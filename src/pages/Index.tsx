@@ -8,23 +8,19 @@ import { SelectionsShowcase } from "@/components/showcase/SelectionsShowcase";
 import { SliderTooltipShowcase } from "@/components/showcase/SliderTooltipShowcase";
 import { DatePickerShowcase } from "@/components/showcase/DatePickerShowcase";
 import { TableShowcase } from "@/components/showcase/TableShowcase";
+import { TabsShowcase } from "@/components/showcase/TabsShowcase";
 import { ModalAlertsShowcase } from "@/components/showcase/ModalAlertsShowcase";
+import { BreadcrumbLinksShowcase } from "@/components/showcase/BreadcrumbLinksShowcase";
+import { CardShowcase } from "@/components/showcase/CardShowcase";
+import { ChipsShowcase } from "@/components/showcase/ChipsShowcase";
+import { MultiselectShowcase } from "@/components/showcase/MultiselectShowcase";
 import { ExperienceCalculator } from "@/components/showcase/ExperienceCalculator";
 import { FilterForm } from "@/components/showcase/FilterForm";
 
-const navItems = [
-  "Typography",
-  "Colors",
-  "Spacing",
-  "Buttons",
-  "Inputs",
-  "Selects",
-  "Slider & Tooltip",
-  "Date Picker",
-  "Table",
-  "Modal & Alerts",
-  "Калькулятор стажа",
-  "Форма фильтра",
+const navGroups = [
+  { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts"] },
+  { label: "Примеры", items: ["Калькулятор", "Фильтр"] },
 ];
 
 const Index = () => {
@@ -32,17 +28,17 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50">
-        <div className="container max-w-5xl py-4 flex items-center justify-between">
+        <div className="container max-w-6xl py-3 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-tight">UI Kit</h1>
+            <h1 className="text-lg font-bold tracking-tight">UI Kit</h1>
             <p className="text-xs text-muted-foreground">Строгий минималистичный набор компонентов</p>
           </div>
-          <nav className="hidden md:flex gap-1 overflow-x-auto">
-            {navItems.slice(0, 6).map((item) => (
+          <nav className="hidden lg:flex gap-0.5 overflow-x-auto">
+            {navGroups.flatMap(g => g.items).slice(0, 8).map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-xs px-2.5 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap"
+                href={`#${item.toLowerCase().replace(/\s+&\s+/g, "-").replace(/\s+/g, "-")}`}
+                className="text-xs px-2 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap"
               >
                 {item}
               </a>
@@ -52,9 +48,9 @@ const Index = () => {
       </header>
 
       {/* Content */}
-      <main className="container max-w-5xl py-8 space-y-6">
+      <main className="container max-w-6xl py-8 space-y-8">
         {/* Design Tokens */}
-        <div>
+        <section>
           <h2 className="mb-4">Дизайн-токены</h2>
           <div className="space-y-6">
             <ShowcaseSection title="Typography" description="Типографика">
@@ -67,55 +63,69 @@ const Index = () => {
               <SpacingShowcase />
             </ShowcaseSection>
           </div>
-        </div>
+        </section>
 
-        {/* Base Components */}
-        <div>
-          <h2 className="mb-4">Базовые компоненты</h2>
+        {/* Components */}
+        <section>
+          <h2 className="mb-4">Компоненты</h2>
           <div className="space-y-6">
-            <ShowcaseSection title="Buttons" description="Кнопки">
+            <ShowcaseSection title="Buttons" description="Кнопки с icon и size">
               <ButtonsShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Inputs" description="Поля ввода">
+            <ShowcaseSection title="Inputs" description="inputStart, inputEnd, inputSize">
               <InputsShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Selects" description="Выбор значений">
+            <ShowcaseSection title="Selects" description="Select, Dropdown, Radio, Checkbox, Switch">
               <SelectionsShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Multiselect" description="Мультивыбор">
+              <MultiselectShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Chips" description="Теги / Badge">
+              <ChipsShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Tabs" description="Вкладки">
+              <TabsShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Table" description="size, bordered, striped">
+              <TableShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Cards" description="Карточки">
+              <CardShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Date Pickers" description="Date, Range, Period">
+              <DatePickerShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Slider & Tooltip" description="Ползунок и подсказки">
               <SliderTooltipShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Date Picker" description="Выбор даты">
-              <DatePickerShowcase />
-            </ShowcaseSection>
-            <ShowcaseSection title="Table" description="Таблица">
-              <TableShowcase />
+            <ShowcaseSection title="Breadcrumbs & Links" description="Навигация и ссылки">
+              <BreadcrumbLinksShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Modal & Alerts" description="Диалоги и уведомления">
               <ModalAlertsShowcase />
             </ShowcaseSection>
           </div>
-        </div>
+        </section>
 
-        {/* Example Scenarios */}
-        <div>
+        {/* Examples */}
+        <section>
           <h2 className="mb-4">Примеры сценариев</h2>
           <div className="space-y-6">
-            <ShowcaseSection title="Калькулятор стажа" description="Пример 1">
+            <ShowcaseSection title="Калькулятор" description="Калькулятор стажа">
               <ExperienceCalculator />
             </ShowcaseSection>
-            <ShowcaseSection title="Форма фильтра" description="Пример 2">
+            <ShowcaseSection title="Фильтр" description="Форма фильтра">
               <FilterForm />
             </ShowcaseSection>
           </div>
-        </div>
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t py-6 mt-12">
-        <div className="container max-w-5xl">
+      <footer className="border-t py-6 mt-8">
+        <div className="container max-w-6xl">
           <p className="text-xs text-muted-foreground text-center">
-            UI Kit · React + TypeScript + Tailwind CSS + shadcn/ui
+            UI Kit · React + TypeScript + Tailwind CSS + shadcn/ui + lucide-react
           </p>
         </div>
       </footer>
