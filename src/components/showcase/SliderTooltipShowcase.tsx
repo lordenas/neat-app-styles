@@ -18,8 +18,10 @@ export function SliderTooltipShowcase() {
         <div className="flex items-center gap-2">
           <Label>Слайдер</Label>
           <Tooltip>
-            <TooltipTrigger>
-              <Info className="h-3.5 w-3.5 text-muted-foreground" />
+            <TooltipTrigger asChild>
+              <button type="button" className="inline-flex">
+                <Info className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>Текущее значение: {value[0]}</p>
