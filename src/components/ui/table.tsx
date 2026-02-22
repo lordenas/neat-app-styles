@@ -19,7 +19,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
           size === "sm" ? "text-xs" : "text-sm",
           bordered && "[&_th]:border [&_td]:border",
           striped && "[&_tbody_tr:nth-child(even)]:bg-[hsl(var(--stripe-bg))]",
-          hoverable && "[&_tbody_tr]:hover:bg-muted/50",
+          hoverable && "[&_tbody_tr:hover]:bg-muted/50",
           className
         )}
         {...props}
