@@ -16,6 +16,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -35,44 +36,30 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   Plus,
   Trash2,
   Info,
   Calculator,
   Clock,
   ChevronDown,
+  ChevronRight,
+  TrendingDown,
+  CalendarOff,
+  Wallet,
+  Percent,
 } from "lucide-react";
 
-/* ───────────────────── helpers ───────────────────── */
+/* ───────────────────── types ───────────────────── */
 
-interface RateRow {
-  id: number;
-  date: string;
-  rate: string;
-  recalc: string;
-}
-
-interface EarlyPayment {
-  id: number;
-  date: string;
-  amount: string;
-  period: string;
-  recalc: string;
-}
-
-interface CommonPayment {
-  id: number;
-  date: string;
-  amount: string;
-  recalc: string;
-}
-
-interface Holiday {
-  id: number;
-  start: string;
-  months: string;
-  payment: string;
-}
+interface RateRow { id: number; date: string; rate: string; recalc: string }
+interface EarlyPayment { id: number; date: string; amount: string; period: string; recalc: string }
+interface CommonPayment { id: number; date: string; amount: string; recalc: string }
+interface Holiday { id: number; start: string; months: string; payment: string }
 
 /* ──────────── form row ──────────── */
 
@@ -89,7 +76,7 @@ function FormRow({
 }) {
   return (
     <div className={`flex flex-col sm:flex-row sm:items-start gap-1.5 sm:gap-4 ${className ?? ""}`}>
-      <div className="sm:w-52 shrink-0 flex items-center gap-1 sm:justify-end sm:pt-2">
+      <div className="sm:w-48 shrink-0 flex items-center gap-1 sm:justify-end sm:pt-2">
         <Label className="text-sm text-muted-foreground text-right">{label}</Label>
         {tooltip && (
           <Tooltip>
@@ -107,55 +94,112 @@ function FormRow({
   );
 }
 
+/* ──────────── collapsible section ──────────── */
+
+function SectionToggle({
+  title,
+  icon,
+  count,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  count?: number;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger asChild>
+        <button
+          type="button"
+          className="flex items-center gap-2 w-full text-left group py-1"
+        >
+          {open ? (
+            <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform" />
+          ) : (
+            <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform" />
+          )}
+          <span className="text-muted-foreground">{icon}</span>
+          <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+            {title}
+          </span>
+          {(count ?? 0) > 0 && (
+            <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">
+              {count}
+            </span>
+          )}
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="pl-6 pt-3 space-y-3">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+/* ──────────── fake schedule data ──────────── */
+
+const fakeSchedule = [
+  { n: 1, date: "22.03.2026", payment: 50109, principal: 15109, interest: 35000, balance: 10484891, early: 0 },
+  { n: 2, date: "22.04.2026", payment: 50109, principal: 15612, interest: 34497, balance: 10469279, early: 0 },
+  { n: 3, date: "22.05.2026", payment: 50109, principal: 15613, interest: 34496, balance: 10453666, early: 0 },
+  { n: 4, date: "22.06.2026", payment: 50109, principal: 15717, interest: 34392, balance: 10437949, early: 0 },
+  { n: 5, date: "22.07.2026", payment: 50109, principal: 15822, interest: 34287, balance: 10422127, early: 0 },
+  { n: 6, date: "22.08.2026", payment: 50109, principal: 15928, interest: 34181, balance: 10406199, early: 0 },
+  { n: 7, date: "22.09.2026", payment: 50109, principal: 16035, interest: 34074, balance: 10390164, early: 0 },
+  { n: 8, date: "22.10.2026", payment: 50109, principal: 16143, interest: 33966, balance: 10374021, early: 0 },
+  { n: 9, date: "22.11.2026", payment: 50109, principal: 16252, interest: 33857, balance: 10357769, early: 0 },
+  { n: 10, date: "22.12.2026", payment: 50109, principal: 16362, interest: 33747, balance: 10341407, early: 0 },
+  { n: 11, date: "22.01.2027", payment: 50109, principal: 16473, interest: 33636, balance: 10324934, early: 30000 },
+  { n: 12, date: "22.02.2027", payment: 47800, principal: 14300, interest: 33500, balance: 10280634, early: 30000 },
+  { n: 13, date: "22.03.2027", payment: 47800, principal: 14510, interest: 33290, balance: 10236124, early: 30000 },
+  { n: 14, date: "22.04.2027", payment: 47800, principal: 14723, interest: 33077, balance: 10191401, early: 30000 },
+  { n: 15, date: "22.05.2027", payment: 47800, principal: 14938, interest: 32862, balance: 10146463, early: 30000 },
+  { n: 16, date: "22.06.2027", payment: 47800, principal: 15155, interest: 32645, balance: 10101308, early: 30000 },
+  { n: 17, date: "22.07.2027", payment: 47800, principal: 15374, interest: 32426, balance: 10055934, early: 0 },
+  { n: 18, date: "22.08.2027", payment: 47800, principal: 15596, interest: 32204, balance: 10010338, early: 0 },
+  { n: 19, date: "22.09.2027", payment: 47800, principal: 15820, interest: 31980, balance: 9964518, early: 0 },
+  { n: 20, date: "22.10.2027", payment: 47800, principal: 16046, interest: 31754, balance: 9918472, early: 0 },
+  { n: 21, date: "22.11.2027", payment: 47800, principal: 16275, interest: 31525, balance: 9872197, early: 0 },
+  { n: 22, date: "22.12.2027", payment: 47800, principal: 16506, interest: 31294, balance: 9825691, early: 0 },
+  { n: 23, date: "22.01.2028", payment: 47800, principal: 16740, interest: 31060, balance: 9778951, early: 0 },
+  { n: 24, date: "22.02.2028", payment: 47800, principal: 16976, interest: 30824, balance: 9731975, early: 0 },
+];
+
+const totalPayment = fakeSchedule.reduce((s, r) => s + r.payment, 0);
+const totalPrincipal = fakeSchedule.reduce((s, r) => s + r.principal, 0);
+const totalInterest = fakeSchedule.reduce((s, r) => s + r.interest, 0);
+const totalEarly = fakeSchedule.reduce((s, r) => s + r.early, 0);
+
+function fmt(n: number) {
+  return n.toLocaleString("ru-RU");
+}
+
 /* ──────────── page ──────────── */
 
 let nextId = 1;
 
 const CreditCalculator = () => {
-  /* rates */
   const [rates, setRates] = useState<RateRow[]>([]);
-  const addRate = () =>
-    setRates((prev) => [
-      ...prev,
-      { id: nextId++, date: "", rate: "", recalc: "payment" },
-    ]);
-  const removeRate = (id: number) =>
-    setRates((prev) => prev.filter((r) => r.id !== id));
+  const addRate = () => setRates((p) => [...p, { id: nextId++, date: "", rate: "", recalc: "payment" }]);
+  const removeRate = (id: number) => setRates((p) => p.filter((r) => r.id !== id));
 
-  /* early payments */
   const [earlyPayments, setEarlyPayments] = useState<EarlyPayment[]>([]);
-  const addEarlyPayment = () =>
-    setEarlyPayments((prev) => [
-      ...prev,
-      { id: nextId++, date: "", amount: "", period: "once", recalc: "payment" },
-    ]);
-  const removeEarlyPayment = (id: number) =>
-    setEarlyPayments((prev) => prev.filter((r) => r.id !== id));
+  const addEarlyPayment = () => setEarlyPayments((p) => [...p, { id: nextId++, date: "", amount: "", period: "once", recalc: "payment" }]);
+  const removeEarlyPayment = (id: number) => setEarlyPayments((p) => p.filter((r) => r.id !== id));
 
-  /* common payments */
   const [commonPayments, setCommonPayments] = useState<CommonPayment[]>([]);
-  const addCommonPayment = () =>
-    setCommonPayments((prev) => [
-      ...prev,
-      { id: nextId++, date: "", amount: "", recalc: "payment" },
-    ]);
-  const removeCommonPayment = (id: number) =>
-    setCommonPayments((prev) => prev.filter((r) => r.id !== id));
+  const addCommonPayment = () => setCommonPayments((p) => [...p, { id: nextId++, date: "", amount: "", recalc: "payment" }]);
+  const removeCommonPayment = (id: number) => setCommonPayments((p) => p.filter((r) => r.id !== id));
 
-  /* holidays */
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const addHoliday = () =>
-    setHolidays((prev) => [
-      ...prev,
-      { id: nextId++, start: "", months: "", payment: "none" },
-    ]);
-  const removeHoliday = (id: number) =>
-    setHolidays((prev) => prev.filter((r) => r.id !== id));
+  const addHoliday = () => setHolidays((p) => [...p, { id: nextId++, start: "", months: "", payment: "none" }]);
+  const removeHoliday = (id: number) => setHolidays((p) => p.filter((r) => r.id !== id));
 
-  /* checkboxes */
   const [firstPayInterest, setFirstPayInterest] = useState(false);
-  const [skipFirstMonth, setSkipFirstMonth] = useState(false);
-  const [increaseToInterest, setIncreaseToInterest] = useState(false);
   const [roundPayment, setRoundPayment] = useState(false);
   const [transferWeekend, setTransferWeekend] = useState(false);
 
@@ -172,17 +216,14 @@ const CreditCalculator = () => {
       </header>
 
       <main className="container max-w-5xl py-6 space-y-6">
-        {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/">Главная</Link>
-              </BreadcrumbLink>
+              <BreadcrumbLink asChild><Link to="/">Главная</Link></BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Кредитный калькулятор с досрочным погашением</BreadcrumbPage>
+              <BreadcrumbPage>Кредитный калькулятор</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -191,55 +232,46 @@ const CreditCalculator = () => {
           Кредитный калькулятор с досрочным погашением
         </h1>
 
-        {/* ─────── Form Card ─────── */}
+        {/* ─────── Form ─────── */}
         <div className="section-card space-y-5">
-          {/* Сумма кредита */}
-          <FormRow label="Сумма кредита">
-            <Input
-              type="text"
-              placeholder="10 500 000"
-              inputEnd={<span className="text-sm font-medium">₽</span>}
-            />
-          </FormRow>
+          {/* Основные параметры */}
+          <div className="space-y-4">
+            <FormRow label="Сумма кредита">
+              <Input type="text" placeholder="10 500 000" className="max-w-52" inputEnd={<span className="text-sm font-medium">₽</span>} />
+            </FormRow>
 
-          {/* Срок кредита */}
-          <FormRow label="Срок кредита">
-            <div className="flex gap-2">
-              <Input type="text" placeholder="30" className="max-w-28" />
-              <Select defaultValue="years">
-                <SelectTrigger className="w-32">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="years">лет</SelectItem>
-                  <SelectItem value="months">месяцев</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </FormRow>
+            <FormRow label="Срок">
+              <div className="flex gap-2">
+                <Input type="text" placeholder="30" className="max-w-20" />
+                <Select defaultValue="years">
+                  <SelectTrigger className="w-28">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="years">лет</SelectItem>
+                    <SelectItem value="months">месяцев</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </FormRow>
 
-          {/* Дата выдачи */}
-          <FormRow label="Дата выдачи кредита">
-            <Input type="date" defaultValue="2026-02-22" className="max-w-44" />
-          </FormRow>
+            <FormRow label="Дата выдачи">
+              <Input type="date" defaultValue="2026-02-22" className="max-w-44" />
+            </FormRow>
 
-          {/* Процентная ставка */}
-          <FormRow label="Процентная ставка">
-            <div className="space-y-3">
-              <Input
-                type="text"
-                placeholder="4"
-                className="max-w-28"
-                inputEnd={<span className="text-sm font-medium">%</span>}
-              />
-
-              {/* Rate changes table */}
+            <FormRow label="Ставка">
+              <div className="flex items-center gap-2">
+                <Input type="text" placeholder="4" className="max-w-20" inputEnd={<span className="text-sm font-medium">%</span>} />
+                <button type="button" onClick={addRate} className="text-xs text-primary hover:text-primary/80 transition-colors whitespace-nowrap">
+                  + Изменение ставки
+                </button>
+              </div>
               {rates.length > 0 && (
-                <div className="rounded-md border">
+                <div className="rounded-md border mt-3">
                   <Table size="sm" bordered>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Дата, с которой действует</TableHead>
+                        <TableHead>Дата</TableHead>
                         <TableHead>Ставка, %</TableHead>
                         <TableHead>Пересчитать</TableHead>
                         <TableHead className="w-10" />
@@ -248,17 +280,11 @@ const CreditCalculator = () => {
                     <TableBody>
                       {rates.map((row) => (
                         <TableRow key={row.id}>
-                          <TableCell>
-                            <Input type="date" inputSize="sm" />
-                          </TableCell>
-                          <TableCell>
-                            <Input type="text" inputSize="sm" placeholder="%" />
-                          </TableCell>
+                          <TableCell><Input type="date" inputSize="sm" /></TableCell>
+                          <TableCell><Input type="text" inputSize="sm" placeholder="%" /></TableCell>
                           <TableCell>
                             <Select defaultValue="payment">
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
+                              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="payment">Платёж</SelectItem>
                                 <SelectItem value="term">Срок</SelectItem>
@@ -266,11 +292,7 @@ const CreditCalculator = () => {
                             </Select>
                           </TableCell>
                           <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => removeRate(row.id)}
-                            >
+                            <Button variant="ghost" size="icon-sm" onClick={() => removeRate(row.id)}>
                               <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                           </TableCell>
@@ -280,444 +302,251 @@ const CreditCalculator = () => {
                   </Table>
                 </div>
               )}
+            </FormRow>
 
-              <button
-                type="button"
-                onClick={addRate}
-                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Добавить ставку
-              </button>
-            </div>
-          </FormRow>
+            <FormRow label="Тип платежей">
+              <RadioGroup defaultValue="annuity" className="flex gap-4">
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="annuity" id="annuity" />
+                  <Label htmlFor="annuity" className="font-normal cursor-pointer text-sm">Аннуитетные</Label>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <RadioGroupItem value="diff" id="diff" />
+                  <Label htmlFor="diff" className="font-normal cursor-pointer text-sm">Дифференцированные</Label>
+                </div>
+              </RadioGroup>
+            </FormRow>
+
+            <FormRow label="Платежи">
+              <Select defaultValue="issue_day">
+                <SelectTrigger className="max-w-56">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="issue_day">В день выдачи кредита</SelectItem>
+                  <SelectItem value="last_day">В последний день месяца</SelectItem>
+                  {Array.from({ length: 30 }, (_, i) => (
+                    <SelectItem key={i + 1} value={String(i + 1)}>
+                      {i + 1}-е число месяца
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormRow>
+          </div>
 
           <Separator />
 
-          {/* Тип ежемесячных платежей */}
-          <FormRow
-            label="Тип ежемесячных платежей"
-          >
-            <RadioGroup defaultValue="annuity" className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="annuity" id="annuity" />
-                <Label htmlFor="annuity" className="font-normal cursor-pointer">
-                  Аннуитетные
-                </Label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button type="button" className="inline-flex">
-                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    Ежемесячные платежи одинаковы на протяжении всего срока кредита
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="diff" id="diff" />
-                <Label htmlFor="diff" className="font-normal cursor-pointer">
-                  Дифференцированные
-                </Label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button type="button" className="inline-flex">
-                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    Основной долг делится равными частями, проценты начисляются на остаток
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </RadioGroup>
-          </FormRow>
-
-          {/* Ежемесячные платежи */}
-          <FormRow label="Ежемесячные платежи">
-            <Select defaultValue="issue_day">
-              <SelectTrigger className="max-w-64">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="issue_day">в день выдачи кредита</SelectItem>
-                <SelectItem value="last_day">в последний день месяца</SelectItem>
-                {Array.from({ length: 30 }, (_, i) => (
-                  <SelectItem key={i + 1} value={String(i + 1)}>
-                    {i + 1}-е число каждого месяца
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormRow>
-
-          {/* Чекбоксы */}
-          <FormRow label="" className="sm:pl-0">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="firstPayInterest"
-                  checked={firstPayInterest}
-                  onCheckedChange={(v) => setFirstPayInterest(v === true)}
-                />
-                <Label htmlFor="firstPayInterest" className="font-normal cursor-pointer">
-                  Первый платёж – только проценты
-                </Label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="skipFirstMonth"
-                  checked={skipFirstMonth}
-                  onCheckedChange={(v) => setSkipFirstMonth(v === true)}
-                />
-                <Label htmlFor="skipFirstMonth" className="font-normal cursor-pointer">
-                  Пропустить первый месяц
-                </Label>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="increaseToInterest"
-                  checked={increaseToInterest}
-                  onCheckedChange={(v) => setIncreaseToInterest(v === true)}
-                />
-                <Label htmlFor="increaseToInterest" className="font-normal cursor-pointer">
-                  Увеличить ЕП до размера процентов
-                </Label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button type="button" className="inline-flex">
-                      <Info className="h-3.5 w-3.5 text-muted-foreground" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    Если ежемесячный платёж меньше начисленных процентов, он будет увеличен
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Checkbox
-                  id="roundPayment"
-                  checked={roundPayment}
-                  onCheckedChange={(v) => setRoundPayment(v === true)}
-                  className="mt-0.5"
-                />
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="roundPayment" className="font-normal cursor-pointer">
-                    Округлять платёж
-                  </Label>
-                  {roundPayment && (
-                    <Select defaultValue="rub">
-                      <SelectTrigger className="h-8 w-32 text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="rub">До рублей</SelectItem>
-                        <SelectItem value="hundred">До сотен</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Checkbox
-                  id="transferWeekend"
-                  checked={transferWeekend}
-                  onCheckedChange={(v) => setTransferWeekend(v === true)}
-                  className="mt-0.5"
-                />
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="transferWeekend" className="font-normal cursor-pointer">
-                    Переносить платёж с выходных дней
-                  </Label>
-                  {transferWeekend && (
-                    <Select defaultValue="next">
-                      <SelectTrigger className="h-8 w-56 text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="next">На следующий рабочий день</SelectItem>
-                        <SelectItem value="prev">На предыдущий рабочий день</SelectItem>
-                        <SelectItem value="sun_mon">Только с ВС на ПН</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
-                </div>
-              </div>
+          {/* Опции */}
+          <div className="space-y-2.5 sm:pl-52">
+            <div className="flex items-center gap-2">
+              <Checkbox id="fpi" checked={firstPayInterest} onCheckedChange={(v) => setFirstPayInterest(v === true)} />
+              <Label htmlFor="fpi" className="font-normal cursor-pointer text-sm">Первый платёж – только проценты</Label>
             </div>
-          </FormRow>
-
-          <Separator />
-
-          {/* ─── Досрочные погашения ─── */}
-          <FormRow label="Досрочные погашения">
-            <div className="space-y-3">
-              {earlyPayments.length > 0 && (
-                <div className="rounded-md border">
-                  <Table size="sm" bordered>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Дата</TableHead>
-                        <TableHead>Сумма</TableHead>
-                        <TableHead>Периодичность</TableHead>
-                        <TableHead>Пересчитать</TableHead>
-                        <TableHead className="w-10" />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {earlyPayments.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell>
-                            <Input type="date" inputSize="sm" />
-                          </TableCell>
-                          <TableCell>
-                            <Input type="text" inputSize="sm" placeholder="Сумма" />
-                          </TableCell>
-                          <TableCell>
-                            <Select defaultValue="once">
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="once">Разовый</SelectItem>
-                                <SelectItem value="1M">Каждый месяц</SelectItem>
-                                <SelectItem value="2M">Каждые 2 месяца</SelectItem>
-                                <SelectItem value="3M">Каждые 3 месяца</SelectItem>
-                                <SelectItem value="6M">Каждые 6 месяцев</SelectItem>
-                                <SelectItem value="1Y">Каждый год</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <Select defaultValue="payment">
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="payment">Уменьшить платёж</SelectItem>
-                                <SelectItem value="term">Уменьшить срок</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => removeEarlyPayment(row.id)}
-                            >
-                              <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="round" checked={roundPayment} onCheckedChange={(v) => setRoundPayment(v === true)} />
+              <Label htmlFor="round" className="font-normal cursor-pointer text-sm">Округлять платёж</Label>
+              {roundPayment && (
+                <Select defaultValue="rub">
+                  <SelectTrigger className="h-7 w-28 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="rub">До рублей</SelectItem>
+                    <SelectItem value="hundred">До сотен</SelectItem>
+                  </SelectContent>
+                </Select>
               )}
-
-              <button
-                type="button"
-                onClick={addEarlyPayment}
-                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Добавить досрочный платёж
-              </button>
             </div>
-          </FormRow>
+            <div className="flex items-center gap-2">
+              <Checkbox id="tw" checked={transferWeekend} onCheckedChange={(v) => setTransferWeekend(v === true)} />
+              <Label htmlFor="tw" className="font-normal cursor-pointer text-sm">Переносить с выходных</Label>
+              {transferWeekend && (
+                <Select defaultValue="next">
+                  <SelectTrigger className="h-7 w-52 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="next">На следующий рабочий</SelectItem>
+                    <SelectItem value="prev">На предыдущий рабочий</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+          </div>
 
           <Separator />
 
-          {/* ─── Общий ежемесячный платёж ─── */}
-          <FormRow
-            label="Общий ежемесячный платёж"
-            tooltip="Общий ежемесячный платёж — фиксированная сумма, которую заёмщик платит каждый месяц"
-          >
-            <div className="space-y-3">
-              {commonPayments.length > 0 && (
-                <div className="rounded-md border">
-                  <Table size="sm" bordered>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Дата начала</TableHead>
-                        <TableHead>Сумма</TableHead>
-                        <TableHead>Пересчитать</TableHead>
-                        <TableHead className="w-10" />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {commonPayments.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell>
-                            <Input type="date" inputSize="sm" />
-                          </TableCell>
-                          <TableCell>
-                            <Input type="text" inputSize="sm" placeholder="Сумма" />
-                          </TableCell>
-                          <TableCell>
-                            <Select defaultValue="payment">
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="payment">Уменьшить платёж</SelectItem>
-                                <SelectItem value="term">Уменьшить срок</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => removeCommonPayment(row.id)}
-                            >
-                              <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+          {/* Collapsible sections */}
+          <div className="space-y-3">
+            <SectionToggle
+              title="Досрочные погашения"
+              icon={<TrendingDown className="h-4 w-4" />}
+              count={earlyPayments.length}
+            >
+              {earlyPayments.map((row) => (
+                <div key={row.id} className="flex items-center gap-2 flex-wrap">
+                  <Input type="date" inputSize="sm" className="w-36" />
+                  <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
+                  <Select defaultValue="once">
+                    <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="once">Разовый</SelectItem>
+                      <SelectItem value="1M">Каждый месяц</SelectItem>
+                      <SelectItem value="3M">Каждые 3 мес.</SelectItem>
+                      <SelectItem value="6M">Каждые 6 мес.</SelectItem>
+                      <SelectItem value="1Y">Каждый год</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select defaultValue="payment">
+                    <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="payment">Уменьшить платёж</SelectItem>
+                      <SelectItem value="term">Уменьшить срок</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(row.id)}>
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Button>
                 </div>
-              )}
-
-              <button
-                type="button"
-                onClick={addCommonPayment}
-                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Добавить общий ежемесячный платёж
+              ))}
+              <button type="button" onClick={addEarlyPayment} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+                <Plus className="h-4 w-4" /> Добавить
               </button>
-            </div>
-          </FormRow>
+            </SectionToggle>
 
-          <Separator />
-
-          {/* ─── Кредитные каникулы ─── */}
-          <FormRow
-            label="Кредитные каникулы"
-            tooltip="Период, в течение которого заёмщик может не платить или платить только проценты"
-          >
-            <div className="space-y-3">
-              {holidays.length > 0 && (
-                <div className="rounded-md border">
-                  <Table size="sm" bordered>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Начало</TableHead>
-                        <TableHead>Срок (мес)</TableHead>
-                        <TableHead>Платёж</TableHead>
-                        <TableHead className="w-10" />
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {holidays.map((row) => (
-                        <TableRow key={row.id}>
-                          <TableCell>
-                            <Input type="date" inputSize="sm" />
-                          </TableCell>
-                          <TableCell>
-                            <Input type="text" inputSize="sm" placeholder="Мес." />
-                          </TableCell>
-                          <TableCell>
-                            <Select defaultValue="none">
-                              <SelectTrigger className="h-8 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">Отсутствует</SelectItem>
-                                <SelectItem value="interest">Проценты</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => removeHoliday(row.id)}
-                            >
-                              <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+            <SectionToggle
+              title="Общий ежемесячный платёж"
+              icon={<Wallet className="h-4 w-4" />}
+              count={commonPayments.length}
+            >
+              {commonPayments.map((row) => (
+                <div key={row.id} className="flex items-center gap-2 flex-wrap">
+                  <Input type="date" inputSize="sm" className="w-36" />
+                  <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
+                  <Select defaultValue="payment">
+                    <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="payment">Уменьшить платёж</SelectItem>
+                      <SelectItem value="term">Уменьшить срок</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeCommonPayment(row.id)}>
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Button>
                 </div>
-              )}
-
-              <button
-                type="button"
-                onClick={addHoliday}
-                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Добавить кредитные каникулы
+              ))}
+              <button type="button" onClick={addCommonPayment} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+                <Plus className="h-4 w-4" /> Добавить
               </button>
-            </div>
-          </FormRow>
+            </SectionToggle>
+
+            <SectionToggle
+              title="Кредитные каникулы"
+              icon={<CalendarOff className="h-4 w-4" />}
+              count={holidays.length}
+            >
+              {holidays.map((row) => (
+                <div key={row.id} className="flex items-center gap-2 flex-wrap">
+                  <Input type="date" inputSize="sm" className="w-36" />
+                  <Input type="text" inputSize="sm" placeholder="Месяцев" className="w-24" />
+                  <Select defaultValue="none">
+                    <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Без платежей</SelectItem>
+                      <SelectItem value="interest">Только проценты</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeHoliday(row.id)}>
+                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  </Button>
+                </div>
+              ))}
+              <button type="button" onClick={addHoliday} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+                <Plus className="h-4 w-4" /> Добавить
+              </button>
+            </SectionToggle>
+          </div>
 
           <Separator />
 
           {/* Submit */}
-          <div className="flex items-center gap-3 sm:pl-56">
-            <Button icon={<Calculator className="h-4 w-4" />}>
-              Рассчитать
-            </Button>
+          <div className="flex items-center gap-3 sm:pl-52">
+            <Button icon={<Calculator className="h-4 w-4" />}>Рассчитать</Button>
             <Button variant="outline" size="icon">
               <Clock className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        {/* ─────── Results Placeholder ─────── */}
-        <div className="section-card space-y-4">
+        {/* ─────── Results ─────── */}
+        <div className="section-card space-y-5">
           <h2 className="text-lg font-semibold">Результаты расчёта</h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
-              { label: "Ежемесячный платёж", value: "—" },
-              { label: "Начисленные проценты", value: "—" },
-              { label: "Сумма досрочных погашений", value: "—" },
-              { label: "Фактический срок", value: "—" },
-              { label: "Переплата", value: "—" },
-              { label: "Долг + проценты", value: "—" },
+              { label: "Ежемесячный платёж", value: "50 109 ₽", sub: "→ 47 800 ₽ после пересчёта" },
+              { label: "Начисленные проценты", value: "7 783 442 ₽", color: "text-destructive" },
+              { label: "Досрочные погашения", value: "180 000 ₽", color: "text-[hsl(var(--success))]" },
+              { label: "Фактический срок", value: "24 года 8 мес." },
+              { label: "Переплата", value: "74.1%", color: "text-destructive" },
+              { label: "Итого выплачено", value: "18 283 442 ₽" },
             ].map((item) => (
               <div key={item.label} className="form-section space-y-1">
                 <p className="text-xs text-muted-foreground">{item.label}</p>
-                <p className="text-lg font-semibold font-mono">{item.value}</p>
+                <p className={`text-lg font-semibold font-mono ${item.color ?? "text-foreground"}`}>{item.value}</p>
+                {item.sub && <p className="text-xs text-muted-foreground">{item.sub}</p>}
               </div>
             ))}
           </div>
 
           <Separator />
 
+          {/* Schedule table with sticky header & footer */}
           <div>
             <h3 className="text-sm font-medium mb-3">График погашения</h3>
-            <div className="rounded-md border">
-              <Table size="sm" striped>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>#</TableHead>
+            <div className="rounded-md border relative overflow-auto max-h-[480px]">
+              <Table size="sm" striped hoverable>
+                <TableHeader className="sticky top-0 z-10 bg-card shadow-[0_1px_0_0_hsl(var(--border))]">
+                  <TableRow className="border-b-0">
+                    <TableHead className="w-10">#</TableHead>
                     <TableHead>Дата</TableHead>
                     <TableHead className="text-right">Платёж</TableHead>
                     <TableHead className="text-right">Основной долг</TableHead>
                     <TableHead className="text-right">Проценты</TableHead>
+                    <TableHead className="text-right">Досрочное</TableHead>
                     <TableHead className="text-right">Остаток</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                      Заполните форму и нажмите «Рассчитать»
-                    </TableCell>
-                  </TableRow>
+                  {fakeSchedule.map((row) => (
+                    <TableRow key={row.n}>
+                      <TableCell className="font-mono text-muted-foreground text-xs">{row.n}</TableCell>
+                      <TableCell className="text-xs">{row.date}</TableCell>
+                      <TableCell className="text-right font-mono text-xs">{fmt(row.payment)}</TableCell>
+                      <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">
+                        {fmt(row.principal)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-xs text-destructive">
+                        {fmt(row.interest)}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-xs">
+                        {row.early > 0 ? (
+                          <span className="text-[hsl(var(--success))] font-medium">{fmt(row.early)}</span>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right font-mono text-xs">{fmt(row.balance)}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
+                <TableFooter className="sticky bottom-0 z-10 bg-card shadow-[0_-1px_0_0_hsl(var(--border))]">
+                  <TableRow className="border-t-0 font-semibold">
+                    <TableCell colSpan={2} className="text-xs">Итого</TableCell>
+                    <TableCell className="text-right font-mono text-xs">{fmt(totalPayment)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalPrincipal)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs text-destructive">{fmt(totalInterest)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalEarly)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs">—</TableCell>
+                  </TableRow>
+                </TableFooter>
               </Table>
             </div>
           </div>
