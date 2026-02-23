@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -52,7 +57,50 @@ import {
   CalendarOff,
   Wallet,
   Percent,
+  CalendarIcon,
 } from "lucide-react";
+
+/* ───────────────────── date picker ───────────────────── */
+
+function DatePick({
+  value,
+  onChange,
+  placeholder = "Выберите дату",
+  small = false,
+}: {
+  value?: Date;
+  onChange?: (d: Date | undefined) => void;
+  placeholder?: string;
+  small?: boolean;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "justify-start text-left font-normal",
+            small ? "h-8 text-xs px-2 w-36" : "w-44",
+            !value && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className={cn("mr-1.5", small ? "h-3 w-3" : "h-4 w-4")} />
+          {value ? format(value, "dd.MM.yyyy") : <span>{placeholder}</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={onChange}
+          locale={ru}
+          initialFocus
+          className="p-3 pointer-events-auto"
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 /* ───────────────────── types ───────────────────── */
 
@@ -256,7 +304,7 @@ const CreditCalculator = () => {
             </FormRow>
 
             <FormRow label="Дата выдачи">
-              <Input type="date" defaultValue="2026-02-22" className="max-w-44" />
+              <DatePick value={new Date("2026-02-22")} />
             </FormRow>
 
             <FormRow label="Ставка">
@@ -280,7 +328,7 @@ const CreditCalculator = () => {
                     <TableBody>
                       {rates.map((row) => (
                         <TableRow key={row.id}>
-                          <TableCell><Input type="date" inputSize="sm" /></TableCell>
+                          <TableCell><DatePick small /></TableCell>
                           <TableCell><Input type="text" inputSize="sm" placeholder="%" /></TableCell>
                           <TableCell>
                             <Select defaultValue="payment">
@@ -382,7 +430,7 @@ const CreditCalculator = () => {
             >
               {earlyPayments.map((row) => (
                 <div key={row.id} className="flex items-center gap-2 flex-wrap">
-                  <Input type="date" inputSize="sm" className="w-36" />
+                  <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
                   <Select defaultValue="once">
                     <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
@@ -418,7 +466,7 @@ const CreditCalculator = () => {
             >
               {commonPayments.map((row) => (
                 <div key={row.id} className="flex items-center gap-2 flex-wrap">
-                  <Input type="date" inputSize="sm" className="w-36" />
+                  <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
                   <Select defaultValue="payment">
                     <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
@@ -444,7 +492,7 @@ const CreditCalculator = () => {
             >
               {holidays.map((row) => (
                 <div key={row.id} className="flex items-center gap-2 flex-wrap">
-                  <Input type="date" inputSize="sm" className="w-36" />
+                  <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Месяцев" className="w-24" />
                   <Select defaultValue="none">
                     <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
