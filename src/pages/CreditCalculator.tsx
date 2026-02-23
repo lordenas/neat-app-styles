@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
@@ -62,10 +62,30 @@ import {
 
 /* ───────────────────── date picker ───────────────────── */
 
+function applyDateMask(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 8);
+  let result = "";
+  for (let i = 0; i < digits.length; i++) {
+    if (i === 2 || i === 4) result += ".";
+    result += digits[i];
+  }
+  return result;
+}
+
+function parseMaskedDate(masked: string): Date | undefined {
+  if (masked.length !== 10) return undefined;
+  const [dd, mm, yyyy] = masked.split(".");
+  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
+  if (!d || !m || !y || m < 1 || m > 12 || d < 1 || d > 31) return undefined;
+  const date = new Date(y, m - 1, d);
+  if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
+  return undefined;
+}
+
 function DatePick({
   value,
   onChange,
-  placeholder = "Выберите дату",
+  placeholder = "дд.мм.гггг",
   small = false,
 }: {
   value?: Date;
@@ -73,26 +93,59 @@ function DatePick({
   placeholder?: string;
   small?: boolean;
 }) {
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(value ? format(value, "dd.MM.yyyy") : "");
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  // sync external value → input text
+  React.useEffect(() => {
+    setInputValue(value ? format(value, "dd.MM.yyyy") : "");
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = applyDateMask(e.target.value);
+    setInputValue(masked);
+    const parsed = parseMaskedDate(masked);
+    if (parsed) {
+      onChange?.(parsed);
+    }
+  };
+
+  const handleCalendarSelect = (d: Date | undefined) => {
+    onChange?.(d);
+    setOpen(false);
+  };
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
+    <Popover open={open} onOpenChange={setOpen}>
+      <div className={cn("flex items-center", small ? "w-36" : "w-48")}>
+        <input
+          ref={inputRef}
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder={placeholder}
           className={cn(
-            "justify-start text-left font-normal",
-            small ? "h-8 text-xs px-2 w-36" : "w-44",
-            !value && "text-muted-foreground"
+            "flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors",
+            small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm"
           )}
-        >
-          <CalendarIcon className={cn("mr-1.5", small ? "h-3 w-3" : "h-4 w-4")} />
-          {value ? format(value, "dd.MM.yyyy") : <span>{placeholder}</span>}
-        </Button>
-      </PopoverTrigger>
+        />
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className={cn(
+              "rounded-l-none border-l-0 px-2 shrink-0",
+              small ? "h-8" : "h-10"
+            )}
+          >
+            <CalendarIcon className={small ? "h-3 w-3" : "h-4 w-4"} />
+          </Button>
+        </PopoverTrigger>
+      </div>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
           selected={value}
-          onSelect={onChange}
+          onSelect={handleCalendarSelect}
           locale={ru}
           initialFocus
           className="p-3 pointer-events-auto"
