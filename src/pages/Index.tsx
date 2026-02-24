@@ -25,10 +25,11 @@ import { CopyShowcase } from "@/components/showcase/CopyShowcase";
 import { EmptyStateShowcase } from "@/components/showcase/EmptyStateShowcase";
 import { FileUploadShowcase } from "@/components/showcase/FileUploadShowcase";
 import { ValidationFormShowcase } from "@/components/showcase/ValidationFormShowcase";
+import { PaginationShowcase } from "@/components/showcase/PaginationShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State", "File Upload"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State", "File Upload", "Pagination"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -137,6 +138,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="File Upload" description="Загрузка файлов: Drag & Drop, кнопка, аватар">
               <FileUploadShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Pagination" description="Навигация по страницам">
+              <PaginationShowcase />
             </ShowcaseSection>
           </div>
         </section>

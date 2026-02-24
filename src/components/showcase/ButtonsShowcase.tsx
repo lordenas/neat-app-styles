@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus, Trash2, Download, Search, Settings, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Download, Search, Settings, ArrowRight } from "lucide-react";
 
 export function ButtonsShowcase() {
   return (
@@ -42,7 +42,9 @@ export function ButtonsShowcase() {
         <div className="flex flex-wrap items-center gap-3">
           <Button disabled>Disabled</Button>
           <Button disabled variant="secondary">Disabled</Button>
-          <Button icon={<Loader2 className="animate-spin" />}>Загрузка...</Button>
+          <Button loading>Загрузка...</Button>
+          <Button loading variant="outline">Сохранение</Button>
+          <Button loading variant="secondary" size="sm">SM loading</Button>
         </div>
       </div>
     </div>

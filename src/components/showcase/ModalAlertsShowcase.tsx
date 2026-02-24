@@ -23,15 +23,20 @@ export function ModalAlertsShowcase() {
           <AlertTitle>Информация</AlertTitle>
           <AlertDescription>Это информационное уведомление для пользователя.</AlertDescription>
         </Alert>
-        <Alert className="border-success/50 text-success [&>svg]:text-success">
+        <Alert variant="success">
           <CheckCircle2 className="h-4 w-4" />
           <AlertTitle>Успех</AlertTitle>
           <AlertDescription>Операция выполнена успешно.</AlertDescription>
         </Alert>
-        <Alert className="border-warning/50 text-warning [&>svg]:text-warning">
+        <Alert variant="warning">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Предупреждение</AlertTitle>
           <AlertDescription>Обратите внимание на это сообщение.</AlertDescription>
+        </Alert>
+        <Alert variant="info">
+          <Info className="h-4 w-4" />
+          <AlertTitle>Подсказка</AlertTitle>
+          <AlertDescription>Полезная информация для пользователя.</AlertDescription>
         </Alert>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
