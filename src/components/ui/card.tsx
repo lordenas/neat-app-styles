@@ -12,6 +12,7 @@ const cardVariants = cva(
         outline: "border-2",
         elevated: "shadow-md border-0",
         interactive: "border shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer",
+        selected: "border-2 border-primary ring-2 ring-primary/20",
       },
     },
     defaultVariants: {
@@ -29,16 +30,32 @@ const cardVariants = cva(
  * <Card variant="outline">Только рамка</Card>
  * <Card variant="elevated">С тенью</Card>
  * <Card variant="interactive">Кликабельная с hover-эффектом</Card>
+ * <Card variant="selected">Выбранная карточка</Card>
+ * <Card variant={active ? "selected" : "outline"} asButton onClick={toggle}>Выбор</Card>
  * ```
  *
- * @prop variant - `"default"` | `"outline"` | `"elevated"` | `"interactive"`
+ * @prop variant - `"default"` | `"outline"` | `"elevated"` | `"interactive"` | `"selected"`
+ * @prop asButton - Рендерит `<button>` вместо `<div>` для доступности
  */
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof cardVariants>
->(({ className, variant, ...props }, ref) => (
-  <div ref={ref} className={cn(cardVariants({ variant }), className)} {...props} />
-));
+  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof cardVariants> & {
+    asButton?: boolean;
+  }
+>(({ className, variant, asButton, ...props }, ref) => {
+  const Comp = asButton ? "button" : "div";
+  return (
+    <Comp
+      ref={ref as any}
+      className={cn(
+        cardVariants({ variant }),
+        asButton && "text-left w-full cursor-pointer transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        className
+      )}
+      {...(props as any)}
+    />
+  );
+});
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

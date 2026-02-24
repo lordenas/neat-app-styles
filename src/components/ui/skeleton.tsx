@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
  * @example
  * ```tsx
  * <Skeleton className="h-4 w-48" />
- * <Skeleton.Circle size={40} />
- * <Skeleton.Text lines={3} />
- * <Skeleton.Avatar />
+ * <SkeletonCard />
+ * <SkeletonTable rows={3} cols={4} />
+ * <SkeletonForm fields={3} />
  * ```
  */
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -62,8 +62,101 @@ function SkeletonAvatar({ className, ...props }: React.HTMLAttributes<HTMLDivEle
 }
 SkeletonAvatar.displayName = "Skeleton.Avatar";
 
+/**
+ * Карточка-скелетон: аватар + текст + блок контента + кнопка.
+ *
+ * @example
+ * ```tsx
+ * <SkeletonCard />
+ * ```
+ */
+function SkeletonCard({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("rounded-lg border bg-card p-6 space-y-4", className)} {...props}>
+      <SkeletonAvatar />
+      <Skeleton className="h-24 w-full rounded-md" />
+      <div className="flex justify-end">
+        <Skeleton className="h-9 w-24 rounded-md" />
+      </div>
+    </div>
+  );
+}
+SkeletonCard.displayName = "Skeleton.Card";
+
+/**
+ * Таблица-скелетон с настраиваемым числом строк и колонок.
+ *
+ * @example
+ * ```tsx
+ * <SkeletonTable rows={5} cols={4} />
+ * ```
+ */
+function SkeletonTable({
+  rows = 5,
+  cols = 4,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { rows?: number; cols?: number }) {
+  return (
+    <div className={cn("space-y-3", className)} {...props}>
+      {/* Header */}
+      <div className="flex gap-3">
+        {Array.from({ length: cols }).map((_, i) => (
+          <Skeleton key={`h-${i}`} className="h-4 flex-1 rounded" />
+        ))}
+      </div>
+      <Skeleton className="h-px w-full" />
+      {/* Rows */}
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} className="flex gap-3">
+          {Array.from({ length: cols }).map((_, c) => (
+            <Skeleton
+              key={`${r}-${c}`}
+              className="h-4 flex-1 rounded"
+              style={c === 0 ? { maxWidth: "30%" } : undefined}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+SkeletonTable.displayName = "Skeleton.Table";
+
+/**
+ * Форма-скелетон: label + input повторённые N раз.
+ *
+ * @example
+ * ```tsx
+ * <SkeletonForm fields={3} />
+ * ```
+ */
+function SkeletonForm({
+  fields = 3,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { fields?: number }) {
+  return (
+    <div className={cn("space-y-4", className)} {...props}>
+      {Array.from({ length: fields }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <Skeleton className="h-3 w-24 rounded" />
+          <Skeleton className="h-10 w-full rounded-md" />
+        </div>
+      ))}
+      <div className="flex justify-end pt-2">
+        <Skeleton className="h-10 w-32 rounded-md" />
+      </div>
+    </div>
+  );
+}
+SkeletonForm.displayName = "Skeleton.Form";
+
 Skeleton.Circle = SkeletonCircle;
 Skeleton.Text = SkeletonText;
 Skeleton.Avatar = SkeletonAvatar;
+Skeleton.Card = SkeletonCard;
+Skeleton.Table = SkeletonTable;
+Skeleton.Form = SkeletonForm;
 
-export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar };
+export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonTable, SkeletonForm };

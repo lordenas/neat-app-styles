@@ -22,6 +22,7 @@ export { Label } from "./label";
 
 /** Метка/чип для статусов */
 export { Badge, badgeVariants } from "./badge";
+export type { BadgeProps } from "./badge";
 
 /** Флажок */
 export { Checkbox } from "./checkbox";
@@ -139,7 +140,7 @@ export { Progress, progressVariants } from "./progress";
 export { ScrollArea, ScrollBar } from "./scroll-area";
 
 /** Заглушка-скелетон загрузки */
-export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar } from "./skeleton";
+export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonTable, SkeletonForm } from "./skeleton";
 
 /** Аватар с размерами и статус-индикатором */
 export { Avatar, AvatarImage, AvatarFallback, avatarVariants } from "./avatar";

@@ -79,13 +79,14 @@
 | `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки (форма не прыгает). Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
 | `loading` | `boolean` | `false` | Показывает спиннер в конце поля и делает его `disabled` |
 | `showPasswordToggle` | `boolean` | `false` | Добавляет кнопку показа/скрытия пароля (для `type="password"`) |
+| `clearable` | `boolean` | `false` | Показывает кнопку × при наличии значения для быстрой очистки |
 
 ```tsx
 <Input placeholder="Введите текст..." />
 <Input inputStart={<Search />} placeholder="Поиск..." />
 <Input inputSize="lg" placeholder="Крупное поле для лендинга" />
 <Input loading placeholder="Проверка..." />
-<Input loading inputStart={<Mail />} placeholder="Валидация email..." />
+<Input clearable placeholder="Поиск..." value={search} onChange={e => setSearch(e.target.value)} />
 <Input formatNumber placeholder="Введите сумму" />
 <Input error={errors.name?.message ?? ""} {...register("name")} />
 ```
@@ -95,6 +96,7 @@
 **Примечания:**
 - При `formatNumber` в `onChange` передаётся числовое значение без пробелов.
 - При `loading` автоматически ставится `disabled` и показывается спиннер `Loader2`.
+- При `clearable` кнопка × появляется только когда поле не пустое; клик очищает и фокусирует.
 - При `error` передавайте пустую строку `""` когда ошибки нет — место под текст будет зарезервировано. Без пропа `error` дополнительный элемент не рендерится.
 
 ---
@@ -270,6 +272,8 @@
 | `size` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер |
 | `icon` | `ReactNode` | — | Иконка перед текстом |
 | `dot` | `boolean` | `false` | Цветной кружок-индикатор статуса перед текстом |
+| `active` | `boolean` | `false` | Визуально выделяет бейдж (заливка для outline, кольцо для остальных). Для фильтров |
+| `onClick` | `() => void` | — | Делает бейдж кликабельным с cursor-pointer, hover и focus-visible стилями |
 | `onDismiss` | `() => void` | — | Колбэк при удалении. Добавляет кнопку × |
 
 ```tsx
@@ -281,6 +285,8 @@
 <Badge variant="destructive" dot>Офлайн</Badge>
 <Badge icon={<Star className="h-3 w-3" />}>Избранное</Badge>
 <Badge variant="secondary" onDismiss={() => remove(id)}>Тег</Badge>
+<Badge variant="outline" active={filter === "new"} onClick={() => setFilter("new")}>Новые</Badge>
+<Badge variant="outline" active={filter === "done"} onClick={() => setFilter("done")}>Выполнено</Badge>
 ```
 
 ---
@@ -288,6 +294,11 @@
 ## Card
 
 **Импорт:** `import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `variant` | `"default"` \| `"outline"` \| `"elevated"` \| `"interactive"` \| `"selected"` | `"default"` | Стиль карточки |
+| `asButton` | `boolean` | `false` | Рендерит `<button>` вместо `<div>` для кликабельных карточек (тарифы, опции) |
 
 ```tsx
 <Card>
@@ -299,6 +310,14 @@
   <CardFooter>
     <Button>Действие</Button>
   </CardFooter>
+</Card>
+
+<Card variant="selected">Выбранная карточка</Card>
+
+{/* Кликабельная карточка для выбора */}
+<Card variant={plan === "pro" ? "selected" : "outline"} asButton onClick={() => setPlan("pro")}>
+  <CardHeader><CardTitle>Pro</CardTitle></CardHeader>
+  <CardContent>...</CardContent>
 </Card>
 ```
 
@@ -911,36 +930,19 @@ const steps = [
 
 ### Skeleton (паттерны загрузки)
 
-Шаблоны скелетонов для типичных интерфейсов:
+Готовые пресеты + базовый компонент:
 
 ```tsx
-// Карточка
-<div className="section-card space-y-4 max-w-sm">
-  <div className="flex items-center gap-3">
-    <Skeleton className="h-10 w-10 rounded-full" />
-    <div className="space-y-2 flex-1">
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-3 w-1/2" />
-    </div>
-  </div>
-  <Skeleton className="h-32 w-full rounded-md" />
-</div>
+// Базовый
+<Skeleton className="h-4 w-48" />
 
-// Таблица (header + rows)
-{[...Array(4)].map((_, i) => (
-  <div key={i} className="flex gap-3">
-    <Skeleton className="h-4 w-12" />
-    <Skeleton className="h-4 w-24" />
-    <Skeleton className="h-4 flex-1" />
-    <Skeleton className="h-4 w-20" />
-  </div>
-))}
-
-// Форма (label + input)
-<div className="space-y-2">
-  <Skeleton className="h-3 w-24" />
-  <Skeleton className="h-10 w-full rounded-md" />
-</div>
+// Пресеты
+<SkeletonCard />                  // Карточка: аватар + текст + блок + кнопка
+<SkeletonTable rows={5} cols={4} /> // Таблица с заголовком
+<SkeletonForm fields={3} />       // Форма: label + input × N + кнопка
+<SkeletonAvatar />                // Аватар + 2 строки текста
+<SkeletonCircle size={40} />      // Круг
+<SkeletonText lines={3} />        // Строки текста
 ```
 
 ---
@@ -969,12 +971,14 @@ const steps = [
 
 Пустое состояние с иконкой, заголовком, описанием и опциональным CTA.
 
-| Prop | Тип | Описание |
-|------|-----|----------|
-| `icon` | `ReactNode` | Иконка (h-10 w-10) |
-| `title` | `string` | Заголовок |
-| `description` | `string` | Описание |
-| `action` | `ReactNode?` | CTA-кнопка (опционально) |
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `icon` | `ReactNode` | — | Иконка (h-10 w-10 для default, h-6 w-6 для compact) |
+| `title` | `string` | — | Заголовок |
+| `description` | `string` | — | Описание |
+| `action` | `ReactNode?` | — | CTA-кнопка (опционально) |
+| `size` | `"default"` \| `"compact"` | `"default"` | Compact для таблиц и списков |
+| `bordered` | `boolean` | `true` для default, `false` для compact | Показывать dashed border |
 
 ```tsx
 <EmptyState
@@ -983,9 +987,15 @@ const steps = [
   description="Заполните параметры и нажмите «Рассчитать»"
   action={<Button size="sm">Рассчитать</Button>}
 />
-```
 
-**Стиль:** `border border-dashed border-border py-12 text-center rounded-md`
+{/* Компактный — для таблиц */}
+<EmptyState
+  size="compact"
+  icon={<Inbox className="h-6 w-6" />}
+  title="Нет записей"
+  description="Данные появятся после добавления."
+/>
+```
 
 ---
 

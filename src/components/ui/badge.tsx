@@ -36,32 +36,41 @@ const badgeVariants = cva(
  * @example
  * ```tsx
  * <Badge>Новый</Badge>
- * <Badge variant="secondary">Черновик</Badge>
- * <Badge variant="destructive">Ошибка</Badge>
- * <Badge variant="success">Успех</Badge>
- * <Badge icon={<Star className="h-3 w-3" />}>Избранное</Badge>
+ * <Badge variant="success" dot>Онлайн</Badge>
+ * <Badge variant="outline" active={isActive} onClick={() => toggle()}>Фильтр</Badge>
  * <Badge onDismiss={() => remove(id)}>Тег</Badge>
  * ```
  *
- * @prop variant - Стиль: `"default"` | `"secondary"` | `"destructive"` | `"success"` | `"warning"` | `"info"` | `"outline"`
- * @prop icon - React-элемент иконки, отображается перед текстом
- * @prop onDismiss - Колбэк при клике на кнопку удаления (×). Добавляет кнопку × справа
+ * @prop variant - Стиль
+ * @prop icon - Иконка перед текстом
+ * @prop dot - Цветной кружок-индикатор
+ * @prop onDismiss - Кнопка удаления ×
+ * @prop active - Визуально выделяет бейдж (для фильтров)
+ * @prop onClick - Делает бейдж кликабельным с hover/focus стилями
  */
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {
-  /** Иконка перед текстом */
   icon?: React.ReactNode;
-  /** Колбэк удаления — добавляет кнопку × */
   onDismiss?: () => void;
-  /** Показывает цветной кружок-индикатор перед текстом */
   dot?: boolean;
+  /** Визуально выделяет бейдж (заливка для outline, кольцо для остальных) */
+  active?: boolean;
 }
 
-function Badge({ className, variant, size, icon, onDismiss, dot, children, ...props }: BadgeProps) {
+function Badge({ className, variant, size, icon, onDismiss, dot, active, onClick, children, ...props }: BadgeProps) {
+  const isClickable = !!onClick;
+
   return (
     <div
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={isClickable ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(e as any); } } : undefined}
       className={cn(
         badgeVariants({ variant, size }),
         (icon || onDismiss || dot) && "gap-1",
+        isClickable && "cursor-pointer select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        active && variant === "outline" && "bg-primary text-primary-foreground border-transparent",
+        active && variant !== "outline" && "ring-2 ring-ring ring-offset-1",
         className
       )}
       {...props}
