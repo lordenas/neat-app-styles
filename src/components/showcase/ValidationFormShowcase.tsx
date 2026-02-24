@@ -95,13 +95,9 @@ export function ValidationFormShowcase() {
           id="vf-name"
           placeholder="Иван Иванов"
           className="mt-1.5"
-          aria-invalid={!!errors.name}
-          aria-describedby="vf-name-err"
+          error={errors.name?.message ?? ""}
           {...register("name")}
         />
-        <p id="vf-name-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.name?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Email */}
@@ -112,13 +108,9 @@ export function ValidationFormShowcase() {
           type="email"
           placeholder="ivan@example.com"
           className="mt-1.5"
-          aria-invalid={!!errors.email}
-          aria-describedby="vf-email-err"
+          error={errors.email?.message ?? ""}
           {...register("email")}
         />
-        <p id="vf-email-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.email?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Phone */}
@@ -129,13 +121,9 @@ export function ValidationFormShowcase() {
           type="tel"
           placeholder="+7 (999) 123-45-67"
           className="mt-1.5"
-          aria-invalid={!!errors.phone}
-          aria-describedby="vf-phone-err"
+          error={errors.phone?.message ?? ""}
           {...register("phone")}
         />
-        <p id="vf-phone-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.phone?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Role select */}
