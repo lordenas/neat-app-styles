@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,9 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, BarChart3, Users, ArrowRight } from "lucide-react";
+import { FileText, BarChart3, Users, ArrowRight, Check } from "lucide-react";
 
 export function CardShowcase() {
+  const [plan, setPlan] = useState<"free" | "pro" | "team">("pro");
   return (
     <div className="space-y-6">
       <div>
@@ -54,6 +56,44 @@ export function CardShowcase() {
               <p className="text-sm text-muted-foreground">Hover-эффект с поднятием.</p>
             </CardContent>
           </Card>
+          <Card variant="selected">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Selected</CardTitle>
+              <CardDescription>Выбранная карточка</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">Рамка primary + кольцо.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Выбор тарифа (asButton + selected)</p>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {([
+            { id: "free" as const, title: "Free", price: "0 ₽", desc: "Для личных проектов" },
+            { id: "pro" as const, title: "Pro", price: "990 ₽/мес", desc: "Для профессионалов" },
+            { id: "team" as const, title: "Team", price: "2 490 ₽/мес", desc: "Для команд" },
+          ]).map((p) => (
+            <Card
+              key={p.id}
+              variant={plan === p.id ? "selected" : "outline"}
+              asButton
+              onClick={() => setPlan(p.id)}
+            >
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center gap-2">
+                  {p.title}
+                  {plan === p.id && <Check className="h-4 w-4 text-primary" />}
+                </CardTitle>
+                <CardDescription>{p.desc}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-lg font-bold text-foreground">{p.price}</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
 

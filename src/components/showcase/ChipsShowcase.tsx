@@ -3,9 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Zap, Shield } from "lucide-react";
 
 const allChips = ["React", "TypeScript", "Tailwind", "shadcn/ui", "Vite", "Node.js", "PostgreSQL", "Docker"];
+type Filter = "all" | "active" | "archived" | "draft";
 
 export function ChipsShowcase() {
   const [selected, setSelected] = useState<string[]>(["React", "TypeScript", "Tailwind"]);
+  const [filter, setFilter] = useState<Filter>("all");
 
   const remove = (chip: string) => setSelected((prev) => prev.filter((c) => c !== chip));
   const add = (chip: string) => setSelected((prev) => [...prev, chip]);
@@ -63,6 +65,22 @@ export function ChipsShowcase() {
           <Badge variant="info" dot>В процессе</Badge>
           <Badge variant="secondary" dot>Черновик</Badge>
           <Badge dot>По умолчанию</Badge>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-2">Фильтры (active + onClick)</p>
+        <div className="flex flex-wrap gap-2">
+          {(["all", "active", "archived", "draft"] as Filter[]).map((f) => (
+            <Badge
+              key={f}
+              variant="outline"
+              active={filter === f}
+              onClick={() => setFilter(f)}
+            >
+              {f === "all" ? "Все" : f === "active" ? "Активные" : f === "archived" ? "Архив" : "Черновики"}
+            </Badge>
+          ))}
         </div>
       </div>
 

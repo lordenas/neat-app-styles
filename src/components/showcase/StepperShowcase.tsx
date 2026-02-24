@@ -26,6 +26,14 @@ export function StepperShowcase() {
         <Stepper steps={stepsError} size="sm" />
       </div>
       <div className="space-y-2">
+        <Label>Компактный (compact) — только кружки</Label>
+        <Stepper steps={stepsH} compact />
+      </div>
+      <div className="space-y-2">
+        <Label>Компактный (sm + compact)</Label>
+        <Stepper steps={stepsError} size="sm" compact />
+      </div>
+      <div className="space-y-2">
         <Label>Вертикальный</Label>
         <Stepper steps={stepsH} orientation="vertical" />
       </div>
