@@ -23,10 +23,11 @@ import { SkeletonShowcase } from "@/components/showcase/SkeletonShowcase";
 import { AccordionShowcase } from "@/components/showcase/AccordionShowcase";
 import { CopyShowcase } from "@/components/showcase/CopyShowcase";
 import { EmptyStateShowcase } from "@/components/showcase/EmptyStateShowcase";
+import { FileUploadShowcase } from "@/components/showcase/FileUploadShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State", "File Upload"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр"] },
 ];
 
@@ -132,6 +133,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Empty State" description="Пустые состояния">
               <EmptyStateShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="File Upload" description="Загрузка файлов: Drag & Drop, кнопка, аватар">
+              <FileUploadShowcase />
             </ShowcaseSection>
           </div>
         </section>
