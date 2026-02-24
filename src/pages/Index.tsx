@@ -49,10 +49,16 @@ import { CarouselShowcase } from "@/components/showcase/CarouselShowcase";
 import { AlertDialogShowcase } from "@/components/showcase/AlertDialogShowcase";
 import { NavigationMenuShowcase } from "@/components/showcase/NavigationMenuShowcase";
 import { MenubarShowcase } from "@/components/showcase/MenubarShowcase";
+import { ChartsShowcase } from "@/components/showcase/ChartsShowcase";
+import { TagInputShowcase } from "@/components/showcase/TagInputShowcase";
+import { SortableListShowcase } from "@/components/showcase/SortableListShowcase";
+import { AspectRatioShowcase } from "@/components/showcase/AspectRatioShowcase";
+import { ScrollAreaShowcase } from "@/components/showcase/ScrollAreaShowcase";
+import { PinInputShowcase } from "@/components/showcase/PinInputShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Resizable Panels", "Inline Edit", "OTP Input", "Drawer", "Sheet", "Hover Card", "Navigation Menu", "Menubar", "App Shell"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tag Input", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Charts", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Resizable Panels", "Inline Edit", "OTP Input", "Pin Input", "Drawer", "Sheet", "Hover Card", "Scroll Area", "Aspect Ratio", "Sortable List", "Navigation Menu", "Menubar", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -123,6 +129,9 @@ const Index = () => {
             <ShowcaseSection title="Chips" description="Теги / Badge">
               <ChipsShowcase />
             </ShowcaseSection>
+            <ShowcaseSection title="Tag Input" description="Поле ввода тегов">
+              <TagInputShowcase />
+            </ShowcaseSection>
             <ShowcaseSection title="Tabs" description="Вкладки">
               <TabsShowcase />
             </ShowcaseSection>
@@ -137,6 +146,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Rating" description="Рейтинг (звёзды)">
               <RatingShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Charts" description="Графики (Recharts)">
+              <ChartsShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Date Pickers" description="Date, Range, Period">
               <DatePickerShowcase />
@@ -233,6 +245,18 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Menubar" description="Панель меню (desktop app)">
               <MenubarShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Scroll Area" description="Кастомные скроллбары">
+              <ScrollAreaShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Aspect Ratio" description="Соотношение сторон">
+              <AspectRatioShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Sortable List" description="Перетаскиваемый список">
+              <SortableListShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Pin Input" description="Промокод / лицензионный ключ">
+              <PinInputShowcase />
             </ShowcaseSection>
           </div>
         </section>
