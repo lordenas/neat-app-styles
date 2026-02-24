@@ -937,6 +937,19 @@ toast("Нейтральный", { action: { label: "Открыть", onClick: ()
 // Цепочка Loading → Success
 const id = toast.loading("Пересчёт...");
 toast.success("Готово!", { id, description: "Пересчитано." });
+
+// Promise-паттерн
+toast.promise(saveData(), {
+  loading: "Сохранение...",
+  success: "Данные сохранены!",
+  error: "Ошибка сохранения",
+});
+
+// Undo-паттерн
+toast("Элемент удалён", {
+  action: { label: "Отменить", onClick: () => restore() },
+  duration: 5000,
+});
 ```
 
 ---
@@ -1096,29 +1109,89 @@ Tooltip на мобильных работает по тапу:
 
 **Импорт:** `import { InputGroup, InputAddon } from "@/components/ui/input-group"`
 
-Композитное поле ввода с текстовым аддоном (префикс/суффикс).
+Композитное поле ввода с текстовым аддоном. Фокус охватывает весь контейнер (focus-within).
 
 ```tsx
 <InputGroup>
   <InputAddon>https://</InputAddon>
-  <Input placeholder="example.com" className="rounded-l-none border-l-0" />
+  <Input placeholder="example.com" className="border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0" />
 </InputGroup>
 
 <InputGroup>
-  <Input placeholder="0.00" className="rounded-r-none border-r-0" />
+  <Input placeholder="0.00" className="border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0" />
   <InputAddon>₽</InputAddon>
-</InputGroup>
-
-<InputGroup>
-  <InputAddon><Globe className="h-4 w-4" /></InputAddon>
-  <Input placeholder="mysite" className="rounded-none border-x-0" />
-  <InputAddon>.ru</InputAddon>
 </InputGroup>
 ```
 
 **Правила:**
-- `InputAddon` автоматически скругляет углы через CSS `first:` / `last:`
-- Input внутри группы: убери лишнее скругление и бордер (`rounded-l-none border-l-0`)
+- `InputGroup` рендерит border + ring через `focus-within`
+- Input внутри: убери border и ring (`border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0`)
+
+---
+
+## CommandPalette
+
+**Импорт:** `import { CommandPalette, useCommandPalette } from "@/components/ui/command-palette"`
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `open` | `boolean` | Состояние открытия |
+| `onOpenChange` | `(open: boolean) => void` | Колбэк |
+| `commands` | `CommandPaletteGroup[]` | Массив групп команд |
+| `placeholder` | `string` | Плейсхолдер поиска |
+
+```tsx
+const [open, setOpen] = useCommandPalette(); // ⌘K привязка
+
+const commands = [
+  { group: "Навигация", items: [
+    { label: "Главная", icon: <Home />, onSelect: () => navigate("/"), shortcut: "⌘H" },
+  ]},
+];
+<CommandPalette open={open} onOpenChange={setOpen} commands={commands} />
+```
+
+---
+
+## DataTable
+
+**Импорт:** `import { DataTable, type DataTableColumn } from "@/components/ui/data-table"`
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `data` | `T[]` | Массив данных |
+| `columns` | `DataTableColumn<T>[]` | Определения колонок |
+| `pageSize` | `number` | Строк на страницу (0 = без пагинации) |
+| `searchable` | `boolean` | Строка поиска |
+| `searchKeys` | `string[]` | Поля для поиска |
+| `striped` / `bordered` / `size` | — | Варианты отображения |
+
+```tsx
+const columns: DataTableColumn<User>[] = [
+  { key: "name", label: "ФИО", sortable: true },
+  { key: "salary", label: "Оклад", sortable: true, align: "right",
+    render: (v) => `${Number(v).toLocaleString("ru-RU")} ₽` },
+];
+<DataTable data={users} columns={columns} pageSize={5} searchable />
+```
+
+---
+
+## ColorPicker
+
+**Импорт:** `import { ColorPicker } from "@/components/ui/color-picker"`
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `value` | `string` | HEX-цвет |
+| `onChange` | `(color: string) => void` | Колбэк |
+| `presets` | `string[]` | Палитра пресетов (16 по умолчанию) |
+| `size` | `"sm"` \| `"default"` | Размер триггера |
+
+```tsx
+<ColorPicker value={color} onChange={setColor} />
+<ColorPicker value={color} onChange={setColor} size="sm" />
+```
 
 ---
 

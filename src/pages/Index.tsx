@@ -33,10 +33,15 @@ import { TimelineShowcase } from "@/components/showcase/TimelineShowcase";
 import { StatsCardShowcase } from "@/components/showcase/StatsCardShowcase";
 import { CopyButtonShowcase } from "@/components/showcase/CopyButtonShowcase";
 import { DropdownEnhancedShowcase } from "@/components/showcase/DropdownEnhancedShowcase";
+import { CommandPaletteShowcase } from "@/components/showcase/CommandPaletteShowcase";
+import { DataTableShowcase } from "@/components/showcase/DataTableShowcase";
+import { AppShellShowcase } from "@/components/showcase/AppShellShowcase";
+import { ColorPickerShowcase } from "@/components/showcase/ColorPickerShowcase";
+import { ResizablePanelShowcase } from "@/components/showcase/ResizablePanelShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Resizable Panels", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -169,6 +174,21 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Pagination" description="Навигация по страницам">
               <PaginationShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Command Palette" description="Spotlight-поиск ⌘K">
+              <CommandPaletteShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="DataTable" description="Составная таблица">
+              <DataTableShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Color Picker" description="Выбор цвета">
+              <ColorPickerShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Resizable Panels" description="Изменяемые панели">
+              <ResizablePanelShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="App Shell" description="Sidebar + Layout">
+              <AppShellShowcase />
             </ShowcaseSection>
           </div>
         </section>
