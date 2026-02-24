@@ -152,6 +152,44 @@ export function SelectionsShowcase() {
           </div>
         </div>
       </div>
+
+      {/* Error states */}
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Состояния ошибки (error prop)</p>
+        <div className="grid gap-6 sm:grid-cols-3">
+          <div className="space-y-1.5">
+            <Label>RadioGroup с ошибкой</Label>
+            <RadioGroup id="radio-err" error="Выберите один из вариантов">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="a" id="re1" />
+                <label htmlFor="re1" className="text-sm">Вариант A</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="b" id="re2" />
+                <label htmlFor="re2" className="text-sm">Вариант B</label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Switch с ошибкой</Label>
+            <div className="flex items-center gap-2">
+              <Switch id="sw-err" error="Необходимо принять условия" />
+              <label htmlFor="sw-err" className="text-sm">Принимаю условия</label>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>RadioGroup без ошибки (место зарезервировано)</Label>
+            <RadioGroup id="radio-ok" error="">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem value="x" id="ro1" />
+                <label htmlFor="ro1" className="text-sm">Опция</label>
+              </div>
+            </RadioGroup>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

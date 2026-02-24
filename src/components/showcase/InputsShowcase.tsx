@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Mail, Eye, Calendar, DollarSign, Hash } from "lucide-react";
+import { Search, Mail, Eye, Calendar, DollarSign, Hash, MessageSquare } from "lucide-react";
 
 export function InputsShowcase() {
   return (
@@ -107,6 +107,14 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label htmlFor="textarea-ok">Без ошибки (место зарезервировано)</Label>
             <Textarea id="textarea-ok" error="" placeholder="Ошибки нет, но место занято" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>С иконкой (inputStart)</Label>
+            <Textarea inputStart={<MessageSquare />} placeholder="Комментарий..." rows={3} />
+          </div>
+          <div className="space-y-1.5">
+            <Label>С иконкой и ошибкой</Label>
+            <Textarea id="ta-err2" inputStart={<MessageSquare />} error="Слишком короткий комментарий" placeholder="Введите текст..." rows={3} />
           </div>
         </div>
       </div>

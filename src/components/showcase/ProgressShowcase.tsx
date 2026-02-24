@@ -4,10 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/**
- * Шаги для Stepper-компонента.
- * Каждый шаг имеет метку и описание.
- */
 const steps = [
   { label: "Параметры кредита", description: "Сумма, срок, ставка" },
   { label: "Досрочные погашения", description: "Разовые и регулярные" },
@@ -15,16 +11,6 @@ const steps = [
   { label: "Результат", description: "График и переплата" },
 ];
 
-/**
- * Витрина Progress bar и Stepper.
- * Progress — стандартный индикатор прогресса (0–100%).
- * Stepper — пошаговый визард с кружками, коннекторами и навигацией Назад/Далее.
- *
- * @example
- * ```tsx
- * <Progress value={60} className="h-2" />
- * ```
- */
 export function ProgressShowcase() {
   const [progress, setProgress] = useState(45);
   const [step, setStep] = useState(1);
@@ -46,6 +32,33 @@ export function ProgressShowcase() {
         </div>
       </div>
 
+      {/* Progress variants */}
+      <div className="space-y-3">
+        <p className="text-sm font-medium">Цветовые варианты</p>
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-24">default</span>
+            <Progress value={70} className="h-2 flex-1" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-24">success</span>
+            <Progress value={100} variant="success" className="h-2 flex-1" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-24">warning</span>
+            <Progress value={55} variant="warning" className="h-2 flex-1" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-24">destructive</span>
+            <Progress value={30} variant="destructive" className="h-2 flex-1" />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground w-24">info</span>
+            <Progress value={80} variant="info" className="h-2 flex-1" />
+          </div>
+        </div>
+      </div>
+
       {/* Stepper */}
       <div className="space-y-3">
         <p className="text-sm font-medium">Stepper</p>
@@ -55,7 +68,6 @@ export function ProgressShowcase() {
             const isCurrent = i === step;
             return (
               <div key={i} className="flex-1 flex flex-col items-center text-center relative">
-                {/* Connector line */}
                 {i > 0 && (
                   <div
                     className={cn(
@@ -64,7 +76,6 @@ export function ProgressShowcase() {
                     )}
                   />
                 )}
-                {/* Circle */}
                 <button
                   type="button"
                   onClick={() => setStep(i)}

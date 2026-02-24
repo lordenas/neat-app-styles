@@ -236,6 +236,9 @@ toast.success("Готово!", { id });
 ### Progress & Stepper
 ```tsx
 <Progress value={60} className="h-2" />
+<Progress value={100} variant="success" className="h-2" />
+<Progress value={30} variant="destructive" />
+// Variants: default | success | warning | destructive | info
 ```
 Stepper — пошаговая навигация с кружками, коннекторами и статусами (completed/current/pending):
 ```tsx
@@ -334,6 +337,31 @@ Stepper — пошаговая навигация с кружками, конн�
 ```tsx
 <Slider value={value} onValueChange={setValue} max={100} step={1} />
 <Slider value={range} onValueChange={setRange} max={100} step={1} />  {/* Диапазон */}
+<Slider id="amount" error={errors.amount?.message ?? ""} />  {/* С ошибкой */}
+```
+
+### NumberInput
+```tsx
+<NumberInput value={count} onChange={setCount} min={0} max={100} step={1} />
+<NumberInput id="qty" value={qty} onChange={setQty} error={errors.qty?.message ?? ""} />
+```
+
+### ConfirmDialog
+```tsx
+<ConfirmDialog
+  trigger={<Button variant="destructive">Удалить</Button>}
+  title="Удалить запись?"
+  description="Это действие нельзя отменить."
+  onConfirm={() => deleteItem(id)}
+  variant="destructive"
+  confirmText="Удалить"
+/>
+```
+
+### Kbd
+```tsx
+<Kbd>Ctrl</Kbd> + <Kbd>K</Kbd>
+<Kbd>⌘</Kbd> + <Kbd>S</Kbd>
 ```
 
 ### Recharts стили

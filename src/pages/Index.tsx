@@ -109,7 +109,7 @@ const Index = () => {
             <ShowcaseSection title="Date Pickers" description="Date, Range, Period">
               <DatePickerShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Slider & Tooltip" description="Ползунок и подсказки">
+            <ShowcaseSection title="Slider & Tooltip" description="Ползунок, NumberInput, Kbd, ConfirmDialog, Textarea с иконкой">
               <SliderTooltipShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Breadcrumbs & Links" description="Навигация и ссылки">
