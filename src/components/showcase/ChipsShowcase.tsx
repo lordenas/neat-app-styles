@@ -55,6 +55,18 @@ export function ChipsShowcase() {
       </div>
 
       <div>
+        <p className="text-xs text-muted-foreground mb-2">Статус-индикатор (dot)</p>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="success" dot>Онлайн</Badge>
+          <Badge variant="destructive" dot>Офлайн</Badge>
+          <Badge variant="warning" dot>Отсутствует</Badge>
+          <Badge variant="info" dot>В процессе</Badge>
+          <Badge variant="secondary" dot>Черновик</Badge>
+          <Badge dot>По умолчанию</Badge>
+        </div>
+      </div>
+
+      <div>
         <p className="text-xs text-muted-foreground mb-2">Удаляемые (onDismiss)</p>
         <div className="flex flex-wrap gap-2">
           {selected.map((chip) => (

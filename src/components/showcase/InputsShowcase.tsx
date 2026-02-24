@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock } from "lucide-react";
+import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock, Loader2 } from "lucide-react";
 
 export function InputsShowcase() {
   return (
@@ -31,7 +31,7 @@ export function InputsShowcase() {
 
       <div>
         <p className="text-xs text-muted-foreground mb-3">Размеры (inputSize)</p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-3">
           <div className="space-y-1.5">
             <Label>Small</Label>
             <Input inputSize="sm" placeholder="Маленькое поле..." />
@@ -39,6 +39,10 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label>Default</Label>
             <Input inputSize="default" placeholder="Обычное поле..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Large</Label>
+            <Input inputSize="lg" placeholder="Крупное поле..." />
           </div>
         </div>
       </div>
@@ -99,6 +103,20 @@ export function InputsShowcase() {
       </div>
 
       <div>
+        <p className="text-xs text-muted-foreground mb-3">Загрузка (loading)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label>Input с loading</Label>
+            <Input loading placeholder="Проверка..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Input с loading + иконка</Label>
+            <Input loading inputStart={<Mail />} placeholder="Валидация email..." />
+          </div>
+        </div>
+      </div>
+
+      <div>
         <p className="text-xs text-muted-foreground mb-3">Textarea</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
@@ -108,6 +126,10 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label htmlFor="textarea-sm">Маленький размер (inputSize="sm")</Label>
             <Textarea id="textarea-sm" inputSize="sm" placeholder="Компактное поле..." rows={2} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="textarea-lg">Крупный размер (inputSize="lg")</Label>
+            <Textarea id="textarea-lg" inputSize="lg" placeholder="Большое поле для лендингов..." rows={4} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="textarea-err">С ошибкой</Label>
