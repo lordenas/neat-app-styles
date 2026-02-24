@@ -16,6 +16,7 @@ import { ChipsShowcase } from "@/components/showcase/ChipsShowcase";
 import { MultiselectShowcase } from "@/components/showcase/MultiselectShowcase";
 import { ExperienceCalculator } from "@/components/showcase/ExperienceCalculator";
 import { FilterForm } from "@/components/showcase/FilterForm";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
@@ -33,17 +34,20 @@ const Index = () => {
             <h1 className="text-lg font-bold tracking-tight">UI Kit</h1>
             <p className="text-xs text-muted-foreground">Строгий минималистичный набор компонентов</p>
           </div>
-          <nav aria-label="Быстрая навигация по компонентам" className="hidden lg:flex gap-0.5 overflow-x-auto">
-            {navGroups.flatMap(g => g.items).slice(0, 8).map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(/\s+&\s+/g, "-").replace(/\s+/g, "-")}`}
-                className="text-xs px-2 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
+          <div className="flex items-center gap-2">
+            <nav aria-label="Быстрая навигация по компонентам" className="hidden lg:flex gap-0.5 overflow-x-auto">
+              {navGroups.flatMap(g => g.items).slice(0, 8).map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(/\s+&\s+/g, "-").replace(/\s+/g, "-")}`}
+                  className="text-xs px-2 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors whitespace-nowrap"
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
