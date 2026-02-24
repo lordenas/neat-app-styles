@@ -92,6 +92,10 @@
 
 **Импорт:** `import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from "@/components/ui/select"`
 
+| Prop (SelectTrigger) | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `error` | `string` | — | Сообщение об ошибке под триггером. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+
 ```tsx
 <Select defaultValue="apple">
   <SelectTrigger className="w-48">
@@ -102,6 +106,11 @@
     <SelectItem value="banana">Банан</SelectItem>
   </SelectContent>
 </Select>
+
+// С ошибкой валидации
+<SelectTrigger id="role" error={errors.role?.message ?? ""}>
+  <SelectValue placeholder="Выберите..." />
+</SelectTrigger>
 ```
 
 **Маленький вариант:**
@@ -117,11 +126,18 @@
 
 **Импорт:** `import { Checkbox } from "@/components/ui/checkbox"`
 
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `error` | `string` | — | Сообщение об ошибке под чекбоксом. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+
 ```tsx
 <div className="flex items-center gap-2">
   <Checkbox id="terms" checked={val} onCheckedChange={setVal} />
   <Label htmlFor="terms" className="font-normal cursor-pointer text-sm">Принимаю условия</Label>
 </div>
+
+// С ошибкой валидации
+<Checkbox id="agree" error={errors.agree?.message ?? ""} />
 ```
 
 ---
