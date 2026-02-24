@@ -86,21 +86,37 @@ const DropdownMenuContent = React.forwardRef<
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
+/**
+ * Элемент выпадающего меню с поддержкой иконки, шортката и деструктивного стиля.
+ *
+ * @prop icon - React-элемент иконки слева
+ * @prop shortcut - Клавиатурное сочетание справа (строка)
+ * @prop destructive - Деструктивный стиль (красный текст)
+ * @prop inset - Добавить отступ слева (для выравнивания с чекбоксами)
+ */
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
     inset?: boolean;
+    icon?: React.ReactNode;
+    shortcut?: string;
+    destructive?: boolean;
   }
->(({ className, inset, ...props }, ref) => (
+>(({ className, inset, icon, shortcut, destructive, children, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
       inset && "pl-8",
+      destructive && "text-destructive focus:text-destructive",
       className,
     )}
     {...props}
-  />
+  >
+    {icon && <span className="shrink-0 [&>svg]:h-4 [&>svg]:w-4 text-muted-foreground">{icon}</span>}
+    <span className="flex-1">{children}</span>
+    {shortcut && <span className="ml-auto text-xs tracking-widest opacity-60">{shortcut}</span>}
+  </DropdownMenuPrimitive.Item>
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 

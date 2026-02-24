@@ -43,10 +43,46 @@ export interface TextareaProps
   inputStart?: React.ReactNode;
   /** Элемент в конце поля (иконка/текст) */
   inputEnd?: React.ReactNode;
+  /** Автоматически подстраивать высоту под содержимое */
+  autoResize?: boolean;
+  /** Максимальное количество строк при autoResize */
+  maxRows?: number;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, inputSize, error, id, inputStart, inputEnd, ...props }, ref) => {
+  ({ className, inputSize, error, id, inputStart, inputEnd, autoResize, maxRows, onChange, ...props }, ref) => {
+    const internalRef = React.useRef<HTMLTextAreaElement | null>(null);
+    const mergedRef = React.useCallback(
+      (node: HTMLTextAreaElement | null) => {
+        internalRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+      },
+      [ref],
+    );
+
+    const adjustHeight = React.useCallback(() => {
+      const el = internalRef.current;
+      if (!el || !autoResize) return;
+      el.style.height = "auto";
+      let maxH = Infinity;
+      if (maxRows) {
+        const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || 20;
+        const paddingY = parseFloat(getComputedStyle(el).paddingTop) + parseFloat(getComputedStyle(el).paddingBottom);
+        maxH = lineHeight * maxRows + paddingY;
+      }
+      el.style.height = `${Math.min(el.scrollHeight, maxH)}px`;
+    }, [autoResize, maxRows]);
+
+    React.useEffect(() => { adjustHeight(); }, [adjustHeight]);
+
+    const handleChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onChange?.(e);
+        adjustHeight();
+      },
+      [onChange, adjustHeight],
+    );
     const errorId = error !== undefined && id ? `${id}-err` : undefined;
     const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
     const ariaInvalid = error ? true : props["aria-invalid"];
@@ -58,7 +94,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         aria-describedby={ariaDescribedBy}
         className={cn(
           inputStart || inputEnd
-            ? "flex-1 w-full bg-transparent placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed resize-y"
+            ? "flex-1 w-full bg-transparent placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed"
             : cn(textareaVariants({ inputSize }), error && "border-destructive"),
           inputStart || inputEnd
             ? cn(
@@ -67,9 +103,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                 inputEnd ? "pr-2" : "pr-3",
               )
             : "",
+          autoResize ? "resize-none overflow-hidden" : "resize-y",
           className
         )}
-        ref={ref}
+        ref={mergedRef}
+        onChange={handleChange}
         {...props}
       />
     );
