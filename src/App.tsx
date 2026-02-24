@@ -15,6 +15,8 @@ const CreditCalculator = lazy(() => import("./pages/CreditCalculator"));
 const Showcase = lazy(() => import("./pages/Showcase"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 
@@ -43,6 +45,8 @@ const App = () => (
                   <Route path="/credit-calculator" element={<CreditCalculator />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
                   <Route path="/showcase" element={<Showcase />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
