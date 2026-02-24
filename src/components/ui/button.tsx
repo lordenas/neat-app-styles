@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -32,7 +33,7 @@ const buttonVariants = cva(
 );
 
 /**
- * Кнопка с поддержкой вариантов оформления и размеров.
+ * Кнопка с поддержкой вариантов оформления, размеров и состояния загрузки.
  *
  * @example
  * ```tsx
@@ -40,12 +41,14 @@ const buttonVariants = cva(
  * <Button variant="destructive">Удалить</Button>
  * <Button variant="outline" icon={<Plus />}>Добавить</Button>
  * <Button variant="ghost" size="icon"><Settings /></Button>
+ * <Button loading>Сохранение...</Button>
  * <Button asChild><a href="/link">Ссылка-кнопка</a></Button>
  * ```
  *
  * @prop variant - Стиль кнопки: `"default"` | `"destructive"` | `"outline"` | `"secondary"` | `"ghost"` | `"link"`
  * @prop size - Размер: `"sm"` (h-8) | `"default"` (h-10) | `"lg"` (h-11) | `"icon"` (h-10 w-10) | `"icon-sm"` (h-8 w-8)
  * @prop icon - React-элемент иконки, отображается перед `children`
+ * @prop loading - Показывает спиннер вместо иконки и делает кнопку `disabled`
  * @prop asChild - Если `true`, рендерит дочерний элемент вместо `<button>` (через Radix Slot)
  */
 export interface ButtonProps
@@ -53,14 +56,23 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   icon?: React.ReactNode;
+  /** Показывает спиннер вместо иконки и делает кнопку disabled */
+  loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, icon, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, icon, loading, children, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    const isDisabled = disabled || loading;
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-        {icon && icon}
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        disabled={isDisabled}
+        {...props}
+      >
+        {loading ? <Loader2 className="animate-spin" /> : icon && icon}
         {children}
       </Comp>
     );

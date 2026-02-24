@@ -14,18 +14,53 @@ import { cn } from "@/lib/utils";
  *     <RadioGroupItem value="option1" id="r1" />
  *     <Label htmlFor="r1">Вариант 1</Label>
  *   </div>
- *   <div className="flex items-center gap-2">
- *     <RadioGroupItem value="option2" id="r2" />
- *     <Label htmlFor="r2">Вариант 2</Label>
- *   </div>
+ * </RadioGroup>
+ *
+ * // С ошибкой валидации
+ * <RadioGroup id="role" error={errors.role?.message ?? ""}>
+ *   ...
  * </RadioGroup>
  * ```
+ *
+ * @prop error - Сообщение об ошибке. Резервирует место (min-h-[1rem]). Добавляет `aria-invalid`, `aria-describedby`
  */
+
+interface RadioGroupProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {
+  /** Сообщение об ошибке. Отображается под группой. Место зарезервировано даже без ошибки (форма не прыгает). */
+  error?: string;
+}
+
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => {
-  return <RadioGroupPrimitive.Root className={cn("grid gap-2", className)} {...props} ref={ref} />;
+  RadioGroupProps
+>(({ className, error, id, ...props }, ref) => {
+  const errorId = error !== undefined && id ? `${id}-err` : undefined;
+  const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
+  const ariaInvalid = error ? true : props["aria-invalid"];
+
+  const group = (
+    <RadioGroupPrimitive.Root
+      className={cn("grid gap-2", className)}
+      aria-invalid={ariaInvalid}
+      aria-describedby={ariaDescribedBy}
+      id={id}
+      {...props}
+      ref={ref}
+    />
+  );
+
+  if (error !== undefined) {
+    return (
+      <div>
+        {group}
+        <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {error || "\u00A0"}
+        </p>
+      </div>
+    );
+  }
+
+  return group;
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 

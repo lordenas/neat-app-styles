@@ -110,8 +110,11 @@
 <Button variant="outline" size="sm">SM</Button>
 <Button variant="ghost" size="icon-sm"><Trash2 /></Button>
 <Button icon={<Calculator />}>С иконкой</Button>
+<Button loading>Сохранение...</Button>
+<Button loading variant="outline">Загрузка</Button>
 // Sizes: sm(h-8) | default(h-10) | lg(h-11) | icon(h-10) | icon-sm(h-8)
 // Variants: default | destructive | outline | secondary | ghost | link
+// loading: спиннер вместо иконки + disabled
 ```
 
 ### Select
@@ -136,6 +139,11 @@
     <RadioGroupItem value="v1" id="v1" />
     <Label htmlFor="v1" className="font-normal cursor-pointer text-sm">Текст</Label>
   </div>
+</RadioGroup>
+
+// С ошибкой валидации
+<RadioGroup id="type" error={errors.type?.message ?? ""}>
+  ...
 </RadioGroup>
 ```
 
@@ -361,8 +369,9 @@ tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
 ### Обратная связь
 - Все действия должны иметь визуальный отклик: `hover:`, `active:`, `focus-visible:`
 - Используй `disabled:opacity-50 disabled:pointer-events-none` для неактивных элементов
-- Ошибки валидации: проп `error` у `Input` (место зарезервировано, форма не прыгает)
+- Ошибки валидации: проп `error` у `Input`, `Textarea`, `Select`, `RadioGroup`, `Switch`, `Checkbox`, `FileUpload` (место зарезервировано, форма не прыгает)
 - Успешные действия: `sonner` toast или зелёный текст `text-[hsl(var(--success))]`
+- Загрузка: `Skeleton` для контента, `<Button loading>` для кнопок
 - Загрузка: `Skeleton` для контента, спиннер или `disabled` для кнопок
 
 ### Доступность (Accessibility) — WCAG 2.1 AAA

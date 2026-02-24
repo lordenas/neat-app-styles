@@ -11,6 +11,9 @@ const badgeVariants = cva(
         default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
         secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        success: "border-transparent bg-success text-success-foreground hover:bg-success/80",
+        warning: "border-transparent bg-warning text-warning-foreground hover:bg-warning/80",
+        info: "border-transparent bg-info text-info-foreground hover:bg-info/80",
         outline: "text-foreground",
       },
     },
@@ -28,10 +31,13 @@ const badgeVariants = cva(
  * <Badge>Новый</Badge>
  * <Badge variant="secondary">Черновик</Badge>
  * <Badge variant="destructive">Ошибка</Badge>
+ * <Badge variant="success">Успех</Badge>
+ * <Badge variant="warning">Внимание</Badge>
+ * <Badge variant="info">Информация</Badge>
  * <Badge variant="outline">v2.0</Badge>
  * ```
  *
- * @prop variant - Стиль: `"default"` | `"secondary"` | `"destructive"` | `"outline"`
+ * @prop variant - Стиль: `"default"` | `"secondary"` | `"destructive"` | `"success"` | `"warning"` | `"info"` | `"outline"`
  */
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
 
