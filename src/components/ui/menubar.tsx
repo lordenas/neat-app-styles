@@ -4,6 +4,23 @@ import { Check, ChevronRight, Circle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Горизонтальная панель меню (menubar) — аналог меню настольных приложений.
+ *
+ * @example
+ * ```tsx
+ * <Menubar>
+ *   <MenubarMenu>
+ *     <MenubarTrigger>Файл</MenubarTrigger>
+ *     <MenubarContent>
+ *       <MenubarItem>Новый <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+ *       <MenubarSeparator />
+ *       <MenubarItem>Выход</MenubarItem>
+ *     </MenubarContent>
+ *   </MenubarMenu>
+ * </Menubar>
+ * ```
+ */
 const MenubarMenu = MenubarPrimitive.Menu;
 
 const MenubarGroup = MenubarPrimitive.Group;

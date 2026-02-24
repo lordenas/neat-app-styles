@@ -25,6 +25,23 @@ const toggleVariants = cva(
   },
 );
 
+/**
+ * Кнопка-переключатель с двумя состояниями (вкл/выкл).
+ *
+ * @example
+ * ```tsx
+ * <Toggle aria-label="Жирный">
+ *   <Bold className="h-4 w-4" />
+ * </Toggle>
+ *
+ * <Toggle variant="outline" size="sm">
+ *   <Italic className="h-4 w-4" />
+ * </Toggle>
+ * ```
+ *
+ * @prop variant - `"default"` | `"outline"`
+ * @prop size - `"sm"` | `"default"` | `"lg"`
+ */
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>

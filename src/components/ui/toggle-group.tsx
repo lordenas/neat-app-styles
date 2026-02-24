@@ -10,6 +10,29 @@ const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariant
   variant: "default",
 });
 
+/**
+ * Группа кнопок-переключателей для выбора одного или нескольких значений.
+ *
+ * @example
+ * ```tsx
+ * // Одиночный выбор
+ * <ToggleGroup type="single" defaultValue="center">
+ *   <ToggleGroupItem value="left"><AlignLeft /></ToggleGroupItem>
+ *   <ToggleGroupItem value="center"><AlignCenter /></ToggleGroupItem>
+ *   <ToggleGroupItem value="right"><AlignRight /></ToggleGroupItem>
+ * </ToggleGroup>
+ *
+ * // Множественный выбор
+ * <ToggleGroup type="multiple" variant="outline">
+ *   <ToggleGroupItem value="bold"><Bold /></ToggleGroupItem>
+ *   <ToggleGroupItem value="italic"><Italic /></ToggleGroupItem>
+ * </ToggleGroup>
+ * ```
+ *
+ * @prop type - `"single"` | `"multiple"`
+ * @prop variant - Наследуется из `Toggle`: `"default"` | `"outline"`
+ * @prop size - Наследуется из `Toggle`: `"sm"` | `"default"` | `"lg"`
+ */
 const ToggleGroup = React.forwardRef<
   React.ElementRef<typeof ToggleGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants>
