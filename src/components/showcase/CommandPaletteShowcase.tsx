@@ -2,30 +2,30 @@ import { CommandPalette, useCommandPalette } from "@/components/ui/command-palet
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Home, Settings, User, FileText, Search, Calculator, Palette, Bell } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const commands = [
   {
     group: "Навигация",
     items: [
-      { label: "Главная", icon: <Home />, onSelect: () => toast.info("→ Главная"), shortcut: "⌘H" },
-      { label: "Настройки", icon: <Settings />, onSelect: () => toast.info("→ Настройки"), shortcut: "⌘," },
-      { label: "Профиль", icon: <User />, onSelect: () => toast.info("→ Профиль") },
+      { label: "Главная", icon: <Home />, onSelect: () => toast({ title: "→ Главная" }), shortcut: "⌘H" },
+      { label: "Настройки", icon: <Settings />, onSelect: () => toast({ title: "→ Настройки" }), shortcut: "⌘," },
+      { label: "Профиль", icon: <User />, onSelect: () => toast({ title: "→ Профиль" }) },
     ],
   },
   {
     group: "Инструменты",
     items: [
-      { label: "Калькулятор", icon: <Calculator />, onSelect: () => toast.info("Калькулятор открыт") },
-      { label: "Тема оформления", icon: <Palette />, onSelect: () => toast.info("Тема") },
-      { label: "Уведомления", icon: <Bell />, onSelect: () => toast.info("Уведомления") },
+      { label: "Калькулятор", icon: <Calculator />, onSelect: () => toast({ title: "Калькулятор открыт" }) },
+      { label: "Тема оформления", icon: <Palette />, onSelect: () => toast({ title: "Тема" }) },
+      { label: "Уведомления", icon: <Bell />, onSelect: () => toast({ title: "Уведомления" }) },
     ],
   },
   {
     group: "Документы",
     items: [
-      { label: "Последние документы", icon: <FileText />, onSelect: () => toast.info("Документы") },
-      { label: "Поиск по проекту", icon: <Search />, onSelect: () => toast.info("Поиск"), shortcut: "⌘⇧F" },
+      { label: "Последние документы", icon: <FileText />, onSelect: () => toast({ title: "Документы" }) },
+      { label: "Поиск по проекту", icon: <Search />, onSelect: () => toast({ title: "Поиск" }), shortcut: "⌘⇧F" },
     ],
   },
 ];

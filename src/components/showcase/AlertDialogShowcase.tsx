@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -33,7 +33,7 @@ export function AlertDialogShowcase() {
               <AlertDialogCancel>Отмена</AlertDialogCancel>
               <AlertDialogAction
                 className={buttonVariants({ variant: "destructive" })}
-                onClick={() => toast.success("Аккаунт удалён (демо)")}
+                onClick={() => toast({ title: "Аккаунт удалён (демо)" })}
               >
                 Удалить навсегда
               </AlertDialogAction>
@@ -55,7 +55,7 @@ export function AlertDialogShowcase() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Остаться</AlertDialogCancel>
-              <AlertDialogAction onClick={() => toast.info("Изменения отменены (демо)")}>
+              <AlertDialogAction onClick={() => toast({ title: "Изменения отменены (демо)" })}>
                 Выйти
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -76,7 +76,7 @@ export function AlertDialogShowcase() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Отмена</AlertDialogCancel>
-              <AlertDialogAction onClick={() => toast.success("Настройки сброшены (демо)")}>
+              <AlertDialogAction onClick={() => toast({ title: "Настройки сброшены (демо)" })}>
                 Сбросить
               </AlertDialogAction>
             </AlertDialogFooter>

@@ -168,7 +168,7 @@ const Index = () => {
             <ShowcaseSection title="Dropdown Enhanced" description="icon, shortcut, destructive">
               <DropdownEnhancedShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Notifications" description="Toast-уведомления (Sonner)">
+            <ShowcaseSection title="Notifications" description="Toast-уведомления">
               <NotificationShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Progress & Stepper" description="Прогресс-бар">

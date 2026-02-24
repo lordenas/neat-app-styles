@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 export function OTPInputShowcase() {
   const [value4, setValue4] = useState("");
@@ -17,7 +17,7 @@ export function OTPInputShowcase() {
   const handleAutoComplete = (val: string) => {
     setAutoValue(val);
     if (val.length === 6) {
-      toast.success("Код подтверждён!", { description: `Введённый код: ${val}` });
+      toast({ title: "Код подтверждён!", description: `Введённый код: ${val}` });
     }
   };
 

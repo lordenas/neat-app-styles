@@ -6,7 +6,7 @@ import { Kbd } from "@/components/ui/kbd";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import {
   Tooltip,
   TooltipContent,
@@ -93,14 +93,14 @@ export function SliderTooltipShowcase() {
             trigger={<Button variant="outline" size="sm">Подтвердить действие</Button>}
             title="Сохранить изменения?"
             description="Все несохранённые данные будут применены."
-            onConfirm={() => { toast.success("Сохранено"); }}
+            onConfirm={() => { toast({ title: "Сохранено" }); }}
             confirmText="Сохранить"
           />
           <ConfirmDialog
             trigger={<Button variant="destructive" size="sm">Удалить</Button>}
             title="Удалить запись?"
             description="Это действие нельзя отменить. Все данные будут потеряны."
-            onConfirm={() => { toast.success("Удалено"); }}
+            onConfirm={() => { toast({ title: "Удалено" }); }}
             variant="destructive"
             confirmText="Удалить"
           />

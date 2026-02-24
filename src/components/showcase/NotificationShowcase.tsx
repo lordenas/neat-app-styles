@@ -1,18 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 
 /**
- * Витрина Toast-уведомлений (Sonner).
- * Демонстрирует все типы: success, error, warning, info, с действием, loading→success.
+ * Витрина Toast-уведомлений.
+ * Демонстрирует все варианты: default, destructive, с действием.
  *
  * @example
  * ```tsx
- * import { toast } from "sonner";
- * toast.success("Сохранено", { description: "Описание" });
- * toast.error("Ошибка", { description: "Описание" });
- * toast.warning("Внимание", { description: "Описание" });
- * toast.info("Подсказка", { description: "Описание" });
+ * import { toast } from "@/hooks/use-toast";
+ * toast({ title: "Сохранено", description: "Описание" });
+ * toast({ title: "Ошибка", description: "Описание", variant: "destructive" });
  * ```
  */
 export function NotificationShowcase() {
@@ -24,7 +22,8 @@ export function NotificationShowcase() {
           size="sm"
           icon={<CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))]" />}
           onClick={() =>
-            toast.success("Расчёт сохранён", {
+            toast({
+              title: "Расчёт сохранён",
               description: "График погашения обновлён успешно.",
             })
           }
@@ -37,8 +36,10 @@ export function NotificationShowcase() {
           size="sm"
           icon={<XCircle className="h-4 w-4 text-destructive" />}
           onClick={() =>
-            toast.error("Ошибка расчёта", {
+            toast({
+              title: "Ошибка расчёта",
               description: "Проверьте введённые параметры и попробуйте снова.",
+              variant: "destructive",
             })
           }
         >
@@ -50,7 +51,8 @@ export function NotificationShowcase() {
           size="sm"
           icon={<AlertTriangle className="h-4 w-4 text-[hsl(var(--warning))]" />}
           onClick={() =>
-            toast.warning("Внимание", {
+            toast({
+              title: "Внимание",
               description: "Ставка выше средней по рынку — 18% годовых.",
             })
           }
@@ -63,7 +65,8 @@ export function NotificationShowcase() {
           size="sm"
           icon={<Info className="h-4 w-4 text-[hsl(var(--info))]" />}
           onClick={() =>
-            toast.info("Подсказка", {
+            toast({
+              title: "Подсказка",
               description: "Вы можете добавить досрочные погашения для уменьшения переплаты.",
             })
           }
@@ -75,73 +78,20 @@ export function NotificationShowcase() {
           variant="outline"
           size="sm"
           onClick={() =>
-            toast("Файл экспортирован", {
+            toast({
+              title: "Файл экспортирован",
               description: "График сохранён в формате PDF.",
-              action: {
-                label: "Открыть",
-                onClick: () => {},
-              },
             })
           }
         >
           С действием
         </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            const id = toast.loading("Пересчёт графика...");
-            setTimeout(() => {
-              toast.success("Готово!", {
-                id,
-                description: "График пересчитан с учётом досрочных погашений.",
-              });
-            }, 2000);
-          }}
-        >
-          Loading → Success
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            toast.promise(
-              new Promise((resolve) => setTimeout(resolve, 2500)),
-              {
-                loading: "Сохранение данных...",
-                success: "Данные успешно сохранены!",
-                error: "Не удалось сохранить",
-              }
-            );
-          }}
-        >
-          Promise
-        </Button>
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            toast("Элемент удалён", {
-              description: "Запись перемещена в корзину.",
-              action: {
-                label: "Отменить",
-                onClick: () => toast.success("Удаление отменено"),
-              },
-              duration: 5000,
-            });
-          }}
-        >
-          Undo-паттерн
-        </Button>
       </div>
 
       <p className="helper-text">
-        Используется библиотека Sonner. Вызов: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast.success("Текст")</code>.
-        Паттерны: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast.promise()</code> для async,{" "}
-        <code className="text-xs bg-muted px-1 py-0.5 rounded">action + duration</code> для undo.
+        Используется встроенный useToast. Вызов: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast({"{"} title: "Текст" {"}"})</code>.
+        Варианты: <code className="text-xs bg-muted px-1 py-0.5 rounded">default</code> и{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">destructive</code>.
       </p>
     </div>
   );
