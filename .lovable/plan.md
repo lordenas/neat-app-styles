@@ -1,101 +1,142 @@
 
 
-## Улучшения UI-Kit
+## Улучшения UI-Kit -- Раунд 3
 
-### 1. Баг: дублирование `{...props}` в TabsContent
+### 1. ConfirmDialog: поддержка async `onConfirm` с loading-состоянием
 
-В `src/components/ui/tabs.tsx` (строки 106-108) `{...props}` написано дважды подряд. Это не вызывает ошибку, но создает лишнюю работу React и может привести к неожиданным проблемам при серверном рендеринге.
+Сейчас `ConfirmDialog` закрывается сразу при клике на "Подтвердить". Если `onConfirm` -- асинхронный (удаление, API-вызов), диалог закрывается до завершения операции, и пользователь не видит обратной связи.
 
-**Файл:** `src/components/ui/tabs.tsx`
-- Удалить дублирующийся `{...props}` на строке 107
-- Вернуть `children` в рендер (сейчас `children` деструктурируется, но не используется)
+**Файл:** `src/components/ui/confirm-dialog.tsx`
+- Сделать `onConfirm` поддерживающим `Promise`: `onConfirm: () => void | Promise<void>`
+- При возврате Promise показывать спиннер на кнопке подтверждения и блокировать кнопки
+- Закрывать диалог только после успешного resolve
+- Добавить внутренний state `loading`
 
-### 2. Удалить `framer-motion` из зависимостей проекта
+```tsx
+// Использование:
+<ConfirmDialog
+  trigger={<Button variant="destructive">Удалить</Button>}
+  title="Удалить запись?"
+  onConfirm={async () => {
+    await api.deleteItem(id);  // диалог остаётся открытым и показывает спиннер
+  }}
+/>
+```
 
-`framer-motion` используется только в `ShowcaseSection.tsx` (демо-компонент). Для SSR-проекта лучше убрать эту зависимость из core-библиотеки и заменить на CSS-анимации.
+### 2. Button: вариант `success` для позитивных действий
 
-**Файл:** `src/components/showcase/ShowcaseSection.tsx`
-- Заменить `motion.div` на обычный `div` с CSS-классами `animate-in fade-in slide-in-from-bottom-3` из `tailwindcss-animate`
+Есть `destructive` для опасных действий, но нет варианта для "успешных" -- сохранение, подтверждение, оплата. Приходится использовать `default` или кастомные классы.
 
-**Файл:** `package.json`
-- Удалить `framer-motion` из dependencies
+**Файл:** `src/components/ui/button.tsx`
+- Добавить вариант `success: "bg-success text-success-foreground hover:bg-success/90"` в `buttonVariants`
 
-### 3. Добавить проп `loading` в Input и Textarea
+```tsx
+<Button variant="success">Оплатить</Button>
+<Button variant="success" icon={<Check />}>Сохранено</Button>
+```
 
-Кнопка уже поддерживает `loading`, но поля ввода -- нет. Полезно для async-валидации и отправки форм.
+### 3. Select: добавить `size="lg"` для консистентности с Input
 
-**Файл:** `src/components/ui/input.tsx`
-- Добавить опциональный проп `loading?: boolean`
-- При `loading=true` показывать спиннер `Loader2` в `inputEnd` позиции
-- Автоматически ставить `disabled` при loading
+Input и Textarea уже поддерживают `inputSize="lg"`, но SelectTrigger -- только `sm` и `default`. Это создает визуальную несогласованность в формах.
 
-### 4. Добавить `size="lg"` для Input и Textarea
+**Файл:** `src/components/ui/select.tsx`
+- Добавить вариант `lg` в `SelectTrigger`: `"h-12 px-4 py-3 text-base"`
 
-Сейчас Input и Textarea поддерживают только `sm` и `default`. Для лендингов и форм калькуляторов нужен крупный размер.
+### 4. Progress: добавить текст значения и `indeterminate` режим
 
-**Файл:** `src/components/ui/input.tsx`
-- Добавить вариант `lg: "h-12 px-4 py-3 text-base"` в `inputVariants`
+Прогресс-бар не показывает числовое значение, и нет режима "бесконечной" загрузки.
 
-**Файл:** `src/components/ui/textarea.tsx`
-- Добавить вариант `lg: "min-h-[120px] text-base"` в `textareaVariants`
+**Файл:** `src/components/ui/progress.tsx`
+- Добавить проп `showValue?: boolean` -- отображает "60%" справа от полоски
+- Добавить проп `indeterminate?: boolean` -- анимация "бегущей полоски" когда значение неизвестно
 
-### 5. Добавить `dot` вариант для Badge (статус-индикатор)
+```tsx
+<Progress value={60} showValue />           // "60%" справа
+<Progress indeterminate />                   // бегущая полоска
+<Progress indeterminate variant="info" />
+```
 
-Часто нужен бейдж с цветной точкой слева для статусов (online/offline, active/inactive).
+**Файл:** `src/index.css`
+- Добавить keyframes для indeterminate-анимации
 
-**Файл:** `src/components/ui/badge.tsx`
-- Добавить проп `dot?: boolean` -- рендерит цветной кружок 6x6px перед текстом
-- Цвет точки определяется текущим `variant`
+### 5. Tooltip: shortcut-проп для быстрого создания
+
+Сейчас Tooltip требует 5 строк кода для простейшего случая. Частый паттерн -- обернуть иконку/кнопку подсказкой.
+
+**Файл:** Новый компонент `src/components/ui/simple-tooltip.tsx`
+- Создать обёртку `SimpleTooltip` с пропсами `content` и `children`
+- Автоматически оборачивает в `TooltipProvider > Tooltip > TooltipTrigger + TooltipContent`
+
+```tsx
+// Было (5 строк):
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger asChild><Button size="icon"><Settings /></Button></TooltipTrigger>
+    <TooltipContent>Настройки</TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+// Станет (1 строка):
+<SimpleTooltip content="Настройки">
+  <Button size="icon"><Settings /></Button>
+</SimpleTooltip>
+```
 
 ### Порядок реализации
 
-1. Исправить баг в TabsContent (критичный, потеря children)
-2. Удалить framer-motion и заменить на CSS
-3. Добавить `loading` для Input
-4. Добавить `size="lg"` для Input/Textarea
-5. Добавить `dot` для Badge
+1. Button: вариант `success` (минимальное изменение, 1 строка)
+2. Select: `size="lg"` (1 строка)
+3. SimpleTooltip (новый файл + экспорт из index.ts)
+4. Progress: `showValue` + `indeterminate` (CSS + компонент)
+5. ConfirmDialog: async `onConfirm` с loading
 
 ### Технические детали
 
-**TabsContent fix:**
+**Button success вариант:**
 ```tsx
-// Было (строки 99-108):
->(({ className, children, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn("mt-2 ...", className)}
-    {...props}
-    {...props}  // <-- дубль
-  />
-
-// Станет:
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn("mt-2 ...", className)}
-    {...props}
-  />
+// В buttonVariants.variants.variant:
+success: "bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))] hover:bg-[hsl(var(--success))]/90",
 ```
 
-**ShowcaseSection CSS замена:**
+**Select lg:**
 ```tsx
-// Было:
-<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-
-// Станет:
-<div className="animate-in fade-in slide-in-from-bottom-3 duration-300">
+// В SelectTrigger, расширить условие inputSize:
+inputSize === "sm" ? "h-8 px-2.5 py-1 text-xs" 
+  : inputSize === "lg" ? "h-12 px-4 py-3 text-base" 
+  : "h-10 px-3 py-2 text-sm"
 ```
 
-**Input loading:**
-```tsx
-// Использование:
-<Input loading placeholder="Проверка..." />
-<Input loading={isValidating} inputStart={<Mail />} placeholder="Email" />
+**Progress indeterminate keyframes (src/index.css):**
+```css
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
 ```
 
-**Badge dot:**
+**Progress с showValue:**
 ```tsx
-// Использование:
-<Badge variant="success" dot>Активен</Badge>
-<Badge variant="destructive" dot>Офлайн</Badge>
+<div className="flex items-center gap-3">
+  <ProgressPrimitive.Root ...>...</ProgressPrimitive.Root>
+  {showValue && <span className="text-sm tabular-nums">{value ?? 0}%</span>}
+</div>
 ```
+
+**ConfirmDialog async:**
+```tsx
+const [loading, setLoading] = React.useState(false);
+const handleConfirm = async () => {
+  const result = onConfirm();
+  if (result instanceof Promise) {
+    setLoading(true);
+    try { await result; onOpenChange?.(false); }
+    finally { setLoading(false); }
+  }
+};
+```
+
+### Обновления документации
+
+- Обновить `COMPONENTS.md` с новыми пропсами
+- Обновить `src/components/ui/index.ts` с экспортом `SimpleTooltip`
+- Добавить showcase-примеры для каждого нового пропа
