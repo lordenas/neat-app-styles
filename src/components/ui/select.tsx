@@ -32,12 +32,14 @@ interface SelectTriggerProps
   extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
   /** Сообщение об ошибке. Отображается под триггером. Место зарезервировано даже без ошибки. */
   error?: string;
+  /** Размер триггера: `"sm"` (h-8, text-xs) | `"default"` (h-10, text-sm) */
+  inputSize?: "sm" | "default";
 }
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   SelectTriggerProps
->(({ className, children, error, id, ...props }, ref) => {
+>(({ className, children, error, id, inputSize = "default", ...props }, ref) => {
   const errorId = error !== undefined && id ? `${id}-err` : undefined;
   const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
   const ariaInvalid = error ? true : props["aria-invalid"];
@@ -49,7 +51,8 @@ const SelectTrigger = React.forwardRef<
       aria-invalid={ariaInvalid}
       aria-describedby={ariaDescribedBy}
       className={cn(
-        "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        "flex w-full items-center justify-between rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        inputSize === "sm" ? "h-8 px-2.5 py-1 text-xs" : "h-10 px-3 py-2 text-sm",
         error && "border-destructive",
         className,
       )}

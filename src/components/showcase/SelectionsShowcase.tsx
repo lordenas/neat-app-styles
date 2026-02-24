@@ -28,7 +28,7 @@ export function SelectionsShowcase() {
       <div className="grid gap-6 sm:grid-cols-2">
         {/* Select */}
         <div className="space-y-1.5">
-          <Label>Select</Label>
+          <Label>Select (default)</Label>
           <Select>
             <SelectTrigger>
               <SelectValue placeholder="Выберите опцию" />
@@ -40,6 +40,22 @@ export function SelectionsShowcase() {
             </SelectContent>
           </Select>
           <p className="helper-text">Простой выпадающий список.</p>
+        </div>
+
+        {/* Select sm */}
+        <div className="space-y-1.5">
+          <Label>Select (inputSize="sm")</Label>
+          <Select>
+            <SelectTrigger inputSize="sm">
+              <SelectValue placeholder="Компактный" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="opt1">Опция 1</SelectItem>
+              <SelectItem value="opt2">Опция 2</SelectItem>
+              <SelectItem value="opt3">Опция 3</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="helper-text">Маленький размер — h-8, text-xs.</p>
         </div>
 
         {/* Grouped Select */}
@@ -101,18 +117,9 @@ export function SelectionsShowcase() {
         <div className="space-y-3">
           <Label>Чекбоксы</Label>
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Checkbox id="cb1" defaultChecked />
-              <label htmlFor="cb1" className="text-sm">Выбрано</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox id="cb2" />
-              <label htmlFor="cb2" className="text-sm">Не выбрано</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Checkbox id="cb3" disabled />
-              <label htmlFor="cb3" className="text-sm text-muted-foreground">Заблокировано</label>
-            </div>
+            <Checkbox id="cb1" defaultChecked label="Выбрано" />
+            <Checkbox id="cb2" label="Не выбрано" />
+            <Checkbox id="cb3" disabled label="Заблокировано" />
           </div>
         </div>
 
@@ -180,13 +187,8 @@ export function SelectionsShowcase() {
           </div>
 
           <div className="space-y-1.5">
-            <Label>RadioGroup без ошибки (место зарезервировано)</Label>
-            <RadioGroup id="radio-ok" error="">
-              <div className="flex items-center gap-2">
-                <RadioGroupItem value="x" id="ro1" />
-                <label htmlFor="ro1" className="text-sm">Опция</label>
-              </div>
-            </RadioGroup>
+            <Label>Checkbox с label и ошибкой</Label>
+            <Checkbox id="cb-err" label="Согласен с условиями" error="Необходимо согласие" />
           </div>
         </div>
       </div>

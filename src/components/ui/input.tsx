@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Eye, EyeOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -52,6 +53,8 @@ export interface InputProps
   formatNumber?: boolean;
   /** Сообщение об ошибке. Отображается под полем. Место зарезервировано даже без ошибки (форма не прыгает). */
   error?: string;
+  /** Добавляет кнопку показа/скрытия пароля (для type="password") */
+  showPasswordToggle?: boolean;
 }
 
 function formatWithSpaces(value: string): string {
@@ -64,10 +67,11 @@ function parseDigits(value: string): string {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, inputSize, inputStart, inputEnd, formatNumber, error, onChange, value, defaultValue, id, ...props }, ref) => {
+  ({ className, type, inputSize, inputStart, inputEnd, formatNumber, error, showPasswordToggle, onChange, value, defaultValue, id, ...props }, ref) => {
     const [formatted, setFormatted] = React.useState(() =>
       formatNumber && value != null ? formatWithSpaces(String(value)) : undefined
     );
+    const [showPassword, setShowPassword] = React.useState(false);
 
     React.useEffect(() => {
       if (formatNumber && value != null) {
@@ -98,8 +102,26 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
     const ariaInvalid = error ? true : props["aria-invalid"];
 
+    // Resolve effective type (password toggle)
+    const isPasswordType = type === "password";
+    const effectiveType = formatNumber ? "text" : (isPasswordType && showPassword ? "text" : type);
+
+    const passwordToggle = showPasswordToggle && isPasswordType ? (
+      <button
+        type="button"
+        tabIndex={-1}
+        onClick={() => setShowPassword((v) => !v)}
+        className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
+        aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+      >
+        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </button>
+    ) : null;
+
+    const effectiveEnd = passwordToggle || inputEnd;
+
     const renderInput = () => {
-      if (inputStart || inputEnd) {
+      if (inputStart || effectiveEnd) {
         return (
           <div
             className={cn(
@@ -119,7 +141,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               </span>
             )}
             <input
-              type={formatNumber ? "text" : type}
+              type={effectiveType}
               inputMode={formatNumber ? "numeric" : undefined}
               id={id}
               aria-invalid={ariaInvalid}
@@ -128,17 +150,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 "flex-1 bg-transparent placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed",
                 inputSize === "sm" ? "px-2 py-1 text-xs" : "px-3 py-2 text-base md:text-sm",
                 !inputStart && (inputSize === "sm" ? "pl-2.5" : "pl-3"),
-                !inputEnd && (inputSize === "sm" ? "pr-2.5" : "pr-3"),
+                !effectiveEnd && (inputSize === "sm" ? "pr-2.5" : "pr-3"),
               )}
               ref={ref}
               {...inputProps}
             />
-            {inputEnd && (
+            {effectiveEnd && (
               <span className={cn(
                 "flex items-center text-muted-foreground shrink-0",
                 inputSize === "sm" ? "pr-2 [&>svg]:h-3.5 [&>svg]:w-3.5" : "pr-3 [&>svg]:h-4 [&>svg]:w-4"
               )}>
-                {inputEnd}
+                {effectiveEnd}
               </span>
             )}
           </div>
@@ -147,7 +169,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       return (
         <input
-          type={formatNumber ? "text" : type}
+          type={effectiveType}
           inputMode={formatNumber ? "numeric" : undefined}
           id={id}
           aria-invalid={ariaInvalid}

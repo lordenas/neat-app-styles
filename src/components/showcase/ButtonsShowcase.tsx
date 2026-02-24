@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, Download, Search, Settings, ArrowRight } from "lucide-react";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Plus, Trash2, Download, Search, Settings, ArrowRight, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 
 export function ButtonsShowcase() {
   return (
@@ -45,6 +46,36 @@ export function ButtonsShowcase() {
           <Button loading>Загрузка...</Button>
           <Button loading variant="outline">Сохранение</Button>
           <Button loading variant="secondary" size="sm">SM loading</Button>
+        </div>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground mb-2">ButtonGroup</p>
+        <div className="flex flex-wrap items-center gap-4">
+          <ButtonGroup>
+            <Button variant="outline">Левая</Button>
+            <Button variant="outline">Центр</Button>
+            <Button variant="outline">Правая</Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button variant="outline" size="icon-sm"><Bold /></Button>
+            <Button variant="outline" size="icon-sm"><Italic /></Button>
+            <Button variant="outline" size="icon-sm"><Underline /></Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button variant="outline" size="icon-sm"><AlignLeft /></Button>
+            <Button variant="outline" size="icon-sm"><AlignCenter /></Button>
+            <Button variant="outline" size="icon-sm"><AlignRight /></Button>
+          </ButtonGroup>
+        </div>
+        <div className="flex flex-wrap items-start gap-4 mt-3">
+          <div>
+            <p className="text-xs text-muted-foreground mb-2">Вертикальная</p>
+            <ButtonGroup orientation="vertical">
+              <Button variant="outline" size="sm">Верх</Button>
+              <Button variant="outline" size="sm">Центр</Button>
+              <Button variant="outline" size="sm">Низ</Button>
+            </ButtonGroup>
+          </div>
         </div>
       </div>
     </div>
