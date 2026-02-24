@@ -379,7 +379,7 @@ const CreditCalculator = () => {
 
         <h1 className="text-2xl font-bold tracking-tight">Кредитный калькулятор с досрочным погашением</h1>
 
-        <div className="flex gap-6 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
         {/* ─── Left column (calculator) ─── */}
         <div className="flex-1 min-w-0 space-y-5">
 
@@ -897,7 +897,7 @@ const CreditCalculator = () => {
         </div>
 
         {/* ─── Right sidebar ─── */}
-        <aside className="hidden lg:block w-72 shrink-0 space-y-5 sticky top-6">
+        <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6">
           {/* Ad block */}
           <div className="section-card">
             <p className="text-xs text-muted-foreground mb-2">Реклама</p>
