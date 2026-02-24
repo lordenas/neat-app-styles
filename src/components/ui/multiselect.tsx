@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { X, ChevronDown, Check, Search } from "lucide-react";
@@ -102,8 +102,10 @@ export function Multiselect({
 }: MultiselectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [highlightIndex, setHighlightIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -117,8 +119,11 @@ export function Multiselect({
 
   // Focus search input when dropdown opens
   useEffect(() => {
-    if (open && searchable && searchRef.current) {
-      searchRef.current.focus();
+    if (open) {
+      setHighlightIndex(-1);
+      if (searchable && searchRef.current) {
+        searchRef.current.focus();
+      }
     }
     if (!open) setSearch("");
   }, [open, searchable]);
@@ -161,21 +166,76 @@ export function Multiselect({
     }
   }
 
+  // Flat list for keyboard navigation
+  const flatOptions = useMemo(() => {
+    const result: MultiselectOption[] = [...ungrouped];
+    for (const opts of groups.values()) {
+      result.push(...opts);
+    }
+    return result;
+  }, [ungrouped, groups]);
+
   const hasResults = ungrouped.length > 0 || groups.size > 0;
+
+  // Scroll highlight into view
+  useEffect(() => {
+    if (highlightIndex < 0 || !listRef.current) return;
+    const items = listRef.current.querySelectorAll("[data-multiselect-option]");
+    items[highlightIndex]?.scrollIntoView({ block: "nearest" });
+  }, [highlightIndex]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!open) {
+      if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(true);
+      }
+      return;
+    }
+    const total = flatOptions.length;
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightIndex((i) => (i + 1) % total);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightIndex((i) => (i - 1 + total) % total);
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightIndex >= 0 && highlightIndex < total) {
+          const opt = flatOptions[highlightIndex];
+          if (!opt.disabled) toggle(opt.value);
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        setOpen(false);
+        break;
+    }
+  }, [open, flatOptions, highlightIndex, toggle]);
+
+  // Track flat index for each option
+  let flatIdx = -1;
 
   const renderOption = (option: MultiselectOption) => {
     const isSelected = selected.includes(option.value);
+    const currentIdx = flatOptions.indexOf(option);
     return (
       <div
         key={option.value}
+        data-multiselect-option
         className={cn(
           "flex items-center gap-2 px-3 py-2 text-sm transition-colors",
           option.disabled
             ? "opacity-50 cursor-not-allowed"
             : "cursor-pointer hover:bg-accent",
-          isSelected && !option.disabled && "text-primary"
+          isSelected && !option.disabled && "text-primary",
+          currentIdx === highlightIndex && !option.disabled && "bg-accent",
         )}
         onClick={() => !option.disabled && toggle(option.value)}
+        onMouseEnter={() => !option.disabled && setHighlightIndex(currentIdx)}
       >
         <div className={cn(
           "h-4 w-4 rounded border flex items-center justify-center shrink-0 transition-colors",
@@ -194,11 +254,13 @@ export function Multiselect({
       <Label>{label}</Label>
       <div ref={ref} className="relative">
         <div
+          tabIndex={0}
           className={cn(
             "flex flex-wrap items-center gap-1 min-h-[40px] w-full rounded-md border border-input bg-background px-3 py-1.5 cursor-pointer transition-colors",
             open && "ring-2 ring-ring ring-offset-2 ring-offset-background"
           )}
           onClick={() => setOpen(!open)}
+          onKeyDown={handleKeyDown}
         >
           {selected.length === 0 && (
             <span className="text-sm text-muted-foreground">{placeholder}</span>
@@ -243,6 +305,7 @@ export function Multiselect({
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     placeholder={searchPlaceholder}
                     className="flex-1 py-1.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
                     onClick={(e) => e.stopPropagation()}
@@ -259,7 +322,7 @@ export function Multiselect({
                 </div>
               </div>
             )}
-            <div className="py-1 max-h-48 overflow-auto">
+            <div ref={listRef} className="py-1 max-h-48 overflow-auto">
               {!hasResults && (
                 <div className="px-3 py-4 text-sm text-muted-foreground text-center">
                   Ничего не найдено
