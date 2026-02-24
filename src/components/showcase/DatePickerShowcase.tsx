@@ -1,15 +1,48 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { format, differenceInDays } from "date-fns";
-import { ru } from "date-fns/locale";
+import { ru, enUS, de, ja, fr } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import type { DateRange } from "react-day-picker";
 
-/* ── smart mask helpers ── */
+/* ═══════════════════════════════════════════════
+   Locale-aware date mask system
+   ═══════════════════════════════════════════════ */
+
+type DatePart = "day" | "month" | "year";
+
+interface DateLocaleConfig {
+  /** e.g. "ru", "en-US", "de", "ja" */
+  code: string;
+  label: string;
+  /** Order of parts, e.g. ["day","month","year"] */
+  order: [DatePart, DatePart, DatePart];
+  /** Separator char, e.g. "." or "/" or "-" */
+  sep: string;
+  /** Placeholder, e.g. "дд.мм.гггг" */
+  placeholder: string;
+  /** date-fns locale */
+  fnsLocale: typeof ru;
+  /** date-fns format string */
+  fnsFormat: string;
+}
+
+const DATE_LOCALES: DateLocaleConfig[] = [
+  { code: "ru",    label: "🇷🇺 Россия (дд.мм.гггг)",    order: ["day","month","year"], sep: ".", placeholder: "дд.мм.гггг",   fnsLocale: ru,   fnsFormat: "dd.MM.yyyy" },
+  { code: "de",    label: "🇩🇪 Deutschland (TT.MM.JJJJ)", order: ["day","month","year"], sep: ".", placeholder: "TT.MM.JJJJ",   fnsLocale: de,   fnsFormat: "dd.MM.yyyy" },
+  { code: "en-GB", label: "🇬🇧 UK (dd/mm/yyyy)",           order: ["day","month","year"], sep: "/", placeholder: "dd/mm/yyyy",    fnsLocale: enUS, fnsFormat: "dd/MM/yyyy" },
+  { code: "en-US", label: "🇺🇸 US (mm/dd/yyyy)",           order: ["month","day","year"], sep: "/", placeholder: "mm/dd/yyyy",    fnsLocale: enUS, fnsFormat: "MM/dd/yyyy" },
+  { code: "ja",    label: "🇯🇵 日本 (yyyy/mm/dd)",         order: ["year","month","day"], sep: "/", placeholder: "yyyy/mm/dd",    fnsLocale: ja,   fnsFormat: "yyyy/MM/dd" },
+  { code: "iso",   label: "ISO 8601 (yyyy-mm-dd)",         order: ["year","month","day"], sep: "-", placeholder: "yyyy-mm-dd",    fnsLocale: enUS, fnsFormat: "yyyy-MM-dd" },
+  { code: "fr",    label: "🇫🇷 France (jj/mm/aaaa)",       order: ["day","month","year"], sep: "/", placeholder: "jj/mm/aaaa",    fnsLocale: fr,   fnsFormat: "dd/MM/yyyy" },
+];
+
+/* ── helpers ── */
 
 function daysInMonth(month: number, year?: number): number {
   if (month === 2) {
@@ -19,94 +52,169 @@ function daysInMonth(month: number, year?: number): number {
   return [4, 6, 9, 11].includes(month) ? 30 : 31;
 }
 
-/**
- * Smart date mask: дд.мм.гггг
- * Validates ranges as user types and blocks invalid input.
- */
-function applyDateMask(raw: string): string {
+/** Generic smart mask that works for any part order and separator */
+function applyDateMaskLocale(raw: string, config: DateLocaleConfig): string {
   const digits = raw.replace(/\D/g, "").slice(0, 8);
   if (digits.length === 0) return "";
 
-  const parts: string[] = [];
+  const { order, sep } = config;
+  const results: string[] = [];
+  let cursor = 0;
+  let dayVal: number | undefined;
+  let monthVal: number | undefined;
 
-  // ── Day ──
-  const d1 = parseInt(digits[0]);
-  if (d1 > 3) {
-    parts.push("0" + digits[0]);
-  } else {
-    if (digits.length === 1) return digits[0];
-    const dayVal = parseInt(digits.slice(0, 2));
-    if (dayVal < 1 || dayVal > 31) return digits[0];
-    parts.push(digits.slice(0, 2));
-  }
+  for (let i = 0; i < 3; i++) {
+    const part = order[i];
+    if (cursor >= digits.length) break;
 
-  const day = parseInt(parts[0]);
-  const dayLen = parts[0].length === 2 ? (d1 > 3 ? 1 : 2) : 1;
-  const rest = digits.slice(dayLen);
+    if (part === "year") {
+      const yearDigits = digits.slice(cursor, cursor + 4);
+      cursor += yearDigits.length;
 
-  if (rest.length === 0) return parts[0];
+      // Final leap-year validation when year complete
+      if (yearDigits.length === 4 && dayVal && monthVal) {
+        const y = parseInt(yearDigits);
+        if (dayVal > daysInMonth(monthVal, y)) {
+          // Block last digit
+          results.push(yearDigits.slice(0, 3));
+          return results.join(sep);
+        }
+      }
+      results.push(yearDigits);
+    } else if (part === "month") {
+      const m1 = parseInt(digits[cursor]);
+      let monthStr: string;
 
-  // ── Month ──
-  const m1 = parseInt(rest[0]);
-  let monthStr: string;
-  let monthDigitsUsed: number;
+      if (m1 > 1) {
+        monthStr = "0" + digits[cursor];
+        cursor += 1;
+      } else {
+        if (cursor + 1 >= digits.length) {
+          // single digit so far
+          results.push(digits[cursor]);
+          cursor += 1;
+          break;
+        }
+        const mv = parseInt(digits.slice(cursor, cursor + 2));
+        if (mv < 1 || mv > 12) {
+          results.push(digits[cursor]);
+          cursor += 1;
+          break;
+        }
+        monthStr = digits.slice(cursor, cursor + 2);
+        cursor += 2;
+      }
 
-  if (m1 > 1) {
-    monthStr = "0" + rest[0];
-    monthDigitsUsed = 1;
-  } else {
-    if (rest.length === 1) return parts[0] + "." + rest[0];
-    const monthVal = parseInt(rest.slice(0, 2));
-    if (monthVal < 1 || monthVal > 12) return parts[0] + "." + rest[0];
-    monthStr = rest.slice(0, 2);
-    monthDigitsUsed = 2;
-  }
+      monthVal = parseInt(monthStr);
 
-  const month = parseInt(monthStr);
-  // cross-validate: day must fit in this month
-  const maxDay = daysInMonth(month);
-  if (day > maxDay) {
-    // block this month digit
-    return parts[0] + ".";
-  }
+      // Cross-validate with existing day
+      if (dayVal && dayVal > daysInMonth(monthVal)) {
+        // Can't use this month — block
+        if (results.length > 0) return results.join(sep) + sep;
+        return "";
+      }
+      results.push(monthStr);
+    } else {
+      // day
+      const d1 = parseInt(digits[cursor]);
+      let dayStr: string;
 
-  const yearDigits = rest.slice(monthDigitsUsed);
-  if (yearDigits.length === 0) return parts[0] + "." + monthStr;
+      if (d1 > 3) {
+        dayStr = "0" + digits[cursor];
+        cursor += 1;
+      } else {
+        if (cursor + 1 >= digits.length) {
+          results.push(digits[cursor]);
+          cursor += 1;
+          break;
+        }
+        const dv = parseInt(digits.slice(cursor, cursor + 2));
+        if (dv < 1 || dv > 31) {
+          results.push(digits[cursor]);
+          cursor += 1;
+          break;
+        }
+        dayStr = digits.slice(cursor, cursor + 2);
+        cursor += 2;
+      }
 
-  // ── Year ──
-  let yyyy = yearDigits.slice(0, 4);
+      dayVal = parseInt(dayStr);
 
-  // final validation when year is complete
-  if (yyyy.length === 4) {
-    const y = parseInt(yyyy);
-    const exactMax = daysInMonth(month, y);
-    if (day > exactMax) {
-      // e.g. 29.02 but not a leap year — block last year digit
-      return parts[0] + "." + monthStr + "." + yyyy.slice(0, 3);
+      // Cross-validate with existing month
+      if (monthVal && dayVal > daysInMonth(monthVal)) {
+        if (results.length > 0) return results.join(sep) + sep;
+        return "";
+      }
+      results.push(dayStr);
     }
   }
 
-  return parts[0] + "." + monthStr + "." + yyyy;
+  return results.join(sep);
 }
 
-function parseMaskedDate(masked: string): Date | undefined {
-  if (masked.length !== 10) return undefined;
-  const [dd, mm, yyyy] = masked.split(".");
-  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
+function getFullLength(config: DateLocaleConfig): number {
+  // e.g. dd.mm.yyyy = 10, yyyy-mm-dd = 10
+  return 10;
+}
+
+function parseMaskedDateLocale(masked: string, config: DateLocaleConfig): Date | undefined {
+  if (masked.length !== getFullLength(config)) return undefined;
+  const parts = masked.split(config.sep);
+  if (parts.length !== 3) return undefined;
+
+  let d = 0, m = 0, y = 0;
+  config.order.forEach((part, i) => {
+    const val = parseInt(parts[i], 10);
+    if (part === "day") d = val;
+    else if (part === "month") m = val;
+    else y = val;
+  });
+
   if (!d || !m || !y || m < 1 || m > 12 || d < 1) return undefined;
-  const maxDay = daysInMonth(m, y);
-  if (d > maxDay) return undefined;
+  if (d > daysInMonth(m, y)) return undefined;
   const date = new Date(y, m - 1, d);
   if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
   return undefined;
 }
 
+function formatDateLocale(date: Date, config: DateLocaleConfig): string {
+  return format(date, config.fnsFormat);
+}
+
+/* ═══════════════════════════════════════════════
+   Components
+   ═══════════════════════════════════════════════ */
+
 export function DatePickerShowcase() {
+  const [localeIdx, setLocaleIdx] = useState(0);
+  const locale = DATE_LOCALES[localeIdx];
+
   const [date, setDate] = useState<Date>();
   const [range, setRange] = useState<DateRange | undefined>();
 
   return (
     <div className="space-y-6">
+      {/* Locale switcher */}
+      <div className="space-y-1.5">
+        <Label>Локаль / Date format</Label>
+        <div className="flex flex-wrap gap-1">
+          {DATE_LOCALES.map((l, i) => (
+            <Button
+              key={l.code}
+              variant={i === localeIdx ? "default" : "outline"}
+              size="sm"
+              onClick={() => { setLocaleIdx(i); setDate(undefined); setRange(undefined); }}
+              className="text-xs"
+            >
+              {l.label}
+            </Button>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Маска: <code className="bg-muted px-1 rounded">{locale.placeholder}</code> · Разделитель: <code className="bg-muted px-1 rounded">{locale.sep}</code> · Порядок: <Badge variant="outline" className="text-xs font-mono">{locale.order.join(" → ")}</Badge>
+        </p>
+      </div>
+
       {/* Single date — calendar only */}
       <div className="space-y-1.5">
         <Label>Только календарь</Label>
@@ -120,7 +228,7 @@ export function DatePickerShowcase() {
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "dd.MM.yyyy", { locale: ru }) : "дд.мм.гггг"}
+              {date ? formatDateLocale(date, locale) : locale.placeholder}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -128,18 +236,19 @@ export function DatePickerShowcase() {
               mode="single"
               selected={date}
               onSelect={setDate}
+              locale={locale.fnsLocale}
               initialFocus
               className="p-3 pointer-events-auto"
             />
           </PopoverContent>
         </Popover>
         {date && (
-          <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: ru })}</p>
+          <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: locale.fnsLocale })}</p>
         )}
       </div>
 
       {/* Single date — input + calendar */}
-      <DateInputPicker />
+      <DateInputPicker locale={locale} />
 
       {/* Date range */}
       <div className="space-y-1.5">
@@ -157,10 +266,10 @@ export function DatePickerShowcase() {
               {range?.from ? (
                 range.to ? (
                   <>
-                    {format(range.from, "dd.MM.yyyy", { locale: ru })} — {format(range.to, "dd.MM.yyyy", { locale: ru })}
+                    {formatDateLocale(range.from, locale)} — {formatDateLocale(range.to, locale)}
                   </>
                 ) : (
-                  format(range.from, "dd.MM.yyyy", { locale: ru })
+                  formatDateLocale(range.from, locale)
                 )
               ) : (
                 "Выберите период"
@@ -173,6 +282,7 @@ export function DatePickerShowcase() {
               selected={range}
               onSelect={setRange}
               numberOfMonths={2}
+              locale={locale.fnsLocale}
               initialFocus
               className="p-3 pointer-events-auto"
             />
@@ -186,35 +296,32 @@ export function DatePickerShowcase() {
       </div>
 
       {/* Period picker */}
-      <PeriodPicker />
+      <PeriodPicker locale={locale} />
     </div>
   );
 }
 
-function DateInputPicker() {
+function DateInputPicker({ locale }: { locale: DateLocaleConfig }) {
   const [date, setDate] = useState<Date>();
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setInputValue(date ? format(date, "dd.MM.yyyy") : "");
-  }, [date]);
+    setInputValue(date ? formatDateLocale(date, locale) : "");
+  }, [date, locale]);
+
+  // Reset on locale change
+  useEffect(() => {
+    setDate(undefined);
+    setInputValue("");
+  }, [locale.code]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVal = e.target.value;
-    // Auto-insert dot when typing forward after complete day (2 digits) or month (5 chars: dd.mm)
-    let adjusted = newVal;
-    if (newVal.length > inputValue.length) {
-      // typing forward — add separator dots automatically
-      const digitsOnly = newVal.replace(/\D/g, "");
-      if (digitsOnly.length > 2 && !newVal.includes(".")) {
-        adjusted = digitsOnly.slice(0, 2) + "." + digitsOnly.slice(2);
-      }
-    }
-    const masked = applyDateMask(adjusted);
+    const masked = applyDateMaskLocale(newVal, locale);
     setInputValue(masked);
-    const parsed = parseMaskedDate(masked);
+    const parsed = parseMaskedDateLocale(masked, locale);
     if (parsed) setDate(parsed);
   };
 
@@ -232,7 +339,7 @@ function DateInputPicker() {
             ref={inputRef}
             value={inputValue}
             onChange={handleInputChange}
-            placeholder="дд.мм.гггг"
+            placeholder={locale.placeholder}
             className="flex-1 min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:outline-none h-10 px-3 text-sm"
           />
           <PopoverTrigger asChild>
@@ -246,21 +353,28 @@ function DateInputPicker() {
             mode="single"
             selected={date}
             onSelect={handleCalendarSelect}
+            locale={locale.fnsLocale}
             initialFocus
             className="p-3 pointer-events-auto"
           />
         </PopoverContent>
       </Popover>
       {date && (
-        <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: ru })}</p>
+        <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: locale.fnsLocale })}</p>
       )}
     </div>
   );
 }
 
-function PeriodPicker() {
+function PeriodPicker({ locale }: { locale: DateLocaleConfig }) {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+
+  // Reset on locale change
+  useEffect(() => {
+    setStartDate(undefined);
+    setEndDate(undefined);
+  }, [locale.code]);
 
   return (
     <div className="space-y-1.5">
@@ -277,7 +391,7 @@ function PeriodPicker() {
               )}
             >
               <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-              {startDate ? format(startDate, "dd.MM.yyyy", { locale: ru }) : "Начало"}
+              {startDate ? formatDateLocale(startDate, locale) : locale.placeholder}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -285,6 +399,7 @@ function PeriodPicker() {
               mode="single"
               selected={startDate}
               onSelect={setStartDate}
+              locale={locale.fnsLocale}
               initialFocus
               className="p-3 pointer-events-auto"
             />
@@ -304,7 +419,7 @@ function PeriodPicker() {
               )}
             >
               <CalendarIcon className="mr-1.5 h-3.5 w-3.5" />
-              {endDate ? format(endDate, "dd.MM.yyyy", { locale: ru }) : "Конец"}
+              {endDate ? formatDateLocale(endDate, locale) : locale.placeholder}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -313,6 +428,7 @@ function PeriodPicker() {
               selected={endDate}
               onSelect={setEndDate}
               disabled={(d) => startDate ? d < startDate : false}
+              locale={locale.fnsLocale}
               initialFocus
               className="p-3 pointer-events-auto"
             />
