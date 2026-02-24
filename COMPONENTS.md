@@ -98,19 +98,21 @@
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
 | `inputSize` | `"sm"` \| `"default"` | `"default"` | Размер поля |
+| `inputStart` | `ReactNode` | — | Элемент в начале поля (иконка) |
+| `inputEnd` | `ReactNode` | — | Элемент в конце поля (иконка/текст) |
 | `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
 
 ```tsx
 <Textarea placeholder="Введите описание..." rows={4} />
 <Textarea inputSize="sm" placeholder="Компактное поле" />
+<Textarea inputStart={<MessageSquare />} placeholder="Комментарий..." />
 <Textarea error={errors.bio?.message ?? ""} {...register("bio")} />
 ```
 
 **Примечания:**
 - `inputSize="sm"` — уменьшенная высота (min-h-[60px]) и text-xs.
+- `inputStart` / `inputEnd` — иконки привязаны к верхнему краю поля.
 - Паттерн `error` идентичен `Input` — пустая строка `""` резервирует место.
-
----
 
 **Импорт:** `import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from "@/components/ui/select"`
 
@@ -219,9 +221,14 @@
 
 **Импорт:** `import { Slider } from "@/components/ui/slider"`
 
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `error` | `string` | — | Сообщение об ошибке под ползунком. Место зарезервировано даже без ошибки. Автоматически добавляет `aria-invalid` и `aria-describedby` |
+
 ```tsx
 <Slider defaultValue={[50]} max={100} step={1} />
 <Slider defaultValue={[25, 75]} max={100} step={5} />  {/* Диапазон */}
+<Slider id="amount" error={errors.amount?.message ?? ""} />
 ```
 
 ---
@@ -241,15 +248,11 @@
 
 **Импорт:** `import { Badge } from "@/components/ui/badge"`
 
-| Variant | Описание |
-|---------|----------|
-| `default` | Primary фон |
-| `secondary` | Нейтральный фон |
-| `destructive` | Красный фон |
-| `success` | Зелёный фон |
-| `warning` | Жёлтый фон |
-| `info` | Голубой фон |
-| `outline` | Только рамка |
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `variant` | `"default"` \| `"secondary"` \| `"destructive"` \| `"success"` \| `"warning"` \| `"info"` \| `"outline"` | `"default"` | Стиль |
+| `icon` | `ReactNode` | — | Иконка перед текстом |
+| `onDismiss` | `() => void` | — | Колбэк при удалении. Добавляет кнопку × |
 
 ```tsx
 <Badge>Новый</Badge>
@@ -259,6 +262,8 @@
 <Badge variant="warning">В процессе</Badge>
 <Badge variant="info">Информация</Badge>
 <Badge variant="outline">v2.0</Badge>
+<Badge icon={<Star className="h-3 w-3" />}>Избранное</Badge>
+<Badge variant="secondary" onDismiss={() => remove(id)}>Тег</Badge>
 ```
 
 ---
@@ -541,9 +546,17 @@
 
 **Импорт:** `import { Progress } from "@/components/ui/progress"`
 
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `value` | `number` | — | Текущее значение (0–100) |
+| `variant` | `"default"` \| `"success"` \| `"warning"` \| `"destructive"` \| `"info"` | `"default"` | Цвет индикатора |
+
 ```tsx
 <Progress value={60} />
-<Progress value={100} className="h-2" />
+<Progress value={100} variant="success" className="h-2" />
+<Progress value={30} variant="destructive" />
+<Progress value={55} variant="warning" />
+<Progress value={80} variant="info" />
 ```
 
 ---
@@ -608,6 +621,63 @@
   <AvatarImage src="/avatar.jpg" alt="Имя" />
   <AvatarFallback>ИФ</AvatarFallback>
 </Avatar>
+```
+
+---
+
+## ConfirmDialog
+
+**Импорт:** `import { ConfirmDialog } from "@/components/ui/confirm-dialog"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `trigger` | `ReactNode` | — | Элемент, открывающий диалог |
+| `title` | `string` | — | Заголовок диалога |
+| `description` | `string` | — | Описание (опционально) |
+| `onConfirm` | `() => void` | — | Колбэк при подтверждении |
+| `variant` | `"default"` \| `"destructive"` | `"default"` | Стиль кнопки подтверждения |
+| `confirmText` | `string` | `"Подтвердить"` | Текст кнопки подтверждения |
+| `cancelText` | `string` | `"Отмена"` | Текст кнопки отмены |
+
+```tsx
+<ConfirmDialog
+  trigger={<Button variant="destructive">Удалить</Button>}
+  title="Удалить запись?"
+  description="Это действие нельзя отменить."
+  onConfirm={() => deleteItem(id)}
+  variant="destructive"
+  confirmText="Удалить"
+/>
+```
+
+---
+
+## NumberInput
+
+**Импорт:** `import { NumberInput } from "@/components/ui/number-input"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `value` | `number` | — | Текущее значение |
+| `onChange` | `(value: number) => void` | — | Колбэк изменения |
+| `min` | `number` | — | Минимальное значение |
+| `max` | `number` | — | Максимальное значение |
+| `step` | `number` | `1` | Шаг изменения |
+| `error` | `string` | — | Сообщение об ошибке под полем |
+
+```tsx
+<NumberInput value={count} onChange={setCount} min={0} max={100} />
+```
+
+---
+
+## Kbd
+
+**Импорт:** `import { Kbd } from "@/components/ui/kbd"`
+
+```tsx
+<Kbd>Ctrl</Kbd> + <Kbd>K</Kbd>
+<Kbd>⌘</Kbd> + <Kbd>S</Kbd>
 ```
 
 ---

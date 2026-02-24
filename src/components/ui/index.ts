@@ -128,8 +128,8 @@ export {
 /** Разделитель (линия) */
 export { Separator } from "./separator";
 
-/** Прогресс-бар */
-export { Progress } from "./progress";
+/** Прогресс-бар с вариантами */
+export { Progress, progressVariants } from "./progress";
 
 /** Область прокрутки с кастомными скроллбарами */
 export { ScrollArea, ScrollBar } from "./scroll-area";
@@ -147,3 +147,14 @@ export type { FileUploadBaseProps, FileUploadDropzoneProps, FileUploadButtonProp
 /** Многострочное текстовое поле */
 export { Textarea, textareaVariants } from "./textarea";
 export type { TextareaProps } from "./textarea";
+
+/** Диалог подтверждения действия */
+export { ConfirmDialog } from "./confirm-dialog";
+export type { ConfirmDialogProps } from "./confirm-dialog";
+
+/** Числовое поле с кнопками +/- */
+export { NumberInput } from "./number-input";
+export type { NumberInputProps } from "./number-input";
+
+/** Клавиатурное сочетание */
+export { Kbd } from "./kbd";
