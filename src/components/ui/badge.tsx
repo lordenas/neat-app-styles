@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
@@ -17,9 +17,15 @@ const badgeVariants = cva(
         info: "border-transparent bg-[hsl(var(--info))] text-[hsl(var(--info-foreground))] hover:bg-[hsl(var(--info))]/80",
         outline: "text-foreground",
       },
+      size: {
+        sm: "px-2 py-px text-[10px]",
+        default: "px-2.5 py-0.5 text-xs",
+        lg: "px-3 py-1 text-sm",
+      },
     },
     defaultVariants: {
       variant: "default",
+      size: "default",
     },
   },
 );
@@ -48,11 +54,11 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, Varian
   onDismiss?: () => void;
 }
 
-function Badge({ className, variant, icon, onDismiss, children, ...props }: BadgeProps) {
+function Badge({ className, variant, size, icon, onDismiss, children, ...props }: BadgeProps) {
   return (
     <div
       className={cn(
-        badgeVariants({ variant }),
+        badgeVariants({ variant, size }),
         (icon || onDismiss) && "gap-1",
         className
       )}

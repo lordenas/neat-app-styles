@@ -8,27 +8,23 @@ import { cn } from "@/lib/utils";
  *
  * @example
  * ```tsx
- * <div className="flex items-center gap-2">
- *   <Switch id="notifications" checked={enabled} onCheckedChange={setEnabled} />
- *   <Label htmlFor="notifications">Уведомления</Label>
- * </div>
- *
- * // С ошибкой валидации
+ * <Switch id="notifications" label="Уведомления" checked={enabled} onCheckedChange={setEnabled} />
  * <Switch id="terms" error={errors.terms?.message ?? ""} />
  * ```
  *
- * @prop error - Сообщение об ошибке. Резервирует место (min-h-[1rem]). Добавляет `aria-invalid`, `aria-describedby`
+ * @prop label - Текст подписи. Автоматически оборачивается в `<label>`.
+ * @prop error - Сообщение об ошибке.
  */
 
 interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> {
-  /** Сообщение об ошибке. Отображается под переключателем. Место зарезервировано даже без ошибки (форма не прыгает). */
   error?: string;
+  label?: React.ReactNode;
 }
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   SwitchProps
->(({ className, error, id, ...props }, ref) => {
+>(({ className, error, id, label, ...props }, ref) => {
   const errorId = error !== undefined && id ? `${id}-err` : undefined;
   const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
   const ariaInvalid = error ? true : props["aria-invalid"];
@@ -53,10 +49,24 @@ const Switch = React.forwardRef<
     </SwitchPrimitives.Root>
   );
 
+  const content = label ? (
+    <div className="flex items-center gap-2">
+      {switchEl}
+      <label
+        htmlFor={id}
+        className="text-sm font-normal leading-tight cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
+      >
+        {label}
+      </label>
+    </div>
+  ) : (
+    switchEl
+  );
+
   if (error !== undefined) {
     return (
       <div>
-        {switchEl}
+        {content}
         <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
           {error || "\u00A0"}
         </p>
@@ -64,7 +74,7 @@ const Switch = React.forwardRef<
     );
   }
 
-  return switchEl;
+  return content;
 });
 Switch.displayName = SwitchPrimitives.Root.displayName;
 

@@ -15,6 +15,15 @@ export function ChipsShowcase() {
   return (
     <div className="space-y-4">
       <div>
+        <p className="text-xs text-muted-foreground mb-2">Размеры (size)</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge size="sm">Small</Badge>
+          <Badge size="default">Default</Badge>
+          <Badge size="lg">Large</Badge>
+        </div>
+      </div>
+
+      <div>
         <p className="text-xs text-muted-foreground mb-2">Варианты Badge/Chip</p>
         <div className="flex flex-wrap gap-2">
           <Badge>Default</Badge>
@@ -24,6 +33,15 @@ export function ChipsShowcase() {
           <Badge variant="success">Success</Badge>
           <Badge variant="warning">Warning</Badge>
           <Badge variant="info">Info</Badge>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-2">Размеры × варианты</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge size="sm" variant="success" icon={<Shield />}>SM Success</Badge>
+          <Badge size="default" variant="warning" icon={<Zap />}>Default Warning</Badge>
+          <Badge size="lg" variant="info" icon={<Star />}>LG Info</Badge>
         </div>
       </div>
 

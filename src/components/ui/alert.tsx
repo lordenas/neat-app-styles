@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -26,44 +27,42 @@ const alertVariants = cva(
  *
  * @example
  * ```tsx
- * <Alert>
+ * <Alert onDismiss={() => setVisible(false)}>
  *   <Info className="h-4 w-4" />
  *   <AlertTitle>Информация</AlertTitle>
  *   <AlertDescription>Данные были обновлены.</AlertDescription>
  * </Alert>
- *
- * <Alert variant="destructive">
- *   <AlertCircle className="h-4 w-4" />
- *   <AlertTitle>Ошибка</AlertTitle>
- *   <AlertDescription>Не удалось сохранить данные.</AlertDescription>
- * </Alert>
- *
- * <Alert variant="success">
- *   <CheckCircle2 className="h-4 w-4" />
- *   <AlertTitle>Успех</AlertTitle>
- *   <AlertDescription>Данные сохранены.</AlertDescription>
- * </Alert>
- *
- * <Alert variant="warning">
- *   <AlertTriangle className="h-4 w-4" />
- *   <AlertTitle>Внимание</AlertTitle>
- *   <AlertDescription>Проверьте настройки.</AlertDescription>
- * </Alert>
- *
- * <Alert variant="info">
- *   <Info className="h-4 w-4" />
- *   <AlertTitle>Подсказка</AlertTitle>
- *   <AlertDescription>Полезная информация.</AlertDescription>
- * </Alert>
  * ```
  *
  * @prop variant - `"default"` | `"destructive"` | `"success"` | `"warning"` | `"info"`
+ * @prop onDismiss - Колбэк закрытия — добавляет кнопку ×
  */
 const Alert = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>
->(({ className, variant, ...props }, ref) => (
-  <div ref={ref} role="alert" className={cn(alertVariants({ variant }), className)} {...props} />
+  React.HTMLAttributes<HTMLDivElement> &
+    VariantProps<typeof alertVariants> & {
+      /** Колбэк при закрытии — показывает кнопку × */
+      onDismiss?: () => void;
+    }
+>(({ className, variant, onDismiss, children, ...props }, ref) => (
+  <div
+    ref={ref}
+    role="alert"
+    className={cn(alertVariants({ variant }), onDismiss && "pr-10", className)}
+    {...props}
+  >
+    {children}
+    {onDismiss && (
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="absolute right-3 top-3 rounded-sm p-0.5 opacity-70 hover:opacity-100 transition-opacity"
+        aria-label="Закрыть"
+      >
+        <X className="h-4 w-4" />
+      </button>
+    )}
+  </div>
 ));
 Alert.displayName = "Alert";
 

@@ -83,17 +83,51 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
 );
 TableRow.displayName = "TableRow";
 
-const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTableCellElement>>(
-  ({ className, ...props }, ref) => (
-    <th
-      ref={ref}
-      className={cn(
-        "h-10 px-3 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
-        className
-      )}
-      {...props}
-    />
-  )
+interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
+  /** Включает кнопку сортировки в заголовке */
+  sortable?: boolean;
+  /** Текущее направление сортировки */
+  sortDirection?: "asc" | "desc" | false;
+  /** Колбэк при клике на сортировку */
+  onSort?: () => void;
+}
+
+const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
+  ({ className, sortable, sortDirection, onSort, children, ...props }, ref) => {
+    const content = sortable ? (
+      <button
+        type="button"
+        onClick={onSort}
+        className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+      >
+        {children}
+        {sortDirection === "asc" && (
+          <svg className="h-3.5 w-3.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 19V5m-7 7 7-7 7 7" /></svg>
+        )}
+        {sortDirection === "desc" && (
+          <svg className="h-3.5 w-3.5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14m7-7-7 7-7-7" /></svg>
+        )}
+        {sortDirection === false && (
+          <svg className="h-3.5 w-3.5 text-muted-foreground/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /><path d="m7 8 5-5 5 5M7 16l5 5 5-5" /></svg>
+        )}
+      </button>
+    ) : (
+      children
+    );
+
+    return (
+      <th
+        ref={ref}
+        className={cn(
+          "h-10 px-3 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+          className
+        )}
+        {...props}
+      >
+        {content}
+      </th>
+    );
+  }
 );
 TableHead.displayName = "TableHead";
 
