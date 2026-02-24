@@ -142,6 +142,12 @@
     transition-timing-function: ease-out;
   }
 
+  /* Не конфликтовать с Radix-анимациями */
+  [data-radix-popper-content-wrapper],
+  [data-radix-popper-content-wrapper] * {
+    transition: none !important;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
