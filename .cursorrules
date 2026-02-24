@@ -165,6 +165,7 @@
   <TooltipTrigger asChild><button><Info className="h-3.5 w-3.5" /></button></TooltipTrigger>
   <TooltipContent className="max-w-xs">Текст</TooltipContent>
 </Tooltip>
+// Автоматически работает по тапу на мобильных (hover недоступен)
 ```
 
 ### Recharts стили
