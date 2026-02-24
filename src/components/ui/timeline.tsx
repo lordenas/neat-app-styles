@@ -55,20 +55,20 @@ export function Timeline({ items, variant = "default", className }: TimelineProp
 
         if (isAlternate) {
           return (
-            <div key={i} className="relative flex items-stretch justify-center pb-0">
+            <div key={i} className="relative flex items-stretch">
               {/* Left content */}
-              <div className={cn("flex-1 pb-6", isRight ? "invisible" : "text-right pr-4")}>
+              <div className={cn("flex-1 pb-6 pr-4", isRight && "invisible")}>
                 <TimelineContent item={item} compact={false} align="right" />
               </div>
 
-              {/* Center: dot + line */}
-              <div className="relative flex flex-col items-center shrink-0">
+              {/* Center: dot + line — fixed width */}
+              <div className="relative flex flex-col items-center shrink-0 w-8">
                 <TimelineDot item={item} compact={false} />
                 {!isLast && <div className="w-0.5 flex-1 bg-border" />}
               </div>
 
               {/* Right content */}
-              <div className={cn("flex-1 pb-6", !isRight ? "invisible" : "pl-4")}>
+              <div className={cn("flex-1 pb-6 pl-4", !isRight && "invisible")}>
                 <TimelineContent item={item} compact={false} />
               </div>
             </div>
