@@ -59,6 +59,10 @@ export interface FileUploadBaseProps {
   onBlur?: () => void;
   /** react-hook-form: имя поля */
   name?: string;
+  /** Сообщение об ошибке. Отображается под компонентом. Место зарезервировано даже без ошибки (форма не прыгает). */
+  error?: string;
+  /** id для связки aria-describedby с ошибкой */
+  id?: string;
 }
 
 // ─── Utilities ───────────────────────────────────────────────
@@ -232,12 +236,13 @@ function useFileList(valueProp: File[] | undefined, notify: (files: File[]) => v
 export interface FileUploadDropzoneProps extends FileUploadBaseProps {}
 
 const FileUploadDropzone = React.forwardRef<HTMLDivElement, FileUploadDropzoneProps>(
-  ({ value, onChange, onFilesChange, onBlur, name, disabled, className, ...rest }, ref) => {
+  ({ value, onChange, onFilesChange, onBlur, name, disabled, className, error, id, ...rest }, ref) => {
     const { inputAccept, label, maxSizeMB, multiple, validate } = useFileUploadConfig(rest);
     const notify = useNotify(onChange, onFilesChange);
     const { files, addFiles, removeFile, setInternal } = useFileList(value, notify);
     const [isDragging, setIsDragging] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const errorId = error !== undefined && id ? `${id}-err` : undefined;
 
     const handleAdd = React.useCallback((fileList: FileList) => {
       const valid = validate(fileList);
@@ -256,9 +261,12 @@ const FileUploadDropzone = React.forwardRef<HTMLDivElement, FileUploadDropzonePr
             if (!disabled && e.dataTransfer.files.length) handleAdd(e.dataTransfer.files);
           }}
           onClick={() => !disabled && inputRef.current?.click()}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={errorId}
           className={cn(
             "relative flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 text-center cursor-pointer transition-colors",
             isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/50",
+            error && "border-destructive",
             disabled && "opacity-50 cursor-not-allowed"
           )}
         >
@@ -271,11 +279,17 @@ const FileUploadDropzone = React.forwardRef<HTMLDivElement, FileUploadDropzonePr
           </div>
           <input
             ref={inputRef} type="file" multiple={multiple} className="hidden"
-            accept={inputAccept} disabled={disabled} name={name}
+            accept={inputAccept} disabled={disabled} name={name} id={id}
             onBlur={onBlur}
             onChange={(e) => { if (e.target.files?.length) handleAdd(e.target.files); e.target.value = ""; }}
           />
         </div>
+
+        {error !== undefined && (
+          <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+            {error || "\u00A0"}
+          </p>
+        )}
 
         {files.length > 0 && (
           <ul className="space-y-2" role="list" aria-label="Загруженные файлы">
@@ -404,11 +418,12 @@ export interface FileUploadAvatarProps extends Omit<FileUploadBaseProps, "multip
 }
 
 const FileUploadAvatar = React.forwardRef<HTMLDivElement, FileUploadAvatarProps>(
-  ({ value, onChange, onFilesChange, onBlur, name, disabled, className, label: textLabel = "Загрузите изображение", ...rest }, ref) => {
+  ({ value, onChange, onFilesChange, onBlur, name, disabled, className, error, id, label: textLabel = "Загрузите изображение", ...rest }, ref) => {
     const { inputAccept, label, maxSizeMB, validate } = useFileUploadConfig({ ...rest, multiple: false });
     const notify = useNotify(onChange, onFilesChange);
     const [preview, setPreview] = React.useState<string | null>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const errorId = error !== undefined && id ? `${id}-err` : undefined;
 
     // Sync preview from controlled value
     React.useEffect(() => {
@@ -416,7 +431,6 @@ const FileUploadAvatar = React.forwardRef<HTMLDivElement, FileUploadAvatarProps>
       if (value.length === 0) {
         if (preview) { URL.revokeObjectURL(preview); setPreview(null); }
       } else {
-        // Only update if file changed
         const file = value[0];
         if (file && (!preview || !preview.startsWith("blob:"))) {
           setPreview(URL.createObjectURL(file));
@@ -441,42 +455,52 @@ const FileUploadAvatar = React.forwardRef<HTMLDivElement, FileUploadAvatarProps>
     }, [preview, notify]);
 
     return (
-      <div ref={ref} className={cn("flex items-center gap-4", className)}>
-        <div
-          onClick={() => !disabled && inputRef.current?.click()}
-          className={cn(
-            "relative flex h-24 w-24 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed transition-colors overflow-hidden",
-            preview ? "border-transparent" : "border-border hover:border-primary/50 hover:bg-muted/50",
-            disabled && "opacity-50 cursor-not-allowed"
-          )}
-        >
-          {preview ? (
-            <>
-              <img src={preview} alt="Превью" className="h-full w-full object-cover" />
-              <div className="absolute inset-0 flex items-center justify-center bg-foreground/40 opacity-0 hover:opacity-100 transition-opacity">
-                <Upload className="h-5 w-5 text-background" />
+      <div ref={ref} className={cn("space-y-1", className)}>
+        <div className="flex items-center gap-4">
+          <div
+            onClick={() => !disabled && inputRef.current?.click()}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={errorId}
+            className={cn(
+              "relative flex h-24 w-24 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed transition-colors overflow-hidden",
+              preview ? "border-transparent" : "border-border hover:border-primary/50 hover:bg-muted/50",
+              error && !preview && "border-destructive",
+              disabled && "opacity-50 cursor-not-allowed"
+            )}
+          >
+            {preview ? (
+              <>
+                <img src={preview} alt="Превью" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 flex items-center justify-center bg-foreground/40 opacity-0 hover:opacity-100 transition-opacity">
+                  <Upload className="h-5 w-5 text-background" />
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                <ImageIcon className="h-6 w-6" />
+                <span className="text-[10px]">Загрузить</span>
               </div>
-            </>
-          ) : (
-            <div className="flex flex-col items-center gap-1 text-muted-foreground">
-              <ImageIcon className="h-6 w-6" />
-              <span className="text-[10px]">Загрузить</span>
-            </div>
-          )}
-          <input ref={inputRef} type="file" className="hidden" accept={inputAccept}
-            disabled={disabled} name={name} onBlur={onBlur}
-            onChange={(e) => { if (e.target.files?.length) handleFile(e.target.files); e.target.value = ""; }} />
+            )}
+            <input ref={inputRef} type="file" className="hidden" accept={inputAccept}
+              disabled={disabled} name={name} id={id} onBlur={onBlur}
+              onChange={(e) => { if (e.target.files?.length) handleFile(e.target.files); e.target.value = ""; }} />
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm text-foreground">{textLabel}</p>
+            <p className="text-xs text-muted-foreground">{label} до {maxSizeMB} MB</p>
+            {preview && (
+              <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-destructive hover:text-destructive"
+                onClick={handleRemove} disabled={disabled}>
+                Удалить
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="space-y-1">
-          <p className="text-sm text-foreground">{textLabel}</p>
-          <p className="text-xs text-muted-foreground">{label} до {maxSizeMB} MB</p>
-          {preview && (
-            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-destructive hover:text-destructive"
-              onClick={handleRemove} disabled={disabled}>
-              Удалить
-            </Button>
-          )}
-        </div>
+        {error !== undefined && (
+          <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+            {error || "\u00A0"}
+          </p>
+        )}
       </div>
     );
   }

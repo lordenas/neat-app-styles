@@ -153,7 +153,6 @@ export function ValidationFormShowcase() {
         />
       </div>
 
-      {/* Avatar via FileUploadAvatar */}
       <div>
         <Label>Фото *</Label>
         <div className="mt-1.5">
@@ -162,6 +161,7 @@ export function ValidationFormShowcase() {
             control={control}
             render={({ field }) => (
               <FileUploadAvatar
+                id="vf-avatar"
                 value={field.value as File[]}
                 onChange={field.onChange}
                 onBlur={field.onBlur}
@@ -170,13 +170,11 @@ export function ValidationFormShowcase() {
                 acceptLabel="PNG, JPG, WebP"
                 maxSizeMB={5}
                 label="Загрузите фото профиля"
+                error={errors.avatar?.message ?? ""}
               />
             )}
           />
         </div>
-        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.avatar?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Agreement checkbox */}
