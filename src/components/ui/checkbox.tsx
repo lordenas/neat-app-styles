@@ -9,15 +9,19 @@ import { cn } from "@/lib/utils";
  *
  * @example
  * ```tsx
+ * <Checkbox id="terms" label="Принимаю условия" />
+ *
+ * // Без label
  * <div className="flex items-center gap-2">
  *   <Checkbox id="terms" />
  *   <Label htmlFor="terms">Принимаю условия</Label>
  * </div>
  *
  * // С ошибкой валидации
- * <Checkbox id="agree" error={errors.agree?.message ?? ""} />
+ * <Checkbox id="agree" label="Согласен" error={errors.agree?.message ?? ""} />
  * ```
  *
+ * @prop label — Текст подписи. Автоматически оборачивается в `<label>` с правильным `htmlFor`.
  * @prop error — Сообщение об ошибке. Отображается под чекбоксом. Место зарезервировано даже без ошибки.
  */
 
@@ -25,17 +29,19 @@ interface CheckboxProps
   extends React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
   /** Сообщение об ошибке. Место зарезервировано даже без ошибки (форма не прыгает). */
   error?: string;
+  /** Текст подписи рядом с чекбоксом */
+  label?: React.ReactNode;
 }
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
->(({ className, error, id, ...props }, ref) => {
+>(({ className, error, id, label, ...props }, ref) => {
   const errorId = error !== undefined && id ? `${id}-err` : undefined;
   const ariaDescribedBy = [props["aria-describedby"], errorId].filter(Boolean).join(" ") || undefined;
   const ariaInvalid = error ? true : props["aria-invalid"];
 
-  const checkbox = (
+  const checkboxEl = (
     <CheckboxPrimitive.Root
       ref={ref}
       id={id}
@@ -54,10 +60,24 @@ const Checkbox = React.forwardRef<
     </CheckboxPrimitive.Root>
   );
 
+  const content = label ? (
+    <div className="flex items-start gap-2">
+      {checkboxEl}
+      <label
+        htmlFor={id}
+        className="text-sm font-normal leading-tight cursor-pointer peer-disabled:cursor-not-allowed peer-disabled:opacity-50"
+      >
+        {label}
+      </label>
+    </div>
+  ) : (
+    checkboxEl
+  );
+
   if (error !== undefined) {
     return (
       <div>
-        {checkbox}
+        {content}
         <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
           {error || "\u00A0"}
         </p>
@@ -65,7 +85,7 @@ const Checkbox = React.forwardRef<
     );
   }
 
-  return checkbox;
+  return content;
 });
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 

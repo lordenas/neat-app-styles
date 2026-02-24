@@ -9,6 +9,10 @@
 export { Button, buttonVariants } from "./button";
 export type { ButtonProps } from "./button";
 
+/** Группа кнопок с объединёнными границами */
+export { ButtonGroup } from "./button-group";
+export type { ButtonGroupProps } from "./button-group";
+
 /** Текстовое поле с иконками и форматированием чисел */
 export { Input, inputVariants } from "./input";
 export type { InputProps } from "./input";
@@ -44,13 +48,13 @@ export {
 } from "./select";
 
 /** Карточка-контейнер */
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card";
+export { Card, cardVariants, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./card";
 
 /** Таблица с вариантами (size, bordered, striped, hoverable) */
 export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from "./table";
 
 /** Вкладки */
-export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
+export { Tabs, TabsList, tabsListVariants, TabsTrigger, TabsContent } from "./tabs";
 
 /** Аккордеон — сворачиваемые секции */
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./accordion";
@@ -135,7 +139,7 @@ export { Progress, progressVariants } from "./progress";
 export { ScrollArea, ScrollBar } from "./scroll-area";
 
 /** Заглушка-скелетон загрузки */
-export { Skeleton } from "./skeleton";
+export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar } from "./skeleton";
 
 /** Аватар с фоллбэком */
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar";

@@ -5,7 +5,7 @@ export function TabsShowcase() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-xs text-muted-foreground mb-3">Базовые табы</p>
+        <p className="text-xs text-muted-foreground mb-3">Default (pill)</p>
         <Tabs defaultValue="tab1">
           <TabsList>
             <TabsTrigger value="tab1">Общие</TabsTrigger>
@@ -31,9 +31,9 @@ export function TabsShowcase() {
       </div>
 
       <div>
-        <p className="text-xs text-muted-foreground mb-3">Табы с иконками</p>
+        <p className="text-xs text-muted-foreground mb-3">Underline</p>
         <Tabs defaultValue="docs">
-          <TabsList>
+          <TabsList variant="underline">
             <TabsTrigger value="docs" className="gap-1.5">
               <FileText className="h-3.5 w-3.5" /> Документы
             </TabsTrigger>
@@ -57,6 +57,32 @@ export function TabsShowcase() {
           <TabsContent value="users">
             <div className="form-section mt-3">
               <p className="text-sm">Участники команды.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Outline</p>
+        <Tabs defaultValue="ot1">
+          <TabsList variant="outline">
+            <TabsTrigger value="ot1">Обзор</TabsTrigger>
+            <TabsTrigger value="ot2">Детали</TabsTrigger>
+            <TabsTrigger value="ot3">История</TabsTrigger>
+          </TabsList>
+          <TabsContent value="ot1">
+            <div className="form-section mt-0 border-t-0 rounded-tl-none">
+              <p className="text-sm">Вкладка «Обзор» в outline-стиле.</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="ot2">
+            <div className="form-section mt-0 border-t-0 rounded-tl-none">
+              <p className="text-sm">Вкладка «Детали».</p>
+            </div>
+          </TabsContent>
+          <TabsContent value="ot3">
+            <div className="form-section mt-0 border-t-0 rounded-tl-none">
+              <p className="text-sm">Вкладка «История».</p>
             </div>
           </TabsContent>
         </Tabs>

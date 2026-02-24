@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Mail, Eye, Calendar, DollarSign, Hash, MessageSquare } from "lucide-react";
+import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock } from "lucide-react";
 
 export function InputsShowcase() {
   return (
@@ -24,8 +24,7 @@ export function InputsShowcase() {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="error-input">С ошибкой</Label>
-            <Input id="error-input" className="border-destructive focus-visible:ring-destructive" value="Неверное значение" />
-            <p className="error-text">Поле заполнено некорректно.</p>
+            <Input id="error-input" error="Поле заполнено некорректно." value="Неверное значение" />
           </div>
         </div>
       </div>
@@ -56,10 +55,6 @@ export function InputsShowcase() {
             <Input inputStart={<Mail />} placeholder="email@example.com" type="email" />
           </div>
           <div className="space-y-1.5">
-            <Label>Пароль (inputEnd)</Label>
-            <Input inputEnd={<Eye />} placeholder="Введите пароль" type="password" />
-          </div>
-          <div className="space-y-1.5">
             <Label>Дата (inputEnd)</Label>
             <Input inputEnd={<Calendar />} placeholder="дд.мм.гггг" />
           </div>
@@ -70,6 +65,20 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label>Small с иконкой</Label>
             <Input inputSize="sm" inputStart={<Search />} placeholder="Поиск..." />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Пароль (showPasswordToggle)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="pw-input">Пароль с тогглом</Label>
+            <Input id="pw-input" type="password" showPasswordToggle inputStart={<Lock />} placeholder="Введите пароль..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="pw-input2">Пароль (без иконки)</Label>
+            <Input id="pw-input2" type="password" showPasswordToggle placeholder="Введите пароль..." />
           </div>
         </div>
       </div>

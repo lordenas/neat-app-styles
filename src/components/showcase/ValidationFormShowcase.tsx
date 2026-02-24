@@ -183,17 +183,13 @@ export function ValidationFormShowcase() {
           name="agree"
           control={control}
           render={({ field }) => (
-            <div className="flex items-start gap-2">
-              <Checkbox
-                id="vf-agree"
-                checked={field.value}
-                onCheckedChange={field.onChange}
-                error={errors.agree?.message ?? ""}
-              />
-              <Label htmlFor="vf-agree" className="font-normal cursor-pointer text-sm leading-tight">
-                Я согласен на обработку персональных данных *
-              </Label>
-            </div>
+            <Checkbox
+              id="vf-agree"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              error={errors.agree?.message ?? ""}
+              label="Я согласен на обработку персональных данных *"
+            />
           )}
         />
       </div>
