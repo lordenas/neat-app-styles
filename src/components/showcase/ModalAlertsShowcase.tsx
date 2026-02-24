@@ -55,6 +55,10 @@ export function ModalAlertsShowcase() {
           <AlertTitle>Ошибка</AlertTitle>
           <AlertDescription>Произошла ошибка при выполнении операции.</AlertDescription>
         </Alert>
+        <Alert variant="loading">
+          <AlertTitle>Обработка платежа</AlertTitle>
+          <AlertDescription>Пожалуйста, подождите. Это может занять несколько секунд.</AlertDescription>
+        </Alert>
         {dismissedAlerts.length > 0 && (
           <Button variant="outline" size="sm" onClick={() => setDismissedAlerts([])}>
             Показать закрытые алерты

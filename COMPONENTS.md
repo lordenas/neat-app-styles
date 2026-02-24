@@ -369,6 +369,10 @@
 
 **Импорт:** `import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"`
 
+| Prop (TabsList) | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `variant` | `"default"` \| `"underline"` \| `"outline"` \| `"vertical"` | `"default"` | Стиль вкладок |
+
 ```tsx
 <Tabs defaultValue="tab1">
   <TabsList>
@@ -377,6 +381,18 @@
   </TabsList>
   <TabsContent value="tab1">Контент 1</TabsContent>
   <TabsContent value="tab2">Контент 2</TabsContent>
+</Tabs>
+
+{/* Vertical — для настроек, профилей */}
+<Tabs defaultValue="general" className="flex gap-4">
+  <TabsList variant="vertical">
+    <TabsTrigger value="general">Общие</TabsTrigger>
+    <TabsTrigger value="security">Безопасность</TabsTrigger>
+  </TabsList>
+  <div className="flex-1">
+    <TabsContent value="general" className="mt-0">...</TabsContent>
+    <TabsContent value="security" className="mt-0">...</TabsContent>
+  </div>
 </Tabs>
 ```
 
@@ -553,6 +569,7 @@
 | `success` | Зелёная рамка |
 | `warning` | Жёлтая рамка |
 | `info` | Голубая рамка |
+| `loading` | Серый фон + спиннер (автоматически) |
 
 ```tsx
 <Alert>
@@ -583,6 +600,11 @@
   <Info className="h-4 w-4" />
   <AlertTitle>Подсказка</AlertTitle>
   <AlertDescription>Полезная информация.</AlertDescription>
+</Alert>
+
+<Alert variant="loading">
+  <AlertTitle>Обработка платежа</AlertTitle>
+  <AlertDescription>Пожалуйста, подождите...</AlertDescription>
 </Alert>
 ```
 
@@ -674,13 +696,41 @@
 
 ## Avatar
 
-**Импорт:** `import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"`
+**Импорт:** `import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `size` | `"xs"` \| `"sm"` \| `"default"` \| `"lg"` \| `"xl"` | `"default"` | Размер аватара |
+| `status` | `"online"` \| `"away"` \| `"offline"` \| `"busy"` | — | Цветной статус-индикатор |
 
 ```tsx
 <Avatar>
   <AvatarImage src="/avatar.jpg" alt="Имя" />
   <AvatarFallback>ИФ</AvatarFallback>
 </Avatar>
+
+<Avatar size="lg" status="online">
+  <AvatarImage src="/avatar.jpg" />
+  <AvatarFallback>ИФ</AvatarFallback>
+</Avatar>
+```
+
+### AvatarGroup
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `max` | `number` | `5` | Максимальное количество видимых аватаров |
+| `size` | Размер аватара | `"default"` | Размер аватаров и счётчика "+N" |
+
+```tsx
+<AvatarGroup max={3}>
+  <Avatar><AvatarFallback>АБ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ВГ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ДЕ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ЖЗ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ИК</AvatarFallback></Avatar>
+</AvatarGroup>
+{/* Показывает 3 аватара + "+2" */}
 ```
 
 ---
@@ -1039,6 +1089,36 @@ Tooltip на мобильных работает по тапу:
   <TooltipContent>Подсказка</TooltipContent>
 </Tooltip>
 ```
+
+---
+
+## InputGroup
+
+**Импорт:** `import { InputGroup, InputAddon } from "@/components/ui/input-group"`
+
+Композитное поле ввода с текстовым аддоном (префикс/суффикс).
+
+```tsx
+<InputGroup>
+  <InputAddon>https://</InputAddon>
+  <Input placeholder="example.com" className="rounded-l-none border-l-0" />
+</InputGroup>
+
+<InputGroup>
+  <Input placeholder="0.00" className="rounded-r-none border-r-0" />
+  <InputAddon>₽</InputAddon>
+</InputGroup>
+
+<InputGroup>
+  <InputAddon><Globe className="h-4 w-4" /></InputAddon>
+  <Input placeholder="mysite" className="rounded-none border-x-0" />
+  <InputAddon>.ru</InputAddon>
+</InputGroup>
+```
+
+**Правила:**
+- `InputAddon` автоматически скругляет углы через CSS `first:` / `last:`
+- Input внутри группы: убери лишнее скругление и бордер (`rounded-l-none border-l-0`)
 
 ---
 

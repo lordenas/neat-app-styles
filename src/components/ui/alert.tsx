@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,9 +11,10 @@ const alertVariants = cva(
       variant: {
         default: "bg-background text-foreground",
         destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-        success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
-        warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
-        info: "border-info/50 text-info dark:border-info [&>svg]:text-info",
+        success: "border-[hsl(var(--success))]/50 text-[hsl(var(--success))] dark:border-[hsl(var(--success))] [&>svg]:text-[hsl(var(--success))]",
+        warning: "border-[hsl(var(--warning))]/50 text-[hsl(var(--warning))] dark:border-[hsl(var(--warning))] [&>svg]:text-[hsl(var(--warning))]",
+        info: "border-[hsl(var(--info))]/50 text-[hsl(var(--info))] dark:border-[hsl(var(--info))] [&>svg]:text-[hsl(var(--info))]",
+        loading: "border-border bg-muted/30 text-muted-foreground [&>svg]:text-muted-foreground",
       },
     },
     defaultVariants: {
@@ -32,9 +33,14 @@ const alertVariants = cva(
  *   <AlertTitle>Информация</AlertTitle>
  *   <AlertDescription>Данные были обновлены.</AlertDescription>
  * </Alert>
+ *
+ * <Alert variant="loading">
+ *   <AlertTitle>Обработка</AlertTitle>
+ *   <AlertDescription>Пожалуйста, подождите...</AlertDescription>
+ * </Alert>
  * ```
  *
- * @prop variant - `"default"` | `"destructive"` | `"success"` | `"warning"` | `"info"`
+ * @prop variant - `"default"` | `"destructive"` | `"success"` | `"warning"` | `"info"` | `"loading"`
  * @prop onDismiss - Колбэк закрытия — добавляет кнопку ×
  */
 const Alert = React.forwardRef<
@@ -51,6 +57,9 @@ const Alert = React.forwardRef<
     className={cn(alertVariants({ variant }), onDismiss && "pr-10", className)}
     {...props}
   >
+    {variant === "loading" && (
+      <Loader2 className="h-4 w-4 animate-spin" />
+    )}
     {children}
     {onDismiss && (
       <button

@@ -143,7 +143,7 @@ export { ScrollArea, ScrollBar } from "./scroll-area";
 export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonTable, SkeletonForm } from "./skeleton";
 
 /** Аватар с размерами и статус-индикатором */
-export { Avatar, AvatarImage, AvatarFallback, avatarVariants } from "./avatar";
+export { Avatar, AvatarImage, AvatarFallback, AvatarGroup, avatarVariants } from "./avatar";
 
 /** Toggle-переключатель */
 export { Toggle, toggleVariants } from "./toggle";
@@ -201,3 +201,7 @@ export type { CopyButtonProps } from "./copy-button";
 /** Обёртка для быстрого создания тултипа */
 export { SimpleTooltip } from "./simple-tooltip";
 export type { SimpleTooltipProps } from "./simple-tooltip";
+
+/** Группа поля ввода с текстовым аддоном (https://, ₽) */
+export { InputGroup, InputAddon } from "./input-group";
+export type { InputGroupProps, InputAddonProps } from "./input-group";

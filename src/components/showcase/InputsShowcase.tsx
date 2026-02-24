@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock, Loader2 } from "lucide-react";
+import { InputGroup, InputAddon } from "@/components/ui/input-group";
+import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock, Globe } from "lucide-react";
 
 export function InputsShowcase() {
   const [clearVal, setClearVal] = useState("Текст для очистки");
   const [clearSearch, setClearSearch] = useState("");
+  const [autoText, setAutoText] = useState("");
   return (
     <div className="space-y-6">
       <div>
@@ -134,6 +136,34 @@ export function InputsShowcase() {
       </div>
 
       <div>
+        <p className="text-xs text-muted-foreground mb-3">InputGroup (аддоны)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label>URL с префиксом</Label>
+            <InputGroup>
+              <InputAddon>https://</InputAddon>
+              <Input placeholder="example.com" className="rounded-l-none border-l-0" />
+            </InputGroup>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Сумма с суффиксом</Label>
+            <InputGroup>
+              <Input placeholder="0.00" className="rounded-r-none border-r-0" />
+              <InputAddon>₽</InputAddon>
+            </InputGroup>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Домен с обоими</Label>
+            <InputGroup>
+              <InputAddon><Globe className="h-4 w-4" /></InputAddon>
+              <Input placeholder="mysite" className="rounded-none border-x-0" />
+              <InputAddon>.ru</InputAddon>
+            </InputGroup>
+          </div>
+        </div>
+      </div>
+
+      <div>
         <p className="text-xs text-muted-foreground mb-3">Textarea</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
@@ -159,6 +189,17 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label>С иконкой (inputStart)</Label>
             <Textarea inputStart={<MessageSquare />} placeholder="Комментарий..." rows={3} />
+          </div>
+          <div className="space-y-1.5">
+            <Label>autoResize (maxRows=5)</Label>
+            <Textarea 
+              autoResize 
+              maxRows={5} 
+              value={autoText} 
+              onChange={e => setAutoText(e.target.value)} 
+              placeholder="Начните печатать — высота будет увеличиваться..." 
+            />
+            <p className="helper-text">Высота растёт до 5 строк, потом — скролл.</p>
           </div>
           <div className="space-y-1.5">
             <Label>С иконкой и ошибкой</Label>

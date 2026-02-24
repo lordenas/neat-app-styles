@@ -102,4 +102,61 @@ const AvatarFallback = React.forwardRef<
 ));
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
-export { Avatar, AvatarImage, AvatarFallback, avatarVariants };
+/**
+ * Группа аватаров с перекрытием и счётчиком "+N".
+ *
+ * @example
+ * ```tsx
+ * <AvatarGroup max={3}>
+ *   <Avatar><AvatarImage src="..." /><AvatarFallback>АБ</AvatarFallback></Avatar>
+ *   <Avatar><AvatarImage src="..." /><AvatarFallback>ВГ</AvatarFallback></Avatar>
+ *   <Avatar><AvatarImage src="..." /><AvatarFallback>ДЕ</AvatarFallback></Avatar>
+ *   <Avatar><AvatarImage src="..." /><AvatarFallback>ЖЗ</AvatarFallback></Avatar>
+ * </AvatarGroup>
+ * ```
+ *
+ * @prop max - Максимальное количество видимых аватаров. Остальные — "+N"
+ * @prop size - Размер аватаров в группе
+ */
+interface AvatarGroupProps {
+  children: React.ReactNode;
+  max?: number;
+  size?: VariantProps<typeof avatarVariants>["size"];
+  className?: string;
+}
+
+function AvatarGroup({ children, max = 5, size = "default", className }: AvatarGroupProps) {
+  const childArray = React.Children.toArray(children);
+  const visible = max ? childArray.slice(0, max) : childArray;
+  const overflow = max ? childArray.length - max : 0;
+
+  const sizeClasses: Record<string, string> = {
+    xs: "h-6 w-6 text-[10px]",
+    sm: "h-8 w-8 text-xs",
+    default: "h-10 w-10 text-sm",
+    lg: "h-12 w-12 text-base",
+    xl: "h-16 w-16 text-lg",
+  };
+
+  return (
+    <div className={cn("flex items-center -space-x-2", className)}>
+      {visible.map((child, i) => (
+        <div key={i} className="ring-2 ring-background rounded-full">
+          {child}
+        </div>
+      ))}
+      {overflow > 0 && (
+        <div
+          className={cn(
+            "relative flex shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground font-medium ring-2 ring-background",
+            sizeClasses[size ?? "default"],
+          )}
+        >
+          +{overflow}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarGroup, avatarVariants };
