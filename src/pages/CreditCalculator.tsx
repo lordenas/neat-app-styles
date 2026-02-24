@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, B
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -359,7 +360,10 @@ const CreditCalculator = () => {
           >
             UI Kit
           </Link>
-          <span className="text-xs text-muted-foreground">Кредитный калькулятор</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">Кредитный калькулятор</span>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
