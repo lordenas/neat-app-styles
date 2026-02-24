@@ -122,6 +122,11 @@
     <SelectItem value="val">Текст</SelectItem>
   </SelectContent>
 </Select>
+
+// С ошибкой валидации (SelectTrigger)
+<SelectTrigger id="role" error={errors.role?.message ?? ""}>
+  <SelectValue placeholder="Выберите..." />
+</SelectTrigger>
 ```
 
 ### RadioGroup
@@ -140,6 +145,9 @@
   <Checkbox id="opt" checked={val} onCheckedChange={setVal} />
   <Label htmlFor="opt" className="font-normal cursor-pointer text-sm">Текст</Label>
 </div>
+
+// С ошибкой валидации
+<Checkbox id="agree" error={errors.agree?.message ?? ""} />
 ```
 
 ### Table
