@@ -1,11 +1,48 @@
 import { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar, SkeletonCard, SkeletonTable, SkeletonForm } from "@/components/ui/skeleton";
+import { Avatar, AvatarImage, AvatarFallback, AvatarGroup } from "@/components/ui/avatar";
 
 /**
- * Витрина паттернов Skeleton-загрузки.
+ * Витрина паттернов Skeleton-загрузки и AvatarGroup.
  */
 export function SkeletonShowcase() {
   return (
     <div className="space-y-6">
+      {/* Avatar Group */}
+      <div className="space-y-3">
+        <p className="text-sm font-medium">AvatarGroup</p>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">max=3 (из 5)</p>
+            <AvatarGroup max={3}>
+              <Avatar><AvatarFallback>АБ</AvatarFallback></Avatar>
+              <Avatar><AvatarFallback>ВГ</AvatarFallback></Avatar>
+              <Avatar><AvatarFallback>ДЕ</AvatarFallback></Avatar>
+              <Avatar><AvatarFallback>ЖЗ</AvatarFallback></Avatar>
+              <Avatar><AvatarFallback>ИК</AvatarFallback></Avatar>
+            </AvatarGroup>
+          </div>
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">size="sm", max=4</p>
+            <AvatarGroup max={4} size="sm">
+              <Avatar size="sm"><AvatarFallback>A</AvatarFallback></Avatar>
+              <Avatar size="sm"><AvatarFallback>B</AvatarFallback></Avatar>
+              <Avatar size="sm"><AvatarFallback>C</AvatarFallback></Avatar>
+              <Avatar size="sm"><AvatarFallback>D</AvatarFallback></Avatar>
+              <Avatar size="sm"><AvatarFallback>E</AvatarFallback></Avatar>
+              <Avatar size="sm"><AvatarFallback>F</AvatarFallback></Avatar>
+            </AvatarGroup>
+          </div>
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">size="lg", max=2</p>
+            <AvatarGroup max={2} size="lg">
+              <Avatar size="lg"><AvatarFallback>ИИ</AvatarFallback></Avatar>
+              <Avatar size="lg"><AvatarFallback>МС</AvatarFallback></Avatar>
+              <Avatar size="lg"><AvatarFallback>АП</AvatarFallback></Avatar>
+            </AvatarGroup>
+          </div>
+        </div>
+      </div>
+
       {/* Presets */}
       <div className="space-y-3">
         <p className="text-sm font-medium">Базовые пресеты</p>

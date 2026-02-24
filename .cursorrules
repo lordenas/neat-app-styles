@@ -95,6 +95,19 @@
 <Input error={errors.name?.message ?? ""} />      // Ошибка под полем (место зарезервировано)
 ```
 
+### InputGroup (аддоны)
+```tsx
+<InputGroup>
+  <InputAddon>https://</InputAddon>
+  <Input placeholder="example.com" className="rounded-l-none border-l-0" />
+</InputGroup>
+
+<InputGroup>
+  <Input placeholder="0.00" className="rounded-r-none border-r-0" />
+  <InputAddon>₽</InputAddon>
+</InputGroup>
+```
+
 ### Составные поля (input + кнопка)
 Фокус должен охватывать группу как единый элемент:
 ```tsx
@@ -108,7 +121,7 @@
 <input className="border rounded-l-md focus-visible:ring-2 ..." />
 <Button className="rounded-l-none border-l-0 ..." />
 ```
-Применяется к: DatePick, Input с inputEnd-кнопкой, поисковые поля с иконкой.
+Применяется к: DatePick, Input с inputEnd-кнопкой, InputGroup, поисковые поля с иконкой.
 
 ### Button
 ```tsx
@@ -198,6 +211,18 @@
   <TabsList><TabsTrigger value="tab1">Tab</TabsTrigger></TabsList>
   <TabsContent value="tab1">Content</TabsContent>
 </Tabs>
+
+// Vertical — для настроек, боковая навигация
+<Tabs defaultValue="general" className="flex gap-4">
+  <TabsList variant="vertical">
+    <TabsTrigger value="general">Общие</TabsTrigger>
+    <TabsTrigger value="security">Безопасность</TabsTrigger>
+  </TabsList>
+  <div className="flex-1">
+    <TabsContent value="general" className="mt-0">...</TabsContent>
+  </div>
+</Tabs>
+// Variants: default | underline | outline | vertical
 ```
 
 ### DatePicker (мультилокальный)
@@ -276,6 +301,17 @@ Stepper — пошаговая навигация с кружками, конн�
 <SkeletonTable rows={5} cols={4} /> // Таблица с заголовком
 <SkeletonForm fields={3} />         // Форма: label + input × N + кнопка
 <SkeletonAvatar />                  // Аватар + 2 строки текста
+```
+
+### AvatarGroup
+```tsx
+<AvatarGroup max={3}>
+  <Avatar><AvatarFallback>АБ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ВГ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ДЕ</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>ЖЗ</AvatarFallback></Avatar>
+</AvatarGroup>
+// Props: max (number), size ("xs"|"sm"|"default"|"lg"|"xl")
 ```
 
 ### Copy to Clipboard

@@ -43,6 +43,7 @@ const tabsListVariants = cva(
         default: "h-10 justify-center rounded-md bg-muted p-1",
         underline: "gap-2 border-b border-border bg-transparent p-0 rounded-none",
         outline: "gap-0 bg-transparent p-0 rounded-none",
+        vertical: "flex-col items-stretch gap-1 bg-transparent p-0 rounded-none border-r border-border pr-2",
       },
     },
     defaultVariants: {
@@ -76,6 +77,8 @@ const tabsTriggerVariants: Record<NonNullable<TabsListVariant>, string> = {
     "inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium transition-all border-b-2 border-transparent rounded-none -mb-px data-[state=active]:border-primary data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
   outline:
     "inline-flex items-center justify-center whitespace-nowrap px-3 py-1.5 text-sm font-medium transition-all border border-transparent rounded-t-md -mb-px data-[state=active]:border-border data-[state=active]:border-b-background data-[state=active]:bg-background data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  vertical:
+    "inline-flex items-center justify-start whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-all border-r-2 border-transparent -mr-px data-[state=active]:border-primary data-[state=active]:bg-muted data-[state=active]:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
 };
 
 const TabsTrigger = React.forwardRef<
