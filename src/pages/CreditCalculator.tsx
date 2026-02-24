@@ -679,7 +679,7 @@ const CreditCalculator = () => {
 
         {/* ─────── Results ─────── */}
         <div className="section-card space-y-5">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <h2 className="text-lg font-semibold">Результаты расчёта</h2>
             <div className="flex items-center gap-2">
               <Button
@@ -822,7 +822,7 @@ const CreditCalculator = () => {
 
           {/* Schedule table with sticky header & footer */}
           <div>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
               <h3 className="text-sm font-medium">График погашения</h3>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" icon={<FileDown />}>
