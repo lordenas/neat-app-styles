@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { X, ChevronDown, Check } from "lucide-react";
+import { X, ChevronDown, Check, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /** Склонение слова «элемент» по числу */
@@ -45,12 +45,17 @@ export interface MultiselectProps {
   maxDisplayed?: number;
   /** Плейсхолдер при пустом выборе */
   placeholder?: string;
+  /** Включить поле поиска в выпадающем списке (по умолчанию `false`) */
+  searchable?: boolean;
+  /** Плейсхолдер поля поиска */
+  searchPlaceholder?: string;
 }
 
 /**
  * Мульти-выбор с Badge-тегами и выпадающим списком.
  *
  * Поддерживает:
+ * - Поиск/фильтрацию через `searchable`
  * - Группировку опций через `group`
  * - Блокировку отдельных опций через `disabled`
  * - Свёртку тегов через `maxDisplayed`
@@ -92,9 +97,13 @@ export function Multiselect({
   onSelectedChange,
   maxDisplayed,
   placeholder = "Выберите опции...",
+  searchable = false,
+  searchPlaceholder = "Поиск...",
 }: MultiselectProps) {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const ref = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -105,6 +114,21 @@ export function Multiselect({
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (open && searchable && searchRef.current) {
+      searchRef.current.focus();
+    }
+    if (!open) setSearch("");
+  }, [open, searchable]);
+
+  // Filter options by search query
+  const filteredOptions = useMemo(() => {
+    if (!search) return options;
+    const q = search.toLowerCase();
+    return options.filter((o) => o.label.toLowerCase().includes(q));
+  }, [options, search]);
 
   const toggle = (value: string) => {
     const opt = options.find((o) => o.value === value);
@@ -124,10 +148,10 @@ export function Multiselect({
 
   const showCollapsed = maxDisplayed !== undefined && selected.length > maxDisplayed;
 
-  // Group options
+  // Group filtered options
   const groups = new Map<string, MultiselectOption[]>();
   const ungrouped: MultiselectOption[] = [];
-  for (const opt of options) {
+  for (const opt of filteredOptions) {
     if (opt.group) {
       const arr = groups.get(opt.group) || [];
       arr.push(opt);
@@ -136,6 +160,8 @@ export function Multiselect({
       ungrouped.push(opt);
     }
   }
+
+  const hasResults = ungrouped.length > 0 || groups.size > 0;
 
   const renderOption = (option: MultiselectOption) => {
     const isSelected = selected.includes(option.value);
@@ -208,7 +234,37 @@ export function Multiselect({
 
         {open && (
           <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md animate-fade-in">
+            {searchable && (
+              <div className="p-2 border-b">
+                <div className="flex items-center gap-2 px-2 rounded-md border border-input bg-background">
+                  <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder={searchPlaceholder}
+                    className="flex-1 py-1.5 text-sm bg-transparent outline-none placeholder:text-muted-foreground"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  {search && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setSearch(""); }}
+                      className="shrink-0"
+                    >
+                      <X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
             <div className="py-1 max-h-48 overflow-auto">
+              {!hasResults && (
+                <div className="px-3 py-4 text-sm text-muted-foreground text-center">
+                  Ничего не найдено
+                </div>
+              )}
               {ungrouped.map(renderOption)}
               {Array.from(groups.entries()).map(([group, opts]) => (
                 <div key={group}>
