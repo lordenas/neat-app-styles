@@ -62,6 +62,7 @@ function applyDateMaskLocale(raw: string, config: DateLocaleConfig): string {
   let cursor = 0;
   let dayVal: number | undefined;
   let monthVal: number | undefined;
+  let yearVal: number | undefined;
 
   for (let i = 0; i < 3; i++) {
     const part = order[i];
@@ -71,11 +72,10 @@ function applyDateMaskLocale(raw: string, config: DateLocaleConfig): string {
       const yearDigits = digits.slice(cursor, cursor + 4);
       cursor += yearDigits.length;
 
-      // Final leap-year validation when year complete
-      if (yearDigits.length === 4 && dayVal && monthVal) {
-        const y = parseInt(yearDigits);
-        if (dayVal > daysInMonth(monthVal, y)) {
-          // Block last digit
+      if (yearDigits.length === 4) {
+        yearVal = parseInt(yearDigits);
+        // Final leap-year validation when year complete and day+month known
+        if (dayVal && monthVal && dayVal > daysInMonth(monthVal, yearVal)) {
           results.push(yearDigits.slice(0, 3));
           return results.join(sep);
         }
@@ -140,8 +140,8 @@ function applyDateMaskLocale(raw: string, config: DateLocaleConfig): string {
 
       dayVal = parseInt(dayStr);
 
-      // Cross-validate with existing month
-      if (monthVal && dayVal > daysInMonth(monthVal)) {
+      // Cross-validate with existing month (and year if known)
+      if (monthVal && dayVal > daysInMonth(monthVal, yearVal)) {
         if (results.length > 0) return results.join(sep) + sep;
         return "";
       }
