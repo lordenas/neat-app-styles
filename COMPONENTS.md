@@ -1195,6 +1195,126 @@ const columns: DataTableColumn<User>[] = [
 
 ---
 
+## InlineEdit
+
+**Импорт:** `import { InlineEdit } from "@/components/ui/inline-edit"`
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `value` | `string` | Текущее значение |
+| `onSave` | `(value: string) => void` | Колбэк при сохранении |
+| `placeholder` | `string` | Плейсхолдер при пустом значении |
+| `inputSize` | `"sm"` \| `"default"` \| `"lg"` | Размер поля |
+| `disabled` | `boolean` | Запрет редактирования |
+
+```tsx
+<InlineEdit value={name} onSave={setName} />
+<InlineEdit value={title} onSave={setTitle} placeholder="Не указано" inputSize="sm" />
+```
+
+**Управление:** `Enter` — сохранить, `Escape` — отменить, blur — сохранить.
+
+---
+
+## OTP Input
+
+**Импорт:** `import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@/components/ui/input-otp"`
+
+```tsx
+<InputOTP maxLength={6} value={code} onChange={setCode}>
+  <InputOTPGroup>
+    <InputOTPSlot index={0} />
+    <InputOTPSlot index={1} />
+    <InputOTPSlot index={2} />
+  </InputOTPGroup>
+  <InputOTPSeparator />
+  <InputOTPGroup>
+    <InputOTPSlot index={3} />
+    <InputOTPSlot index={4} />
+    <InputOTPSlot index={5} />
+  </InputOTPGroup>
+</InputOTP>
+```
+
+---
+
+## Drawer
+
+**Импорт:** `import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer"`
+
+Bottom-sheet с жестом свайпа (vaul). Идеален для мобильных.
+
+```tsx
+<Drawer>
+  <DrawerTrigger asChild><Button>Открыть</Button></DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>Заголовок</DrawerTitle>
+    </DrawerHeader>
+    <div className="p-4">Контент</div>
+    <DrawerFooter>
+      <DrawerClose asChild><Button variant="outline">Закрыть</Button></DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>
+```
+
+---
+
+## Sheet
+
+**Импорт:** `import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from "@/components/ui/sheet"`
+
+| Prop (SheetContent) | Тип | Описание |
+|------|-----|----------|
+| `side` | `"left"` \| `"right"` \| `"top"` \| `"bottom"` | Сторона выезда (по умолчанию `"right"`) |
+
+```tsx
+<Sheet>
+  <SheetTrigger asChild><Button>Открыть</Button></SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader><SheetTitle>Заголовок</SheetTitle></SheetHeader>
+    <div>Контент</div>
+  </SheetContent>
+</Sheet>
+```
+
+---
+
+## ContextMenu
+
+**Импорт:** `import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ... } from "@/components/ui/context-menu"`
+
+```tsx
+<ContextMenu>
+  <ContextMenuTrigger>Правый клик</ContextMenuTrigger>
+  <ContextMenuContent>
+    <ContextMenuItem>Копировать<ContextMenuShortcut>⌘C</ContextMenuShortcut></ContextMenuItem>
+    <ContextMenuSub>
+      <ContextMenuSubTrigger>Подменю</ContextMenuSubTrigger>
+      <ContextMenuSubContent>...</ContextMenuSubContent>
+    </ContextMenuSub>
+  </ContextMenuContent>
+</ContextMenu>
+```
+
+---
+
+## HoverCard
+
+**Импорт:** `import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"`
+
+```tsx
+<HoverCard>
+  <HoverCardTrigger asChild><a href="#">@username</a></HoverCardTrigger>
+  <HoverCardContent className="w-72">
+    <p>Превью профиля при наведении</p>
+  </HoverCardContent>
+</HoverCard>
+```
+
+---
+
 ## CSS-утилиты
 
 | Класс | Стили | Использование |
