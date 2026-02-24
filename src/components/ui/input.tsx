@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ const inputVariants = cva(
       inputSize: {
         sm: "h-8 px-2.5 py-1 text-xs",
         default: "h-10 px-3 py-2 text-base md:text-sm",
+        lg: "h-12 px-4 py-3 text-base",
       },
     },
     defaultVariants: {
@@ -55,6 +56,8 @@ export interface InputProps
   error?: string;
   /** Добавляет кнопку показа/скрытия пароля (для type="password") */
   showPasswordToggle?: boolean;
+  /** Показывает спиннер и делает поле disabled */
+  loading?: boolean;
 }
 
 function formatWithSpaces(value: string): string {
@@ -67,7 +70,7 @@ function parseDigits(value: string): string {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, inputSize, inputStart, inputEnd, formatNumber, error, showPasswordToggle, onChange, value, defaultValue, id, ...props }, ref) => {
+  ({ className, type, inputSize, inputStart, inputEnd, formatNumber, error, showPasswordToggle, loading, onChange, value, defaultValue, id, ...props }, ref) => {
     const [formatted, setFormatted] = React.useState(() =>
       formatNumber && value != null ? formatWithSpaces(String(value)) : undefined
     );
@@ -118,7 +121,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       </button>
     ) : null;
 
-    const effectiveEnd = passwordToggle || inputEnd;
+    const loadingSpinner = loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null;
+    const effectiveEnd = loadingSpinner || passwordToggle || inputEnd;
+    const isDisabled = props.disabled || loading;
 
     const renderInput = () => {
       if (inputStart || effectiveEnd) {
@@ -126,8 +131,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <div
             className={cn(
               "flex items-center rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-colors",
-              inputSize === "sm" ? "h-8" : "h-10",
-              props.disabled && "cursor-not-allowed opacity-50",
+              inputSize === "sm" ? "h-8" : inputSize === "lg" ? "h-12" : "h-10",
+              isDisabled && "cursor-not-allowed opacity-50",
               error && "border-destructive",
               className
             )}
@@ -144,13 +149,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               type={effectiveType}
               inputMode={formatNumber ? "numeric" : undefined}
               id={id}
+              disabled={isDisabled}
               aria-invalid={ariaInvalid}
               aria-describedby={ariaDescribedBy}
               className={cn(
                 "flex-1 bg-transparent placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed",
-                inputSize === "sm" ? "px-2 py-1 text-xs" : "px-3 py-2 text-base md:text-sm",
-                !inputStart && (inputSize === "sm" ? "pl-2.5" : "pl-3"),
-                !effectiveEnd && (inputSize === "sm" ? "pr-2.5" : "pr-3"),
+                inputSize === "sm" ? "px-2 py-1 text-xs" : inputSize === "lg" ? "px-4 py-3 text-base" : "px-3 py-2 text-base md:text-sm",
+                !inputStart && (inputSize === "sm" ? "pl-2.5" : inputSize === "lg" ? "pl-4" : "pl-3"),
+                !effectiveEnd && (inputSize === "sm" ? "pr-2.5" : inputSize === "lg" ? "pr-4" : "pr-3"),
               )}
               ref={ref}
               {...inputProps}
@@ -172,6 +178,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={effectiveType}
           inputMode={formatNumber ? "numeric" : undefined}
           id={id}
+          disabled={isDisabled}
           aria-invalid={ariaInvalid}
           aria-describedby={ariaDescribedBy}
           className={cn(inputVariants({ inputSize }), error && "border-destructive", className)}
