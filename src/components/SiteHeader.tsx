@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Globe, ChevronDown, Calculator } from "lucide-react";
+import { Globe, ChevronDown, Calculator, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -46,8 +46,14 @@ export function SiteHeader() {
           <span className="font-bold text-lg tracking-tight hidden sm:inline">{t("site.name")}</span>
         </Link>
 
-        {/* Right controls */}
+        {/* Nav + controls */}
         <div className="flex items-center gap-1">
+          <Link to="/blog">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
+              <BookOpen className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Блог</span>
+            </Button>
+          </Link>
           {/* Language */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
