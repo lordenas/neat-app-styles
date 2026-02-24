@@ -2,6 +2,15 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Многострочное текстовое поле.
+ *
+ * @example
+ * ```tsx
+ * <Textarea placeholder="Введите описание..." rows={4} />
+ * <Textarea disabled value="Только для чтения" />
+ * ```
+ */
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => {

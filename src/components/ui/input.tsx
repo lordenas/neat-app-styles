@@ -18,6 +18,31 @@ const inputVariants = cva(
   }
 );
 
+/**
+ * Текстовое поле ввода с поддержкой размеров, иконок и форматирования чисел.
+ *
+ * @example
+ * ```tsx
+ * // Базовое использование
+ * <Input placeholder="Введите текст..." />
+ *
+ * // С иконками
+ * <Input inputStart={<Search />} placeholder="Поиск..." />
+ * <Input inputEnd={<Eye />} placeholder="Пароль" type="password" />
+ * <Input inputStart={<DollarSign />} inputEnd={<span>USD</span>} placeholder="0.00" />
+ *
+ * // Маленький размер
+ * <Input inputSize="sm" placeholder="Компактное поле" />
+ *
+ * // Автоформатирование числа (1000000 → 1 000 000)
+ * <Input formatNumber placeholder="Введите сумму" />
+ * ```
+ *
+ * @prop inputSize - Размер поля: `"sm"` (h-8) | `"default"` (h-10)
+ * @prop inputStart - React-элемент (иконка/текст), отображаемый в начале поля
+ * @prop inputEnd - React-элемент (иконка/текст), отображаемый в конце поля
+ * @prop formatNumber - Автоматически группирует цифры пробелами по разрядам. В `onChange` передаётся «сырое» числовое значение без пробелов
+ */
 export interface InputProps
   extends Omit<React.ComponentProps<"input">, "size">,
     VariantProps<typeof inputVariants> {

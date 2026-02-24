@@ -5,6 +5,18 @@ import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
+/**
+ * Календарь для выбора даты или диапазона дат. Основан на `react-day-picker`.
+ *
+ * @example
+ * ```tsx
+ * // Выбор одной даты
+ * <Calendar mode="single" selected={date} onSelect={setDate} />
+ *
+ * // Диапазон дат
+ * <Calendar mode="range" selected={range} onSelect={setRange} />
+ * ```
+ */
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {

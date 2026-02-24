@@ -6,6 +6,29 @@ import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useF
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
+/**
+ * Провайдер формы на основе `react-hook-form`.
+ *
+ * @example
+ * ```tsx
+ * const form = useForm({ resolver: zodResolver(schema) });
+ *
+ * <Form {...form}>
+ *   <FormField
+ *     control={form.control}
+ *     name="email"
+ *     render={({ field }) => (
+ *       <FormItem>
+ *         <FormLabel>Email</FormLabel>
+ *         <FormControl><Input {...field} /></FormControl>
+ *         <FormDescription>Ваш рабочий email.</FormDescription>
+ *         <FormMessage />
+ *       </FormItem>
+ *     )}
+ *   />
+ * </Form>
+ * ```
+ */
 const Form = FormProvider;
 
 type FormFieldContextValue<

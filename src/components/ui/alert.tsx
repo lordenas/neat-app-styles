@@ -18,6 +18,26 @@ const alertVariants = cva(
   },
 );
 
+/**
+ * Информационное уведомление (inline-блок) с иконкой, заголовком и описанием.
+ *
+ * @example
+ * ```tsx
+ * <Alert>
+ *   <Info className="h-4 w-4" />
+ *   <AlertTitle>Информация</AlertTitle>
+ *   <AlertDescription>Данные были обновлены.</AlertDescription>
+ * </Alert>
+ *
+ * <Alert variant="destructive">
+ *   <AlertCircle className="h-4 w-4" />
+ *   <AlertTitle>Ошибка</AlertTitle>
+ *   <AlertDescription>Не удалось сохранить данные.</AlertDescription>
+ * </Alert>
+ * ```
+ *
+ * @prop variant - `"default"` | `"destructive"`
+ */
 const Alert = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>

@@ -2,6 +2,23 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Контейнер-карточка с рамкой и тенью.
+ *
+ * @example
+ * ```tsx
+ * <Card>
+ *   <CardHeader>
+ *     <CardTitle>Заголовок</CardTitle>
+ *     <CardDescription>Описание карточки</CardDescription>
+ *   </CardHeader>
+ *   <CardContent>Содержимое</CardContent>
+ *   <CardFooter>
+ *     <Button>Действие</Button>
+ *   </CardFooter>
+ * </Card>
+ * ```
+ */
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)} {...props} />
 ));

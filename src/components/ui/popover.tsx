@@ -3,6 +3,17 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Всплывающий контейнер (popover), открывающийся по клику.
+ *
+ * @example
+ * ```tsx
+ * <Popover>
+ *   <PopoverTrigger asChild><Button variant="outline">Открыть</Button></PopoverTrigger>
+ *   <PopoverContent>Содержимое поповера</PopoverContent>
+ * </Popover>
+ * ```
+ */
 const Popover = PopoverPrimitive.Root;
 
 const PopoverTrigger = PopoverPrimitive.Trigger;

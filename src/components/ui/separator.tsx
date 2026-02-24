@@ -3,6 +3,15 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Визуальный разделитель (линия) — горизонтальный или вертикальный.
+ *
+ * @example
+ * ```tsx
+ * <Separator />
+ * <Separator orientation="vertical" className="h-6" />
+ * ```
+ */
 const Separator = React.forwardRef<
   React.ElementRef<typeof SeparatorPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>

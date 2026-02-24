@@ -3,6 +3,17 @@ import * as ProgressPrimitive from "@radix-ui/react-progress";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Индикатор прогресса (прогресс-бар).
+ *
+ * @example
+ * ```tsx
+ * <Progress value={60} />
+ * <Progress value={100} className="h-2" />
+ * ```
+ *
+ * @prop value - Текущее значение прогресса (0–100)
+ */
 const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>

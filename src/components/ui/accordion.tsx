@@ -4,6 +4,22 @@ import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Аккордеон — сворачиваемые секции контента.
+ *
+ * @example
+ * ```tsx
+ * <Accordion type="single" collapsible>
+ *   <AccordionItem value="item-1">
+ *     <AccordionTrigger>Раздел 1</AccordionTrigger>
+ *     <AccordionContent>Содержимое раздела 1</AccordionContent>
+ *   </AccordionItem>
+ * </Accordion>
+ * ```
+ *
+ * @prop type - `"single"` (одна секция) | `"multiple"` (несколько одновременно)
+ * @prop collapsible - Позволяет закрыть все секции (только для `type="single"`)
+ */
 const Accordion = AccordionPrimitive.Root;
 
 const AccordionItem = React.forwardRef<

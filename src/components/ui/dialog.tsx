@@ -4,12 +4,34 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Модальное диалоговое окно с оверлеем.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTrigger asChild><Button>Открыть</Button></DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>
+ *       <DialogTitle>Заголовок</DialogTitle>
+ *       <DialogDescription>Описание действия</DialogDescription>
+ *     </DialogHeader>
+ *     <p>Содержимое диалога</p>
+ *     <DialogFooter>
+ *       <Button>Подтвердить</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ */
 const Dialog = DialogPrimitive.Root;
 
+/** Элемент, при клике на который открывается диалог. */
 const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
 
+/** Кнопка закрытия диалога. */
 const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<

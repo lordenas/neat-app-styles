@@ -2,6 +2,32 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Таблица с поддержкой вариантов отображения.
+ *
+ * @example
+ * ```tsx
+ * <Table size="sm" bordered striped>
+ *   <TableHeader>
+ *     <TableRow>
+ *       <TableHead>Имя</TableHead>
+ *       <TableHead>Роль</TableHead>
+ *     </TableRow>
+ *   </TableHeader>
+ *   <TableBody>
+ *     <TableRow>
+ *       <TableCell>Иван</TableCell>
+ *       <TableCell>Админ</TableCell>
+ *     </TableRow>
+ *   </TableBody>
+ * </Table>
+ * ```
+ *
+ * @prop size - Размер текста: `"default"` | `"sm"`
+ * @prop bordered - Обводка ячеек
+ * @prop striped - Чередование фона строк
+ * @prop hoverable - Подсветка строки при наведении (по умолчанию `true`)
+ */
 interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   size?: "default" | "sm";
   bordered?: boolean;

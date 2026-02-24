@@ -31,6 +31,23 @@ const buttonVariants = cva(
   }
 );
 
+/**
+ * Кнопка с поддержкой вариантов оформления и размеров.
+ *
+ * @example
+ * ```tsx
+ * <Button variant="default" size="sm">Сохранить</Button>
+ * <Button variant="destructive">Удалить</Button>
+ * <Button variant="outline" icon={<Plus />}>Добавить</Button>
+ * <Button variant="ghost" size="icon"><Settings /></Button>
+ * <Button asChild><a href="/link">Ссылка-кнопка</a></Button>
+ * ```
+ *
+ * @prop variant - Стиль кнопки: `"default"` | `"destructive"` | `"outline"` | `"secondary"` | `"ghost"` | `"link"`
+ * @prop size - Размер: `"sm"` (h-8) | `"default"` (h-10) | `"lg"` (h-11) | `"icon"` (h-10 w-10) | `"icon-sm"` (h-8 w-8)
+ * @prop icon - React-элемент иконки, отображается перед `children`
+ * @prop asChild - Если `true`, рендерит дочерний элемент вместо `<button>` (через Radix Slot)
+ */
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {

@@ -4,6 +4,23 @@ import { Circle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Группа радиокнопок для выбора одного значения из набора.
+ *
+ * @example
+ * ```tsx
+ * <RadioGroup defaultValue="option1" onValueChange={(v) => console.log(v)}>
+ *   <div className="flex items-center gap-2">
+ *     <RadioGroupItem value="option1" id="r1" />
+ *     <Label htmlFor="r1">Вариант 1</Label>
+ *   </div>
+ *   <div className="flex items-center gap-2">
+ *     <RadioGroupItem value="option2" id="r2" />
+ *     <Label htmlFor="r2">Вариант 2</Label>
+ *   </div>
+ * </RadioGroup>
+ * ```
+ */
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>

@@ -4,10 +4,28 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Выпадающий список для выбора одного значения.
+ *
+ * @example
+ * ```tsx
+ * <Select defaultValue="apple">
+ *   <SelectTrigger className="w-48">
+ *     <SelectValue placeholder="Выберите..." />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectItem value="apple">Яблоко</SelectItem>
+ *     <SelectItem value="banana">Банан</SelectItem>
+ *   </SelectContent>
+ * </Select>
+ * ```
+ */
 const Select = SelectPrimitive.Root;
 
+/** Группа элементов внутри `SelectContent`. */
 const SelectGroup = SelectPrimitive.Group;
 
+/** Отображает текущее выбранное значение или `placeholder`. */
 const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
