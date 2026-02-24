@@ -4,17 +4,6 @@ import { Label } from "@/components/ui/label";
 import { X, ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const options = [
-  "Разработка",
-  "Дизайн",
-  "Управление",
-  "Аналитика",
-  "Тестирование",
-  "DevOps",
-  "Маркетинг",
-  "Поддержка",
-];
-
 /** Склонение слова «элемент» по числу */
 function pluralizeElement(n: number): string {
   const abs = Math.abs(n) % 100;
@@ -25,32 +14,45 @@ function pluralizeElement(n: number): string {
   return "элементов";
 }
 
+export interface MultiselectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  group?: string;
+}
+
 /**
  * Мульти-выбор с Badge-тегами и выпадающим списком.
- * Поддерживает удаление тегов по клику на X, закрытие по клику вне, `maxDisplayed` для свёртки.
  *
- * @param label - Метка поля
- * @param selected - Текущие выбранные значения
- * @param onSelectedChange - Колбэк изменения выбора
- * @param maxDisplayed - Макс. количество тегов для отображения. При превышении показывает "Выбрано N элементов"
+ * @prop options - Массив опций с поддержкой disabled и group
+ * @prop selected - Текущие выбранные значения
+ * @prop onSelectedChange - Колбэк изменения выбора
+ * @prop maxDisplayed - Макс. кол-во тегов
+ * @prop label - Метка поля
  *
  * @example
  * ```tsx
  * <Multiselect
  *   label="Отделы"
- *   selected={["Разработка", "Дизайн"]}
+ *   options={[
+ *     { value: "dev", label: "Разработка", group: "Технологии" },
+ *     { value: "design", label: "Дизайн", group: "Технологии" },
+ *     { value: "hr", label: "HR", group: "Бизнес", disabled: true },
+ *   ]}
+ *   selected={["dev"]}
  *   onSelectedChange={setSelected}
- *   maxDisplayed={3}
  * />
  * ```
  */
 function Multiselect({
   label,
+  options,
   selected,
   onSelectedChange,
   maxDisplayed,
 }: {
   label: string;
+  options: MultiselectOption[];
   selected: string[];
   onSelectedChange: (val: string[]) => void;
   maxDisplayed?: number;
@@ -68,18 +70,62 @@ function Multiselect({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const toggle = (option: string) => {
+  const toggle = (value: string) => {
+    const opt = options.find((o) => o.value === value);
+    if (opt?.disabled) return;
     onSelectedChange(
-      selected.includes(option) ? selected.filter((s) => s !== option) : [...selected, option]
+      selected.includes(value) ? selected.filter((s) => s !== value) : [...selected, value]
     );
   };
 
-  const remove = (option: string) => {
-    onSelectedChange(selected.filter((s) => s !== option));
+  const remove = (value: string) => {
+    const opt = options.find((o) => o.value === value);
+    if (opt?.disabled) return;
+    onSelectedChange(selected.filter((s) => s !== value));
   };
 
+  const getLabel = (value: string) => options.find((o) => o.value === value)?.label ?? value;
+
   const showCollapsed = maxDisplayed !== undefined && selected.length > maxDisplayed;
-  const visibleTags = showCollapsed ? selected.slice(0, maxDisplayed) : selected;
+
+  // Group options
+  const groups = new Map<string, MultiselectOption[]>();
+  const ungrouped: MultiselectOption[] = [];
+  for (const opt of options) {
+    if (opt.group) {
+      const arr = groups.get(opt.group) || [];
+      arr.push(opt);
+      groups.set(opt.group, arr);
+    } else {
+      ungrouped.push(opt);
+    }
+  }
+
+  const renderOption = (option: MultiselectOption) => {
+    const isSelected = selected.includes(option.value);
+    return (
+      <div
+        key={option.value}
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 text-sm transition-colors",
+          option.disabled
+            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer hover:bg-accent",
+          isSelected && !option.disabled && "text-primary"
+        )}
+        onClick={() => !option.disabled && toggle(option.value)}
+      >
+        <div className={cn(
+          "h-4 w-4 rounded border flex items-center justify-center shrink-0 transition-colors",
+          isSelected ? "bg-primary border-primary" : "border-input",
+          option.disabled && "opacity-50"
+        )}>
+          {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
+        </div>
+        {option.label}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-1.5">
@@ -100,20 +146,23 @@ function Multiselect({
               Выбрано {selected.length} {pluralizeElement(selected.length)}
             </span>
           ) : (
-            visibleTags.map((s) => (
-              <Badge
-                key={s}
-                variant="secondary"
-                className="gap-1 text-xs"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  remove(s);
-                }}
-              >
-                {s}
-                <X className="h-3 w-3" />
-              </Badge>
-            ))
+            selected.map((s) => {
+              const opt = options.find((o) => o.value === s);
+              return (
+                <Badge
+                  key={s}
+                  variant="secondary"
+                  className={cn("gap-1 text-xs", opt?.disabled && "opacity-60")}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    remove(s);
+                  }}
+                >
+                  {getLabel(s)}
+                  {!opt?.disabled && <X className="h-3 w-3" />}
+                </Badge>
+              );
+            })
           )}
           <ChevronDown className={cn(
             "ml-auto h-4 w-4 text-muted-foreground shrink-0 transition-transform",
@@ -124,27 +173,18 @@ function Multiselect({
         {open && (
           <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md animate-fade-in">
             <div className="py-1 max-h-48 overflow-auto">
-              {options.map((option) => {
-                const isSelected = selected.includes(option);
-                return (
-                  <div
-                    key={option}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-2 text-sm cursor-pointer transition-colors hover:bg-accent",
-                      isSelected && "text-primary"
-                    )}
-                    onClick={() => toggle(option)}
-                  >
-                    <div className={cn(
-                      "h-4 w-4 rounded border flex items-center justify-center shrink-0 transition-colors",
-                      isSelected ? "bg-primary border-primary" : "border-input"
-                    )}>
-                      {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
-                    </div>
-                    {option}
+              {/* Ungrouped options first */}
+              {ungrouped.map(renderOption)}
+
+              {/* Grouped options */}
+              {Array.from(groups.entries()).map(([group, opts]) => (
+                <div key={group}>
+                  <div className="px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    {group}
                   </div>
-                );
-              })}
+                  {opts.map(renderOption)}
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -154,22 +194,62 @@ function Multiselect({
   );
 }
 
+/* ─── Showcase data ─── */
+const flatOptions: MultiselectOption[] = [
+  { value: "dev", label: "Разработка" },
+  { value: "design", label: "Дизайн" },
+  { value: "mgmt", label: "Управление" },
+  { value: "analytics", label: "Аналитика" },
+  { value: "qa", label: "Тестирование" },
+  { value: "devops", label: "DevOps" },
+  { value: "marketing", label: "Маркетинг" },
+  { value: "support", label: "Поддержка" },
+];
+
+const groupedOptions: MultiselectOption[] = [
+  { value: "react", label: "React", group: "Frontend" },
+  { value: "vue", label: "Vue", group: "Frontend" },
+  { value: "angular", label: "Angular", group: "Frontend", disabled: true },
+  { value: "node", label: "Node.js", group: "Backend" },
+  { value: "python", label: "Python", group: "Backend" },
+  { value: "go", label: "Go", group: "Backend", disabled: true },
+  { value: "postgres", label: "PostgreSQL", group: "Database" },
+  { value: "mongo", label: "MongoDB", group: "Database" },
+  { value: "redis", label: "Redis", group: "Database" },
+];
+
+const disabledOptions: MultiselectOption[] = [
+  { value: "free", label: "Бесплатный" },
+  { value: "starter", label: "Стартер" },
+  { value: "pro", label: "Pro", disabled: true },
+  { value: "enterprise", label: "Enterprise", disabled: true },
+];
+
 export function MultiselectShowcase() {
-  const [selected1, setSelected1] = useState<string[]>(["Разработка", "Дизайн"]);
-  const [selected2, setSelected2] = useState<string[]>(["Разработка", "Дизайн", "Аналитика", "DevOps"]);
+  const [selected1, setSelected1] = useState<string[]>(["dev", "design"]);
+  const [selected2, setSelected2] = useState<string[]>(["react", "node", "angular", "postgres"]);
+  const [selected3, setSelected3] = useState<string[]>(["free", "pro"]);
 
   return (
     <div className="space-y-6">
       <Multiselect
-        label="Multiselect"
+        label="Multiselect (базовый)"
+        options={flatOptions}
         selected={selected1}
         onSelectedChange={setSelected1}
       />
       <Multiselect
-        label="Multiselect (maxDisplayed=3)"
+        label="С группами и disabled (maxDisplayed=3)"
+        options={groupedOptions}
         selected={selected2}
         onSelectedChange={setSelected2}
         maxDisplayed={3}
+      />
+      <Multiselect
+        label="С заблокированными опциями"
+        options={disabledOptions}
+        selected={selected3}
+        onSelectedChange={setSelected3}
       />
     </div>
   );
