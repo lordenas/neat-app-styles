@@ -46,11 +46,12 @@ export function MultiselectShowcase() {
         onSelectedChange={setSelected1}
       />
       <Multiselect
-        label="С группами и disabled (maxDisplayed=3)"
+        label="С поиском, группами и disabled (searchable)"
         options={groupedOptions}
         selected={selected2}
         onSelectedChange={setSelected2}
         maxDisplayed={3}
+        searchable
       />
       <Multiselect
         label="С заблокированными опциями"
