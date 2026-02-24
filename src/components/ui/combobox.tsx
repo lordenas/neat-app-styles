@@ -118,7 +118,7 @@ export function Combobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[260px] p-0" align="start">
+      <PopoverContent className="w-[260px] p-0 pointer-events-auto" align="start">
         <div className="flex items-center border-b px-3">
           <input
             ref={inputRef}
