@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
@@ -711,6 +711,56 @@ const CreditCalculator = () => {
                   <span className="text-sm font-semibold font-mono">{fmt(totalInterest)} ₽</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Bar chart - monthly breakdown */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Разбивка платежей по месяцам</h3>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={fakeSchedule.map((row) => ({
+                    date: row.date.slice(3),
+                    principal: row.principal,
+                    interest: row.interest,
+                  }))}
+                  margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={{ stroke: "hsl(var(--border))" }}
+                    tickFormatter={(v) => (v / 1000).toFixed(0) + "k"}
+                  />
+                  <RechartsTooltip
+                    formatter={(value: number, name: string) => [
+                      fmt(value) + " ₽",
+                      name === "principal" ? "Основной долг" : "Проценты",
+                    ]}
+                    contentStyle={{
+                      backgroundColor: "hsl(var(--popover))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "var(--radius)",
+                      color: "hsl(var(--popover-foreground))",
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                  <Legend
+                    formatter={(value) => (value === "principal" ? "Основной долг" : "Проценты")}
+                    wrapperStyle={{ fontSize: "0.75rem" }}
+                  />
+                  <Bar dataKey="principal" stackId="a" fill="hsl(var(--success))" radius={[0, 0, 0, 0]} />
+                  <Bar dataKey="interest" stackId="a" fill="hsl(var(--destructive))" radius={[2, 2, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
