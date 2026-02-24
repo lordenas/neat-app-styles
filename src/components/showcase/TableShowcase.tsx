@@ -625,15 +625,31 @@ const GRID_COLS = 5;
 function KeyboardNavTable() {
   const [activeRow, setActiveRow] = useState(0);
   const [activeCol, setActiveCol] = useState(0);
+  const [copied, setCopied] = useState(false);
   const tableRef = useRef<HTMLTableElement>(null);
 
   const data = employees.slice(0, GRID_ROWS);
   const columns = ["id", "name", "position", "experience", "salary"] as const;
   const colHeaders = ["#", "ФИО", "Должность", "Стаж", "Оклад"];
 
+  const getCellValue = useCallback((row: typeof data[0], col: typeof columns[number]) => {
+    if (col === "salary") return fmt(row.salary);
+    return String(row[col]);
+  }, [data]);
+
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     let newRow = activeRow;
     let newCol = activeCol;
+
+    if (e.key === "c" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      const value = getCellValue(data[activeRow], columns[activeCol]);
+      navigator.clipboard.writeText(value).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      });
+      return;
+    }
 
     switch (e.key) {
       case "ArrowUp":    newRow = Math.max(0, activeRow - 1); break;
@@ -653,12 +669,7 @@ function KeyboardNavTable() {
     e.preventDefault();
     setActiveRow(newRow);
     setActiveCol(newCol);
-  }, [activeRow, activeCol]);
-
-  const getCellValue = (row: typeof data[0], col: typeof columns[number]) => {
-    if (col === "salary") return fmt(row.salary);
-    return String(row[col]);
-  };
+  }, [activeRow, activeCol, getCellValue, data, columns]);
 
   return (
     <div className="space-y-3">
@@ -668,7 +679,8 @@ function KeyboardNavTable() {
         <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">↑</kbd>{" "}
         <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">↓</kbd> для навигации.{" "}
         <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Home</kbd> / <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">End</kbd> — начало/конец строки.{" "}
-        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+Home</kbd> / <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+End</kbd> — начало/конец таблицы.
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+Home</kbd> / <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+End</kbd> — начало/конец таблицы.{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+C</kbd> — копировать содержимое ячейки.
       </p>
       <div className="rounded-md border">
         <Table bordered>
@@ -726,6 +738,12 @@ function KeyboardNavTable() {
         <span className="font-medium text-foreground">
           {getCellValue(data[activeRow], columns[activeCol])}
         </span>
+        {copied && (
+          <>
+            <span className="text-muted-foreground/50">|</span>
+            <span className="text-success font-medium animate-in fade-in">✓ Скопировано</span>
+          </>
+        )}
       </div>
     </div>
   );
