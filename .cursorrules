@@ -86,6 +86,7 @@
 <Input inputStart={<Search />} />                  // Иконка слева
 <Input inputEnd={<span>₽</span>} />                // Суффикс справа
 <Input formatNumber />                             // 1000000 → 1 000 000
+<Input error={errors.name?.message ?? ""} />      // Ошибка под полем (место зарезервировано)
 ```
 
 ### Составные поля (input + кнопка)
@@ -351,7 +352,7 @@ tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
 ### Обратная связь
 - Все действия должны иметь визуальный отклик: `hover:`, `active:`, `focus-visible:`
 - Используй `disabled:opacity-50 disabled:pointer-events-none` для неактивных элементов
-- Ошибки валидации: `text-xs text-destructive mt-1` под полем
+- Ошибки валидации: проп `error` у `Input` (место зарезервировано, форма не прыгает)
 - Успешные действия: `sonner` toast или зелёный текст `text-[hsl(var(--success))]`
 - Загрузка: `Skeleton` для контента, спиннер или `disabled` для кнопок
 

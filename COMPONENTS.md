@@ -71,6 +71,7 @@
 | `inputStart` | `ReactNode` | — | Элемент в начале поля (иконка/текст) |
 | `inputEnd` | `ReactNode` | — | Элемент в конце поля (иконка/текст) |
 | `formatNumber` | `boolean` | `false` | Авто-группировка цифр пробелами (1000000 → 1 000 000). В `onChange` — «сырое» значение без пробелов |
+| `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки (форма не прыгает). Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
 
 ```tsx
 <Input placeholder="Введите текст..." />
@@ -78,10 +79,12 @@
 <Input inputEnd={<span className="text-sm font-medium">₽</span>} placeholder="0" />
 <Input inputSize="sm" placeholder="Компактное поле" />
 <Input formatNumber placeholder="Введите сумму" />
-<Input inputStart={<DollarSign />} inputEnd={<span>USD</span>} placeholder="0.00" />
+<Input error={errors.name?.message ?? ""} {...register("name")} />
 ```
 
-**Примечание:** При `formatNumber` в `onChange` передаётся числовое значение без пробелов.
+**Примечания:**
+- При `formatNumber` в `onChange` передаётся числовое значение без пробелов.
+- При `error` передавайте пустую строку `""` когда ошибки нет — место под текст будет зарезервировано. Без пропа `error` дополнительный элемент не рендерится.
 
 ---
 
