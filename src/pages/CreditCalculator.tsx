@@ -476,7 +476,7 @@ const CreditCalculator = () => {
             </FormRow>
 
             <FormRow label="Тип платежей">
-              <RadioGroup defaultValue="annuity" className="flex gap-4">
+              <RadioGroup defaultValue="annuity" className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                 <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="annuity" id="annuity" />
                   <Label htmlFor="annuity" className="font-normal cursor-pointer text-sm">
