@@ -205,3 +205,15 @@ export type { SimpleTooltipProps } from "./simple-tooltip";
 /** Группа поля ввода с текстовым аддоном (https://, ₽) */
 export { InputGroup, InputAddon } from "./input-group";
 export type { InputGroupProps, InputAddonProps } from "./input-group";
+
+/** Командная палитра / Spotlight (⌘K) */
+export { CommandPalette, useCommandPalette } from "./command-palette";
+export type { CommandPaletteProps, CommandPaletteGroup, CommandPaletteItem } from "./command-palette";
+
+/** Составная таблица с сортировкой, поиском и пагинацией */
+export { DataTable } from "./data-table";
+export type { DataTableProps, DataTableColumn } from "./data-table";
+
+/** Выбор цвета из палитры + ручной ввод HEX */
+export { ColorPicker } from "./color-picker";
+export type { ColorPickerProps } from "./color-picker";

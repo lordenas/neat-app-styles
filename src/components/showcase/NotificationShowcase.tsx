@@ -102,10 +102,46 @@ export function NotificationShowcase() {
         >
           Loading → Success
         </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            toast.promise(
+              new Promise((resolve) => setTimeout(resolve, 2500)),
+              {
+                loading: "Сохранение данных...",
+                success: "Данные успешно сохранены!",
+                error: "Не удалось сохранить",
+              }
+            );
+          }}
+        >
+          Promise
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            toast("Элемент удалён", {
+              description: "Запись перемещена в корзину.",
+              action: {
+                label: "Отменить",
+                onClick: () => toast.success("Удаление отменено"),
+              },
+              duration: 5000,
+            });
+          }}
+        >
+          Undo-паттерн
+        </Button>
       </div>
 
       <p className="helper-text">
-        Используется библиотека Sonner. Вызов: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast.success("Текст")</code>
+        Используется библиотека Sonner. Вызов: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast.success("Текст")</code>.
+        Паттерны: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast.promise()</code> для async,{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">action + duration</code> для undo.
       </p>
     </div>
   );
