@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect, Fragment } from "react";
 import {
   Table,
   TableBody,
@@ -11,6 +11,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -20,7 +21,7 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { ArrowUpDown, ArrowUp, ArrowDown, ChevronRight, ChevronDown, Loader2 } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronRight, ChevronDown, Loader2, Search, X } from "lucide-react";
 
 /* ─── Data ─── */
 const employees = [
@@ -516,6 +517,220 @@ function MasterDetailTable() {
   );
 }
 
+/* ─── 7. Lookup Filter ─── */
+function LookupFilterTable() {
+  const [query, setQuery] = useState("");
+  const [deptFilter, setDeptFilter] = useState<string | null>(null);
+
+  const departments = useMemo(() => [...new Set(employees.map(e => e.department))], []);
+
+  const filtered = useMemo(() => {
+    return employees.filter(e => {
+      const matchesQuery = !query ||
+        e.name.toLowerCase().includes(query.toLowerCase()) ||
+        e.position.toLowerCase().includes(query.toLowerCase());
+      const matchesDept = !deptFilter || e.department === deptFilter;
+      return matchesQuery && matchesDept;
+    });
+  }, [query, deptFilter]);
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">Поиск по ФИО/должности + фильтр по отделу</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            placeholder="Поиск по ФИО или должности…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            className="pl-8 pr-8"
+            inputSize="sm"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Очистить поиск"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+        <div className="flex gap-1">
+          <Button
+            variant={deptFilter === null ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDeptFilter(null)}
+          >
+            Все
+          </Button>
+          {departments.map(dept => (
+            <Button
+              key={dept}
+              variant={deptFilter === dept ? "default" : "outline"}
+              size="sm"
+              onClick={() => setDeptFilter(deptFilter === dept ? null : dept)}
+            >
+              {dept}
+            </Button>
+          ))}
+        </div>
+      </div>
+      <div className="rounded-md border">
+        <Table striped>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">#</TableHead>
+              <TableHead>ФИО</TableHead>
+              <TableHead>Отдел</TableHead>
+              <TableHead>Должность</TableHead>
+              <TableHead className="text-right">Оклад</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filtered.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  Ничего не найдено
+                </TableCell>
+              </TableRow>
+            ) : (
+              filtered.map((row, i) => (
+                <TableRow key={row.id}>
+                  <TableCell className="font-mono text-muted-foreground">{i + 1}</TableCell>
+                  <TableCell className="font-medium">{row.name}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs font-normal">{row.department}</Badge>
+                  </TableCell>
+                  <TableCell>{row.position}</TableCell>
+                  <TableCell className="text-right font-mono">{fmt(row.salary)}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Найдено: {filtered.length} из {employees.length}
+      </p>
+    </div>
+  );
+}
+
+/* ─── 8. Keyboard Navigation ─── */
+const GRID_ROWS = 5;
+const GRID_COLS = 5;
+
+function KeyboardNavTable() {
+  const [activeRow, setActiveRow] = useState(0);
+  const [activeCol, setActiveCol] = useState(0);
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  const data = employees.slice(0, GRID_ROWS);
+  const columns = ["id", "name", "position", "experience", "salary"] as const;
+  const colHeaders = ["#", "ФИО", "Должность", "Стаж", "Оклад"];
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    let newRow = activeRow;
+    let newCol = activeCol;
+
+    switch (e.key) {
+      case "ArrowUp":    newRow = Math.max(0, activeRow - 1); break;
+      case "ArrowDown":  newRow = Math.min(GRID_ROWS - 1, activeRow + 1); break;
+      case "ArrowLeft":  newCol = Math.max(0, activeCol - 1); break;
+      case "ArrowRight": newCol = Math.min(GRID_COLS - 1, activeCol + 1); break;
+      case "Home":
+        if (e.ctrlKey) { newRow = 0; newCol = 0; }
+        else { newCol = 0; }
+        break;
+      case "End":
+        if (e.ctrlKey) { newRow = GRID_ROWS - 1; newCol = GRID_COLS - 1; }
+        else { newCol = GRID_COLS - 1; }
+        break;
+      default: return;
+    }
+    e.preventDefault();
+    setActiveRow(newRow);
+    setActiveCol(newCol);
+  }, [activeRow, activeCol]);
+
+  const getCellValue = (row: typeof data[0], col: typeof columns[number]) => {
+    if (col === "salary") return fmt(row.salary);
+    return String(row[col]);
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">
+        Кликните по таблице и используйте <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">←</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">→</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">↑</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">↓</kbd> для навигации.{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Home</kbd> / <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">End</kbd> — начало/конец строки.{" "}
+        <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+Home</kbd> / <kbd className="px-1.5 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+End</kbd> — начало/конец таблицы.
+      </p>
+      <div className="rounded-md border">
+        <Table bordered>
+          <TableHeader>
+            <TableRow>
+              {colHeaders.map((h, ci) => (
+                <TableHead key={ci} className={ci === 0 ? "w-12" : ci === GRID_COLS - 1 ? "text-right" : ""}>
+                  {h}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((row, ri) => (
+              <TableRow key={row.id}>
+                {columns.map((col, ci) => {
+                  const isActive = ri === activeRow && ci === activeCol;
+                  return (
+                    <TableCell
+                      key={col}
+                      ref={el => {
+                        if (isActive && el) el.focus();
+                      }}
+                      tabIndex={isActive ? 0 : -1}
+                      role="gridcell"
+                      aria-rowindex={ri + 1}
+                      aria-colindex={ci + 1}
+                      onClick={() => { setActiveRow(ri); setActiveCol(ci); }}
+                      onKeyDown={handleKeyDown}
+                      className={[
+                        "cursor-pointer transition-all outline-none select-none",
+                        col === "id" ? "font-mono text-muted-foreground" : "",
+                        col === "name" ? "font-medium" : "",
+                        col === "salary" ? "text-right font-mono" : "",
+                        isActive
+                          ? "ring-2 ring-primary ring-inset bg-primary/5"
+                          : "hover:bg-muted/50",
+                      ].filter(Boolean).join(" ")}
+                    >
+                      {getCellValue(row, col)}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <span>Активная ячейка:</span>
+        <Badge variant="secondary" className="font-mono text-xs">
+          строка {activeRow + 1}, столбец {activeCol + 1}
+        </Badge>
+        <span className="text-muted-foreground/50">|</span>
+        <span className="font-medium text-foreground">
+          {getCellValue(data[activeRow], columns[activeCol])}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Export ─── */
 export function TableShowcase() {
   return (
@@ -531,6 +746,8 @@ export function TableShowcase() {
         <TabsTrigger value="pagination">Пагинация</TabsTrigger>
         <TabsTrigger value="grouped">Группировка</TabsTrigger>
         <TabsTrigger value="master">Master-Detail</TabsTrigger>
+        <TabsTrigger value="lookup">Lookup-фильтр</TabsTrigger>
+        <TabsTrigger value="keyboard">Клавиатура</TabsTrigger>
       </TabsList>
       <TabsContent value="default"><BasicTable /></TabsContent>
       <TabsContent value="striped"><BasicTable striped /></TabsContent>
@@ -542,6 +759,8 @@ export function TableShowcase() {
       <TabsContent value="pagination"><PaginatedTable /></TabsContent>
       <TabsContent value="grouped"><GroupedTable /></TabsContent>
       <TabsContent value="master"><MasterDetailTable /></TabsContent>
+      <TabsContent value="lookup"><LookupFilterTable /></TabsContent>
+      <TabsContent value="keyboard"><KeyboardNavTable /></TabsContent>
     </Tabs>
   );
 }
