@@ -24,7 +24,7 @@ const PopoverContent = React.forwardRef<
     /** Показать стрелку, указывающую на триггер */
     arrow?: boolean;
   }
->(({ className, align = "center", sideOffset = 4, arrow, ...props }, ref) => (
+>(({ className, align = "center", sideOffset = 4, arrow, children, ...props }, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}
@@ -36,6 +36,7 @@ const PopoverContent = React.forwardRef<
       )}
       {...props}
     >
+      {children}
       {arrow && (
         <PopoverPrimitive.Arrow className="fill-popover drop-shadow-sm" width={12} height={6} />
       )}

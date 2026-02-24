@@ -133,19 +133,14 @@
     @apply border-border;
   }
 
-  /* Плавная смена темы */
-  *,
-  *::before,
-  *::after {
-    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-    transition-duration: 200ms;
-    transition-timing-function: ease-out;
-  }
-
-  /* Не конфликтовать с Radix-анимациями */
-  [data-radix-popper-content-wrapper],
-  [data-radix-popper-content-wrapper] * {
-    transition: none !important;
+  /* Плавная смена темы — применяем только к основным контейнерам */
+  body,
+  .section-card,
+  .form-section,
+  header,
+  footer,
+  main {
+    transition: background-color 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out, box-shadow 200ms ease-out;
   }
 
   body {
