@@ -108,13 +108,14 @@ function DatePick({
           value={inputValue}
           onChange={handleInputChange}
           placeholder={placeholder}
+          aria-label={small ? "Выберите дату" : "Дата в формате дд.мм.гггг"}
           className={cn(
             "flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors",
             small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
           )}
         />
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("rounded-l-none border-l-0 px-2 shrink-0", small ? "h-8" : "h-10")}>
+          <Button variant="outline" className={cn("rounded-l-none border-l-0 px-2 shrink-0", small ? "h-8" : "h-10")} aria-label="Открыть календарь">
             <CalendarIcon className={small ? "h-3 w-3" : "h-4 w-4"} />
           </Button>
         </PopoverTrigger>
@@ -362,20 +363,22 @@ const CreditCalculator = () => {
         </div>
       </header>
 
-      <main className="container max-w-7xl py-6 space-y-6">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link to="/">Главная</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Кредитный калькулятор</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <main id="main-content" className="container max-w-7xl py-6 space-y-6">
+        <nav aria-label="Хлебные крошки">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/">Главная</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Кредитный калькулятор</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </nav>
 
         <h1 className="text-2xl font-bold tracking-tight">Кредитный калькулятор с досрочным погашением</h1>
 
@@ -463,7 +466,7 @@ const CreditCalculator = () => {
                             </Select>
                           </TableCell>
                           <TableCell>
-                            <Button variant="ghost" size="icon-sm" onClick={() => removeRate(row.id)}>
+                            <Button variant="ghost" size="icon-sm" onClick={() => removeRate(row.id)} aria-label="Удалить строку ставки">
                               <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                             </Button>
                           </TableCell>
@@ -590,7 +593,7 @@ const CreditCalculator = () => {
                       <SelectItem value="term">Уменьшить срок</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(row.id)}>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(row.id)} aria-label="Удалить досрочное погашение">
                     <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                   </Button>
                 </div>
@@ -622,7 +625,7 @@ const CreditCalculator = () => {
                       <SelectItem value="term">Уменьшить срок</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="ghost" size="icon-sm" onClick={() => removeCommonPayment(row.id)}>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeCommonPayment(row.id)} aria-label="Удалить ежемесячный платёж">
                     <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                   </Button>
                 </div>
@@ -654,7 +657,7 @@ const CreditCalculator = () => {
                       <SelectItem value="interest">Только проценты</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button variant="ghost" size="icon-sm" onClick={() => removeHoliday(row.id)}>
+                  <Button variant="ghost" size="icon-sm" onClick={() => removeHoliday(row.id)} aria-label="Удалить каникулы">
                     <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                   </Button>
                 </div>
@@ -678,9 +681,9 @@ const CreditCalculator = () => {
         </div>
 
         {/* ─────── Results ─────── */}
-        <div className="section-card space-y-5">
+        <section className="section-card space-y-5" aria-labelledby="results-heading">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-            <h2 className="text-lg font-semibold">Результаты расчёта</h2>
+            <h2 id="results-heading" className="text-lg font-semibold">Результаты расчёта</h2>
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -718,7 +721,7 @@ const CreditCalculator = () => {
           </div>
 
           {/* Pie chart */}
-          <div>
+          <div role="figure" aria-label={`Круговая диаграмма: основной долг ${fmt(totalPrincipal)} ₽, проценты ${fmt(totalInterest)} ₽`}>
             <h3 className="text-sm font-medium mb-3">Тело долга и проценты</h3>
             <div className="flex flex-col sm:flex-row items-center gap-6">
               <div className="w-48 h-48">
@@ -769,7 +772,7 @@ const CreditCalculator = () => {
           </div>
 
           {/* Bar chart - monthly breakdown */}
-          <div>
+          <div role="figure" aria-label="Столбчатая диаграмма: разбивка платежей по месяцам на основной долг и проценты">
             <h3 className="text-sm font-medium mb-3">Разбивка платежей по месяцам</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -893,7 +896,7 @@ const CreditCalculator = () => {
               </Table>
             </div>
           </div>
-        </div>
+        </section>
         </div>
 
         {/* ─── Right sidebar ─── */}
@@ -909,7 +912,7 @@ const CreditCalculator = () => {
           {/* Related calculators */}
           <div className="section-card space-y-2">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Кредитные калькуляторы</p>
-            <nav className="space-y-1">
+            <nav aria-label="Кредитные калькуляторы" className="space-y-1">
               {[
                 "Ипотечный калькулятор",
                 "Калькулятор рефинансирования",
@@ -931,7 +934,7 @@ const CreditCalculator = () => {
           {/* Other categories */}
           <div className="section-card space-y-2">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
-            <nav className="space-y-1">
+            <nav aria-label="Другие категории калькуляторов" className="space-y-1">
               {[
                 "Вклады и депозиты",
                 "Налоговые калькуляторы",

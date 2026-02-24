@@ -205,12 +205,135 @@ tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
 - Успешные действия: `sonner` toast или зелёный текст `text-[hsl(var(--success))]`
 - Загрузка: `Skeleton` для контента, спиннер или `disabled` для кнопок
 
-### Доступность (a11y)
-- Каждый `Input` должен иметь связанный `Label` через `htmlFor`/`id`
-- Иконки-кнопки: добавляй `aria-label` или `sr-only` текст
-- Контраст текста: используй только токены — они уже проверены
-- Фокус: не убирай `focus-visible:ring` — это навигация с клавиатуры
-- Порядок табуляции: логичный, сверху вниз, слева направо
+### Доступность (Accessibility) — WCAG 2.1 AAA
+
+#### Критические требования
+- ❌ НЕ удаляй `focus-visible:ring` — это навигация с клавиатуры
+- ❌ НЕ используй `outline-none` без замены на `focus-visible:ring`
+- ❌ НЕ скрывай контент через `display:none` если он нужен скринридерам — используй `sr-only`
+- ❌ НЕ используй `tabindex > 0` — ломает естественный порядок фокуса
+- ❌ НЕ полагайся только на цвет для передачи информации (дальтонизм)
+- ✅ Контраст текста ≥ 7:1 для обычного текста (AAA), ≥ 4.5:1 для крупного (≥18px bold / ≥24px)
+- ✅ Контраст UI-элементов (границ, иконок) ≥ 3:1 к фону
+
+#### Формы и поля ввода
+```tsx
+{/* ✅ Правильно: Label связан с Input через htmlFor/id */}
+<Label htmlFor="amount">Сумма кредита</Label>
+<Input id="amount" aria-describedby="amount-hint amount-error" />
+<p id="amount-hint" className="helper-text">Введите сумму от 100 000 до 100 000 000 ₽</p>
+<p id="amount-error" className="error-text" role="alert">Минимальная сумма — 100 000 ₽</p>
+
+{/* ✅ FormRow — input наследует label через aria-label */}
+<FormRow label="Сумма кредита">
+  <Input id="credit-amount" aria-label="Сумма кредита" />
+</FormRow>
+```
+
+**Правила для форм:**
+- Каждый `<Input>` → `<Label htmlFor>` ИЛИ `aria-label`
+- Ошибки: `role="alert"` + `aria-live="assertive"`
+- Подсказки: `aria-describedby` ссылается на id подсказки
+- Обязательные поля: `aria-required="true"` или `required`
+- Невалидные поля: `aria-invalid="true"`
+- Группы полей: `<fieldset>` + `<legend>` (или `role="group"` + `aria-label`)
+
+#### Кнопки и интерактивные элементы
+```tsx
+{/* ✅ Иконка-кнопка */}
+<Button variant="ghost" size="icon-sm" aria-label="Удалить строку">
+  <Trash2 className="h-3.5 w-3.5" />
+</Button>
+
+{/* ✅ Ссылка в новом окне */}
+<a href="/doc.pdf" target="_blank" rel="noopener noreferrer">
+  Документ <span className="sr-only">(откроется в новой вкладке)</span>
+</a>
+```
+
+- Все `<button>`/`<a>` → доступное имя (текст, `aria-label`, `sr-only`)
+- Иконки-кнопки: всегда `aria-label`
+- Тап-зона ≥ 44×44px (WCAG 2.5.5 AAA)
+- `disabled` → `aria-disabled="true"` если нужен фокус
+
+#### Навигация и лендмарки
+```tsx
+<nav aria-label="Основная навигация">...</nav>
+<nav aria-label="Хлебные крошки"><Breadcrumb>...</Breadcrumb></nav>
+<main id="main-content">...</main>
+<aside aria-label="Связанные калькуляторы">...</aside>
+
+<section aria-labelledby="results-heading">
+  <h2 id="results-heading">Результаты расчёта</h2>
+</section>
+```
+
+- Каждая `<nav>` → уникальный `aria-label`
+- `<section>` с заголовком → `aria-labelledby`
+- Skip-link первым в body:
+```tsx
+<a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-background focus:text-foreground focus:px-4 focus:py-2 focus:rounded-md focus:border focus:shadow-lg">
+  Перейти к содержимому
+</a>
+```
+
+#### Изображения и графики
+```tsx
+{/* ✅ Графики Recharts */}
+<div role="figure" aria-label="Круговая диаграмма: основной долг 10 500 000 ₽, проценты 7 783 442 ₽">
+  <ResponsiveContainer><PieChart>...</PieChart></ResponsiveContainer>
+</div>
+
+{/* ✅ Декоративное изображение */}
+<img src={bg} alt="" role="presentation" />
+```
+
+#### Таблицы
+- `<TableHead>` → `scope="col"` (или `scope="row"`)
+- Таблица → `aria-label` или `<caption>`
+- Пустые ячейки: `<span className="sr-only">Нет данных</span>` вместо `—`
+
+#### Живые регионы
+- Результаты расчёта: `aria-live="polite"` — озвучивается после текущей речи
+- Ошибки: `role="alert"` — озвучивается немедленно
+- Счётчик/прогресс: `aria-live="polite"` + `aria-atomic="true"`
+
+#### Анимации
+- `prefers-reduced-motion: reduce` → отключай анимации
+- Tailwind: `motion-reduce:transition-none motion-reduce:animate-none`
+- Нет мигающего контента (> 3 вспышек в секунду)
+
+#### Клавиатурная навигация
+- Tab → все интерактивные элементы
+- Enter/Space → активация кнопок
+- Escape → закрытие модалок, попапов
+- Arrow keys → RadioGroup, TabsList, Select (shadcn уже поддерживает)
+
+#### Чеклист a11y (WCAG 2.1 AAA)
+- [ ] Skip-link первым в body
+- [ ] `<html lang="ru">`
+- [ ] Один `<h1>`, иерархия без пропусков
+- [ ] Все `<img>` → `alt` (или `alt=""` + `role="presentation"`)
+- [ ] Все `<input>` → `<label>` или `aria-label`
+- [ ] Все иконки-кнопки → `aria-label`
+- [ ] Все `<nav>` → уникальный `aria-label`
+- [ ] Все `<section>` → `aria-labelledby`
+- [ ] Контраст текста ≥ 7:1 / крупный ≥ 4.5:1
+- [ ] Тап-зона ≥ 44×44px
+- [ ] `focus-visible:ring` видим
+- [ ] Ошибки → `role="alert"`
+- [ ] Графики → `role="figure"` + `aria-label`
+- [ ] Таблицы → `scope="col"`, `aria-label`
+- [ ] `prefers-reduced-motion` учтён
+- [ ] Цвет не единственный канал информации
+
+#### Типичные a11y ошибки
+- ❌ `<div onClick>` вместо `<button>`
+- ❌ `placeholder` как единственная метка
+- ❌ `tabIndex > 0`
+- ❌ Цветовые индикаторы без текстовой альтернативы
+- ❌ Автоплей без паузы
+- ❌ Форма без сообщений об ошибках
 
 ### Навигация и состояния
 - Хлебные крошки (`Breadcrumb`) на всех вложенных страницах

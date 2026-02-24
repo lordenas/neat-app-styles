@@ -33,7 +33,7 @@ const Index = () => {
             <h1 className="text-lg font-bold tracking-tight">UI Kit</h1>
             <p className="text-xs text-muted-foreground">Строгий минималистичный набор компонентов</p>
           </div>
-          <nav className="hidden lg:flex gap-0.5 overflow-x-auto">
+          <nav aria-label="Быстрая навигация по компонентам" className="hidden lg:flex gap-0.5 overflow-x-auto">
             {navGroups.flatMap(g => g.items).slice(0, 8).map((item) => (
               <a
                 key={item}
@@ -48,10 +48,10 @@ const Index = () => {
       </header>
 
       {/* Content */}
-      <main className="container max-w-6xl py-8 space-y-8">
+      <main id="main-content" className="container max-w-6xl py-8 space-y-8">
         {/* Design Tokens */}
-        <section>
-          <h2 className="mb-4">Дизайн-токены</h2>
+        <section aria-labelledby="tokens-heading">
+          <h2 id="tokens-heading" className="mb-4">Дизайн-токены</h2>
           <div className="space-y-6">
             <ShowcaseSection title="Typography" description="Типографика">
               <TypographyShowcase />
@@ -66,8 +66,8 @@ const Index = () => {
         </section>
 
         {/* Components */}
-        <section>
-          <h2 className="mb-4">Компоненты</h2>
+        <section aria-labelledby="components-heading">
+          <h2 id="components-heading" className="mb-4">Компоненты</h2>
           <div className="space-y-6">
             <ShowcaseSection title="Buttons" description="Кнопки с icon и size">
               <ButtonsShowcase />
@@ -109,8 +109,8 @@ const Index = () => {
         </section>
 
         {/* Examples */}
-        <section>
-          <h2 className="mb-4">Примеры сценариев</h2>
+        <section aria-labelledby="examples-heading">
+          <h2 id="examples-heading" className="mb-4">Примеры сценариев</h2>
           <div className="space-y-6">
             <ShowcaseSection title="Калькулятор" description="Калькулятор стажа">
               <ExperienceCalculator />
