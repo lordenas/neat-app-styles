@@ -24,11 +24,12 @@ import { AccordionShowcase } from "@/components/showcase/AccordionShowcase";
 import { CopyShowcase } from "@/components/showcase/CopyShowcase";
 import { EmptyStateShowcase } from "@/components/showcase/EmptyStateShowcase";
 import { FileUploadShowcase } from "@/components/showcase/FileUploadShowcase";
+import { ValidationFormShowcase } from "@/components/showcase/ValidationFormShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
   { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State", "File Upload"] },
-  { label: "Примеры", items: ["Калькулятор", "Фильтр"] },
+  { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
 const Index = () => {
@@ -149,6 +150,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Фильтр" description="Форма фильтра">
               <FilterForm />
+            </ShowcaseSection>
+            <ShowcaseSection title="Валидация" description="Форма с Yup + react-hook-form">
+              <ValidationFormShowcase />
             </ShowcaseSection>
           </div>
         </section>
