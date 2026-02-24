@@ -112,7 +112,18 @@ export { Calendar } from "./calendar";
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./collapsible";
 
 /** Inline-уведомление */
-export { Alert, AlertTitle, AlertDescription } from "./alert";
+export { Alert, AlertTitle, AlertDescription, alertVariants } from "./alert";
+
+/** Пагинация */
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "./pagination";
 
 /** Разделитель (линия) */
 export { Separator } from "./separator";
@@ -132,3 +143,7 @@ export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 /** Загрузчик файлов — три варианта (dropzone, кнопка, аватар) */
 export { FileUploadDropzone, FileUploadButton, FileUploadAvatar } from "./file-upload";
 export type { FileUploadBaseProps, FileUploadDropzoneProps, FileUploadButtonProps, FileUploadAvatarProps, UploadedFile } from "./file-upload";
+
+/** Многострочное текстовое поле */
+export { Textarea, textareaVariants } from "./textarea";
+export type { TextareaProps } from "./textarea";

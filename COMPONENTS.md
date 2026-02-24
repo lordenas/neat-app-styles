@@ -46,6 +46,7 @@
 | `variant` | `"default"` \| `"destructive"` \| `"outline"` \| `"secondary"` \| `"ghost"` \| `"link"` | `"default"` | Стиль кнопки |
 | `size` | `"sm"` \| `"default"` \| `"lg"` \| `"icon"` \| `"icon-sm"` | `"default"` | Размер |
 | `icon` | `ReactNode` | — | Иконка перед текстом |
+| `loading` | `boolean` | `false` | Показывает спиннер вместо иконки и делает кнопку `disabled` |
 | `asChild` | `boolean` | `false` | Рендерит дочерний элемент вместо `<button>` |
 
 ```tsx
@@ -54,6 +55,8 @@
 <Button variant="ghost" size="icon-sm"><Trash2 /></Button>
 <Button variant="destructive">Удалить</Button>
 <Button icon={<Calculator />}>С иконкой</Button>
+<Button loading>Сохранение...</Button>
+<Button loading variant="outline">Загрузка</Button>
 <Button asChild><a href="/link">Ссылка-кнопка</a></Button>
 ```
 
@@ -88,7 +91,26 @@
 
 ---
 
-## Select
+## Textarea
+
+**Импорт:** `import { Textarea } from "@/components/ui/textarea"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `inputSize` | `"sm"` \| `"default"` | `"default"` | Размер поля |
+| `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+
+```tsx
+<Textarea placeholder="Введите описание..." rows={4} />
+<Textarea inputSize="sm" placeholder="Компактное поле" />
+<Textarea error={errors.bio?.message ?? ""} {...register("bio")} />
+```
+
+**Примечания:**
+- `inputSize="sm"` — уменьшенная высота (min-h-[60px]) и text-xs.
+- Паттерн `error` идентичен `Input` — пустая строка `""` резервирует место.
+
+---
 
 **Импорт:** `import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from "@/components/ui/select"`
 
@@ -146,6 +168,10 @@
 
 **Импорт:** `import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"`
 
+| Prop (RadioGroup) | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `error` | `string` | — | Сообщение об ошибке под группой. Место зарезервировано даже без ошибки. Автоматически добавляет `aria-invalid` и `aria-describedby` |
+
 ```tsx
 <RadioGroup defaultValue="option1" onValueChange={setValue}
   className="flex flex-col sm:flex-row gap-2 sm:gap-4">
@@ -158,6 +184,11 @@
     <Label htmlFor="r2" className="font-normal cursor-pointer text-sm">Вариант 2</Label>
   </div>
 </RadioGroup>
+
+// С ошибкой валидации
+<RadioGroup id="type" error={errors.type?.message ?? ""}>
+  ...
+</RadioGroup>
 ```
 
 **Правило:** На мобильных — столбик (`flex-col`), на десктопе — строка (`sm:flex-row`).
@@ -168,11 +199,18 @@
 
 **Импорт:** `import { Switch } from "@/components/ui/switch"`
 
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `error` | `string` | — | Сообщение об ошибке под переключателем. Место зарезервировано даже без ошибки. Автоматически добавляет `aria-invalid` и `aria-describedby` |
+
 ```tsx
 <div className="flex items-center gap-2">
   <Switch id="notifications" checked={enabled} onCheckedChange={setEnabled} />
   <Label htmlFor="notifications">Уведомления</Label>
 </div>
+
+// С ошибкой валидации
+<Switch id="terms" error={errors.terms?.message ?? ""} />
 ```
 
 ---
@@ -208,12 +246,18 @@
 | `default` | Primary фон |
 | `secondary` | Нейтральный фон |
 | `destructive` | Красный фон |
+| `success` | Зелёный фон |
+| `warning` | Жёлтый фон |
+| `info` | Голубой фон |
 | `outline` | Только рамка |
 
 ```tsx
 <Badge>Новый</Badge>
 <Badge variant="secondary">Черновик</Badge>
 <Badge variant="destructive">Ошибка</Badge>
+<Badge variant="success">Выполнено</Badge>
+<Badge variant="warning">В процессе</Badge>
+<Badge variant="info">Информация</Badge>
 <Badge variant="outline">v2.0</Badge>
 ```
 
@@ -444,6 +488,9 @@
 |---------|----------|
 | `default` | Нейтральный фон |
 | `destructive` | Красная рамка |
+| `success` | Зелёная рамка |
+| `warning` | Жёлтая рамка |
+| `info` | Голубая рамка |
 
 ```tsx
 <Alert>
@@ -456,6 +503,24 @@
   <AlertCircle className="h-4 w-4" />
   <AlertTitle>Ошибка</AlertTitle>
   <AlertDescription>Не удалось сохранить.</AlertDescription>
+</Alert>
+
+<Alert variant="success">
+  <CheckCircle2 className="h-4 w-4" />
+  <AlertTitle>Успех</AlertTitle>
+  <AlertDescription>Данные сохранены.</AlertDescription>
+</Alert>
+
+<Alert variant="warning">
+  <AlertTriangle className="h-4 w-4" />
+  <AlertTitle>Внимание</AlertTitle>
+  <AlertDescription>Проверьте настройки.</AlertDescription>
+</Alert>
+
+<Alert variant="info">
+  <Info className="h-4 w-4" />
+  <AlertTitle>Подсказка</AlertTitle>
+  <AlertDescription>Полезная информация.</AlertDescription>
 </Alert>
 ```
 
@@ -483,7 +548,29 @@
 
 ---
 
-## ScrollArea
+## Pagination
+
+**Импорт:** `import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from "@/components/ui/pagination"`
+
+```tsx
+<Pagination>
+  <PaginationContent>
+    <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+    <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+    <PaginationItem><PaginationEllipsis /></PaginationItem>
+    <PaginationItem><PaginationNext href="#" /></PaginationItem>
+  </PaginationContent>
+</Pagination>
+```
+
+| Prop (PaginationLink) | Тип | Описание |
+|------|-----|----------|
+| `isActive` | `boolean` | Выделяет текущую страницу (`outline` вариант) |
+| `size` | `ButtonProps["size"]` | Размер кнопки |
+
+---
 
 **Импорт:** `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"`
 
