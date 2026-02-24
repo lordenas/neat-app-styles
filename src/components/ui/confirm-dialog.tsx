@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 /**
  * Высокоуровневый диалог подтверждения действия.
+ * Поддерживает async `onConfirm` — при возврате Promise показывает спиннер и блокирует кнопки.
  *
  * @example
  * ```tsx
@@ -22,32 +24,16 @@ import { cn } from "@/lib/utils";
  *   trigger={<Button variant="destructive">Удалить</Button>}
  *   title="Удалить запись?"
  *   description="Это действие нельзя отменить."
- *   onConfirm={() => deleteItem(id)}
+ *   onConfirm={async () => { await api.deleteItem(id); }}
  *   variant="destructive"
  * />
- *
- * <ConfirmDialog
- *   trigger={<Button>Подтвердить</Button>}
- *   title="Сохранить изменения?"
- *   onConfirm={handleSave}
- *   confirmText="Сохранить"
- *   cancelText="Отмена"
- * />
  * ```
- *
- * @prop trigger - Элемент, открывающий диалог
- * @prop title - Заголовок диалога
- * @prop description - Описание (опционально)
- * @prop onConfirm - Колбэк при подтверждении
- * @prop variant - `"default"` | `"destructive"` — стиль кнопки подтверждения
- * @prop confirmText - Текст кнопки подтверждения (по умолчанию "Подтвердить")
- * @prop cancelText - Текст кнопки отмены (по умолчанию "Отмена")
  */
 interface ConfirmDialogProps {
   trigger: React.ReactNode;
   title: string;
   description?: string;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   variant?: "default" | "destructive";
   confirmText?: string;
   cancelText?: string;
@@ -66,8 +52,34 @@ function ConfirmDialog({
   open,
   onOpenChange,
 }: ConfirmDialogProps) {
+  const [loading, setLoading] = React.useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(false);
+
+  const isControlled = open !== undefined;
+  const isOpen = isControlled ? open : internalOpen;
+  const setIsOpen = (v: boolean) => {
+    if (!isControlled) setInternalOpen(v);
+    onOpenChange?.(v);
+  };
+
+  const handleConfirm = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const result = onConfirm();
+    if (result instanceof Promise) {
+      setLoading(true);
+      try {
+        await result;
+        setIsOpen(false);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={(v) => !loading && setIsOpen(v)}>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -77,14 +89,16 @@ function ConfirmDialog({
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{cancelText}</AlertDialogCancel>
+          <AlertDialogCancel disabled={loading}>{cancelText}</AlertDialogCancel>
           <AlertDialogAction
             className={cn(
               variant === "destructive" &&
                 buttonVariants({ variant: "destructive" })
             )}
-            onClick={onConfirm}
+            onClick={handleConfirm}
+            disabled={loading}
           >
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>

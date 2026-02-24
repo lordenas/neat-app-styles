@@ -93,14 +93,14 @@ export function SliderTooltipShowcase() {
             trigger={<Button variant="outline" size="sm">Подтвердить действие</Button>}
             title="Сохранить изменения?"
             description="Все несохранённые данные будут применены."
-            onConfirm={() => toast.success("Сохранено")}
+            onConfirm={() => { toast.success("Сохранено"); }}
             confirmText="Сохранить"
           />
           <ConfirmDialog
             trigger={<Button variant="destructive" size="sm">Удалить</Button>}
             title="Удалить запись?"
             description="Это действие нельзя отменить. Все данные будут потеряны."
-            onConfirm={() => toast.success("Удалено")}
+            onConfirm={() => { toast.success("Удалено"); }}
             variant="destructive"
             confirmText="Удалить"
           />
