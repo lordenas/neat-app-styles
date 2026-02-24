@@ -168,3 +168,7 @@ export type { NumberInputProps } from "./number-input";
 
 /** Клавиатурное сочетание */
 export { Kbd } from "./kbd";
+
+/** Мульти-выбор с тегами, группировкой и disabled */
+export { Multiselect } from "./multiselect";
+export type { MultiselectOption, MultiselectProps } from "./multiselect";
