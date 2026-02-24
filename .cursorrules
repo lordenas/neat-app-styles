@@ -113,7 +113,7 @@
 <Button loading>Сохранение...</Button>
 <Button loading variant="outline">Загрузка</Button>
 // Sizes: sm(h-8) | default(h-10) | lg(h-11) | icon(h-10) | icon-sm(h-8)
-// Variants: default | destructive | outline | secondary | ghost | link
+// Variants: default | destructive | outline | secondary | ghost | link | success
 // loading: спиннер вместо иконки + disabled
 ```
 
@@ -125,6 +125,9 @@
     <SelectItem value="val">Текст</SelectItem>
   </SelectContent>
 </Select>
+
+// Размеры: inputSize="sm" | "default" | "lg"
+<SelectTrigger inputSize="lg"><SelectValue /></SelectTrigger>
 
 // С ошибкой валидации (SelectTrigger)
 <SelectTrigger id="role" error={errors.role?.message ?? ""}>
@@ -236,6 +239,9 @@ toast.success("Готово!", { id });
 ### Progress & Stepper
 ```tsx
 <Progress value={60} className="h-2" />
+<Progress value={60} showValue />                      // "60%" справа
+<Progress indeterminate />                             // бесконечная загрузка
+<Progress indeterminate variant="info" />
 <Progress value={100} variant="success" className="h-2" />
 <Progress value={30} variant="destructive" />
 // Variants: default | success | warning | destructive | info
@@ -348,6 +354,7 @@ Stepper — пошаговая навигация с кружками, конн�
 
 ### ConfirmDialog
 ```tsx
+// Синхронный
 <ConfirmDialog
   trigger={<Button variant="destructive">Удалить</Button>}
   title="Удалить запись?"
@@ -356,6 +363,24 @@ Stepper — пошаговая навигация с кружками, конн�
   variant="destructive"
   confirmText="Удалить"
 />
+
+// Асинхронный (спиннер + блокировка до завершения)
+<ConfirmDialog
+  trigger={<Button>Сохранить</Button>}
+  title="Сохранить?"
+  onConfirm={async () => { await api.save(); }}
+/>
+```
+
+### SimpleTooltip
+```tsx
+// Обёртка для быстрого создания тултипа (вместо 5 строк — одна):
+<SimpleTooltip content="Настройки">
+  <Button size="icon"><Settings /></Button>
+</SimpleTooltip>
+<SimpleTooltip content="Копировать" side="right">
+  <CopyButton value="text" />
+</SimpleTooltip>
 ```
 
 ### Kbd
