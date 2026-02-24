@@ -44,7 +44,7 @@ function applyDateMask(raw: string): string {
   const dayLen = parts[0].length === 2 ? (d1 > 3 ? 1 : 2) : 1;
   const rest = digits.slice(dayLen);
 
-  if (rest.length === 0) return parts[0] + ".";
+  if (rest.length === 0) return parts[0];
 
   // ── Month ──
   const m1 = parseInt(rest[0]);
@@ -71,7 +71,7 @@ function applyDateMask(raw: string): string {
   }
 
   const yearDigits = rest.slice(monthDigitsUsed);
-  if (yearDigits.length === 0) return parts[0] + "." + monthStr + ".";
+  if (yearDigits.length === 0) return parts[0] + "." + monthStr;
 
   // ── Year ──
   let yyyy = yearDigits.slice(0, 4);
@@ -202,7 +202,17 @@ function DateInputPicker() {
   }, [date]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const masked = applyDateMask(e.target.value);
+    const newVal = e.target.value;
+    // Auto-insert dot when typing forward after complete day (2 digits) or month (5 chars: dd.mm)
+    let adjusted = newVal;
+    if (newVal.length > inputValue.length) {
+      // typing forward — add separator dots automatically
+      const digitsOnly = newVal.replace(/\D/g, "");
+      if (digitsOnly.length > 2 && !newVal.includes(".")) {
+        adjusted = digitsOnly.slice(0, 2) + "." + digitsOnly.slice(2);
+      }
+    }
+    const masked = applyDateMask(adjusted);
     setInputValue(masked);
     const parsed = parseMaskedDate(masked);
     if (parsed) setDate(parsed);
