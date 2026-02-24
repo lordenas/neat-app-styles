@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { format, differenceInDays } from "date-fns";
 import { ru, enUS, de, ja, fr } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -297,6 +297,9 @@ export function DatePickerShowcase() {
 
       {/* Period picker */}
       <PeriodPicker locale={locale} />
+
+      {/* DateTime picker */}
+      <DateTimePicker locale={locale} />
     </div>
   );
 }
@@ -438,6 +441,192 @@ function PeriodPicker({ locale }: { locale: DateLocaleConfig }) {
       {startDate && endDate && (
         <p className="helper-text">
           Период: {differenceInDays(endDate, startDate)} дней
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   DateTime Picker — date + time with masks
+   ═══════════════════════════════════════════════ */
+
+function applyTimeMask(raw: string, use24h: boolean): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 4);
+  if (digits.length === 0) return "";
+
+  const maxH1 = use24h ? 2 : 1;
+  const h1 = parseInt(digits[0]);
+
+  let hourStr: string;
+  let hourDigitsUsed: number;
+
+  if (h1 > maxH1) {
+    hourStr = "0" + digits[0];
+    hourDigitsUsed = 1;
+  } else {
+    if (digits.length === 1) return digits[0];
+    const hv = parseInt(digits.slice(0, 2));
+    const maxH = use24h ? 23 : 12;
+    if (hv > maxH) {
+      return digits[0];
+    }
+    hourStr = digits.slice(0, 2);
+    hourDigitsUsed = 2;
+  }
+
+  const rest = digits.slice(hourDigitsUsed);
+  if (rest.length === 0) return hourStr;
+
+  const m1 = parseInt(rest[0]);
+  if (m1 > 5) {
+    return hourStr + ":" + "0" + rest[0];
+  }
+  if (rest.length === 1) return hourStr + ":" + rest[0];
+
+  const mv = parseInt(rest.slice(0, 2));
+  if (mv > 59) return hourStr + ":" + rest[0];
+
+  return hourStr + ":" + rest.slice(0, 2);
+}
+
+function parseTime(masked: string): { hours: number; minutes: number } | undefined {
+  if (masked.length !== 5) return undefined;
+  const [hh, mm] = masked.split(":");
+  const h = parseInt(hh, 10);
+  const m = parseInt(mm, 10);
+  if (isNaN(h) || isNaN(m) || h < 0 || h > 23 || m < 0 || m > 59) return undefined;
+  return { hours: h, minutes: m };
+}
+
+function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
+  const [date, setDate] = useState<Date>();
+  const [open, setOpen] = useState(false);
+  const [dateInput, setDateInput] = useState("");
+  const [timeInput, setTimeInput] = useState("");
+  const [use24h, setUse24h] = useState(true);
+
+  // Reset on locale change
+  useEffect(() => {
+    setDate(undefined);
+    setDateInput("");
+    setTimeInput("");
+  }, [locale.code]);
+
+  // Sync inputs from date
+  useEffect(() => {
+    if (date) {
+      setDateInput(formatDateLocale(date, locale));
+      setTimeInput(format(date, "HH:mm"));
+    }
+  }, [date, locale]);
+
+  const updateDateTime = useCallback((newDateStr: string, newTimeStr: string) => {
+    const parsedDate = parseMaskedDateLocale(newDateStr, locale);
+    const parsedTime = parseTime(newTimeStr);
+    if (parsedDate && parsedTime) {
+      const dt = new Date(parsedDate);
+      dt.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+      setDate(dt);
+    } else if (parsedDate && !parsedTime) {
+      // Date valid but time incomplete — store date at 00:00
+      setDate(parsedDate);
+    }
+  }, [locale]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = applyDateMaskLocale(e.target.value, locale);
+    setDateInput(masked);
+    updateDateTime(masked, timeInput);
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = applyTimeMask(e.target.value, use24h);
+    setTimeInput(masked);
+    updateDateTime(dateInput, masked);
+  };
+
+  const handleCalendarSelect = (d: Date | undefined) => {
+    if (d) {
+      // Preserve existing time
+      const parsedTime = parseTime(timeInput);
+      if (parsedTime) {
+        d.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+      }
+      setDate(d);
+    }
+    setOpen(false);
+  };
+
+  const setNow = () => {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    setDate(now);
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center gap-2">
+        <Label>DateTime Picker (дата + время)</Label>
+        <button
+          onClick={() => setUse24h(!use24h)}
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+        >
+          {use24h ? "24ч" : "12ч"}
+        </button>
+      </div>
+      <Popover open={open} onOpenChange={setOpen}>
+        <div className="flex items-center w-[340px] rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-colors">
+          <input
+            value={dateInput}
+            onChange={handleDateChange}
+            placeholder={locale.placeholder}
+            className="flex-1 min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:outline-none h-10 pl-3 text-sm"
+          />
+          <span className="text-muted-foreground/40 px-1 select-none">|</span>
+          <div className="flex items-center gap-1 pr-1">
+            <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <input
+              value={timeInput}
+              onChange={handleTimeChange}
+              placeholder={use24h ? "чч:мм" : "hh:mm"}
+              className="w-[48px] bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:outline-none h-10 text-sm text-center"
+            />
+          </div>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" className="rounded-l-none px-2 shrink-0 h-10 hover:bg-transparent">
+              <CalendarIcon className="h-4 w-4 text-muted-foreground" />
+            </Button>
+          </PopoverTrigger>
+        </div>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleCalendarSelect}
+            locale={locale.fnsLocale}
+            initialFocus
+            className="p-3 pointer-events-auto"
+          />
+          <div className="border-t px-3 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <input
+                value={timeInput}
+                onChange={handleTimeChange}
+                placeholder={use24h ? "чч:мм" : "hh:mm"}
+                className="w-[52px] bg-muted/50 rounded px-2 py-1 text-sm text-center border border-input focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              />
+            </div>
+            <Button variant="ghost" size="sm" className="text-xs" onClick={setNow}>
+              Сейчас
+            </Button>
+          </div>
+        </PopoverContent>
+      </Popover>
+      {date && (
+        <p className="helper-text">
+          Выбрано: {format(date, "d MMMM yyyy", { locale: locale.fnsLocale })}, {format(date, "HH:mm")}
         </p>
       )}
     </div>
