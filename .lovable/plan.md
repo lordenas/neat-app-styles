@@ -1,70 +1,101 @@
 
 
-## Problem
+## Улучшения UI-Kit
 
-Components use `framer-motion` with `initial={{ opacity: 0 }}`, which in an SSR/Next.js environment means:
+### 1. Баг: дублирование `{...props}` в TabsContent
 
-1. **Server renders HTML with `opacity: 0`** (inline style from framer-motion)
-2. **Before hydration, content is invisible** to both users and crawlers
-3. **Googlebot may index empty-looking pages** since it sometimes captures pre-hydration state
-4. **CLS (Cumulative Layout Shift)** increases when content "pops in" after hydration
+В `src/components/ui/tabs.tsx` (строки 106-108) `{...props}` написано дважды подряд. Это не вызывает ошибку, но создает лишнюю работу React и может привести к неожиданным проблемам при серверном рендеринге.
 
-## Affected Components
+**Файл:** `src/components/ui/tabs.tsx`
+- Удалить дублирующийся `{...props}` на строке 107
+- Вернуть `children` в рендер (сейчас `children` деструктурируется, но не используется)
 
-| Component | Animation | Risk |
-|-----------|-----------|------|
-| `TabsContent` (`src/components/ui/tabs.tsx`) | `initial={{ opacity: 0, y: 4 }}` | Content hidden until hydration |
-| `ShowcaseSection` (`src/components/showcase/ShowcaseSection.tsx`) | `initial={{ opacity: 0, y: 12 }}` | Sections invisible on first render |
+### 2. Удалить `framer-motion` из зависимостей проекта
 
-## Solution
+`framer-motion` используется только в `ShowcaseSection.tsx` (демо-компонент). Для SSR-проекта лучше убрать эту зависимость из core-библиотеки и заменить на CSS-анимации.
 
-Replace `initial` with a **hydration-safe** pattern that only animates on the client after mount.
+**Файл:** `src/components/showcase/ShowcaseSection.tsx`
+- Заменить `motion.div` на обычный `div` с CSS-классами `animate-in fade-in slide-in-from-bottom-3` из `tailwindcss-animate`
 
-### Approach: Use `initial={false}` or a `useReducedMotion` + `isMounted` guard
+**Файл:** `package.json`
+- Удалить `framer-motion` из dependencies
 
-**For `TabsContent`** (UI component, will be reused in Next.js):
-- Remove `motion.div` wrapper entirely from the base UI component
-- Animation in tab content is a "nice-to-have" that causes real SSR issues
-- If animation is desired, make it opt-in via a prop like `animated={true}`, defaulting to `false`
+### 3. Добавить проп `loading` в Input и Textarea
 
-**For `ShowcaseSection`** (showcase-only, not a reusable UI component):
-- This is a demo/showcase wrapper, not a component that ships to Next.js projects
-- Can keep animations as-is since it won't be imported in SSR contexts
-- But for safety, add a comment marking it as client-only
+Кнопка уже поддерживает `loading`, но поля ввода -- нет. Полезно для async-валидации и отправки форм.
 
-### Technical Details
+**Файл:** `src/components/ui/input.tsx`
+- Добавить опциональный проп `loading?: boolean`
+- При `loading=true` показывать спиннер `Loader2` в `inputEnd` позиции
+- Автоматически ставить `disabled` при loading
 
-**`src/components/ui/tabs.tsx`** -- Remove the `motion.div` wrapper from `TabsContent`:
+### 4. Добавить `size="lg"` для Input и Textarea
 
+Сейчас Input и Textarea поддерживают только `sm` и `default`. Для лендингов и форм калькуляторов нужен крупный размер.
+
+**Файл:** `src/components/ui/input.tsx`
+- Добавить вариант `lg: "h-12 px-4 py-3 text-base"` в `inputVariants`
+
+**Файл:** `src/components/ui/textarea.tsx`
+- Добавить вариант `lg: "min-h-[120px] text-base"` в `textareaVariants`
+
+### 5. Добавить `dot` вариант для Badge (статус-индикатор)
+
+Часто нужен бейдж с цветной точкой слева для статусов (online/offline, active/inactive).
+
+**Файл:** `src/components/ui/badge.tsx`
+- Добавить проп `dot?: boolean` -- рендерит цветной кружок 6x6px перед текстом
+- Цвет точки определяется текущим `variant`
+
+### Порядок реализации
+
+1. Исправить баг в TabsContent (критичный, потеря children)
+2. Удалить framer-motion и заменить на CSS
+3. Добавить `loading` для Input
+4. Добавить `size="lg"` для Input/Textarea
+5. Добавить `dot` для Badge
+
+### Технические детали
+
+**TabsContent fix:**
 ```tsx
-// Before (SSR-unsafe):
-<motion.div
-  initial={{ opacity: 0, y: 4 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.2, ease: "easeOut" }}
->
-  {children}
-</motion.div>
+// Было (строки 99-108):
+>(({ className, children, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn("mt-2 ...", className)}
+    {...props}
+    {...props}  // <-- дубль
+  />
 
-// After (SSR-safe):
-{children}
+// Станет:
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.Content
+    ref={ref}
+    className={cn("mt-2 ...", className)}
+    {...props}
+  />
 ```
 
-This removes the `framer-motion` dependency from the core UI component entirely. The `TabsContent` already has a CSS-based `animate-fade-in` available via Tailwind if subtle animation is needed.
+**ShowcaseSection CSS замена:**
+```tsx
+// Было:
+<motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
 
-**`src/components/ui/tabs.tsx`** -- Also remove unused `motion` and `AnimatePresence` imports to reduce bundle size.
+// Станет:
+<div className="animate-in fade-in slide-in-from-bottom-3 duration-300">
+```
 
-**`src/components/showcase/ShowcaseSection.tsx`** -- Add a `"use client"` comment/marker to document that this component is client-only and should not be used in SSR contexts.
+**Input loading:**
+```tsx
+// Использование:
+<Input loading placeholder="Проверка..." />
+<Input loading={isValidating} inputStart={<Mail />} placeholder="Email" />
+```
 
-### Additional Benefit
-
-Removing `framer-motion` from core UI components means:
-- **Smaller bundle** for consumers (no 30-40KB dependency required)
-- **Tree-shakeable** -- Next.js projects only pay for what they use
-- **No hydration mismatch warnings** in React 18 strict mode
-
-### Files to Modify
-
-1. `src/components/ui/tabs.tsx` -- Remove `motion.div` wrapper and unused imports
-2. `src/components/showcase/ShowcaseSection.tsx` -- Add client-only annotation comment
-
+**Badge dot:**
+```tsx
+// Использование:
+<Badge variant="success" dot>Активен</Badge>
+<Badge variant="destructive" dot>Офлайн</Badge>
+```
