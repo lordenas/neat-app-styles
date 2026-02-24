@@ -40,10 +40,12 @@ export interface StepperProps {
   steps: StepItem[];
   orientation?: "horizontal" | "vertical";
   size?: "sm" | "default";
+  /** Скрывает текстовые метки, показывает только кружки */
+  compact?: boolean;
   className?: string;
 }
 
-export function Stepper({ steps, orientation = "horizontal", size = "default", className }: StepperProps) {
+export function Stepper({ steps, orientation = "horizontal", size = "default", compact = false, className }: StepperProps) {
   const isVertical = orientation === "vertical";
   const dotSize = size === "sm" ? "h-6 w-6 text-xs" : "h-8 w-8 text-sm";
   const iconSize = size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4";
@@ -93,22 +95,24 @@ export function Stepper({ steps, orientation = "horizontal", size = "default", c
               )}
             </div>
             {/* Label */}
-            <div className={cn(isVertical ? "pb-6" : "mt-2 text-center", !isLast && !isVertical && "w-full")}>
-              <p className={cn(
-                "font-medium leading-tight",
-                size === "sm" ? "text-xs" : "text-sm",
-                status === "active" && "text-primary",
-                status === "upcoming" && "text-muted-foreground",
-                status === "error" && "text-destructive",
-              )}>
-                {step.label}
-              </p>
-              {step.description && (
-                <p className={cn("text-muted-foreground mt-0.5", size === "sm" ? "text-[10px]" : "text-xs")}>
-                  {step.description}
+            {!compact && (
+              <div className={cn(isVertical ? "pb-6" : "mt-2 text-center", !isLast && !isVertical && "w-full")}>
+                <p className={cn(
+                  "font-medium leading-tight",
+                  size === "sm" ? "text-xs" : "text-sm",
+                  status === "active" && "text-primary",
+                  status === "upcoming" && "text-muted-foreground",
+                  status === "error" && "text-destructive",
+                )}>
+                  {step.label}
                 </p>
-              )}
-            </div>
+                {step.description && (
+                  <p className={cn("text-muted-foreground mt-0.5", size === "sm" ? "text-[10px]" : "text-xs")}>
+                    {step.description}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         );
       })}
