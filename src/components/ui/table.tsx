@@ -11,20 +11,18 @@ interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
   ({ className, size, bordered, striped, hoverable = true, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
-      <table
-        ref={ref}
-        className={cn(
-          "w-full caption-bottom",
-          size === "sm" ? "text-xs" : "text-sm",
-          bordered && "[&_th]:border [&_td]:border",
-          striped && "[&_tbody_tr:nth-child(even)]:bg-[hsl(var(--stripe-bg))]",
-          hoverable && "[&_tbody_tr:hover]:bg-muted/50",
-          className
-        )}
-        {...props}
-      />
-    </div>
+    <table
+      ref={ref}
+      className={cn(
+        "w-full caption-bottom",
+        size === "sm" ? "text-xs" : "text-sm",
+        bordered && "[&_th]:border [&_td]:border",
+        striped && "[&_tbody_tr:nth-child(even)]:bg-[hsl(var(--stripe-bg))]",
+        hoverable && "[&_tbody_tr:hover]:bg-muted/50",
+        className
+      )}
+      {...props}
+    />
   )
 );
 Table.displayName = "Table";
