@@ -3,6 +3,20 @@ import * as ResizablePrimitive from "react-resizable-panels";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Изменяемые по размеру панели с перетаскиваемым разделителем.
+ *
+ * @example
+ * ```tsx
+ * <ResizablePanelGroup direction="horizontal">
+ *   <ResizablePanel defaultSize={50}>Левая панель</ResizablePanel>
+ *   <ResizableHandle withHandle />
+ *   <ResizablePanel defaultSize={50}>Правая панель</ResizablePanel>
+ * </ResizablePanelGroup>
+ * ```
+ *
+ * @see ResizableHandle — проп `withHandle`: показывает иконку-захват на разделителе
+ */
 const ResizablePanelGroup = ({ className, ...props }: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) => (
   <ResizablePrimitive.PanelGroup
     className={cn("flex h-full w-full data-[panel-group-direction=vertical]:flex-col", className)}
@@ -10,6 +24,7 @@ const ResizablePanelGroup = ({ className, ...props }: React.ComponentProps<typeo
   />
 );
 
+/** Отдельная панель внутри `ResizablePanelGroup`. Принимает `defaultSize` (%) и `minSize`. */
 const ResizablePanel = ResizablePrimitive.Panel;
 
 const ResizableHandle = ({

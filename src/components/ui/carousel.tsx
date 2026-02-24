@@ -10,6 +10,26 @@ type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
+/**
+ * Карусель (слайдер) на основе Embla Carousel.
+ *
+ * @example
+ * ```tsx
+ * <Carousel>
+ *   <CarouselContent>
+ *     <CarouselItem>Слайд 1</CarouselItem>
+ *     <CarouselItem>Слайд 2</CarouselItem>
+ *   </CarouselContent>
+ *   <CarouselPrevious />
+ *   <CarouselNext />
+ * </Carousel>
+ * ```
+ *
+ * @prop orientation - `"horizontal"` (по умолчанию) | `"vertical"`
+ * @prop opts - Параметры Embla Carousel (loop, align и т.д.)
+ * @prop plugins - Плагины Embla (autoplay, fade и т.д.)
+ * @prop setApi - Callback для получения API-инстанса карусели
+ */
 type CarouselProps = {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;

@@ -3,6 +3,19 @@ import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Всплывающая карточка при наведении — для превью профилей, ссылок и т.д.
+ *
+ * @example
+ * ```tsx
+ * <HoverCard>
+ *   <HoverCardTrigger asChild><a href="#">@username</a></HoverCardTrigger>
+ *   <HoverCardContent>
+ *     <p>Информация о пользователе</p>
+ *   </HoverCardContent>
+ * </HoverCard>
+ * ```
+ */
 const HoverCard = HoverCardPrimitive.Root;
 
 const HoverCardTrigger = HoverCardPrimitive.Trigger;

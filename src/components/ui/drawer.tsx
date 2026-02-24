@@ -3,6 +3,28 @@ import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Выдвижная нижняя панель (drawer) с жестом свайпа. Идеальна для мобильных интерфейсов.
+ *
+ * @example
+ * ```tsx
+ * <Drawer>
+ *   <DrawerTrigger asChild><Button>Открыть</Button></DrawerTrigger>
+ *   <DrawerContent>
+ *     <DrawerHeader>
+ *       <DrawerTitle>Настройки</DrawerTitle>
+ *       <DrawerDescription>Выберите параметры</DrawerDescription>
+ *     </DrawerHeader>
+ *     <div className="p-4">Содержимое</div>
+ *     <DrawerFooter>
+ *       <DrawerClose asChild><Button variant="outline">Закрыть</Button></DrawerClose>
+ *     </DrawerFooter>
+ *   </DrawerContent>
+ * </Drawer>
+ * ```
+ *
+ * @prop shouldScaleBackground - Масштабирует фон при открытии (по умолчанию `true`)
+ */
 const Drawer = ({ shouldScaleBackground = true, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
 );

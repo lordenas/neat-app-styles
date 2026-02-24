@@ -4,6 +4,28 @@ import { Dot } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Поле ввода одноразового кода (OTP) с отдельными ячейками для каждой цифры.
+ *
+ * @example
+ * ```tsx
+ * <InputOTP maxLength={6}>
+ *   <InputOTPGroup>
+ *     <InputOTPSlot index={0} />
+ *     <InputOTPSlot index={1} />
+ *     <InputOTPSlot index={2} />
+ *   </InputOTPGroup>
+ *   <InputOTPSeparator />
+ *   <InputOTPGroup>
+ *     <InputOTPSlot index={3} />
+ *     <InputOTPSlot index={4} />
+ *     <InputOTPSlot index={5} />
+ *   </InputOTPGroup>
+ * </InputOTP>
+ * ```
+ *
+ * @prop maxLength - Количество символов (ячеек)
+ */
 const InputOTP = React.forwardRef<React.ElementRef<typeof OTPInput>, React.ComponentPropsWithoutRef<typeof OTPInput>>(
   ({ className, containerClassName, ...props }, ref) => (
     <OTPInput

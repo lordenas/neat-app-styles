@@ -4,6 +4,22 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ButtonProps, buttonVariants } from "@/components/ui/button";
 
+/**
+ * Пагинация для навигации по страницам списка.
+ *
+ * @example
+ * ```tsx
+ * <Pagination>
+ *   <PaginationContent>
+ *     <PaginationItem><PaginationPrevious href="#" /></PaginationItem>
+ *     <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+ *     <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+ *     <PaginationItem><PaginationEllipsis /></PaginationItem>
+ *     <PaginationItem><PaginationNext href="#" /></PaginationItem>
+ *   </PaginationContent>
+ * </Pagination>
+ * ```
+ */
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"

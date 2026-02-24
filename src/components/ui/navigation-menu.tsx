@@ -5,6 +5,28 @@ import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Навигационное меню с выпадающими панелями контента. Подходит для основной навигации сайта.
+ *
+ * @example
+ * ```tsx
+ * <NavigationMenu>
+ *   <NavigationMenuList>
+ *     <NavigationMenuItem>
+ *       <NavigationMenuTrigger>Каталог</NavigationMenuTrigger>
+ *       <NavigationMenuContent>
+ *         <ul className="grid gap-3 p-4 w-[400px]">
+ *           <li><NavigationMenuLink href="/products">Товары</NavigationMenuLink></li>
+ *         </ul>
+ *       </NavigationMenuContent>
+ *     </NavigationMenuItem>
+ *     <NavigationMenuItem>
+ *       <NavigationMenuLink href="/about">О нас</NavigationMenuLink>
+ *     </NavigationMenuItem>
+ *   </NavigationMenuList>
+ * </NavigationMenu>
+ * ```
+ */
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
