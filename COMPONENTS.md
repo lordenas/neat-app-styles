@@ -43,7 +43,7 @@
 
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
-| `variant` | `"default"` \| `"destructive"` \| `"outline"` \| `"secondary"` \| `"ghost"` \| `"link"` | `"default"` | Стиль кнопки |
+| `variant` | `"default"` \| `"destructive"` \| `"outline"` \| `"secondary"` \| `"ghost"` \| `"link"` \| `"success"` | `"default"` | Стиль кнопки |
 | `size` | `"sm"` \| `"default"` \| `"lg"` \| `"icon"` \| `"icon-sm"` | `"default"` | Размер |
 | `icon` | `ReactNode` | — | Иконка перед текстом |
 | `loading` | `boolean` | `false` | Показывает спиннер вместо иконки и делает кнопку `disabled` |
@@ -54,6 +54,8 @@
 <Button variant="outline" size="sm">Outline SM</Button>
 <Button variant="ghost" size="icon-sm"><Trash2 /></Button>
 <Button variant="destructive">Удалить</Button>
+<Button variant="success">Оплатить</Button>
+<Button variant="success" icon={<Check />}>Сохранено</Button>
 <Button icon={<Calculator />}>С иконкой</Button>
 <Button loading>Сохранение...</Button>
 <Button loading variant="outline">Загрузка</Button>
@@ -125,10 +127,13 @@
 - `inputStart` / `inputEnd` — иконки привязаны к верхнему краю поля.
 - Паттерн `error` идентичен `Input` — пустая строка `""` резервирует место.
 
+## Select
+
 **Импорт:** `import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from "@/components/ui/select"`
 
 | Prop (SelectTrigger) | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
+| `inputSize` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер триггера |
 | `error` | `string` | — | Сообщение об ошибке под триггером. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
 
 ```tsx
@@ -142,18 +147,18 @@
   </SelectContent>
 </Select>
 
+// Крупный размер (для лендингов/форм)
+<SelectTrigger inputSize="lg">
+  <SelectValue placeholder="Выберите..." />
+</SelectTrigger>
+
 // С ошибкой валидации
 <SelectTrigger id="role" error={errors.role?.message ?? ""}>
   <SelectValue placeholder="Выберите..." />
 </SelectTrigger>
 ```
 
-**Маленький вариант:**
-```tsx
-<SelectTrigger className="h-8 text-xs w-36">
-  <SelectValue />
-</SelectTrigger>
-```
+**Размеры:** `sm` (h-8, text-xs) → `default` (h-10, text-sm) → `lg` (h-12, text-base)
 
 ---
 
@@ -431,6 +436,27 @@
 
 **Примечание:** `TooltipProvider` нужно оборачивать на верхнем уровне один раз.
 
+### SimpleTooltip (обёртка)
+
+**Импорт:** `import { SimpleTooltip } from "@/components/ui/simple-tooltip"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `content` | `ReactNode` | — | Текст подсказки |
+| `side` | `"top"` \| `"right"` \| `"bottom"` \| `"left"` | — | Сторона появления |
+| `delayDuration` | `number` | `300` | Задержка перед показом (мс) |
+
+```tsx
+// Вместо 5 строк — одна:
+<SimpleTooltip content="Настройки">
+  <Button size="icon"><Settings /></Button>
+</SimpleTooltip>
+
+<SimpleTooltip content="Копировать" side="right">
+  <CopyButton value="text" />
+</SimpleTooltip>
+```
+
 ---
 
 ## DropdownMenu
@@ -562,13 +588,16 @@
 |------|-----|-------------|----------|
 | `value` | `number` | — | Текущее значение (0–100) |
 | `variant` | `"default"` \| `"success"` \| `"warning"` \| `"destructive"` \| `"info"` | `"default"` | Цвет индикатора |
+| `showValue` | `boolean` | `false` | Показывает числовое значение ("60%") справа от полоски |
+| `indeterminate` | `boolean` | `false` | Бесконечная анимация загрузки (значение неизвестно) |
 
 ```tsx
 <Progress value={60} />
+<Progress value={60} showValue />
 <Progress value={100} variant="success" className="h-2" />
 <Progress value={30} variant="destructive" />
-<Progress value={55} variant="warning" />
-<Progress value={80} variant="info" />
+<Progress indeterminate />
+<Progress indeterminate variant="info" />
 ```
 
 ---
@@ -646,12 +675,13 @@
 | `trigger` | `ReactNode` | — | Элемент, открывающий диалог |
 | `title` | `string` | — | Заголовок диалога |
 | `description` | `string` | — | Описание (опционально) |
-| `onConfirm` | `() => void` | — | Колбэк при подтверждении |
+| `onConfirm` | `() => void \| Promise<void>` | — | Колбэк при подтверждении. При `Promise` — показывает спиннер и блокирует кнопки до завершения |
 | `variant` | `"default"` \| `"destructive"` | `"default"` | Стиль кнопки подтверждения |
 | `confirmText` | `string` | `"Подтвердить"` | Текст кнопки подтверждения |
 | `cancelText` | `string` | `"Отмена"` | Текст кнопки отмены |
 
 ```tsx
+// Синхронный
 <ConfirmDialog
   trigger={<Button variant="destructive">Удалить</Button>}
   title="Удалить запись?"
@@ -659,6 +689,16 @@
   onConfirm={() => deleteItem(id)}
   variant="destructive"
   confirmText="Удалить"
+/>
+
+// Асинхронный (спиннер + блокировка до завершения)
+<ConfirmDialog
+  trigger={<Button variant="destructive">Удалить</Button>}
+  title="Удалить запись?"
+  onConfirm={async () => {
+    await api.deleteItem(id);  // диалог остаётся открытым
+  }}
+  variant="destructive"
 />
 ```
 
