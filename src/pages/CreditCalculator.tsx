@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -299,6 +300,55 @@ const CreditCalculator = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Кредитный калькулятор онлайн с досрочным погашением 2026</title>
+        <meta name="description" content="Рассчитайте ежемесячный платёж, переплату и график погашения кредита. Калькулятор с досрочным погашением, изменением ставки и кредитными каникулами. Бесплатно." />
+        <link rel="canonical" href="https://neat-app-styles.lovable.app/credit-calculator" />
+        <meta property="og:title" content="Кредитный калькулятор онлайн с досрочным погашением" />
+        <meta property="og:description" content="Рассчитайте ежемесячный платёж, переплату и график погашения кредита. Бесплатный онлайн калькулятор." />
+        <meta property="og:url" content="https://neat-app-styles.lovable.app/credit-calculator" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="ru_RU" />
+        <meta name="twitter:title" content="Кредитный калькулятор онлайн с досрочным погашением" />
+        <meta name="twitter:description" content="Рассчитайте ежемесячный платёж, переплату и график погашения кредита. Бесплатный онлайн калькулятор." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebApplication",
+              "name": "Кредитный калькулятор с досрочным погашением",
+              "description": "Онлайн калькулятор для расчёта ежемесячного платежа, переплаты и графика погашения кредита с учётом досрочных платежей, изменения ставки и кредитных каникул.",
+              "url": "https://neat-app-styles.lovable.app/credit-calculator",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "All",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "RUB"
+              },
+              "inLanguage": "ru"
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Главная", "item": "https://neat-app-styles.lovable.app/" },
+                { "@type": "ListItem", "position": 2, "name": "Кредитный калькулятор", "item": "https://neat-app-styles.lovable.app/credit-calculator" }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                { "@type": "Question", "name": "Насколько точен онлайн-калькулятор кредита?", "acceptedAnswer": { "@type": "Answer", "text": "Наш калькулятор использует стандартные банковские формулы для расчёта аннуитетных и дифференцированных платежей. Результат максимально приближен к реальному графику банка." } },
+                { "@type": "Question", "name": "Что лучше: уменьшать платёж или срок при досрочном погашении?", "acceptedAnswer": { "@type": "Answer", "text": "С точки зрения экономии на процентах, уменьшение срока всегда выгоднее. Однако уменьшение платежа даёт больше финансовой гибкости." } },
+                { "@type": "Question", "name": "Как влияют кредитные каникулы на переплату?", "acceptedAnswer": { "@type": "Answer", "text": "Во время кредитных каникул проценты продолжают начисляться на остаток долга. Это увеличивает общую переплату и может удлинить срок кредита." } },
+                { "@type": "Question", "name": "Можно ли рассчитать ипотеку с этим калькулятором?", "acceptedAnswer": { "@type": "Answer", "text": "Да, калькулятор подходит для расчёта любого кредита с фиксированным графиком — ипотека, потребительский кредит, автокредит." } },
+                { "@type": "Question", "name": "Зачем нужна функция «изменение ставки»?", "acceptedAnswer": { "@type": "Answer", "text": "Многие кредиты имеют плавающую ставку. Функция позволяет задать конкретную дату и новую ставку, чтобы увидеть, как это повлияет на платежи." } },
+                { "@type": "Question", "name": "Как рассчитать экономию на досрочных погашениях?", "acceptedAnswer": { "@type": "Answer", "text": "Сделайте два расчёта: один без досрочных платежей, второй — с ними. Сравните итоговые суммы переплаты. Наш калькулятор показывает экономию автоматически." } }
+              ]
+            }
+          ]
+        })}</script>
+      </Helmet>
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container max-w-5xl py-3 flex items-center justify-between">
