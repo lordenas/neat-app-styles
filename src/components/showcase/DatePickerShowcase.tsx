@@ -30,16 +30,20 @@ interface DateLocaleConfig {
   fnsLocale: typeof ru;
   /** date-fns format string */
   fnsFormat: string;
+  /** Default 24h or 12h for this locale */
+  use24h: boolean;
+  /** Time placeholder */
+  timePlaceholder: string;
 }
 
 const DATE_LOCALES: DateLocaleConfig[] = [
-  { code: "ru",    label: "🇷🇺 Россия (дд.мм.гггг)",    order: ["day","month","year"], sep: ".", placeholder: "дд.мм.гггг",   fnsLocale: ru,   fnsFormat: "dd.MM.yyyy" },
-  { code: "de",    label: "🇩🇪 Deutschland (TT.MM.JJJJ)", order: ["day","month","year"], sep: ".", placeholder: "TT.MM.JJJJ",   fnsLocale: de,   fnsFormat: "dd.MM.yyyy" },
-  { code: "en-GB", label: "🇬🇧 UK (dd/mm/yyyy)",           order: ["day","month","year"], sep: "/", placeholder: "dd/mm/yyyy",    fnsLocale: enUS, fnsFormat: "dd/MM/yyyy" },
-  { code: "en-US", label: "🇺🇸 US (mm/dd/yyyy)",           order: ["month","day","year"], sep: "/", placeholder: "mm/dd/yyyy",    fnsLocale: enUS, fnsFormat: "MM/dd/yyyy" },
-  { code: "ja",    label: "🇯🇵 日本 (yyyy/mm/dd)",         order: ["year","month","day"], sep: "/", placeholder: "yyyy/mm/dd",    fnsLocale: ja,   fnsFormat: "yyyy/MM/dd" },
-  { code: "iso",   label: "ISO 8601 (yyyy-mm-dd)",         order: ["year","month","day"], sep: "-", placeholder: "yyyy-mm-dd",    fnsLocale: enUS, fnsFormat: "yyyy-MM-dd" },
-  { code: "fr",    label: "🇫🇷 France (jj/mm/aaaa)",       order: ["day","month","year"], sep: "/", placeholder: "jj/mm/aaaa",    fnsLocale: fr,   fnsFormat: "dd/MM/yyyy" },
+  { code: "ru",    label: "🇷🇺 Россия (дд.мм.гггг)",    order: ["day","month","year"], sep: ".", placeholder: "дд.мм.гггг",   fnsLocale: ru,   fnsFormat: "dd.MM.yyyy", use24h: true,  timePlaceholder: "чч:мм" },
+  { code: "de",    label: "🇩🇪 Deutschland (TT.MM.JJJJ)", order: ["day","month","year"], sep: ".", placeholder: "TT.MM.JJJJ",   fnsLocale: de,   fnsFormat: "dd.MM.yyyy", use24h: true,  timePlaceholder: "SS:MM" },
+  { code: "en-GB", label: "🇬🇧 UK (dd/mm/yyyy)",           order: ["day","month","year"], sep: "/", placeholder: "dd/mm/yyyy",    fnsLocale: enUS, fnsFormat: "dd/MM/yyyy", use24h: true,  timePlaceholder: "hh:mm" },
+  { code: "en-US", label: "🇺🇸 US (mm/dd/yyyy)",           order: ["month","day","year"], sep: "/", placeholder: "mm/dd/yyyy",    fnsLocale: enUS, fnsFormat: "MM/dd/yyyy", use24h: false, timePlaceholder: "hh:mm" },
+  { code: "ja",    label: "🇯🇵 日本 (yyyy/mm/dd)",         order: ["year","month","day"], sep: "/", placeholder: "yyyy/mm/dd",    fnsLocale: ja,   fnsFormat: "yyyy/MM/dd", use24h: true,  timePlaceholder: "時:分" },
+  { code: "iso",   label: "ISO 8601 (yyyy-mm-dd)",         order: ["year","month","day"], sep: "-", placeholder: "yyyy-mm-dd",    fnsLocale: enUS, fnsFormat: "yyyy-MM-dd", use24h: true,  timePlaceholder: "hh:mm" },
+  { code: "fr",    label: "🇫🇷 France (jj/mm/aaaa)",       order: ["day","month","year"], sep: "/", placeholder: "jj/mm/aaaa",    fnsLocale: fr,   fnsFormat: "dd/MM/yyyy", use24h: true,  timePlaceholder: "hh:mm" },
 ];
 
 /* ── helpers ── */
@@ -455,8 +459,9 @@ function applyTimeMask(raw: string, use24h: boolean): string {
   const digits = raw.replace(/\D/g, "").slice(0, 4);
   if (digits.length === 0) return "";
 
-  const maxH1 = use24h ? 2 : 1;
+  const maxH = use24h ? 23 : 12;
   const h1 = parseInt(digits[0]);
+  const maxH1 = use24h ? 2 : 1;
 
   let hourStr: string;
   let hourDigitsUsed: number;
@@ -467,10 +472,7 @@ function applyTimeMask(raw: string, use24h: boolean): string {
   } else {
     if (digits.length === 1) return digits[0];
     const hv = parseInt(digits.slice(0, 2));
-    const maxH = use24h ? 23 : 12;
-    if (hv > maxH) {
-      return digits[0];
-    }
+    if (hv > maxH) return digits[0];
     hourStr = digits.slice(0, 2);
     hourDigitsUsed = 2;
   }
@@ -479,15 +481,40 @@ function applyTimeMask(raw: string, use24h: boolean): string {
   if (rest.length === 0) return hourStr;
 
   const m1 = parseInt(rest[0]);
-  if (m1 > 5) {
-    return hourStr + ":" + "0" + rest[0];
-  }
+  if (m1 > 5) return hourStr + ":" + "0" + rest[0];
   if (rest.length === 1) return hourStr + ":" + rest[0];
 
   const mv = parseInt(rest.slice(0, 2));
   if (mv > 59) return hourStr + ":" + rest[0];
 
   return hourStr + ":" + rest.slice(0, 2);
+}
+
+/** Apply time mask preserving cursor position */
+function applyTimeMaskWithCursor(
+  input: HTMLInputElement,
+  use24h: boolean
+): { value: string; cursor: number } {
+  const raw = input.value;
+  const cursorBefore = input.selectionStart ?? raw.length;
+  const masked = applyTimeMask(raw, use24h);
+
+  // Count digits before cursor in raw
+  let digitsBefore = 0;
+  for (let i = 0; i < cursorBefore && i < raw.length; i++) {
+    if (/\d/.test(raw[i])) digitsBefore++;
+  }
+
+  // Find position in masked string after the same number of digits
+  let newCursor = 0;
+  let counted = 0;
+  for (let i = 0; i < masked.length; i++) {
+    if (counted >= digitsBefore) { newCursor = i; break; }
+    if (/\d/.test(masked[i])) counted++;
+    newCursor = i + 1;
+  }
+
+  return { value: masked, cursor: newCursor };
 }
 
 function parseTime(masked: string): { hours: number; minutes: number } | undefined {
@@ -504,54 +531,95 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
   const [open, setOpen] = useState(false);
   const [dateInput, setDateInput] = useState("");
   const [timeInput, setTimeInput] = useState("");
-  const [use24h, setUse24h] = useState(true);
+  const [use24h, setUse24h] = useState(locale.use24h);
+  const [amPm, setAmPm] = useState<"AM" | "PM">("AM");
+  const timeRef = useRef<HTMLInputElement>(null);
+  const timePopoverRef = useRef<HTMLInputElement>(null);
+
+  // Sync use24h from locale
+  useEffect(() => {
+    setUse24h(locale.use24h);
+  }, [locale.code]);
 
   // Reset on locale change
   useEffect(() => {
     setDate(undefined);
     setDateInput("");
     setTimeInput("");
+    setAmPm("AM");
   }, [locale.code]);
 
   // Sync inputs from date
   useEffect(() => {
     if (date) {
       setDateInput(formatDateLocale(date, locale));
-      setTimeInput(format(date, "HH:mm"));
+      if (use24h) {
+        setTimeInput(format(date, "HH:mm"));
+      } else {
+        const h = date.getHours();
+        setAmPm(h >= 12 ? "PM" : "AM");
+        setTimeInput(format(date, "hh:mm"));
+      }
     }
-  }, [date, locale]);
+  }, [date, locale, use24h]);
 
-  const updateDateTime = useCallback((newDateStr: string, newTimeStr: string) => {
+  const updateDateTime = useCallback((newDateStr: string, newTimeStr: string, currentAmPm: "AM" | "PM") => {
     const parsedDate = parseMaskedDateLocale(newDateStr, locale);
     const parsedTime = parseTime(newTimeStr);
     if (parsedDate && parsedTime) {
       const dt = new Date(parsedDate);
-      dt.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+      let h = parsedTime.hours;
+      if (!use24h) {
+        if (currentAmPm === "PM" && h < 12) h += 12;
+        if (currentAmPm === "AM" && h === 12) h = 0;
+      }
+      dt.setHours(h, parsedTime.minutes, 0, 0);
       setDate(dt);
     } else if (parsedDate && !parsedTime) {
-      // Date valid but time incomplete — store date at 00:00
       setDate(parsedDate);
     }
-  }, [locale]);
+  }, [locale, use24h]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const masked = applyDateMaskLocale(e.target.value, locale);
     setDateInput(masked);
-    updateDateTime(masked, timeInput);
+    updateDateTime(masked, timeInput, amPm);
+  };
+
+  const handleTimeChangeWithCursor = (inputEl: HTMLInputElement) => {
+    const { value, cursor } = applyTimeMaskWithCursor(inputEl, use24h);
+    setTimeInput(value);
+    updateDateTime(dateInput, value, amPm);
+    // Restore cursor on next frame
+    requestAnimationFrame(() => {
+      inputEl.setSelectionRange(cursor, cursor);
+    });
   };
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const masked = applyTimeMask(e.target.value, use24h);
-    setTimeInput(masked);
-    updateDateTime(dateInput, masked);
+    handleTimeChangeWithCursor(e.target);
+  };
+
+  const handlePopoverTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleTimeChangeWithCursor(e.target);
+  };
+
+  const toggleAmPm = () => {
+    const next = amPm === "AM" ? "PM" : "AM";
+    setAmPm(next);
+    updateDateTime(dateInput, timeInput, next);
   };
 
   const handleCalendarSelect = (d: Date | undefined) => {
     if (d) {
-      // Preserve existing time
       const parsedTime = parseTime(timeInput);
       if (parsedTime) {
-        d.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
+        let h = parsedTime.hours;
+        if (!use24h) {
+          if (amPm === "PM" && h < 12) h += 12;
+          if (amPm === "AM" && h === 12) h = 0;
+        }
+        d.setHours(h, parsedTime.minutes, 0, 0);
       }
       setDate(d);
     }
@@ -569,7 +637,20 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
       <div className="flex items-center gap-2">
         <Label>DateTime Picker (дата + время)</Label>
         <button
-          onClick={() => setUse24h(!use24h)}
+          onClick={() => {
+            const next = !use24h;
+            setUse24h(next);
+            // Re-format time for the new mode
+            if (date) {
+              if (next) {
+                setTimeInput(format(date, "HH:mm"));
+              } else {
+                const h = date.getHours();
+                setAmPm(h >= 12 ? "PM" : "AM");
+                setTimeInput(format(date, "hh:mm"));
+              }
+            }
+          }}
           className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
         >
           {use24h ? "24ч" : "12ч"}
@@ -587,11 +668,20 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
           <div className="flex items-center gap-1 pr-1">
             <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
             <input
+              ref={timeRef}
               value={timeInput}
               onChange={handleTimeChange}
-              placeholder={use24h ? "чч:мм" : "hh:mm"}
+              placeholder={locale.timePlaceholder}
               className="w-[48px] bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:outline-none h-10 text-sm text-center"
             />
+            {!use24h && (
+              <button
+                onClick={toggleAmPm}
+                className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-1"
+              >
+                {amPm}
+              </button>
+            )}
           </div>
           <PopoverTrigger asChild>
             <Button variant="ghost" className="rounded-l-none px-2 shrink-0 h-10 hover:bg-transparent">
@@ -612,11 +702,20 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
             <div className="flex items-center gap-2 text-sm">
               <Clock className="h-4 w-4 text-muted-foreground" />
               <input
+                ref={timePopoverRef}
                 value={timeInput}
-                onChange={handleTimeChange}
-                placeholder={use24h ? "чч:мм" : "hh:mm"}
+                onChange={handlePopoverTimeChange}
+                placeholder={locale.timePlaceholder}
                 className="w-[52px] bg-muted/50 rounded px-2 py-1 text-sm text-center border border-input focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               />
+              {!use24h && (
+                <button
+                  onClick={toggleAmPm}
+                  className="text-xs font-medium bg-muted/50 rounded px-2 py-1 border border-input hover:bg-muted transition-colors"
+                >
+                  {amPm}
+                </button>
+              )}
             </div>
             <Button variant="ghost" size="sm" className="text-xs" onClick={setNow}>
               Сейчас
@@ -626,7 +725,7 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
       </Popover>
       {date && (
         <p className="helper-text">
-          Выбрано: {format(date, "d MMMM yyyy", { locale: locale.fnsLocale })}, {format(date, "HH:mm")}
+          Выбрано: {format(date, "d MMMM yyyy", { locale: locale.fnsLocale })}, {format(date, use24h ? "HH:mm" : "hh:mm a")}
         </p>
       )}
     </div>
