@@ -64,13 +64,16 @@ export function Combobox({
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [highlightIndex, setHighlightIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   // Focus search on open
   useEffect(() => {
     if (open) {
       setSearch("");
+      setHighlightIndex(-1);
       setTimeout(() => inputRef.current?.focus(), 10);
     }
   }, [open]);
@@ -87,21 +90,56 @@ export function Combobox({
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
-
   const filtered = useMemo(() => {
-    if (!search) return options;
+    if (!search) return options.filter((o) => !o.disabled);
     const q = search.toLowerCase();
-    return options.filter((o) => o.label.toLowerCase().includes(q));
+    return options.filter((o) => !o.disabled && o.label.toLowerCase().includes(q));
   }, [options, search]);
+
+  // Reset highlight when filtered list changes
+  useEffect(() => {
+    setHighlightIndex(-1);
+  }, [filtered.length]);
+
+  // Scroll highlighted into view
+  useEffect(() => {
+    if (highlightIndex < 0 || !listRef.current) return;
+    const items = listRef.current.querySelectorAll("[data-combobox-option]");
+    items[highlightIndex]?.scrollIntoView({ block: "nearest" });
+  }, [highlightIndex]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setOpen(true);
+      }
+      return;
+    }
+    const total = filtered.length + (canCreate ? 1 : 0);
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightIndex((i) => (i + 1) % total);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightIndex((i) => (i - 1 + total) % total);
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightIndex >= 0 && highlightIndex < filtered.length) {
+          handleSelect(filtered[highlightIndex].value);
+        } else if (highlightIndex === filtered.length && canCreate) {
+          handleCreate();
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        setOpen(false);
+        break;
+    }
+  };
 
   const selectedLabel = options.find((o) => o.value === value)?.label;
 
@@ -135,6 +173,7 @@ export function Combobox({
         aria-expanded={open}
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
+        onKeyDown={handleKeyDown}
         className={cn(
           "inline-flex items-center justify-between gap-2 whitespace-nowrap rounded-md font-normal ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
@@ -160,6 +199,7 @@ export function Combobox({
               ref={inputRef}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder={searchPlaceholder}
               className="flex-1 bg-transparent py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
@@ -175,22 +215,24 @@ export function Combobox({
           </div>
 
           {/* Options */}
-          <div className="max-h-[200px] overflow-y-auto p-1">
+          <div ref={listRef} className="max-h-[200px] overflow-y-auto p-1">
             {filtered.length === 0 && !canCreate && (
               <p className="px-2 py-4 text-sm text-center text-muted-foreground">{emptyText}</p>
             )}
-            {filtered.map((opt) => (
+            {filtered.map((opt, idx) => (
               <button
                 key={opt.value}
                 type="button"
-                disabled={opt.disabled}
+                data-combobox-option
                 onClick={() => handleSelect(opt.value)}
+                onMouseEnter={() => setHighlightIndex(idx)}
                 className={cn(
                   "relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
-                  opt.value === value
+                  idx === highlightIndex
                     ? "bg-accent text-accent-foreground"
-                    : "hover:bg-accent hover:text-accent-foreground",
-                  opt.disabled && "pointer-events-none opacity-50",
+                    : opt.value === value
+                      ? "bg-accent/50 text-accent-foreground"
+                      : "hover:bg-accent hover:text-accent-foreground",
                 )}
               >
                 <Check
@@ -202,8 +244,13 @@ export function Combobox({
             {canCreate && (
               <button
                 type="button"
+                data-combobox-option
                 onClick={handleCreate}
-                className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-primary hover:bg-accent transition-colors"
+                onMouseEnter={() => setHighlightIndex(filtered.length)}
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-primary transition-colors",
+                  highlightIndex === filtered.length ? "bg-accent" : "hover:bg-accent",
+                )}
               >
                 <Plus className="h-4 w-4" />
                 Создать «{search.trim()}»
