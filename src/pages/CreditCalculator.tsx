@@ -36,6 +36,8 @@ import {
   Wallet,
   Percent,
   CalendarIcon,
+  Printer,
+  FileDown,
 } from "lucide-react";
 
 /* ───────────────────── date picker ───────────────────── */
@@ -622,7 +624,26 @@ const CreditCalculator = () => {
 
         {/* ─────── Results ─────── */}
         <div className="section-card space-y-5">
-          <h2 className="text-lg font-semibold">Результаты расчёта</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Результаты расчёта</h2>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<Printer />}
+                onClick={() => window.print()}
+              >
+                Печать
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<FileDown />}
+              >
+                Сохранить в PDF
+              </Button>
+            </div>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
