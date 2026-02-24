@@ -858,48 +858,37 @@ axisLine={{ stroke: "hsl(var(--border))" }}
 
 ## File Upload
 
-**Импорт:** `import { FileUploadShowcase } from "@/components/showcase/FileUploadShowcase"`
+**Импорт:** `import { FileUploadDropzone, FileUploadButton, FileUploadAvatar } from "@/components/ui/file-upload"`
 
-Три варианта загрузчика файлов:
+Три переиспользуемых компонента загрузки файлов с встроенной валидацией размера и типа.
 
-### Drag & Drop зона
+### Общие пропсы (`FileUploadBaseProps`)
 
-Область перетаскивания с кнопкой выбора, превью изображений и прогресс-баром.
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `accept` | `string \| string[]` | `"image/,.pdf"` | MIME-типы / расширения |
+| `acceptLabel` | `string` | из `accept` | Человекочитаемая подпись |
+| `maxSizeMB` | `number` | `10` | Макс. размер файла в MB |
+| `multiple` | `boolean` | `true` | Множественный выбор |
+| `onFilesChange` | `(files: File[]) => void` | — | Колбэк при изменении |
+| `disabled` | `boolean` | `false` | Заблокировать |
 
-```tsx
-<DragDropUploader />
-```
-
-**Возможности:**
-- Drag & Drop + клик для выбора
-- Превью для изображений (`URL.createObjectURL`)
-- Прогресс-бар загрузки (`Progress`)
-- Удаление файлов с очисткой `ObjectURL`
-- Иконки по типу файла (изображение, PDF, документ)
-
-### Кнопка + список файлов
-
-Компактная кнопка со списком выбранных файлов.
+### FileUploadDropzone
 
 ```tsx
-<ButtonFileList />
+<FileUploadDropzone accept="image/*,.pdf" acceptLabel="PNG, JPG, PDF" maxSizeMB={10} onFilesChange={setFiles} />
 ```
 
-**Возможности:**
-- Кнопка `variant="outline" size="sm"` с иконкой `Upload`
-- Список файлов с именем, размером и кнопкой удаления
-- Удаление появляется при hover
-
-### Аватар / Изображение
-
-Квадратная зона (96×96) для загрузки одного изображения.
+### FileUploadButton
 
 ```tsx
-<AvatarUploader />
+<FileUploadButton accept={["image/", ".pdf"]} maxSizeMB={20} buttonLabel="Загрузить" onFilesChange={setFiles} />
 ```
 
-**Возможности:**
-- Превью загруженного изображения
-- Overlay с иконкой при hover
-- Кнопка «Удалить» для сброса
-- Подпись с ограничениями формата/размера
+### FileUploadAvatar
+
+```tsx
+<FileUploadAvatar accept="image/png,image/jpeg" maxSizeMB={5} label="Фото профиля" onFilesChange={setFiles} />
+```
+
+**Валидация:** `toast.error` при неподдерживаемом формате или превышении лимита.
