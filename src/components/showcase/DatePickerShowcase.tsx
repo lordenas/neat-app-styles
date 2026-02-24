@@ -9,22 +9,93 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Label } from "@/components/ui/label";
 import type { DateRange } from "react-day-picker";
 
-/* ── mask helpers ── */
+/* ── smart mask helpers ── */
+
+function daysInMonth(month: number, year?: number): number {
+  if (month === 2) {
+    if (!year) return 29;
+    return (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28;
+  }
+  return [4, 6, 9, 11].includes(month) ? 30 : 31;
+}
+
+/**
+ * Smart date mask: дд.мм.гггг
+ * Validates ranges as user types and blocks invalid input.
+ */
 function applyDateMask(raw: string): string {
   const digits = raw.replace(/\D/g, "").slice(0, 8);
-  let result = "";
-  for (let i = 0; i < digits.length; i++) {
-    if (i === 2 || i === 4) result += ".";
-    result += digits[i];
+  if (digits.length === 0) return "";
+
+  const parts: string[] = [];
+
+  // ── Day ──
+  const d1 = parseInt(digits[0]);
+  if (d1 > 3) {
+    parts.push("0" + digits[0]);
+  } else {
+    if (digits.length === 1) return digits[0];
+    const dayVal = parseInt(digits.slice(0, 2));
+    if (dayVal < 1 || dayVal > 31) return digits[0];
+    parts.push(digits.slice(0, 2));
   }
-  return result;
+
+  const day = parseInt(parts[0]);
+  const dayLen = parts[0].length === 2 ? (d1 > 3 ? 1 : 2) : 1;
+  const rest = digits.slice(dayLen);
+
+  if (rest.length === 0) return parts[0] + ".";
+
+  // ── Month ──
+  const m1 = parseInt(rest[0]);
+  let monthStr: string;
+  let monthDigitsUsed: number;
+
+  if (m1 > 1) {
+    monthStr = "0" + rest[0];
+    monthDigitsUsed = 1;
+  } else {
+    if (rest.length === 1) return parts[0] + "." + rest[0];
+    const monthVal = parseInt(rest.slice(0, 2));
+    if (monthVal < 1 || monthVal > 12) return parts[0] + "." + rest[0];
+    monthStr = rest.slice(0, 2);
+    monthDigitsUsed = 2;
+  }
+
+  const month = parseInt(monthStr);
+  // cross-validate: day must fit in this month
+  const maxDay = daysInMonth(month);
+  if (day > maxDay) {
+    // block this month digit
+    return parts[0] + ".";
+  }
+
+  const yearDigits = rest.slice(monthDigitsUsed);
+  if (yearDigits.length === 0) return parts[0] + "." + monthStr + ".";
+
+  // ── Year ──
+  let yyyy = yearDigits.slice(0, 4);
+
+  // final validation when year is complete
+  if (yyyy.length === 4) {
+    const y = parseInt(yyyy);
+    const exactMax = daysInMonth(month, y);
+    if (day > exactMax) {
+      // e.g. 29.02 but not a leap year — block last year digit
+      return parts[0] + "." + monthStr + "." + yyyy.slice(0, 3);
+    }
+  }
+
+  return parts[0] + "." + monthStr + "." + yyyy;
 }
 
 function parseMaskedDate(masked: string): Date | undefined {
   if (masked.length !== 10) return undefined;
   const [dd, mm, yyyy] = masked.split(".");
   const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
-  if (!d || !m || !y || m < 1 || m > 12 || d < 1 || d > 31) return undefined;
+  if (!d || !m || !y || m < 1 || m > 12 || d < 1) return undefined;
+  const maxDay = daysInMonth(m, y);
+  if (d > maxDay) return undefined;
   const date = new Date(y, m - 1, d);
   if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
   return undefined;
