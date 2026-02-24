@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
@@ -15,7 +15,7 @@ const CreditCalculator = lazy(() => import("./pages/CreditCalculator"));
 const Showcase = lazy(() => import("./pages/Showcase"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-const queryClient = new QueryClient();
+
 
 function PageSkeleton() {
   return (
@@ -30,7 +30,6 @@ function PageSkeleton() {
 const App = () => (
   <HelmetProvider>
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
           
@@ -47,7 +46,6 @@ const App = () => (
             </BrowserRouter>
           </ErrorBoundary>
         </TooltipProvider>
-      </QueryClientProvider>
     </ThemeProvider>
   </HelmetProvider>
 );
