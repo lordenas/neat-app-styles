@@ -10,6 +10,7 @@ const textareaVariants = cva(
       inputSize: {
         sm: "min-h-[60px] text-xs",
         default: "min-h-[80px] text-base md:text-sm",
+        lg: "min-h-[120px] text-base",
       },
     },
     defaultVariants: {

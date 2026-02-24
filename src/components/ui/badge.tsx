@@ -52,18 +52,21 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, Varian
   icon?: React.ReactNode;
   /** Колбэк удаления — добавляет кнопку × */
   onDismiss?: () => void;
+  /** Показывает цветной кружок-индикатор перед текстом */
+  dot?: boolean;
 }
 
-function Badge({ className, variant, size, icon, onDismiss, children, ...props }: BadgeProps) {
+function Badge({ className, variant, size, icon, onDismiss, dot, children, ...props }: BadgeProps) {
   return (
     <div
       className={cn(
         badgeVariants({ variant, size }),
-        (icon || onDismiss) && "gap-1",
+        (icon || onDismiss || dot) && "gap-1",
         className
       )}
       {...props}
     >
+      {dot && <span className="shrink-0 h-1.5 w-1.5 rounded-full bg-current" />}
       {icon && <span className="shrink-0 [&>svg]:h-3 [&>svg]:w-3">{icon}</span>}
       {children}
       {onDismiss && (
