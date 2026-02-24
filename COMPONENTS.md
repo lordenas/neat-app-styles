@@ -341,11 +341,13 @@
 ```tsx
 <TooltipProvider>
   <Tooltip>
-    <TooltipTrigger>Наведи</TooltipTrigger>
+    <TooltipTrigger>Наведи / Тапни</TooltipTrigger>
     <TooltipContent>Текст подсказки</TooltipContent>
   </Tooltip>
 </TooltipProvider>
 ```
+
+**Мобильные устройства:** Тултип автоматически переключается в режим клика на тач-устройствах. Hover недоступен — открытие/закрытие по тапу.
 
 **Примечание:** `TooltipProvider` нужно оборачивать на верхнем уровне один раз.
 
