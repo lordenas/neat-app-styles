@@ -17,10 +17,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
           description: "group-[.toast]:text-muted-foreground",
           actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
-          success: "group-[.toaster]:!text-[hsl(var(--success))] [&>svg]:!text-[hsl(var(--success))]",
-          error: "[&>svg]:!text-destructive [&>[data-title]]:!text-destructive",
-          warning: "[&>svg]:!text-[hsl(var(--warning))] [&>[data-title]]:!text-[hsl(var(--warning))]",
-          info: "group-[.toaster]:!text-foreground [&>svg]:!text-[hsl(var(--info))]",
+          success: "[&_[data-icon]>svg]:!text-[hsl(var(--success))]",
+          error: "[&_[data-icon]>svg]:!text-destructive",
+          warning: "[&_[data-icon]>svg]:!text-[hsl(var(--warning))]",
+          info: "[&_[data-icon]>svg]:!text-[hsl(var(--info))]",
         },
       }}
       {...props}
