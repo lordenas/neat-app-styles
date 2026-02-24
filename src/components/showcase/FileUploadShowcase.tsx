@@ -2,12 +2,13 @@ import * as React from "react";
 import { Upload, X, FileText, Image as ImageIcon, File, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 /**
  * Showcase компонента File Uploader.
  *
- * Три варианта загрузчика файлов:
+ * Три варианта загрузчика файлов с валидацией размера и типа:
  * 1. **Drag & Drop зона** — область перетаскивания с превью и прогрессом
  * 2. **Кнопка + список файлов** — компактная кнопка со списком выбранных файлов
  * 3. **Аватар/Изображение** — квадратная зона для загрузки одного изображения с превью
@@ -25,6 +26,12 @@ interface UploadedFile {
   preview?: string;
 }
 
+interface ValidationConfig {
+  maxSizeMB: number;
+  acceptTypes: string[];       // MIME prefixes or extensions: "image/", ".pdf", "application/pdf"
+  acceptLabel: string;         // Human-readable label: "PNG, JPG, PDF"
+}
+
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -35,6 +42,45 @@ function getFileIcon(type: string) {
   if (type.startsWith("image/")) return <ImageIcon className="h-4 w-4" />;
   if (type.includes("pdf") || type.includes("document")) return <FileText className="h-4 w-4" />;
   return <File className="h-4 w-4" />;
+}
+
+/** Validate a single file against config. Returns error message or null. */
+function validateFile(file: File, config: ValidationConfig): string | null {
+  // Type check
+  const typeOk = config.acceptTypes.some((t) => {
+    if (t.startsWith(".")) {
+      return file.name.toLowerCase().endsWith(t);
+    }
+    if (t.endsWith("/")) {
+      return file.type.startsWith(t);
+    }
+    return file.type === t;
+  });
+  if (!typeOk) {
+    return `«${file.name}» — неподдерживаемый формат. Допустимы: ${config.acceptLabel}`;
+  }
+
+  // Size check
+  const maxBytes = config.maxSizeMB * 1024 * 1024;
+  if (file.size > maxBytes) {
+    return `«${file.name}» (${formatFileSize(file.size)}) превышает лимит ${config.maxSizeMB} MB`;
+  }
+
+  return null;
+}
+
+/** Filter files, show toast for each rejected file, return valid ones. */
+function filterValidFiles(fileList: FileList, config: ValidationConfig): File[] {
+  const valid: File[] = [];
+  for (const file of Array.from(fileList)) {
+    const error = validateFile(file, config);
+    if (error) {
+      toast.error("Файл отклонён", { description: error });
+    } else {
+      valid.push(file);
+    }
+  }
+  return valid;
 }
 
 function simulateUpload(
@@ -56,13 +102,22 @@ function simulateUpload(
 
 // ─── Drag & Drop Zone ────────────────────────────────────────
 
+const DRAG_DROP_CONFIG: ValidationConfig = {
+  maxSizeMB: 10,
+  acceptTypes: ["image/", "application/pdf", ".doc", ".docx"],
+  acceptLabel: "PNG, JPG, PDF, DOC",
+};
+
 function DragDropUploader() {
   const [files, setFiles] = React.useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const addFiles = (fileList: FileList) => {
-    const newFiles: UploadedFile[] = Array.from(fileList).map((file) => {
+    const valid = filterValidFiles(fileList, DRAG_DROP_CONFIG);
+    if (!valid.length) return;
+
+    const newFiles: UploadedFile[] = valid.map((file) => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const preview = file.type.startsWith("image/")
         ? URL.createObjectURL(file)
@@ -111,7 +166,7 @@ function DragDropUploader() {
             <span className="text-primary underline underline-offset-2">выберите</span>
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            PNG, JPG, PDF до 10 MB
+            {DRAG_DROP_CONFIG.acceptLabel} до {DRAG_DROP_CONFIG.maxSizeMB} MB
           </p>
         </div>
         <input
@@ -180,12 +235,21 @@ function DragDropUploader() {
 
 // ─── Button + File List ──────────────────────────────────────
 
+const BUTTON_LIST_CONFIG: ValidationConfig = {
+  maxSizeMB: 20,
+  acceptTypes: ["image/", "application/pdf", ".doc", ".docx", ".xls", ".xlsx", ".txt", "text/"],
+  acceptLabel: "Изображения, PDF, DOC, XLS, TXT",
+};
+
 function ButtonFileList() {
   const [files, setFiles] = React.useState<UploadedFile[]>([]);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const addFiles = (fileList: FileList) => {
-    const newFiles: UploadedFile[] = Array.from(fileList).map((file) => ({
+    const valid = filterValidFiles(fileList, BUTTON_LIST_CONFIG);
+    if (!valid.length) return;
+
+    const newFiles: UploadedFile[] = valid.map((file) => ({
       id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       file,
       progress: 100,
@@ -256,11 +320,20 @@ function ButtonFileList() {
 
 // ─── Avatar / Image Uploader ─────────────────────────────────
 
+const AVATAR_CONFIG: ValidationConfig = {
+  maxSizeMB: 5,
+  acceptTypes: ["image/png", "image/jpeg", "image/webp", "image/gif"],
+  acceptLabel: "PNG, JPG, WebP, GIF",
+};
+
 function AvatarUploader() {
   const [preview, setPreview] = React.useState<string | null>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFile = (file: File) => {
+  const handleFile = (fileList: FileList) => {
+    const valid = filterValidFiles(fileList, AVATAR_CONFIG);
+    if (!valid.length) return;
+    const file = valid[0];
     if (preview) URL.revokeObjectURL(preview);
     setPreview(URL.createObjectURL(file));
   };
@@ -302,17 +375,16 @@ function AvatarUploader() {
           ref={inputRef}
           type="file"
           className="hidden"
-          accept="image/*"
+          accept="image/png,image/jpeg,image/webp,image/gif"
           onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) handleFile(file);
+            if (e.target.files?.length) handleFile(e.target.files);
             e.target.value = "";
           }}
         />
       </div>
       <div className="space-y-1">
         <p className="text-sm text-foreground">Загрузите изображение</p>
-        <p className="text-xs text-muted-foreground">PNG, JPG до 5 MB</p>
+        <p className="text-xs text-muted-foreground">{AVATAR_CONFIG.acceptLabel} до {AVATAR_CONFIG.maxSizeMB} MB</p>
         {preview && (
           <Button
             variant="ghost"
