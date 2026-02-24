@@ -170,28 +170,16 @@ function SortableTable() {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">Клик по заголовку — клиентская сортировка</p>
+      <p className="text-sm text-muted-foreground">Клик по заголовку — клиентская сортировка (используются пропсы <code className="text-xs bg-muted px-1 rounded">sortable</code>, <code className="text-xs bg-muted px-1 rounded">sortDirection</code>, <code className="text-xs bg-muted px-1 rounded">onSort</code>)</p>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">#</TableHead>
-              <TableHead>
-                <button onClick={() => toggle("name")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
-                  ФИО <SortIcon col="name" />
-                </button>
-              </TableHead>
+              <TableHead sortable sortDirection={sortKey === "name" ? sortDir : false} onSort={() => toggle("name")}>ФИО</TableHead>
               <TableHead>Должность</TableHead>
-              <TableHead>
-                <button onClick={() => toggle("experience")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
-                  Стаж <SortIcon col="experience" />
-                </button>
-              </TableHead>
-              <TableHead className="text-right">
-                <button onClick={() => toggle("salary")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors float-right">
-                  Оклад <SortIcon col="salary" />
-                </button>
-              </TableHead>
+              <TableHead sortable sortDirection={sortKey === "experience" ? sortDir : false} onSort={() => toggle("experience")}>Стаж</TableHead>
+              <TableHead className="text-right" sortable sortDirection={sortKey === "salary" ? sortDir : false} onSort={() => toggle("salary")}>Оклад</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -259,22 +247,10 @@ function ServerSortTable() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-12">#</TableHead>
-              <TableHead>
-                <button onClick={() => toggle("name")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
-                  ФИО <SortIcon col="name" />
-                </button>
-              </TableHead>
+              <TableHead sortable sortDirection={sortKey === "name" ? sortDir : false} onSort={() => toggle("name")}>ФИО</TableHead>
               <TableHead>Должность</TableHead>
-              <TableHead>
-                <button onClick={() => toggle("experience")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors">
-                  Стаж <SortIcon col="experience" />
-                </button>
-              </TableHead>
-              <TableHead className="text-right">
-                <button onClick={() => toggle("salary")} className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors float-right">
-                  Оклад <SortIcon col="salary" />
-                </button>
-              </TableHead>
+              <TableHead sortable sortDirection={sortKey === "experience" ? sortDir : false} onSort={() => toggle("experience")}>Стаж</TableHead>
+              <TableHead className="text-right" sortable sortDirection={sortKey === "salary" ? sortDir : false} onSort={() => toggle("salary")}>Оклад</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
