@@ -18,10 +18,15 @@ import { ExperienceCalculator } from "@/components/showcase/ExperienceCalculator
 import { FilterForm } from "@/components/showcase/FilterForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationShowcase } from "@/components/showcase/NotificationShowcase";
+import { ProgressShowcase } from "@/components/showcase/ProgressShowcase";
+import { SkeletonShowcase } from "@/components/showcase/SkeletonShowcase";
+import { AccordionShowcase } from "@/components/showcase/AccordionShowcase";
+import { CopyShowcase } from "@/components/showcase/CopyShowcase";
+import { EmptyStateShowcase } from "@/components/showcase/EmptyStateShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр"] },
 ];
 
@@ -112,6 +117,21 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Notifications" description="Toast-уведомления (Sonner)">
               <NotificationShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Progress & Stepper" description="Прогресс-бар и пошаговый визард">
+              <ProgressShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Skeleton" description="Состояния загрузки">
+              <SkeletonShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Accordion" description="Раскрывающиеся секции / FAQ">
+              <AccordionShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Copy" description="Копирование в буфер обмена">
+              <CopyShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Empty State" description="Пустые состояния">
+              <EmptyStateShowcase />
             </ShowcaseSection>
           </div>
         </section>
