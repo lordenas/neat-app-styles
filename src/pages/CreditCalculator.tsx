@@ -666,7 +666,20 @@ const CreditCalculator = () => {
 
           {/* Schedule table with sticky header & footer */}
           <div>
-            <h3 className="text-sm font-medium mb-3">График погашения</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium">График погашения</h3>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" icon={<FileDown />}>
+                  Excel
+                </Button>
+                <Button variant="outline" size="sm" icon={<FileDown />}>
+                  PDF
+                </Button>
+                <Button variant="outline" size="sm" icon={<Printer />}>
+                  Печать
+                </Button>
+              </div>
+            </div>
             <div className="rounded-md border relative overflow-auto max-h-[480px]">
               <Table size="sm" striped hoverable>
                 <TableHeader className="sticky top-0 z-10 bg-card shadow-[0_1px_0_0_hsl(var(--border))]">
