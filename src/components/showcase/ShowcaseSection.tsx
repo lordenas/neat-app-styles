@@ -1,3 +1,4 @@
+// ⚠️ Client-only component — uses framer-motion, do NOT use in SSR/Next.js contexts
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
