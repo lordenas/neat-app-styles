@@ -142,13 +142,13 @@ export function InputsShowcase() {
             <Label>URL с префиксом</Label>
             <InputGroup>
               <InputAddon>https://</InputAddon>
-              <Input placeholder="example.com" className="rounded-l-none border-l-0" />
+              <Input placeholder="example.com" className="border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0" />
             </InputGroup>
           </div>
           <div className="space-y-1.5">
             <Label>Сумма с суффиксом</Label>
             <InputGroup>
-              <Input placeholder="0.00" className="rounded-r-none border-r-0" />
+              <Input placeholder="0.00" className="border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0" />
               <InputAddon>₽</InputAddon>
             </InputGroup>
           </div>
@@ -156,7 +156,7 @@ export function InputsShowcase() {
             <Label>Домен с обоими</Label>
             <InputGroup>
               <InputAddon><Globe className="h-4 w-4" /></InputAddon>
-              <Input placeholder="mysite" className="rounded-none border-x-0" />
+              <Input placeholder="mysite" className="border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0" />
               <InputAddon>.ru</InputAddon>
             </InputGroup>
           </div>

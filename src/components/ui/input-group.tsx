@@ -25,7 +25,10 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex items-stretch", className)}
+      className={cn(
+        "flex items-stretch rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-colors",
+        className,
+      )}
       {...props}
     />
   ),
@@ -42,9 +45,9 @@ const InputAddon = React.forwardRef<HTMLDivElement, InputAddonProps>(
     <div
       ref={ref}
       className={cn(
-        "flex items-center border border-input bg-muted px-3 text-sm text-muted-foreground",
-        "first:rounded-l-md first:border-r-0",
-        "last:rounded-r-md last:border-l-0",
+        "flex items-center bg-muted px-3 text-sm text-muted-foreground",
+        "first:rounded-l-md first:border-r-[1px] first:border-input",
+        "last:rounded-r-md last:border-l-[1px] last:border-input",
         className,
       )}
       {...props}
