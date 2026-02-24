@@ -40,6 +40,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import { CreditCalculatorSeoContent } from "@/components/seo/CreditCalculatorSeoContent";
 import {
   Collapsible,
   CollapsibleContent,
@@ -652,6 +653,9 @@ const CreditCalculator = () => {
             </div>
           </div>
         </div>
+
+        {/* SEO Content */}
+        <CreditCalculatorSeoContent />
       </main>
 
       <footer className="border-t py-6 mt-8">
