@@ -55,6 +55,12 @@
 
     --radius: 0.375rem;
 
+    --shadow-color: 214 20% 50%;
+    --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.08), 0 2px 4px -2px hsl(var(--shadow-color) / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.08), 0 4px 6px -4px hsl(var(--shadow-color) / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.1), 0 8px 10px -6px hsl(var(--shadow-color) / 0.05);
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -113,12 +119,27 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
     --section-bg: 220 18% 10%;
     --stripe-bg: 220 15% 14%;
+
+    --shadow-color: 220 40% 3%;
+    --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.2);
+    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.3), 0 2px 4px -2px hsl(var(--shadow-color) / 0.2);
+    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.35), 0 4px 6px -4px hsl(var(--shadow-color) / 0.2);
+    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.4), 0 8px 10px -6px hsl(var(--shadow-color) / 0.25);
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+  }
+
+  /* Плавная смена темы */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
   }
 
   body {
