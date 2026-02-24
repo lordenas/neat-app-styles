@@ -312,7 +312,7 @@ const CreditCalculator = () => {
         </div>
       </header>
 
-      <main className="container max-w-5xl py-6 space-y-6">
+      <main className="container max-w-7xl py-6 space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -328,6 +328,10 @@ const CreditCalculator = () => {
         </Breadcrumb>
 
         <h1 className="text-2xl font-bold tracking-tight">Кредитный калькулятор с досрочным погашением</h1>
+
+        <div className="flex gap-6 items-start">
+        {/* ─── Left column (calculator) ─── */}
+        <div className="flex-1 min-w-0 space-y-5">
 
         {/* ─────── Form ─────── */}
         <div className="section-card space-y-5">
@@ -839,6 +843,63 @@ const CreditCalculator = () => {
               </Table>
             </div>
           </div>
+        </div>
+        </div>
+
+        {/* ─── Right sidebar ─── */}
+        <aside className="hidden lg:block w-72 shrink-0 space-y-5 sticky top-6">
+          {/* Ad block */}
+          <div className="section-card">
+            <p className="text-xs text-muted-foreground mb-2">Реклама</p>
+            <div className="rounded-md bg-muted/50 border border-dashed border-border-subtle flex items-center justify-center h-60">
+              <span className="text-xs text-muted-foreground">Рекламный блок</span>
+            </div>
+          </div>
+
+          {/* Related calculators */}
+          <div className="section-card space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Кредитные калькуляторы</p>
+            <nav className="space-y-1">
+              {[
+                "Ипотечный калькулятор",
+                "Калькулятор рефинансирования",
+                "Калькулятор досрочного погашения",
+                "Калькулятор автокредита",
+                "Калькулятор переплаты",
+              ].map((name) => (
+                <a
+                  key={name}
+                  href="#"
+                  className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                >
+                  {name}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          {/* Other categories */}
+          <div className="section-card space-y-2">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
+            <nav className="space-y-1">
+              {[
+                "Вклады и депозиты",
+                "Налоговые калькуляторы",
+                "Зарплатные калькуляторы",
+                "Инвестиции",
+                "Пенсионные калькуляторы",
+              ].map((name) => (
+                <a
+                  key={name}
+                  href="#"
+                  className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                >
+                  {name}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </aside>
         </div>
       </main>
 
