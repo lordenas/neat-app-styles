@@ -2,6 +2,19 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 
+/**
+ * Витрина Toast-уведомлений (Sonner).
+ * Демонстрирует все типы: success, error, warning, info, с действием, loading→success.
+ *
+ * @example
+ * ```tsx
+ * import { toast } from "sonner";
+ * toast.success("Сохранено", { description: "Описание" });
+ * toast.error("Ошибка", { description: "Описание" });
+ * toast.warning("Внимание", { description: "Описание" });
+ * toast.info("Подсказка", { description: "Описание" });
+ * ```
+ */
 export function NotificationShowcase() {
   return (
     <div className="space-y-4">

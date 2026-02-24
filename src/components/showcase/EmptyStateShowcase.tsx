@@ -1,6 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { Calculator, FileSearch, Inbox } from "lucide-react";
 
+/**
+ * Универсальный компонент пустого состояния.
+ * Используется когда нет данных, результатов поиска или контента.
+ *
+ * @param icon - Иконка (рекомендуется h-10 w-10)
+ * @param title - Заголовок пустого состояния
+ * @param description - Пояснительный текст
+ * @param action - Опциональная CTA-кнопка
+ *
+ * @example
+ * ```tsx
+ * <EmptyState
+ *   icon={<Calculator className="h-10 w-10" />}
+ *   title="Нет расчётов"
+ *   description="Заполните параметры и нажмите «Рассчитать»"
+ *   action={<Button size="sm">Рассчитать</Button>}
+ * />
+ * ```
+ */
 function EmptyState({
   icon,
   title,

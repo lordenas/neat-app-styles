@@ -174,13 +174,126 @@
 </Tabs>
 ```
 
-### Tooltip
+### DatePicker (мультилокальный)
+Поддерживает 7 локалей: RU (дд.мм.гггг), DE (TT.MM.JJJJ), UK (dd/mm/yyyy), US (mm/dd/yyyy), JP (yyyy/mm/dd), ISO (yyyy-mm-dd), FR (jj/mm/aaaa).
+Умная маска с валидацией дней/месяцев/високосных лет. Режимы: только календарь, ввод+календарь, диапазон дат, period picker (два поля), datetime picker (дата + время).
+
 ```tsx
-<Tooltip>
-  <TooltipTrigger asChild><button><Info className="h-3.5 w-3.5" /></button></TooltipTrigger>
-  <TooltipContent className="max-w-xs">Текст</TooltipContent>
-</Tooltip>
-// Автоматически работает по тапу на мобильных (hover недоступен)
+// Только календарь
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">{date ? formatDateLocale(date, locale) : locale.placeholder}</Button>
+  </PopoverTrigger>
+  <PopoverContent><Calendar mode="single" selected={date} onSelect={setDate} locale={locale.fnsLocale} /></PopoverContent>
+</Popover>
+
+// Ввод + календарь (с маской)
+<DateInputPicker locale={locale} />
+
+// Диапазон дат
+<Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} />
+
+// DateTime Picker (дата + время, 24ч/12ч по локали)
+<DateTimePicker locale={locale} />
+```
+
+**Локали:** Каждая локаль определяет `order` (порядок day/month/year), `sep` (разделитель), `placeholder`, `use24h` (формат времени), `timePlaceholder`.
+**Маска времени:** Сохраняет позицию курсора при вводе, поддерживает 24ч и 12ч (AM/PM) форматы.
+
+### Notifications (Toast)
+Библиотека Sonner. Типы: `success`, `error`, `warning`, `info`, `loading`.
+```tsx
+import { toast } from "sonner";
+
+toast.success("Сохранено", { description: "Описание" });
+toast.error("Ошибка", { description: "Описание" });
+toast.warning("Внимание", { description: "Описание" });
+toast.info("Подсказка", { description: "Описание" });
+toast("Нейтральный", { action: { label: "Открыть", onClick: () => {} } });
+
+// Loading → Success
+const id = toast.loading("Загрузка...");
+toast.success("Готово!", { id });
+```
+
+### Progress & Stepper
+```tsx
+<Progress value={60} className="h-2" />
+```
+Stepper — пошаговая навигация с кружками, коннекторами и статусами (completed/current/pending):
+```tsx
+<div className="flex items-start gap-0">
+  {steps.map((s, i) => (
+    <div key={i} className="flex-1 flex flex-col items-center">
+      <button className={cn("h-8 w-8 rounded-full border-2", isCompleted ? "bg-primary" : "border-border")}>
+        {isCompleted ? <Check /> : i + 1}
+      </button>
+      <p className="text-xs mt-1.5">{s.label}</p>
+    </div>
+  ))}
+</div>
+```
+
+### Skeleton (паттерны загрузки)
+```tsx
+// Карточка
+<div className="section-card space-y-4">
+  <div className="flex items-center gap-3">
+    <Skeleton className="h-10 w-10 rounded-full" />
+    <div className="space-y-2 flex-1">
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-3 w-1/2" />
+    </div>
+  </div>
+  <Skeleton className="h-32 w-full rounded-md" />
+</div>
+
+// Таблица
+<div className="flex gap-3">
+  <Skeleton className="h-4 w-12" />
+  <Skeleton className="h-4 w-24" />
+  <Skeleton className="h-4 flex-1" />
+</div>
+```
+
+### Copy to Clipboard
+Два варианта: кнопка и инлайн-строка.
+```tsx
+// Кнопка
+<CopyButton text="50 109 ₽" label="платёж" />
+
+// Инлайн — строка с иконкой копирования
+<CopyInline text="npm install @radix-ui/react-accordion" />
+```
+Логика: `navigator.clipboard.writeText(text)`, состояние `copied` сбрасывается через 2 сек.
+
+### Empty State
+Пустое состояние с иконкой, заголовком, описанием и опциональным CTA.
+```tsx
+<EmptyState
+  icon={<Calculator className="h-10 w-10" />}
+  title="Нет расчётов"
+  description="Заполните параметры и нажмите «Рассчитать»"
+  action={<Button size="sm">Рассчитать</Button>}
+/>
+```
+Стиль: `border border-dashed border-border py-12 text-center`.
+
+### Multiselect
+Мульти-выбор с Badge-тегами, выпадающим списком и поддержкой `maxDisplayed`.
+```tsx
+<Multiselect
+  label="Отделы"
+  selected={selected}
+  onSelectedChange={setSelected}
+  maxDisplayed={3}  // свернёт в "Выбрано N элементов"
+/>
+```
+
+### Slider + Tooltip
+```tsx
+<Slider value={value} onValueChange={setValue} max={100} step={1} />
+<Slider value={range} onValueChange={setRange} max={100} step={1} />  {/* Диапазон */}
 ```
 
 ### Recharts стили

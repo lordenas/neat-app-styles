@@ -567,13 +567,239 @@ function SectionToggle({ title, icon, count, children, defaultOpen = false }) {
 }
 ```
 
-### DatePick — выбор даты с маской
+### DatePick — выбор даты с маской (мультилокальный)
 
-Инпут с маской `дд.мм.гггг` + календарь-попапом.
+Поддерживает 7 локалей с умной маской ввода. Режимы: только календарь, ввод+календарь, диапазон, period picker, datetime picker.
+
+**Локали:** RU `дд.мм.гггг`, DE `TT.MM.JJJJ`, UK `dd/mm/yyyy`, US `mm/dd/yyyy`, JP `yyyy/mm/dd`, ISO `yyyy-mm-dd`, FR `jj/mm/aaaa`.
 
 ```tsx
-<DatePick value={date} onChange={setDate} />
-<DatePick small />  {/* Компактный вариант (h-8, w-36) */}
+// Только календарь
+<Popover>
+  <PopoverTrigger asChild>
+    <Button variant="outline">
+      <CalendarIcon className="mr-2 h-4 w-4" />
+      {date ? formatDateLocale(date, locale) : locale.placeholder}
+    </Button>
+  </PopoverTrigger>
+  <PopoverContent className="w-auto p-0">
+    <Calendar mode="single" selected={date} onSelect={setDate} locale={locale.fnsLocale} />
+  </PopoverContent>
+</Popover>
+
+// Ввод с маской + календарь
+<DateInputPicker locale={locale} />
+
+// Диапазон дат (два месяца)
+<Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2} locale={locale.fnsLocale} />
+
+// Period Picker — два отдельных поля (начало — конец)
+<PeriodPicker locale={locale} />
+
+// DateTime Picker (дата + время с маской, 24ч/12ч по локали)
+<DateTimePicker locale={locale} />
+```
+
+**Конфиг локали (DateLocaleConfig):**
+
+| Поле | Тип | Описание |
+|------|-----|----------|
+| `code` | `string` | Код локали: `"ru"`, `"en-US"`, `"ja"`, `"iso"` |
+| `order` | `[DatePart, DatePart, DatePart]` | Порядок: `["day","month","year"]` или `["year","month","day"]` |
+| `sep` | `string` | Разделитель: `"."`, `"/"`, `"-"` |
+| `placeholder` | `string` | Плейсхолдер: `"дд.мм.гггг"`, `"mm/dd/yyyy"` |
+| `fnsLocale` | `Locale` | Локаль date-fns для Calendar |
+| `fnsFormat` | `string` | Формат date-fns: `"dd.MM.yyyy"` |
+| `use24h` | `boolean` | Формат времени по умолчанию |
+| `timePlaceholder` | `string` | Плейсхолдер времени: `"чч:мм"`, `"hh:mm"` |
+
+**Маска:** Умная валидация (дни в месяце, високосные годы). Маска времени сохраняет позицию курсора.
+
+---
+
+### Notifications (Toast)
+
+Библиотека: **Sonner** (`sonner`). Импорт: `import { toast } from "sonner"`
+
+| Тип | Метод | Иконка |
+|-----|-------|--------|
+| Успех | `toast.success(title, opts)` | `CheckCircle2` — `--success` |
+| Ошибка | `toast.error(title, opts)` | `XCircle` — `--destructive` |
+| Предупреждение | `toast.warning(title, opts)` | `AlertTriangle` — `--warning` |
+| Информация | `toast.info(title, opts)` | `Info` — `--info` |
+| Нейтральный | `toast(title, opts)` | — |
+| Загрузка | `toast.loading(title)` | Спиннер |
+
+```tsx
+toast.success("Сохранено", { description: "Описание действия." });
+toast.error("Ошибка", { description: "Что пошло не так." });
+toast.warning("Внимание", { description: "Предупреждение." });
+toast.info("Подсказка", { description: "Полезная информация." });
+toast("Нейтральный", { action: { label: "Открыть", onClick: () => {} } });
+
+// Цепочка Loading → Success
+const id = toast.loading("Пересчёт...");
+toast.success("Готово!", { id, description: "Пересчитано." });
+```
+
+---
+
+### Progress & Stepper
+
+**Progress bar:**
+```tsx
+import { Progress } from "@/components/ui/progress";
+<Progress value={60} className="h-2" />
+```
+
+**Stepper** — пошаговый визард с кружками, коннекторами и навигацией:
+```tsx
+const steps = [
+  { label: "Параметры", description: "Сумма, срок" },
+  { label: "Результат", description: "График" },
+];
+
+{steps.map((s, i) => (
+  <div key={i} className="flex-1 flex flex-col items-center">
+    {/* Коннектор */}
+    {i > 0 && <div className={cn("h-0.5", isCompleted ? "bg-primary" : "bg-border")} />}
+    {/* Кружок */}
+    <button className={cn(
+      "h-8 w-8 rounded-full border-2",
+      isCompleted ? "bg-primary border-primary text-primary-foreground"
+        : isCurrent ? "border-primary text-primary"
+        : "border-border text-muted-foreground"
+    )}>
+      {isCompleted ? <Check /> : i + 1}
+    </button>
+    <p className="text-xs mt-1.5">{s.label}</p>
+  </div>
+))}
+```
+
+**Навигация:** Кнопки «Назад» / «Далее» с `disabled` на границах.
+
+---
+
+### Skeleton (паттерны загрузки)
+
+Шаблоны скелетонов для типичных интерфейсов:
+
+```tsx
+// Карточка
+<div className="section-card space-y-4 max-w-sm">
+  <div className="flex items-center gap-3">
+    <Skeleton className="h-10 w-10 rounded-full" />
+    <div className="space-y-2 flex-1">
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-3 w-1/2" />
+    </div>
+  </div>
+  <Skeleton className="h-32 w-full rounded-md" />
+</div>
+
+// Таблица (header + rows)
+{[...Array(4)].map((_, i) => (
+  <div key={i} className="flex gap-3">
+    <Skeleton className="h-4 w-12" />
+    <Skeleton className="h-4 w-24" />
+    <Skeleton className="h-4 flex-1" />
+    <Skeleton className="h-4 w-20" />
+  </div>
+))}
+
+// Форма (label + input)
+<div className="space-y-2">
+  <Skeleton className="h-3 w-24" />
+  <Skeleton className="h-10 w-full rounded-md" />
+</div>
+```
+
+---
+
+### Copy to Clipboard
+
+Два варианта: кнопка и инлайн-строка.
+
+```tsx
+// CopyButton — кнопка с иконкой и текстом
+<CopyButton text="50 109 ₽" label="платёж" />
+// Props: text (string), label? (string)
+// Состояние: copied → "Скопировано" + Check иконка (2 сек)
+
+// CopyInline — строка с кодом и иконкой копирования
+<CopyInline text="npm install @radix-ui/react-accordion" />
+// Props: text (string)
+// Стиль: border bg-muted/50 px-3 py-2 + font-mono code
+```
+
+**Логика:** `navigator.clipboard.writeText(text)` → `copied = true` → сброс через 2 сек.
+
+---
+
+### Empty State
+
+Пустое состояние с иконкой, заголовком, описанием и опциональным CTA.
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `icon` | `ReactNode` | Иконка (h-10 w-10) |
+| `title` | `string` | Заголовок |
+| `description` | `string` | Описание |
+| `action` | `ReactNode?` | CTA-кнопка (опционально) |
+
+```tsx
+<EmptyState
+  icon={<Calculator className="h-10 w-10" />}
+  title="Нет расчётов"
+  description="Заполните параметры и нажмите «Рассчитать»"
+  action={<Button size="sm">Рассчитать</Button>}
+/>
+```
+
+**Стиль:** `border border-dashed border-border py-12 text-center rounded-md`
+
+---
+
+### Multiselect
+
+Мульти-выбор с Badge-тегами и выпадающим списком.
+
+| Prop | Тип | Описание |
+|------|-----|----------|
+| `label` | `string` | Метка поля |
+| `selected` | `string[]` | Текущие выбранные значения |
+| `onSelectedChange` | `(val: string[]) => void` | Колбэк изменения |
+| `maxDisplayed` | `number?` | Макс. тегов для отображения, остальные — "Выбрано N элементов" |
+
+```tsx
+<Multiselect
+  label="Отделы"
+  selected={selected}
+  onSelectedChange={setSelected}
+  maxDisplayed={3}
+/>
+```
+
+**Фичи:** Badge-теги с X для удаления, ChevronDown-индикатор, закрытие по клику вне, поддержка `maxDisplayed` для свёртки.
+
+---
+
+### Slider + Tooltip
+
+```tsx
+<Slider value={value} onValueChange={setValue} max={100} step={1} />
+<Slider value={range} onValueChange={setRange} max={100} step={1} />  {/* Диапазон */}
+```
+
+Tooltip на мобильных работает по тапу:
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild>
+    <span className="underline decoration-dotted cursor-help">Наведите</span>
+  </TooltipTrigger>
+  <TooltipContent>Подсказка</TooltipContent>
+</Tooltip>
 ```
 
 ---

@@ -1,5 +1,21 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+/**
+ * Витрина паттернов Skeleton-загрузки.
+ * Демонстрирует скелетоны для карточки, таблицы и формы.
+ * Используй как шаблон для `Suspense fallback` или состояний загрузки.
+ *
+ * @example
+ * ```tsx
+ * // Карточка
+ * <Skeleton className="h-10 w-10 rounded-full" />
+ * <Skeleton className="h-4 w-3/4" />
+ *
+ * // Форма
+ * <Skeleton className="h-3 w-24" />
+ * <Skeleton className="h-10 w-full rounded-md" />
+ * ```
+ */
 export function SkeletonShowcase() {
   return (
     <div className="space-y-6">

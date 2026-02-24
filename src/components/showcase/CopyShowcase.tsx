@@ -3,6 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Кнопка копирования текста в буфер обмена.
+ * Показывает состояние «Скопировано» на 2 секунды после клика.
+ *
+ * @param text - Текст для копирования
+ * @param label - Текст кнопки (по умолчанию «Копировать»)
+ *
+ * @example
+ * ```tsx
+ * <CopyButton text="50 109 ₽" label="платёж" />
+ * ```
+ */
 function CopyButton({ text, label }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -25,6 +37,17 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   );
 }
 
+/**
+ * Инлайн-строка с кнопкой копирования.
+ * Отображает текст в моноширинном шрифте с иконкой Copy справа.
+ *
+ * @param text - Текст для отображения и копирования
+ *
+ * @example
+ * ```tsx
+ * <CopyInline text="npm install @radix-ui/react-accordion" />
+ * ```
+ */
 function CopyInline({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
