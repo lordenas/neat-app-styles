@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Шаги для Stepper-компонента.
+ * Каждый шаг имеет метку и описание.
+ */
 const steps = [
   { label: "Параметры кредита", description: "Сумма, срок, ставка" },
   { label: "Досрочные погашения", description: "Разовые и регулярные" },
@@ -11,6 +15,16 @@ const steps = [
   { label: "Результат", description: "График и переплата" },
 ];
 
+/**
+ * Витрина Progress bar и Stepper.
+ * Progress — стандартный индикатор прогресса (0–100%).
+ * Stepper — пошаговый визард с кружками, коннекторами и навигацией Назад/Далее.
+ *
+ * @example
+ * ```tsx
+ * <Progress value={60} className="h-2" />
+ * ```
+ */
 export function ProgressShowcase() {
   const [progress, setProgress] = useState(45);
   const [step, setStep] = useState(1);

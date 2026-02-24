@@ -10,9 +10,18 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import type { DateRange } from "react-day-picker";
 
-/* ═══════════════════════════════════════════════
-   Locale-aware date mask system
-   ═══════════════════════════════════════════════ */
+/**
+ * Locale-aware date mask system.
+ * Supports 7 locales: RU, DE, UK, US, JP, ISO, FR.
+ * Each locale defines part order (DMY/MDY/YMD), separator, placeholder,
+ * time format (24h/12h), and date-fns locale for Calendar.
+ *
+ * @example
+ * ```tsx
+ * <DatePickerShowcase />
+ * ```
+ */
+
 
 type DatePart = "day" | "month" | "year";
 

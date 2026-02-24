@@ -8,6 +8,17 @@ import {
 } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 
+/**
+ * Витрина Slider и Tooltip.
+ * Slider — одиночное значение и диапазон.
+ * Tooltip — автоматически переключается в режим клика на тач-устройствах.
+ *
+ * @example
+ * ```tsx
+ * <Slider value={[50]} onValueChange={setValue} max={100} step={1} />
+ * <Slider value={[20, 80]} onValueChange={setRange} max={100} />
+ * ```
+ */
 export function SliderTooltipShowcase() {
   const [value, setValue] = useState([50]);
   const [range, setRange] = useState([20, 80]);

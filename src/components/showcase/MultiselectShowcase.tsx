@@ -15,6 +15,7 @@ const options = [
   "Поддержка",
 ];
 
+/** Склонение слова «элемент» по числу */
 function pluralizeElement(n: number): string {
   const abs = Math.abs(n) % 100;
   const last = abs % 10;
@@ -24,6 +25,25 @@ function pluralizeElement(n: number): string {
   return "элементов";
 }
 
+/**
+ * Мульти-выбор с Badge-тегами и выпадающим списком.
+ * Поддерживает удаление тегов по клику на X, закрытие по клику вне, `maxDisplayed` для свёртки.
+ *
+ * @param label - Метка поля
+ * @param selected - Текущие выбранные значения
+ * @param onSelectedChange - Колбэк изменения выбора
+ * @param maxDisplayed - Макс. количество тегов для отображения. При превышении показывает "Выбрано N элементов"
+ *
+ * @example
+ * ```tsx
+ * <Multiselect
+ *   label="Отделы"
+ *   selected={["Разработка", "Дизайн"]}
+ *   onSelectedChange={setSelected}
+ *   maxDisplayed={3}
+ * />
+ * ```
+ */
 function Multiselect({
   label,
   selected,
