@@ -535,6 +535,7 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
   const [amPm, setAmPm] = useState<"AM" | "PM">("AM");
   const timeRef = useRef<HTMLInputElement>(null);
   const timePopoverRef = useRef<HTMLInputElement>(null);
+  const isEditingTimeRef = useRef(false);
 
   // Sync use24h from locale
   useEffect(() => {
@@ -549,16 +550,18 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
     setAmPm("AM");
   }, [locale.code]);
 
-  // Sync inputs from date
+  // Sync inputs from date — skip time sync when user is actively editing
   useEffect(() => {
     if (date) {
       setDateInput(formatDateLocale(date, locale));
-      if (use24h) {
-        setTimeInput(format(date, "HH:mm"));
-      } else {
-        const h = date.getHours();
-        setAmPm(h >= 12 ? "PM" : "AM");
-        setTimeInput(format(date, "hh:mm"));
+      if (!isEditingTimeRef.current) {
+        if (use24h) {
+          setTimeInput(format(date, "HH:mm"));
+        } else {
+          const h = date.getHours();
+          setAmPm(h >= 12 ? "PM" : "AM");
+          setTimeInput(format(date, "hh:mm"));
+        }
       }
     }
   }, [date, locale, use24h]);
@@ -574,10 +577,11 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
         if (currentAmPm === "AM" && h === 12) h = 0;
       }
       dt.setHours(h, parsedTime.minutes, 0, 0);
+      isEditingTimeRef.current = true;
       setDate(dt);
-    } else if (parsedDate && !parsedTime) {
-      setDate(parsedDate);
+      requestAnimationFrame(() => { isEditingTimeRef.current = false; });
     }
+    // Don't set date when time is incomplete — avoids resetting to 00:00
   }, [locale, use24h]);
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -588,11 +592,12 @@ function DateTimePicker({ locale }: { locale: DateLocaleConfig }) {
 
   const handleTimeChangeWithCursor = (inputEl: HTMLInputElement) => {
     const { value, cursor } = applyTimeMaskWithCursor(inputEl, use24h);
+    isEditingTimeRef.current = true;
     setTimeInput(value);
     updateDateTime(dateInput, value, amPm);
-    // Restore cursor on next frame
     requestAnimationFrame(() => {
       inputEl.setSelectionRange(cursor, cursor);
+      isEditingTimeRef.current = false;
     });
   };
 
