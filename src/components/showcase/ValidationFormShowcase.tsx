@@ -135,8 +135,9 @@ export function ValidationFormShowcase() {
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
+                id="vf-role"
                 className="w-full mt-1.5"
-                aria-invalid={!!errors.role}
+                error={errors.role?.message ?? ""}
                 onBlur={field.onBlur}
               >
                 <SelectValue placeholder="Выберите роль" />
@@ -150,9 +151,6 @@ export function ValidationFormShowcase() {
             </Select>
           )}
         />
-        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.role?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Avatar via FileUploadAvatar */}
@@ -192,7 +190,7 @@ export function ValidationFormShowcase() {
                 id="vf-agree"
                 checked={field.value}
                 onCheckedChange={field.onChange}
-                aria-invalid={!!errors.agree}
+                error={errors.agree?.message ?? ""}
               />
               <Label htmlFor="vf-agree" className="font-normal cursor-pointer text-sm leading-tight">
                 Я согласен на обработку персональных данных *
@@ -200,9 +198,6 @@ export function ValidationFormShowcase() {
             </div>
           )}
         />
-        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-          {errors.agree?.message ?? "\u00A0"}
-        </p>
       </div>
 
       {/* Actions */}
