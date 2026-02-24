@@ -6,6 +6,15 @@ import { cn } from "@/lib/utils";
 
 const labelVariants = cva("text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70");
 
+/**
+ * Подпись к полю ввода. Автоматически затемняется при `disabled` состоянии связанного поля.
+ *
+ * @example
+ * ```tsx
+ * <Label htmlFor="email">Email</Label>
+ * <Input id="email" type="email" />
+ * ```
+ */
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>

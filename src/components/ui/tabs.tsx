@@ -3,6 +3,21 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Вкладки для переключения между контентом.
+ *
+ * @example
+ * ```tsx
+ * <Tabs defaultValue="tab1">
+ *   <TabsList>
+ *     <TabsTrigger value="tab1">Вкладка 1</TabsTrigger>
+ *     <TabsTrigger value="tab2">Вкладка 2</TabsTrigger>
+ *   </TabsList>
+ *   <TabsContent value="tab1">Контент 1</TabsContent>
+ *   <TabsContent value="tab2">Контент 2</TabsContent>
+ * </Tabs>
+ * ```
+ */
 const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<

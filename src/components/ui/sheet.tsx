@@ -5,6 +5,24 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Боковая/верхняя/нижняя панель (sheet), выезжающая поверх контента.
+ *
+ * @example
+ * ```tsx
+ * <Sheet>
+ *   <SheetTrigger asChild><Button>Меню</Button></SheetTrigger>
+ *   <SheetContent side="left">
+ *     <SheetHeader>
+ *       <SheetTitle>Навигация</SheetTitle>
+ *     </SheetHeader>
+ *     <nav>...</nav>
+ *   </SheetContent>
+ * </Sheet>
+ * ```
+ *
+ * @see SheetContent — проп `side`: `"top"` | `"bottom"` | `"left"` | `"right"`
+ */
 const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;

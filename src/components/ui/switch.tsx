@@ -3,6 +3,17 @@ import * as SwitchPrimitives from "@radix-ui/react-switch";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Переключатель (switch) для бинарных состояний вкл/выкл.
+ *
+ * @example
+ * ```tsx
+ * <div className="flex items-center gap-2">
+ *   <Switch id="notifications" checked={enabled} onCheckedChange={setEnabled} />
+ *   <Label htmlFor="notifications">Уведомления</Label>
+ * </div>
+ * ```
+ */
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>

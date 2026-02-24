@@ -20,6 +20,19 @@ const badgeVariants = cva(
   },
 );
 
+/**
+ * Компактная метка/чип для статусов, категорий и тегов.
+ *
+ * @example
+ * ```tsx
+ * <Badge>Новый</Badge>
+ * <Badge variant="secondary">Черновик</Badge>
+ * <Badge variant="destructive">Ошибка</Badge>
+ * <Badge variant="outline">v2.0</Badge>
+ * ```
+ *
+ * @prop variant - Стиль: `"default"` | `"secondary"` | `"destructive"` | `"outline"`
+ */
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {

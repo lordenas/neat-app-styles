@@ -4,6 +4,27 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
+/**
+ * Модальный диалог подтверждения действия (удаление, отмена и т.д.).
+ * Требует явного подтверждения или отмены — нельзя закрыть кликом по оверлею.
+ *
+ * @example
+ * ```tsx
+ * <AlertDialog>
+ *   <AlertDialogTrigger asChild><Button variant="destructive">Удалить</Button></AlertDialogTrigger>
+ *   <AlertDialogContent>
+ *     <AlertDialogHeader>
+ *       <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+ *       <AlertDialogDescription>Это действие нельзя отменить.</AlertDialogDescription>
+ *     </AlertDialogHeader>
+ *     <AlertDialogFooter>
+ *       <AlertDialogCancel>Отмена</AlertDialogCancel>
+ *       <AlertDialogAction>Удалить</AlertDialogAction>
+ *     </AlertDialogFooter>
+ *   </AlertDialogContent>
+ * </AlertDialog>
+ * ```
+ */
 const AlertDialog = AlertDialogPrimitive.Root;
 
 const AlertDialogTrigger = AlertDialogPrimitive.Trigger;

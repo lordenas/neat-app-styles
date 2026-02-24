@@ -5,6 +5,18 @@ import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * Toast-уведомления (всплывающие сообщения). Используйте хук `useToast()` для показа.
+ *
+ * @example
+ * ```tsx
+ * const { toast } = useToast();
+ * toast({ title: "Сохранено", description: "Данные успешно обновлены." });
+ * toast({ variant: "destructive", title: "Ошибка", description: "Что-то пошло не так." });
+ * ```
+ *
+ * @prop variant - `"default"` | `"destructive"`
+ */
 const ToastProvider = ToastPrimitives.Provider;
 
 const ToastViewport = React.forwardRef<
