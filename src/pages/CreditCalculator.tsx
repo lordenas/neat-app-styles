@@ -103,7 +103,10 @@ function DatePick({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <div className={cn("flex items-center", small ? "w-36" : "w-48")}>
+      <div className={cn(
+        "flex items-center rounded-md border border-input ring-offset-background transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        small ? "w-36" : "w-48"
+      )}>
         <input
           ref={inputRef}
           value={inputValue}
@@ -111,14 +114,21 @@ function DatePick({
           placeholder={placeholder}
           aria-label={small ? "Выберите дату" : "Дата в формате дд.мм.гггг"}
           className={cn(
-            "flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors",
+            "flex-1 min-w-0 rounded-l-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none",
             small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
           )}
         />
         <PopoverTrigger asChild>
-          <Button variant="outline" className={cn("rounded-l-none border-l-0 px-2 shrink-0", small ? "h-8" : "h-10")} aria-label="Открыть календарь">
+          <button
+            type="button"
+            className={cn(
+              "shrink-0 flex items-center justify-center rounded-r-md bg-background text-muted-foreground hover:text-foreground transition-colors focus:outline-none",
+              small ? "h-8 w-8" : "h-10 w-10"
+            )}
+            aria-label="Открыть календарь"
+          >
             <CalendarIcon className={small ? "h-3 w-3" : "h-4 w-4"} />
-          </Button>
+          </button>
         </PopoverTrigger>
       </div>
       <PopoverContent className="w-auto p-0" align="start">

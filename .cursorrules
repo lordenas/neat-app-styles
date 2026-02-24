@@ -88,6 +88,21 @@
 <Input formatNumber />                             // 1000000 → 1 000 000
 ```
 
+### Составные поля (input + кнопка)
+Фокус должен охватывать группу как единый элемент:
+```tsx
+{/* ✅ Правильно: focus-within на обёртке, outline убран у дочерних */}
+<div className="flex items-center rounded-md border border-input ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+  <input className="flex-1 bg-background rounded-l-md focus:outline-none ..." />
+  <button className="shrink-0 rounded-r-md focus:outline-none ..." />
+</div>
+
+{/* ❌ Неправильно: каждый элемент со своим фокус-кольцом */}
+<input className="border rounded-l-md focus-visible:ring-2 ..." />
+<Button className="rounded-l-none border-l-0 ..." />
+```
+Применяется к: DatePick, Input с inputEnd-кнопкой, поисковые поля с иконкой.
+
 ### Button
 ```tsx
 <Button>Primary</Button>
