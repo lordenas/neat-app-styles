@@ -885,17 +885,21 @@ axisLine={{ stroke: "hsl(var(--border))" }}
 
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
+| `value` | `File[]` | — | Контролируемое значение |
+| `onChange` | `(files: File[]) => void` | — | Колбэк при изменении |
 | `accept` | `string \| string[]` | `"image/,.pdf"` | MIME-типы / расширения |
 | `acceptLabel` | `string` | из `accept` | Человекочитаемая подпись |
 | `maxSizeMB` | `number` | `10` | Макс. размер файла в MB |
 | `multiple` | `boolean` | `true` | Множественный выбор |
-| `onFilesChange` | `(files: File[]) => void` | — | Колбэк при изменении |
 | `disabled` | `boolean` | `false` | Заблокировать |
+| `error` | `string` | — | Сообщение об ошибке под компонентом. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+| `id` | `string` | — | id для связки `aria-describedby` с ошибкой |
 
 ### FileUploadDropzone
 
 ```tsx
-<FileUploadDropzone accept="image/*,.pdf" acceptLabel="PNG, JPG, PDF" maxSizeMB={10} onFilesChange={setFiles} />
+<FileUploadDropzone accept="image/*,.pdf" acceptLabel="PNG, JPG, PDF" maxSizeMB={10} onChange={setFiles} />
+<FileUploadDropzone id="docs" error={errors.docs?.message ?? ""} accept="image/*,.pdf" onChange={setFiles} />
 ```
 
 ### FileUploadButton
@@ -907,7 +911,8 @@ axisLine={{ stroke: "hsl(var(--border))" }}
 ### FileUploadAvatar
 
 ```tsx
-<FileUploadAvatar accept="image/png,image/jpeg" maxSizeMB={5} label="Фото профиля" onFilesChange={setFiles} />
+<FileUploadAvatar accept="image/png,image/jpeg" maxSizeMB={5} label="Фото профиля" onChange={setFiles} />
+<FileUploadAvatar id="avatar" error={errors.avatar?.message ?? ""} accept="image/png,image/jpeg" onChange={setFiles} />
 ```
 
 **Валидация:** `toast.error` при неподдерживаемом формате или превышении лимита.
