@@ -1,0 +1,209 @@
+# Cursor Rules — UI Kit для калькуляторов
+
+## Главное правило
+
+**Редизайн = только визуальная переработка.** Не трогай бизнес-логику, расчёты, useState, обработчики, формулы.
+
+## Стек
+
+- React 18 + TypeScript
+- Tailwind CSS (семантические HSL-токены)
+- shadcn/ui (кастомизированные компоненты)
+- Lucide React (иконки)
+- Recharts (графики)
+- date-fns (даты, локаль `ru`)
+
+## Критические запреты
+
+- ❌ НЕ используй хардкод цветов: `text-red-500`, `bg-blue-100`, `#ff0000`
+- ❌ НЕ используй `text-white`, `text-black`, `bg-white`, `bg-gray-*`
+- ❌ НЕ меняй логику расчётов, состояния, формулы
+- ❌ НЕ удаляй и не переименовывай существующие пропсы/интерфейсы
+- ❌ НЕ добавляй новые зависимости без явной необходимости
+
+## Обязательные правила
+
+- ✅ Все цвета через токены: `text-foreground`, `text-muted-foreground`, `bg-background`, `bg-card`, `text-primary`, `text-destructive`, `bg-[hsl(var(--success))]`
+- ✅ Числа: `font-mono` + `text-right` в таблицах
+- ✅ Шрифт: Inter (подключён глобально)
+- ✅ Отступы кратны 4px (Tailwind: 1 = 4px)
+- ✅ Компоненты из `@/components/ui/*`
+- ✅ Импорт утилит: `import { cn } from "@/lib/utils"`
+
+## Цветовые токены
+
+```
+Фон:              bg-background / bg-card / bg-[hsl(var(--section-bg))]
+Текст:            text-foreground / text-muted-foreground
+Акцент:           text-primary / bg-primary
+Ошибка/проценты:  text-destructive / bg-destructive
+Успех/долг:       text-[hsl(var(--success))] / bg-[hsl(var(--success))]
+Предупреждение:   text-[hsl(var(--warning))]
+Рамки:            border-border / border-border-strong / border-border-subtle
+```
+
+## Семантика цветов в результатах
+
+- 🟢 Зелёный (`--success`): основной долг, досрочные погашения, выгода
+- 🔴 Красный (`--destructive`): проценты, переплата
+- ⚪ Нейтральный (`text-foreground`): итого, платёж, остаток
+
+## Компоненты — краткая шпаргалка
+
+### Структура страницы
+```
+<div className="min-h-screen bg-background">
+  <main className="container max-w-5xl py-6 space-y-5">
+    <Breadcrumb>...</Breadcrumb>
+    <h1 className="text-2xl font-bold tracking-tight">Заголовок</h1>
+    <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="flex-1 min-w-0 space-y-5">{/* Основной контент */}</div>
+      <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6">{/* Сайдбар */}</aside>
+    </div>
+  </main>
+</div>
+```
+
+### Карточка
+```tsx
+<div className="section-card space-y-5">...</div>
+// section-card = bg-card rounded-md border border-border p-6
+```
+
+### FormRow (строка формы)
+```tsx
+<FormRow label="Метка" tooltip="Подсказка">
+  <Input formatNumber inputEnd={<span className="text-sm font-medium">₽</span>} />
+</FormRow>
+// Метка: sm:w-48, text-right, text-muted-foreground
+// На мобильных — стек, на десктопе — строка
+```
+
+### Input
+```tsx
+<Input placeholder="Текст" />
+<Input inputSize="sm" />                           // h-8
+<Input inputStart={<Search />} />                  // Иконка слева
+<Input inputEnd={<span>₽</span>} />                // Суффикс справа
+<Input formatNumber />                             // 1000000 → 1 000 000
+```
+
+### Button
+```tsx
+<Button>Primary</Button>
+<Button variant="outline" size="sm">SM</Button>
+<Button variant="ghost" size="icon-sm"><Trash2 /></Button>
+<Button icon={<Calculator />}>С иконкой</Button>
+// Sizes: sm(h-8) | default(h-10) | lg(h-11) | icon(h-10) | icon-sm(h-8)
+// Variants: default | destructive | outline | secondary | ghost | link
+```
+
+### Select
+```tsx
+<Select defaultValue="val">
+  <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
+  <SelectContent>
+    <SelectItem value="val">Текст</SelectItem>
+  </SelectContent>
+</Select>
+```
+
+### RadioGroup
+```tsx
+<RadioGroup className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+  <div className="flex items-center gap-1.5">
+    <RadioGroupItem value="v1" id="v1" />
+    <Label htmlFor="v1" className="font-normal cursor-pointer text-sm">Текст</Label>
+  </div>
+</RadioGroup>
+```
+
+### Checkbox
+```tsx
+<div className="flex items-center gap-2">
+  <Checkbox id="opt" checked={val} onCheckedChange={setVal} />
+  <Label htmlFor="opt" className="font-normal cursor-pointer text-sm">Текст</Label>
+</div>
+```
+
+### Table
+```tsx
+<Table size="sm" striped hoverable>
+  <TableHeader className="sticky top-0 z-10 bg-card">
+    <TableRow><TableHead>Столбец</TableHead></TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow><TableCell className="font-mono text-right">10 000</TableCell></TableRow>
+  </TableBody>
+</Table>
+// Props: size="sm"|"default", bordered, striped, hoverable(default true)
+```
+
+### SectionToggle (Collapsible секция)
+```tsx
+<SectionToggle title="Доп. настройки" icon={<Settings />} count={items.length}>
+  {/* Содержимое */}
+</SectionToggle>
+```
+
+### Separator
+```tsx
+<Separator />  // Горизонтальная линия между секциями
+```
+
+### Tabs
+```tsx
+<Tabs defaultValue="tab1">
+  <TabsList><TabsTrigger value="tab1">Tab</TabsTrigger></TabsList>
+  <TabsContent value="tab1">Content</TabsContent>
+</Tabs>
+```
+
+### Tooltip
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild><button><Info className="h-3.5 w-3.5" /></button></TooltipTrigger>
+  <TooltipContent className="max-w-xs">Текст</TooltipContent>
+</Tooltip>
+```
+
+### Recharts стили
+```tsx
+contentStyle={{
+  backgroundColor: "hsl(var(--popover))",
+  border: "1px solid hsl(var(--border))",
+  borderRadius: "var(--radius)",
+  color: "hsl(var(--popover-foreground))",
+  fontSize: "0.75rem",
+}}
+fill="hsl(var(--success))"       // основной долг
+fill="hsl(var(--destructive))"   // проценты
+tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+```
+
+## Полный справочник
+
+Смотри файл `COMPONENTS.md` для полного API каждого компонента с примерами.
+Смотри файл `REDESIGN_PROMPT.md` для правил редизайна и чеклиста.
+
+## Типографика
+
+| Элемент | Класс |
+|---------|-------|
+| h1 | `text-2xl font-bold tracking-tight` |
+| h2 (секция) | `text-lg font-semibold` |
+| Метка формы | `text-sm text-muted-foreground` |
+| Подсказка | `text-xs text-muted-foreground` |
+| Числовое значение | `text-lg font-semibold font-mono` |
+| Числа в таблице | `font-mono text-xs text-right` |
+| Ошибка | `text-xs text-destructive` |
+
+## Интервалы
+
+| Уровень | Класс |
+|---------|-------|
+| Между секциями | `space-y-5` |
+| Внутри секции | `space-y-4` |
+| Между элементами строки | `gap-2` |
+| Padding карточки | `p-6` |
+| Padding form-section | `p-5` |
