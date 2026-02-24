@@ -83,7 +83,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             {inputStart}
           </span>
         )}
-        <div className="flex-1 min-w-0 px-3">
+        <div className={cn("flex-1 min-w-0", inputStart ? "pl-2" : "pl-3", inputEnd ? "pr-2" : "pr-0")}>
           {textareaEl}
         </div>
         {inputEnd && (
