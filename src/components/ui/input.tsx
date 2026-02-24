@@ -23,10 +23,50 @@ export interface InputProps
     VariantProps<typeof inputVariants> {
   inputStart?: React.ReactNode;
   inputEnd?: React.ReactNode;
+  /** Автоматически форматирует числовое значение с разделителями разрядов (пробелами) */
+  formatNumber?: boolean;
+}
+
+function formatWithSpaces(value: string): string {
+  const digits = value.replace(/[^\d]/g, "");
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function parseDigits(value: string): string {
+  return value.replace(/[^\d]/g, "");
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, inputSize, inputStart, inputEnd, ...props }, ref) => {
+  ({ className, type, inputSize, inputStart, inputEnd, formatNumber, onChange, value, defaultValue, ...props }, ref) => {
+    const [formatted, setFormatted] = React.useState(() =>
+      formatNumber && value != null ? formatWithSpaces(String(value)) : undefined
+    );
+
+    React.useEffect(() => {
+      if (formatNumber && value != null) {
+        setFormatted(formatWithSpaces(String(value)));
+      }
+    }, [formatNumber, value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (formatNumber) {
+        const raw = parseDigits(e.target.value);
+        const display = formatWithSpaces(raw);
+        setFormatted(display);
+        // Expose raw numeric value to parent
+        const syntheticEvent = {
+          ...e,
+          target: { ...e.target, value: raw },
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange?.(syntheticEvent);
+      } else {
+        onChange?.(e);
+      }
+    };
+
+    const inputProps = formatNumber
+      ? { ...props, value: formatted ?? "", onChange: handleChange }
+      : { ...props, value, defaultValue, onChange };
     if (inputStart || inputEnd) {
       return (
         <div
@@ -46,7 +86,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </span>
           )}
           <input
-            type={type}
+            type={formatNumber ? "text" : type}
+            inputMode={formatNumber ? "numeric" : undefined}
             className={cn(
               "flex-1 bg-transparent placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed",
               inputSize === "sm" ? "px-2 py-1 text-xs" : "px-3 py-2 text-base md:text-sm",
@@ -54,7 +95,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               !inputEnd && (inputSize === "sm" ? "pr-2.5" : "pr-3"),
             )}
             ref={ref}
-            {...props}
+            {...inputProps}
           />
           {inputEnd && (
             <span className={cn(
@@ -70,10 +111,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <input
-        type={type}
+        type={formatNumber ? "text" : type}
+        inputMode={formatNumber ? "numeric" : undefined}
         className={cn(inputVariants({ inputSize }), className)}
         ref={ref}
-        {...props}
+        {...inputProps}
       />
     );
   }

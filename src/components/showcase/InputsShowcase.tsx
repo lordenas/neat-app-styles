@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Mail, Eye, Calendar, DollarSign } from "lucide-react";
+import { Search, Mail, Eye, Calendar, DollarSign, Hash } from "lucide-react";
 
 export function InputsShowcase() {
   return (
@@ -70,6 +70,21 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label>Small с иконкой</Label>
             <Input inputSize="sm" inputStart={<Search />} placeholder="Поиск..." />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Форматирование числа (formatNumber)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label>Сумма с разбиением по разрядам</Label>
+            <Input formatNumber inputStart={<Hash />} placeholder="1 000 000" />
+            <p className="helper-text">Автоматическая группировка цифр пробелами.</p>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Валюта</Label>
+            <Input formatNumber inputEnd={<span className="text-xs">₽</span>} placeholder="0" />
           </div>
         </div>
       </div>
