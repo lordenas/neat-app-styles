@@ -389,7 +389,7 @@ const CreditCalculator = () => {
           <div className="space-y-4">
             <FormRow label="Сумма кредита">
               <Input
-                type="text"
+                formatNumber
                 placeholder="10 500 000"
                 className="max-w-52"
                 inputEnd={<span className="text-sm font-medium">₽</span>}
