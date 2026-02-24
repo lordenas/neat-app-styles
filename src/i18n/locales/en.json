@@ -14,12 +14,20 @@
     "subtitle": "for every country",
     "description": "Loans, mortgages, deposits, taxes — accurate calculations using banking formulas adapted to local regulations.",
     "cta": "Start calculating",
+    "badge": "Free · No sign-up required",
+    "searchPlaceholder": "Find a calculator...",
     "stats": {
       "calculators": "20+ calculators",
       "countries": "20+ countries",
       "languages": "12 languages",
       "free": "Free"
     }
+  },
+  "trust": {
+    "users": { "value": "150K+", "label": "Monthly users" },
+    "calculations": { "value": "2M+", "label": "Calculations made" },
+    "countries": { "value": "20+", "label": "Countries supported" },
+    "uptime": { "value": "99.9%", "label": "Service uptime" }
   },
   "categories": {
     "title": "Calculator Categories",
@@ -58,6 +66,7 @@
   "popular": {
     "title": "Popular Calculators",
     "subtitle": "Most requested financial planning tools",
+    "noResults": "No calculators found. Try a different search.",
     "creditCalc": {
       "title": "Loan Calculator",
       "description": "Calculate monthly payment, overpayment and repayment schedule with early payments"
@@ -101,6 +110,35 @@
       "title": "Private",
       "description": "All calculations happen in your browser"
     }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to the most common questions about CalcHub",
+    "faq1": {
+      "q": "How accurate are CalcHub calculations?",
+      "a": "We use banking formulas approved by financial regulators. Results match leading banks' calculations down to the cent."
+    },
+    "faq2": {
+      "q": "Do I need to register to use the calculators?",
+      "a": "No, all calculators are completely free and available without registration. Just open the calculator you need and start calculating."
+    },
+    "faq3": {
+      "q": "How does CalcHub account for my country's specifics?",
+      "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each of the 20+ supported countries."
+    },
+    "faq4": {
+      "q": "Is it safe to enter financial data?",
+      "a": "Absolutely. All calculations are performed locally in your browser. We do not send or store your data on any server."
+    },
+    "faq5": {
+      "q": "Can I use CalcHub on my mobile phone?",
+      "a": "Yes, CalcHub is fully responsive. All calculators work equally well on any screen size."
+    }
+  },
+  "cta": {
+    "title": "Ready to calculate?",
+    "description": "Choose a calculator and get an accurate result in seconds. Free, no sign-up required.",
+    "button": "Go to calculator"
   },
   "footer": {
     "rights": "All rights reserved",
