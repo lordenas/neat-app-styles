@@ -10,27 +10,9 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -40,12 +22,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import { CreditCalculatorSeoContent } from "@/components/seo/CreditCalculatorSeoContent";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Plus,
   Trash2,
@@ -76,7 +53,9 @@ function applyDateMask(raw: string): string {
 function parseMaskedDate(masked: string): Date | undefined {
   if (masked.length !== 10) return undefined;
   const [dd, mm, yyyy] = masked.split(".");
-  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
+  const d = parseInt(dd, 10),
+    m = parseInt(mm, 10),
+    y = parseInt(yyyy, 10);
   if (!d || !m || !y || m < 1 || m > 12 || d < 1 || d > 31) return undefined;
   const date = new Date(y, m - 1, d);
   if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
@@ -127,17 +106,11 @@ function DatePick({
           placeholder={placeholder}
           className={cn(
             "flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors",
-            small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm"
+            small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
           )}
         />
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "rounded-l-none border-l-0 px-2 shrink-0",
-              small ? "h-8" : "h-10"
-            )}
-          >
+          <Button variant="outline" className={cn("rounded-l-none border-l-0 px-2 shrink-0", small ? "h-8" : "h-10")}>
             <CalendarIcon className={small ? "h-3 w-3" : "h-4 w-4"} />
           </Button>
         </PopoverTrigger>
@@ -158,10 +131,31 @@ function DatePick({
 
 /* ───────────────────── types ───────────────────── */
 
-interface RateRow { id: number; date: string; rate: string; recalc: string }
-interface EarlyPayment { id: number; date: string; amount: string; period: string; recalc: string }
-interface CommonPayment { id: number; date: string; amount: string; recalc: string }
-interface Holiday { id: number; start: string; months: string; payment: string }
+interface RateRow {
+  id: number;
+  date: string;
+  rate: string;
+  recalc: string;
+}
+interface EarlyPayment {
+  id: number;
+  date: string;
+  amount: string;
+  period: string;
+  recalc: string;
+}
+interface CommonPayment {
+  id: number;
+  date: string;
+  amount: string;
+  recalc: string;
+}
+interface Holiday {
+  id: number;
+  start: string;
+  months: string;
+  payment: string;
+}
 
 /* ──────────── form row ──────────── */
 
@@ -215,10 +209,7 @@ function SectionToggle({
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <CollapsibleTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-2 w-full text-left group py-1"
-        >
+        <button type="button" className="flex items-center gap-2 w-full text-left group py-1">
           {open ? (
             <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform" />
           ) : (
@@ -229,15 +220,11 @@ function SectionToggle({
             {title}
           </span>
           {(count ?? 0) > 0 && (
-            <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">
-              {count}
-            </span>
+            <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full font-medium">{count}</span>
           )}
         </button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="pl-6 pt-3 space-y-3">
-        {children}
-      </CollapsibleContent>
+      <CollapsibleContent className="pl-6 pt-3 space-y-3">{children}</CollapsibleContent>
     </Collapsible>
   );
 }
@@ -290,11 +277,13 @@ const CreditCalculator = () => {
   const removeRate = (id: number) => setRates((p) => p.filter((r) => r.id !== id));
 
   const [earlyPayments, setEarlyPayments] = useState<EarlyPayment[]>([]);
-  const addEarlyPayment = () => setEarlyPayments((p) => [...p, { id: nextId++, date: "", amount: "", period: "once", recalc: "payment" }]);
+  const addEarlyPayment = () =>
+    setEarlyPayments((p) => [...p, { id: nextId++, date: "", amount: "", period: "once", recalc: "payment" }]);
   const removeEarlyPayment = (id: number) => setEarlyPayments((p) => p.filter((r) => r.id !== id));
 
   const [commonPayments, setCommonPayments] = useState<CommonPayment[]>([]);
-  const addCommonPayment = () => setCommonPayments((p) => [...p, { id: nextId++, date: "", amount: "", recalc: "payment" }]);
+  const addCommonPayment = () =>
+    setCommonPayments((p) => [...p, { id: nextId++, date: "", amount: "", recalc: "payment" }]);
   const removeCommonPayment = (id: number) => setCommonPayments((p) => p.filter((r) => r.id !== id));
 
   const [holidays, setHolidays] = useState<Holiday[]>([]);
@@ -310,7 +299,10 @@ const CreditCalculator = () => {
       {/* Header */}
       <header className="border-b bg-card">
         <div className="container max-w-5xl py-3 flex items-center justify-between">
-          <Link to="/" className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+          <Link
+            to="/"
+            className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors"
+          >
             UI Kit
           </Link>
           <span className="text-xs text-muted-foreground">Кредитный калькулятор</span>
@@ -321,7 +313,9 @@ const CreditCalculator = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink asChild><Link to="/">Главная</Link></BreadcrumbLink>
+              <BreadcrumbLink asChild>
+                <Link to="/">Главная</Link>
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -330,16 +324,19 @@ const CreditCalculator = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 className="text-2xl font-bold tracking-tight">
-          Кредитный калькулятор с досрочным погашением
-        </h1>
+        <h1 className="text-2xl font-bold tracking-tight">Кредитный калькулятор с досрочным погашением</h1>
 
         {/* ─────── Form ─────── */}
         <div className="section-card space-y-5">
           {/* Основные параметры */}
           <div className="space-y-4">
             <FormRow label="Сумма кредита">
-              <Input type="text" placeholder="10 500 000" className="max-w-52" inputEnd={<span className="text-sm font-medium">₽</span>} />
+              <Input
+                type="text"
+                placeholder="10 500 000"
+                className="max-w-52"
+                inputEnd={<span className="text-sm font-medium">₽</span>}
+              />
             </FormRow>
 
             <FormRow label="Срок">
@@ -363,8 +360,17 @@ const CreditCalculator = () => {
 
             <FormRow label="Ставка">
               <div className="flex items-center gap-2">
-                <Input type="text" placeholder="4" className="max-w-20" inputEnd={<span className="text-sm font-medium">%</span>} />
-                <button type="button" onClick={addRate} className="text-xs text-primary hover:text-primary/80 transition-colors whitespace-nowrap">
+                <Input
+                  type="text"
+                  placeholder="4"
+                  className="max-w-20"
+                  inputEnd={<span className="text-sm font-medium">%</span>}
+                />
+                <button
+                  type="button"
+                  onClick={addRate}
+                  className="text-xs text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
+                >
                   + Изменение ставки
                 </button>
               </div>
@@ -382,11 +388,17 @@ const CreditCalculator = () => {
                     <TableBody>
                       {rates.map((row) => (
                         <TableRow key={row.id}>
-                          <TableCell><DatePick small /></TableCell>
-                          <TableCell><Input type="text" inputSize="sm" placeholder="%" /></TableCell>
+                          <TableCell>
+                            <DatePick small />
+                          </TableCell>
+                          <TableCell>
+                            <Input type="text" inputSize="sm" placeholder="%" />
+                          </TableCell>
                           <TableCell>
                             <Select defaultValue="payment">
-                              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                              <SelectTrigger className="h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="payment">Платёж</SelectItem>
                                 <SelectItem value="term">Срок</SelectItem>
@@ -410,11 +422,15 @@ const CreditCalculator = () => {
               <RadioGroup defaultValue="annuity" className="flex gap-4">
                 <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="annuity" id="annuity" />
-                  <Label htmlFor="annuity" className="font-normal cursor-pointer text-sm">Аннуитетные</Label>
+                  <Label htmlFor="annuity" className="font-normal cursor-pointer text-sm">
+                    Аннуитетные
+                  </Label>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <RadioGroupItem value="diff" id="diff" />
-                  <Label htmlFor="diff" className="font-normal cursor-pointer text-sm">Дифференцированные</Label>
+                  <Label htmlFor="diff" className="font-normal cursor-pointer text-sm">
+                    Дифференцированные
+                  </Label>
                 </div>
               </RadioGroup>
             </FormRow>
@@ -443,14 +459,20 @@ const CreditCalculator = () => {
           <div className="space-y-2.5 sm:pl-52">
             <div className="flex items-center gap-2">
               <Checkbox id="fpi" checked={firstPayInterest} onCheckedChange={(v) => setFirstPayInterest(v === true)} />
-              <Label htmlFor="fpi" className="font-normal cursor-pointer text-sm">Первый платёж – только проценты</Label>
+              <Label htmlFor="fpi" className="font-normal cursor-pointer text-sm">
+                Первый платёж – только проценты
+              </Label>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="round" checked={roundPayment} onCheckedChange={(v) => setRoundPayment(v === true)} />
-              <Label htmlFor="round" className="font-normal cursor-pointer text-sm">Округлять платёж</Label>
+              <Label htmlFor="round" className="font-normal cursor-pointer text-sm">
+                Округлять платёж
+              </Label>
               {roundPayment && (
                 <Select defaultValue="rub">
-                  <SelectTrigger className="h-7 w-28 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="h-7 w-28 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="rub">До рублей</SelectItem>
                     <SelectItem value="hundred">До сотен</SelectItem>
@@ -460,10 +482,14 @@ const CreditCalculator = () => {
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="tw" checked={transferWeekend} onCheckedChange={(v) => setTransferWeekend(v === true)} />
-              <Label htmlFor="tw" className="font-normal cursor-pointer text-sm">Переносить с выходных</Label>
+              <Label htmlFor="tw" className="font-normal cursor-pointer text-sm">
+                Переносить с выходных
+              </Label>
               {transferWeekend && (
                 <Select defaultValue="next">
-                  <SelectTrigger className="h-7 w-52 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="h-7 w-52 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="next">На следующий рабочий</SelectItem>
                     <SelectItem value="prev">На предыдущий рабочий</SelectItem>
@@ -487,7 +513,9 @@ const CreditCalculator = () => {
                   <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
                   <Select defaultValue="once">
-                    <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs w-36">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="once">Разовый</SelectItem>
                       <SelectItem value="1M">Каждый месяц</SelectItem>
@@ -497,7 +525,9 @@ const CreditCalculator = () => {
                     </SelectContent>
                   </Select>
                   <Select defaultValue="payment">
-                    <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs w-40">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="payment">Уменьшить платёж</SelectItem>
                       <SelectItem value="term">Уменьшить срок</SelectItem>
@@ -508,7 +538,11 @@ const CreditCalculator = () => {
                   </Button>
                 </div>
               ))}
-              <button type="button" onClick={addEarlyPayment} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+              <button
+                type="button"
+                onClick={addEarlyPayment}
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+              >
                 <Plus className="h-4 w-4" /> Добавить
               </button>
             </SectionToggle>
@@ -523,7 +557,9 @@ const CreditCalculator = () => {
                   <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Сумма" className="w-28" />
                   <Select defaultValue="payment">
-                    <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs w-40">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="payment">Уменьшить платёж</SelectItem>
                       <SelectItem value="term">Уменьшить срок</SelectItem>
@@ -534,7 +570,11 @@ const CreditCalculator = () => {
                   </Button>
                 </div>
               ))}
-              <button type="button" onClick={addCommonPayment} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+              <button
+                type="button"
+                onClick={addCommonPayment}
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+              >
                 <Plus className="h-4 w-4" /> Добавить
               </button>
             </SectionToggle>
@@ -549,7 +589,9 @@ const CreditCalculator = () => {
                   <DatePick small />
                   <Input type="text" inputSize="sm" placeholder="Месяцев" className="w-24" />
                   <Select defaultValue="none">
-                    <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs w-36">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">Без платежей</SelectItem>
                       <SelectItem value="interest">Только проценты</SelectItem>
@@ -560,7 +602,11 @@ const CreditCalculator = () => {
                   </Button>
                 </div>
               ))}
-              <button type="button" onClick={addHoliday} className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors">
+              <button
+                type="button"
+                onClick={addHoliday}
+                className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+              >
                 <Plus className="h-4 w-4" /> Добавить
               </button>
             </SectionToggle>
@@ -571,9 +617,6 @@ const CreditCalculator = () => {
           {/* Submit */}
           <div className="flex items-center gap-3 sm:pl-52">
             <Button icon={<Calculator className="h-4 w-4" />}>Рассчитать</Button>
-            <Button variant="outline" size="icon">
-              <Clock className="h-4 w-4" />
-            </Button>
           </div>
         </div>
 
@@ -641,11 +684,19 @@ const CreditCalculator = () => {
                 </TableBody>
                 <TableFooter className="sticky bottom-0 z-10 bg-card shadow-[0_-1px_0_0_hsl(var(--border))]">
                   <TableRow className="border-t-0 font-semibold">
-                    <TableCell colSpan={2} className="text-xs">Итого</TableCell>
+                    <TableCell colSpan={2} className="text-xs">
+                      Итого
+                    </TableCell>
                     <TableCell className="text-right font-mono text-xs">{fmt(totalPayment)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalPrincipal)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs text-destructive">{fmt(totalInterest)}</TableCell>
-                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalEarly)}</TableCell>
+                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">
+                      {fmt(totalPrincipal)}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs text-destructive">
+                      {fmt(totalInterest)}
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">
+                      {fmt(totalEarly)}
+                    </TableCell>
                     <TableCell className="text-right font-mono text-xs">—</TableCell>
                   </TableRow>
                 </TableFooter>
@@ -653,9 +704,6 @@ const CreditCalculator = () => {
             </div>
           </div>
         </div>
-
-        {/* SEO Content */}
-        <CreditCalculatorSeoContent />
       </main>
 
       <footer className="border-t py-6 mt-8">
