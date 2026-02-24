@@ -26,10 +26,17 @@ import { EmptyStateShowcase } from "@/components/showcase/EmptyStateShowcase";
 import { FileUploadShowcase } from "@/components/showcase/FileUploadShowcase";
 import { ValidationFormShowcase } from "@/components/showcase/ValidationFormShowcase";
 import { PaginationShowcase } from "@/components/showcase/PaginationShowcase";
+import { ComboboxShowcase } from "@/components/showcase/ComboboxShowcase";
+import { DateRangePickerShowcase } from "@/components/showcase/DateRangePickerShowcase";
+import { StepperShowcase } from "@/components/showcase/StepperShowcase";
+import { TimelineShowcase } from "@/components/showcase/TimelineShowcase";
+import { StatsCardShowcase } from "@/components/showcase/StatsCardShowcase";
+import { CopyButtonShowcase } from "@/components/showcase/CopyButtonShowcase";
+import { DropdownEnhancedShowcase } from "@/components/showcase/DropdownEnhancedShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications", "Progress & Stepper", "Skeleton", "Accordion", "Copy", "Empty State", "File Upload", "Pagination"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -91,6 +98,9 @@ const Index = () => {
             <ShowcaseSection title="Selects" description="Select, Dropdown, Radio, Checkbox, Switch">
               <SelectionsShowcase />
             </ShowcaseSection>
+            <ShowcaseSection title="Combobox" description="Autocomplete с поиском и creatable">
+              <ComboboxShowcase />
+            </ShowcaseSection>
             <ShowcaseSection title="Multiselect" description="Мультивыбор">
               <MultiselectShowcase />
             </ShowcaseSection>
@@ -106,10 +116,16 @@ const Index = () => {
             <ShowcaseSection title="Cards" description="Карточки">
               <CardShowcase />
             </ShowcaseSection>
+            <ShowcaseSection title="Stats Cards" description="Метрики для дашбордов">
+              <StatsCardShowcase />
+            </ShowcaseSection>
             <ShowcaseSection title="Date Pickers" description="Date, Range, Period">
               <DatePickerShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Slider & Tooltip" description="Ползунок, NumberInput, Kbd, ConfirmDialog, Textarea с иконкой">
+            <ShowcaseSection title="Date Range Picker" description="Два календаря + пресеты">
+              <DateRangePickerShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Slider & Tooltip" description="Ползунок, NumberInput, Kbd, ConfirmDialog, Textarea">
               <SliderTooltipShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Breadcrumbs & Links" description="Навигация и ссылки">
@@ -118,11 +134,20 @@ const Index = () => {
             <ShowcaseSection title="Modal & Alerts" description="Диалоги и уведомления">
               <ModalAlertsShowcase />
             </ShowcaseSection>
+            <ShowcaseSection title="Dropdown Enhanced" description="icon, shortcut, destructive">
+              <DropdownEnhancedShowcase />
+            </ShowcaseSection>
             <ShowcaseSection title="Notifications" description="Toast-уведомления (Sonner)">
               <NotificationShowcase />
             </ShowcaseSection>
-            <ShowcaseSection title="Progress & Stepper" description="Прогресс-бар и пошаговый визард">
+            <ShowcaseSection title="Progress & Stepper" description="Прогресс-бар">
               <ProgressShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Stepper" description="Пошаговый визард">
+              <StepperShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Timeline" description="Лента событий">
+              <TimelineShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Skeleton" description="Состояния загрузки">
               <SkeletonShowcase />
@@ -132,6 +157,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Copy" description="Копирование в буфер обмена">
               <CopyShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Copy Button" description="UI-компонент копирования">
+              <CopyButtonShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Empty State" description="Пустые состояния">
               <EmptyStateShowcase />

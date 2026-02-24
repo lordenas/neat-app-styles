@@ -172,3 +172,27 @@ export { Kbd } from "./kbd";
 /** Мульти-выбор с тегами, группировкой и disabled */
 export { Multiselect } from "./multiselect";
 export type { MultiselectOption, MultiselectProps } from "./multiselect";
+
+/** Автокомплит / Combobox с поиском, creatable и disabled */
+export { Combobox } from "./combobox";
+export type { ComboboxOption, ComboboxProps } from "./combobox";
+
+/** Выбор диапазона дат с пресетами и двумя календарями */
+export { DateRangePicker } from "./date-range-picker";
+export type { DateRangePickerProps, DateRangePreset } from "./date-range-picker";
+
+/** Пошаговый индикатор прогресса */
+export { Stepper } from "./stepper";
+export type { StepperProps, StepItem, StepStatus } from "./stepper";
+
+/** Вертикальная лента событий */
+export { Timeline } from "./timeline";
+export type { TimelineProps, TimelineItem } from "./timeline";
+
+/** Карточка метрики для дашбордов */
+export { StatsCard } from "./stats-card";
+export type { StatsCardProps } from "./stats-card";
+
+/** Кнопка копирования с анимацией */
+export { CopyButton } from "./copy-button";
+export type { CopyButtonProps } from "./copy-button";
