@@ -551,6 +551,361 @@ Host: https://site.com
 - ❌ Текст скрыт через `display:none` (санкции)
 - ❌ `meta keywords` (устарело)
 
+## Performance — Производительность
+
+### Ленивая загрузка страниц
+```tsx
+import { lazy, Suspense } from "react";
+const CreditCalculator = lazy(() => import("./pages/CreditCalculator"));
+
+<Suspense fallback={<PageSkeleton />}>
+  <CreditCalculator />
+</Suspense>
+```
+
+### Мемоизация
+- `useMemo` для тяжёлых вычислений (графики, расчёты, фильтрация > 100 элементов)
+- `useCallback` для колбэков, передаваемых дочерним мемоизированным компонентам
+- `React.memo` для компонентов-списков, которые не должны ререндериться при изменении родителя
+- ❌ НЕ мемоизируй всё подряд — это усложняет код без выгоды для простых компонентов
+
+### Debounce/Throttle
+```tsx
+// Для ввода чисел (сумма, ставка) — debounce 300ms перед пересчётом
+const debouncedCalc = useMemo(() => debounce(calculate, 300), []);
+```
+
+### Изображения
+- `loading="lazy"` для изображений ниже fold
+- Явные `width` + `height` для предотвращения CLS
+- WebP формат с JPEG fallback
+- `<link rel="preconnect">` для внешних ресурсов (Google Fonts)
+
+### Чеклист производительности
+- [ ] Страницы загружены через `React.lazy`
+- [ ] `preconnect` для внешних доменов
+- [ ] Нет лишних ререндеров (React DevTools Profiler)
+- [ ] Тяжёлые вычисления в `useMemo`
+- [ ] Изображения: `loading="lazy"`, `width`, `height`
+- [ ] LCP < 2.5s, CLS < 0.1
+
+---
+
+## Error Handling — Обработка ошибок
+
+### ErrorBoundary
+```tsx
+// src/components/ErrorBoundary.tsx
+import { Component, ReactNode } from "react";
+
+interface Props { children: ReactNode; fallback?: ReactNode }
+interface State { hasError: boolean }
+
+class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("ErrorBoundary caught:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? (
+        <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+          <p className="text-muted-foreground">Что-то пошло не так</p>
+          <button onClick={() => this.setState({ hasError: false })}
+                  className="text-primary hover:underline">Попробовать снова</button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+```
+
+### Правила обработки ошибок
+- ✅ `ErrorBoundary` оборачивает каждую страницу (в `App.tsx`)
+- ✅ Формы: показывай ошибки валидации рядом с полем (`error-text` + `role="alert"`)
+- ✅ API-ошибки: toast через `sonner` с описанием проблемы
+- ✅ Пустые состояния: текст + иконка + CTA, не пустой экран
+- ❌ НЕ глотай ошибки молча (`catch {}`)
+- ❌ НЕ показывай пользователю стектрейсы
+
+---
+
+## State Management — Управление состоянием
+
+### Иерархия выбора
+1. **`useState`** — локальное состояние компонента (формы, UI-флаги)
+2. **`useReducer`** — сложное локальное состояние (> 3 связанных переменных)
+3. **React Context** — глобальные UI-настройки (тема, локаль, тост)
+4. **React Query** — серверные данные (кэш, refetch, loading/error)
+5. **Zustand** — глобальное клиентское состояние (если Context недостаточно)
+
+### Правила
+- ✅ Состояние формы — `useState` или `react-hook-form` (для валидации)
+- ✅ Серверные данные — `@tanstack/react-query` (никогда `useState` + `useEffect`)
+- ✅ Поднимай состояние минимально — только до ближайшего общего предка
+- ❌ НЕ дублируй серверные данные в локальное состояние
+- ❌ НЕ используй Context для часто меняющихся данных (ререндер всего дерева)
+
+---
+
+## Code Conventions — Соглашения по коду
+
+### Именование файлов
+| Тип | Формат | Пример |
+|-----|--------|--------|
+| Компонент | PascalCase | `CreditCalculator.tsx` |
+| Хук | camelCase с `use-` | `use-mobile.tsx` |
+| Утилита | camelCase | `utils.ts` |
+| Тип/интерфейс | PascalCase | `types.ts` |
+| Константа | UPPER_SNAKE | `const MAX_AMOUNT = 100_000_000` |
+| CSS-класс | kebab-case | `section-card` |
+
+### Порядок импортов
+```tsx
+// 1. React и хуки
+import { useState, useMemo } from "react";
+// 2. Внешние библиотеки
+import { format } from "date-fns";
+// 3. UI-компоненты
+import { Button } from "@/components/ui/button";
+// 4. Локальные компоненты
+import { FormRow } from "./FormRow";
+// 5. Утилиты и типы
+import { cn } from "@/lib/utils";
+import type { CreditParams } from "@/types";
+```
+
+### Общие правила
+- ✅ Один компонент на файл (исключение: мелкие вспомогательные внутри того же файла)
+- ✅ Типизация пропсов через `interface` (не `type` для объектов)
+- ✅ Деструктуризация пропсов в параметрах функции
+- ✅ `const` по умолчанию, `let` только при необходимости мутации
+- ❌ НЕ используй `any` — минимум `unknown`
+- ❌ НЕ используй `// @ts-ignore` без комментария причины
+- ❌ НЕ оставляй `console.log` в продакшене
+
+---
+
+## Security — Безопасность
+
+### XSS-защита
+- ✅ React по умолчанию экранирует JSX — не ломай это
+- ❌ НЕ используй `dangerouslySetInnerHTML` без санитизации
+- ❌ НЕ вставляй пользовательский ввод в `href`, `src`, `style` напрямую
+- ✅ Для ссылок: проверяй протокол (`http:`, `https:`, `mailto:`)
+
+### Формы и ввод
+- ✅ Валидация на клиенте через `zod` + `react-hook-form`
+- ✅ Числовые поля: ограничивай `min`/`max`, валидируй тип
+- ✅ `rel="noopener noreferrer"` на всех `target="_blank"` ссылках
+- ✅ `autocomplete` на полях логина/пароля
+
+### API-ключи
+- ❌ НЕ храни приватные ключи в коде или `localStorage`
+- ✅ Публичные ключи (Stripe publishable) — допустимы в коде
+- ✅ Приватные ключи — только через серверные функции (Lovable Cloud)
+
+### Content Security
+- ✅ Sanitize HTML если используешь `dangerouslySetInnerHTML`: библиотека `dompurify`
+- ✅ Не доверяй URL-параметрам — всегда валидируй
+
+---
+
+## Motion — Анимации
+
+### Длительности
+| Тип | Длительность | Tailwind |
+|-----|-------------|----------|
+| Микро (hover, focus) | 150ms | `duration-150` |
+| Стандарт (открытие, переход) | 200-300ms | `duration-200` / `duration-300` |
+| Сложная (модалка, панель) | 300-500ms | `duration-300` / `duration-500` |
+| Появление контента | 200ms | `duration-200` |
+
+### Easing
+- Открытие: `ease-out` (быстрый старт, плавное торможение)
+- Закрытие: `ease-in` (плавный старт, быстрое завершение)
+- Движение: `ease-in-out`
+- Tailwind: `transition-all duration-200 ease-out`
+
+### Framer Motion (для сложных анимаций)
+```tsx
+import { motion } from "framer-motion";
+
+<motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: -10 }}
+  transition={{ duration: 0.2, ease: "easeOut" }}
+/>
+```
+
+### Reduced Motion (обязательно!)
+```tsx
+// CSS
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Tailwind классы
+className="motion-reduce:transition-none motion-reduce:animate-none"
+```
+
+### Правила
+- ✅ Анимируй `opacity` и `transform` (GPU-ускоренные)
+- ❌ НЕ анимируй `width`, `height`, `top`, `left` (дорогие reflow)
+- ❌ НЕ используй анимации > 500ms (ощущается медленно)
+- ❌ НЕ мигай > 3 раз/сек (эпилепсия, WCAG)
+- ✅ Каждая анимация должна иметь `prefers-reduced-motion` альтернативу
+
+---
+
+## Dark Mode — Тёмная тема
+
+### Архитектура
+- Все цвета через CSS-переменные в `index.css` (`:root` и `.dark`)
+- Переключение через `next-themes` (`useTheme`)
+- ❌ НЕ хардкодь цвета в компонентах
+
+### Контрастность (WCAG AAA)
+- Текст на тёмном фоне: контраст ≥ 7:1
+- `--foreground` на `--background`: проверяй через контраст-чекер
+- Границы (`--border`): контраст ≥ 3:1 к фону
+- Мутный текст (`--muted-foreground`): контраст ≥ 4.5:1 к фону (минимум AA)
+
+### Elevation (глубина)
+- Более высокие элементы = более светлый фон в тёмной теме
+- `--background` < `--card` < `--elevated` < `--popover`
+- Тени: в тёмной теме тени менее заметны, используй `--overlay` для затемнения
+
+### Изображения и графики
+- Графики: цвета из токенов (`hsl(var(--success))`, `hsl(var(--destructive))`)
+- Иконки: `currentColor` или токены, не хардкод
+- Изображения: `filter brightness(0.9)` или отдельные версии для тёмной темы
+
+### Чеклист Dark Mode
+- [ ] Все цвета через `var(--token)`, нет хардкода
+- [ ] Контраст текст/фон ≥ 7:1 в обеих темах
+- [ ] Границы видимы в обеих темах
+- [ ] Тени адаптивны (светлая/тёмная)
+- [ ] Графики читаемы в тёмной теме
+- [ ] Фокус-кольца видимы в обеих темах
+
+---
+
+## Testing — Тестирование
+
+### Что тестировать
+| Приоритет | Что | Как |
+|-----------|-----|-----|
+| 🔴 Высокий | Расчёты (аннуитет, дифференцированный, переплата) | Unit-тесты (vitest) |
+| 🔴 Высокий | Форматирование чисел и дат | Unit-тесты |
+| 🟡 Средний | Формы (валидация, отправка) | Integration-тесты (Testing Library) |
+| 🟡 Средний | a11y (контраст, aria, клавиатура) | axe-core + vitest-axe |
+| 🟢 Низкий | UI-компоненты (рендер, клики) | Integration-тесты |
+
+### Структура тестов
+```
+src/
+  test/
+    setup.ts              — глобальная настройка vitest
+  utils/
+    calculations.test.ts  — тесты расчётов
+  components/
+    FormRow.test.tsx       — тесты компонентов
+  pages/
+    CreditCalculator.test.tsx — интеграционные
+```
+
+### Именование
+```tsx
+describe("calculateAnnuity", () => {
+  it("рассчитывает ежемесячный платёж для стандартных параметров", () => {});
+  it("возвращает 0 при нулевой ставке", () => {});
+  it("выбрасывает ошибку при отрицательной сумме", () => {});
+});
+```
+
+### a11y тесты
+```tsx
+import { axe, toHaveNoViolations } from "jest-axe";
+expect.extend(toHaveNoViolations);
+
+it("не имеет a11y нарушений", async () => {
+  const { container } = render(<CreditCalculator />);
+  expect(await axe(container)).toHaveNoViolations();
+});
+```
+
+### Правила
+- ✅ Тесты расчётов — обязательны для каждой формулы
+- ✅ Тестируй граничные значения (0, отрицательные, максимум)
+- ✅ `describe` → группировка, `it` → конкретный сценарий
+- ❌ НЕ тестируй внутреннюю реализацию — тестируй поведение
+- ❌ НЕ мокай всё подряд — мокай только внешние зависимости
+
+---
+
+## i18n — Интернационализация
+
+### Текущий подход (без библиотеки)
+- Язык: русский (`<html lang="ru">`)
+- Числа: `toLocaleString("ru-RU")` — пробелы как разделитель тысяч
+- Даты: `date-fns` с локалью `ru` (`import { ru } from "date-fns/locale"`)
+- Валюта: суффикс `₽` (не через `Intl.NumberFormat` для контроля)
+
+### Форматирование чисел
+```tsx
+// ✅ Правильно
+const formatted = (1234567).toLocaleString("ru-RU"); // "1 234 567"
+const currency = `${formatted} ₽`;
+const percent = `${rate}%`;
+
+// ❌ Неправильно
+const bad = 1234567.toString(); // "1234567" — нечитаемо
+```
+
+### Форматирование дат
+```tsx
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+
+format(new Date(), "dd.MM.yyyy");                    // "22.02.2026"
+format(new Date(), "d MMMM yyyy", { locale: ru });   // "22 февраля 2026"
+format(new Date(), "LLLL yyyy", { locale: ru });      // "февраль 2026"
+```
+
+### Склонения (pluralization)
+```tsx
+function pluralize(n: number, one: string, few: string, many: string): string {
+  const abs = Math.abs(n) % 100;
+  const lastDigit = abs % 10;
+  if (abs > 10 && abs < 20) return many;
+  if (lastDigit > 1 && lastDigit < 5) return few;
+  if (lastDigit === 1) return one;
+  return many;
+}
+
+// Использование
+pluralize(1, "месяц", "месяца", "месяцев");  // "месяц"
+pluralize(3, "месяц", "месяца", "месяцев");  // "месяца"
+pluralize(5, "месяц", "месяца", "месяцев");  // "месяцев"
+pluralize(21, "месяц", "месяца", "месяцев"); // "месяц"
+```
+
+### Подготовка к мультиязычности
+- Все пользовательские строки — в компонентах (не в утилитах)
+- JSON-LD: `"inLanguage": "ru"`
+- `<html lang="ru">` в `index.html`
+- `hreflang` мета-теги если планируется EN-версия
+- ❌ НЕ хардкодь строки в утилитах/хелперах — передавай через параметры
+
+---
+
 ## Полный справочник
 
 Смотри файл `COMPONENTS.md` для полного API каждого компонента с примерами.
