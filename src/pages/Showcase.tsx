@@ -37,7 +37,7 @@ import { CommandPaletteShowcase } from "@/components/showcase/CommandPaletteShow
 import { DataTableShowcase } from "@/components/showcase/DataTableShowcase";
 import { AppShellShowcase } from "@/components/showcase/AppShellShowcase";
 import { ColorPickerShowcase } from "@/components/showcase/ColorPickerShowcase";
-import { ResizablePanelShowcase } from "@/components/showcase/ResizablePanelShowcase";
+
 import { InlineEditShowcase } from "@/components/showcase/InlineEditShowcase";
 import { DrawerShowcase } from "@/components/showcase/DrawerShowcase";
 import { SheetShowcase } from "@/components/showcase/SheetShowcase";
@@ -58,7 +58,7 @@ import { PinInputShowcase } from "@/components/showcase/PinInputShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tag Input", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Charts", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Resizable Panels", "Inline Edit", "OTP Input", "Pin Input", "Drawer", "Sheet", "Hover Card", "Scroll Area", "Aspect Ratio", "Sortable List", "Navigation Menu", "Menubar", "App Shell"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tag Input", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Charts", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Inline Edit", "OTP Input", "Pin Input", "Drawer", "Sheet", "Hover Card", "Scroll Area", "Aspect Ratio", "Sortable List", "Navigation Menu", "Menubar", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -209,9 +209,6 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Color Picker" description="Выбор цвета">
               <ColorPickerShowcase />
-            </ShowcaseSection>
-            <ShowcaseSection title="Resizable Panels" description="Изменяемые панели">
-              <ResizablePanelShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="App Shell" description="Sidebar + Layout">
               <AppShellShowcase />
