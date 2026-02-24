@@ -221,3 +221,7 @@ export type { ColorPickerProps } from "./color-picker";
 /** Редактирование текста «на месте» */
 export { InlineEdit } from "./inline-edit";
 export type { InlineEditProps } from "./inline-edit";
+
+/** Рейтинг (звёзды) с кликом, половинками и read-only */
+export { Rating } from "./rating";
+export type { RatingProps } from "./rating";

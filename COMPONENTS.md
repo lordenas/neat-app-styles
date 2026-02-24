@@ -1408,3 +1408,127 @@ axisLine={{ stroke: "hsl(var(--border))" }}
 ```
 
 **Валидация:** `toast.error` при неподдерживаемом формате или превышении лимита.
+
+---
+
+## Rating
+
+**Импорт:** `import { Rating } from "@/components/ui/rating"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `value` | `number` | — | Текущее значение (0–max) |
+| `max` | `number` | `5` | Максимум звёзд |
+| `onChange` | `(value: number) => void` | — | Колбэк при клике |
+| `readOnly` | `boolean` | `false` | Только отображение |
+| `size` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер звёзд |
+| `allowHalf` | `boolean` | `false` | Разрешить половинки |
+
+```tsx
+<Rating value={3} onChange={setRating} />
+<Rating value={3.5} onChange={setRating} allowHalf />
+<Rating value={4} readOnly size="lg" />
+<Rating value={2.5} readOnly allowHalf size="sm" />
+```
+
+---
+
+## Carousel
+
+**Импорт:** `import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `orientation` | `"horizontal"` \| `"vertical"` | `"horizontal"` | Направление прокрутки |
+| `opts` | `EmblaOptions` | — | Параметры Embla (loop, align и т.д.) |
+| `setApi` | `(api) => void` | — | Получение API-инстанса для программного управления |
+
+```tsx
+<Carousel opts={{ loop: true }}>
+  <CarouselContent>
+    <CarouselItem>Слайд 1</CarouselItem>
+    <CarouselItem>Слайд 2</CarouselItem>
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+
+{/* Несколько элементов */}
+<CarouselItem className="basis-1/3">...</CarouselItem>
+```
+
+---
+
+## AlertDialog
+
+**Импорт:** `import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from "@/components/ui/alert-dialog"`
+
+Блокирующий диалог — нельзя закрыть кликом по оверлею. Для необратимых действий.
+
+```tsx
+<AlertDialog>
+  <AlertDialogTrigger asChild><Button variant="destructive">Удалить</Button></AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Удалить аккаунт?</AlertDialogTitle>
+      <AlertDialogDescription>Это действие необратимо.</AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Отмена</AlertDialogCancel>
+      <AlertDialogAction className={buttonVariants({ variant: "destructive" })}>Удалить</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+---
+
+## NavigationMenu
+
+**Импорт:** `import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"`
+
+Mega-меню для лендингов с выпадающими панелями, иконками и описаниями.
+
+```tsx
+<NavigationMenu>
+  <NavigationMenuList>
+    <NavigationMenuItem>
+      <NavigationMenuTrigger>Продукт</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul className="grid gap-3 p-4 w-[400px] md:grid-cols-2">
+          <li><NavigationMenuLink href="/features">Функции</NavigationMenuLink></li>
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+    <NavigationMenuItem>
+      <NavigationMenuLink className={navigationMenuTriggerStyle()} href="/pricing">Цены</NavigationMenuLink>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+```
+
+---
+
+## Menubar
+
+**Импорт:** `import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarSeparator, MenubarShortcut, MenubarCheckboxItem, MenubarRadioGroup, MenubarRadioItem, MenubarSub, MenubarSubTrigger, MenubarSubContent } from "@/components/ui/menubar"`
+
+Desktop-меню в стиле настольных приложений (Файл / Правка / Вид).
+
+```tsx
+<Menubar>
+  <MenubarMenu>
+    <MenubarTrigger>Файл</MenubarTrigger>
+    <MenubarContent>
+      <MenubarItem>Новый <MenubarShortcut>⌘N</MenubarShortcut></MenubarItem>
+      <MenubarSeparator />
+      <MenubarSub>
+        <MenubarSubTrigger>Последние</MenubarSubTrigger>
+        <MenubarSubContent>
+          <MenubarItem>file.tsx</MenubarItem>
+        </MenubarSubContent>
+      </MenubarSub>
+    </MenubarContent>
+  </MenubarMenu>
+</Menubar>
+```

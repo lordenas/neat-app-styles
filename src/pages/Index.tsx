@@ -44,10 +44,15 @@ import { SheetShowcase } from "@/components/showcase/SheetShowcase";
 import { OTPInputShowcase } from "@/components/showcase/OTPInputShowcase";
 import { ContextMenuShowcase } from "@/components/showcase/ContextMenuShowcase";
 import { HoverCardShowcase } from "@/components/showcase/HoverCardShowcase";
+import { RatingShowcase } from "@/components/showcase/RatingShowcase";
+import { CarouselShowcase } from "@/components/showcase/CarouselShowcase";
+import { AlertDialogShowcase } from "@/components/showcase/AlertDialogShowcase";
+import { NavigationMenuShowcase } from "@/components/showcase/NavigationMenuShowcase";
+import { MenubarShowcase } from "@/components/showcase/MenubarShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Resizable Panels", "Inline Edit", "OTP Input", "Drawer", "Sheet", "Hover Card", "App Shell"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Resizable Panels", "Inline Edit", "OTP Input", "Drawer", "Sheet", "Hover Card", "Navigation Menu", "Menubar", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -129,6 +134,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Stats Cards" description="Метрики для дашбордов">
               <StatsCardShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Rating" description="Рейтинг (звёзды)">
+              <RatingShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Date Pickers" description="Date, Range, Period">
               <DatePickerShowcase />
@@ -213,6 +221,18 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Hover Card" description="Превью при наведении">
               <HoverCardShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Alert Dialog" description="Блокирующий диалог подтверждения">
+              <AlertDialogShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Carousel" description="Слайдер карточек">
+              <CarouselShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Navigation Menu" description="Mega-меню для лендингов">
+              <NavigationMenuShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Menubar" description="Панель меню (desktop app)">
+              <MenubarShowcase />
             </ShowcaseSection>
           </div>
         </section>
