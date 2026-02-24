@@ -225,3 +225,7 @@ export type { InlineEditProps } from "./inline-edit";
 /** Рейтинг (звёзды) с кликом, половинками и read-only */
 export { Rating } from "./rating";
 export type { RatingProps } from "./rating";
+
+/** Поле ввода тегов (свободный ввод + Enter) */
+export { TagInput } from "./tag-input";
+export type { TagInputProps } from "./tag-input";

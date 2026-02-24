@@ -1532,3 +1532,53 @@ Desktop-меню в стиле настольных приложений (Фай
   </MenubarMenu>
 </Menubar>
 ```
+
+---
+
+## TagInput
+
+**Импорт:** `import { TagInput } from "@/components/ui/tag-input"`
+
+| Prop | Тип | По умолчанию | Описание |
+|------|-----|-------------|----------|
+| `value` | `string[]` | — | Массив тегов |
+| `onChange` | `(tags: string[]) => void` | — | Колбэк при изменении |
+| `placeholder` | `string` | `"Введите и нажмите Enter..."` | Подсказка |
+| `max` | `number` | — | Максимум тегов |
+| `disabled` | `boolean` | `false` | Запретить ввод |
+| `error` | `string` | — | Сообщение об ошибке |
+
+```tsx
+<TagInput value={tags} onChange={setTags} placeholder="Навык..." />
+<TagInput value={tags} onChange={setTags} max={5} />
+<TagInput id="skills" value={tags} onChange={setTags} error={tags.length === 0 ? "Обязательно" : ""} />
+```
+
+**Управление:** Enter — добавить, Backspace — удалить последний, × — удалить конкретный.
+
+---
+
+## Charts (Recharts)
+
+**Импорт:** `import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"`
+
+Обёртка над Recharts с поддержкой дизайн-токенов и тем (light/dark).
+
+```tsx
+const config: ChartConfig = {
+  revenue: { label: "Выручка", color: "hsl(var(--primary))" },
+  expenses: { label: "Расходы", color: "hsl(var(--destructive))" },
+};
+
+<ChartContainer config={config} className="h-[250px] w-full">
+  <LineChart data={data}>
+    <XAxis dataKey="month" />
+    <YAxis />
+    <ChartTooltip content={<ChartTooltipContent />} />
+    <ChartLegend content={<ChartLegendContent />} />
+    <Line dataKey="revenue" stroke="var(--color-revenue)" />
+  </LineChart>
+</ChartContainer>
+```
+
+Поддерживает: LineChart, BarChart, AreaChart, PieChart (Donut).
