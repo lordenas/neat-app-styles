@@ -146,17 +146,17 @@ function DateInputPicker() {
     <div className="space-y-1.5">
       <Label>Ввод + календарь (с маской)</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <div className="flex items-center w-[260px]">
+        <div className="flex items-center w-[260px] rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-colors">
           <input
             ref={inputRef}
             value={inputValue}
             onChange={handleInputChange}
             placeholder="дд.мм.гггг"
-            className="flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors h-10 px-3 text-sm"
+            className="flex-1 min-w-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:outline-none h-10 px-3 text-sm"
           />
           <PopoverTrigger asChild>
-            <Button variant="outline" className="rounded-l-none border-l-0 px-2 shrink-0 h-10">
-              <CalendarIcon className="h-4 w-4" />
+            <Button variant="ghost" className="rounded-l-none px-2 shrink-0 h-10 hover:bg-transparent">
+              <CalendarIcon className="h-4 w-4 text-muted-foreground" />
             </Button>
           </PopoverTrigger>
         </div>
