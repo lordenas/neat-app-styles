@@ -70,23 +70,29 @@
 
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
-| `inputSize` | `"sm"` \| `"default"` | `"default"` | Размер поля |
+| `inputSize` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер поля |
 | `inputStart` | `ReactNode` | — | Элемент в начале поля (иконка/текст) |
 | `inputEnd` | `ReactNode` | — | Элемент в конце поля (иконка/текст) |
 | `formatNumber` | `boolean` | `false` | Авто-группировка цифр пробелами (1000000 → 1 000 000). В `onChange` — «сырое» значение без пробелов |
 | `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки (форма не прыгает). Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+| `loading` | `boolean` | `false` | Показывает спиннер в конце поля и делает его `disabled` |
+| `showPasswordToggle` | `boolean` | `false` | Добавляет кнопку показа/скрытия пароля (для `type="password"`) |
 
 ```tsx
 <Input placeholder="Введите текст..." />
 <Input inputStart={<Search />} placeholder="Поиск..." />
-<Input inputEnd={<span className="text-sm font-medium">₽</span>} placeholder="0" />
-<Input inputSize="sm" placeholder="Компактное поле" />
+<Input inputSize="lg" placeholder="Крупное поле для лендинга" />
+<Input loading placeholder="Проверка..." />
+<Input loading inputStart={<Mail />} placeholder="Валидация email..." />
 <Input formatNumber placeholder="Введите сумму" />
 <Input error={errors.name?.message ?? ""} {...register("name")} />
 ```
 
+**Размеры:** `sm` (h-8, text-xs) → `default` (h-10, text-sm) → `lg` (h-12, text-base)
+
 **Примечания:**
 - При `formatNumber` в `onChange` передаётся числовое значение без пробелов.
+- При `loading` автоматически ставится `disabled` и показывается спиннер `Loader2`.
 - При `error` передавайте пустую строку `""` когда ошибки нет — место под текст будет зарезервировано. Без пропа `error` дополнительный элемент не рендерится.
 
 ---
@@ -97,20 +103,25 @@
 
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
-| `inputSize` | `"sm"` \| `"default"` | `"default"` | Размер поля |
+| `inputSize` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер поля |
 | `inputStart` | `ReactNode` | — | Элемент в начале поля (иконка) |
 | `inputEnd` | `ReactNode` | — | Элемент в конце поля (иконка/текст) |
 | `error` | `string` | — | Сообщение об ошибке под полем. Место зарезервировано даже без ошибки. Автоматически добавляет `border-destructive`, `aria-invalid` и `aria-describedby` |
+| `autoResize` | `boolean` | `false` | Автоматически подстраивает высоту под содержимое |
+| `maxRows` | `number` | — | Максимальное количество строк при `autoResize` |
 
 ```tsx
 <Textarea placeholder="Введите описание..." rows={4} />
 <Textarea inputSize="sm" placeholder="Компактное поле" />
+<Textarea inputSize="lg" placeholder="Крупное поле для лендинга" />
 <Textarea inputStart={<MessageSquare />} placeholder="Комментарий..." />
+<Textarea autoResize maxRows={6} placeholder="Авторасширение..." />
 <Textarea error={errors.bio?.message ?? ""} {...register("bio")} />
 ```
 
+**Размеры:** `sm` (min-h-[60px], text-xs) → `default` (min-h-[80px], text-sm) → `lg` (min-h-[120px], text-base)
+
 **Примечания:**
-- `inputSize="sm"` — уменьшенная высота (min-h-[60px]) и text-xs.
 - `inputStart` / `inputEnd` — иконки привязаны к верхнему краю поля.
 - Паттерн `error` идентичен `Input` — пустая строка `""` резервирует место.
 
@@ -251,7 +262,9 @@
 | Prop | Тип | По умолчанию | Описание |
 |------|-----|-------------|----------|
 | `variant` | `"default"` \| `"secondary"` \| `"destructive"` \| `"success"` \| `"warning"` \| `"info"` \| `"outline"` | `"default"` | Стиль |
+| `size` | `"sm"` \| `"default"` \| `"lg"` | `"default"` | Размер |
 | `icon` | `ReactNode` | — | Иконка перед текстом |
+| `dot` | `boolean` | `false` | Цветной кружок-индикатор статуса перед текстом |
 | `onDismiss` | `() => void` | — | Колбэк при удалении. Добавляет кнопку × |
 
 ```tsx
@@ -259,9 +272,8 @@
 <Badge variant="secondary">Черновик</Badge>
 <Badge variant="destructive">Ошибка</Badge>
 <Badge variant="success">Выполнено</Badge>
-<Badge variant="warning">В процессе</Badge>
-<Badge variant="info">Информация</Badge>
-<Badge variant="outline">v2.0</Badge>
+<Badge variant="success" dot>Онлайн</Badge>
+<Badge variant="destructive" dot>Офлайн</Badge>
 <Badge icon={<Star className="h-3 w-3" />}>Избранное</Badge>
 <Badge variant="secondary" onDismiss={() => remove(id)}>Тег</Badge>
 ```
