@@ -38,10 +38,16 @@ import { DataTableShowcase } from "@/components/showcase/DataTableShowcase";
 import { AppShellShowcase } from "@/components/showcase/AppShellShowcase";
 import { ColorPickerShowcase } from "@/components/showcase/ColorPickerShowcase";
 import { ResizablePanelShowcase } from "@/components/showcase/ResizablePanelShowcase";
+import { InlineEditShowcase } from "@/components/showcase/InlineEditShowcase";
+import { DrawerShowcase } from "@/components/showcase/DrawerShowcase";
+import { SheetShowcase } from "@/components/showcase/SheetShowcase";
+import { OTPInputShowcase } from "@/components/showcase/OTPInputShowcase";
+import { ContextMenuShowcase } from "@/components/showcase/ContextMenuShowcase";
+import { HoverCardShowcase } from "@/components/showcase/HoverCardShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Resizable Panels", "App Shell"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Resizable Panels", "Inline Edit", "OTP Input", "Drawer", "Sheet", "Hover Card", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -189,6 +195,24 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="App Shell" description="Sidebar + Layout">
               <AppShellShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Inline Edit" description="Редактирование на месте">
+              <InlineEditShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="OTP Input" description="Ввод одноразового кода">
+              <OTPInputShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Drawer" description="Нижняя панель (мобильная)">
+              <DrawerShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Sheet" description="Боковая панель">
+              <SheetShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Context Menu" description="Контекстное меню (ПКМ)">
+              <ContextMenuShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Hover Card" description="Превью при наведении">
+              <HoverCardShowcase />
             </ShowcaseSection>
           </div>
         </section>

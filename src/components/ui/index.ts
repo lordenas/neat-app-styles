@@ -217,3 +217,7 @@ export type { DataTableProps, DataTableColumn } from "./data-table";
 /** Выбор цвета из палитры + ручной ввод HEX */
 export { ColorPicker } from "./color-picker";
 export type { ColorPickerProps } from "./color-picker";
+
+/** Редактирование текста «на месте» */
+export { InlineEdit } from "./inline-edit";
+export type { InlineEditProps } from "./inline-edit";
