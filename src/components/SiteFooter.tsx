@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Calculator } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function SiteFooter() {
   const { t } = useTranslation();
@@ -14,6 +15,11 @@ export function SiteFooter() {
           </div>
           <span className="font-semibold text-sm">{t("site.name")}</span>
         </div>
+        <nav className="flex flex-wrap gap-4 text-xs">
+          <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">О проекте</Link>
+          <Link to="/blog" className="text-muted-foreground hover:text-foreground transition-colors">Блог</Link>
+          <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">Контакты</Link>
+        </nav>
         <p className="text-xs text-muted-foreground max-w-lg">
           {t("footer.disclaimer")}
         </p>
