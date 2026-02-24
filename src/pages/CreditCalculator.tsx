@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Link } from "react-router-dom";
@@ -660,6 +661,57 @@ const CreditCalculator = () => {
                 {item.sub && <p className="text-xs text-muted-foreground">{item.sub}</p>}
               </div>
             ))}
+          </div>
+
+          {/* Pie chart */}
+          <div>
+            <h3 className="text-sm font-medium mb-3">Тело долга и проценты</h3>
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-48 h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "Основной долг", value: totalPrincipal },
+                        { name: "Проценты", value: totalInterest },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={2}
+                      dataKey="value"
+                      strokeWidth={0}
+                    >
+                      <Cell fill="hsl(var(--success))" />
+                      <Cell fill="hsl(var(--destructive))" />
+                    </Pie>
+                    <RechartsTooltip
+                      formatter={(value: number) => fmt(value) + " ₽"}
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--popover))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "var(--radius)",
+                        color: "hsl(var(--popover-foreground))",
+                        fontSize: "0.75rem",
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-[hsl(var(--success))]" />
+                  <span className="text-sm text-muted-foreground">Основной долг</span>
+                  <span className="text-sm font-semibold font-mono">{fmt(totalPrincipal)} ₽</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-destructive" />
+                  <span className="text-sm text-muted-foreground">Проценты</span>
+                  <span className="text-sm font-semibold font-mono">{fmt(totalInterest)} ₽</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <Separator />
