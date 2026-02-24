@@ -58,10 +58,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         aria-describedby={ariaDescribedBy}
         className={cn(
           inputStart || inputEnd
-            ? "flex-1 bg-transparent placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed resize-y"
+            ? "flex-1 w-full bg-transparent placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed resize-y"
             : cn(textareaVariants({ inputSize }), error && "border-destructive"),
           inputStart || inputEnd
-            ? inputSize === "sm" ? "min-h-[60px] text-xs py-1.5" : "min-h-[80px] text-base md:text-sm py-2"
+            ? cn(
+                inputSize === "sm" ? "min-h-[60px] text-xs py-1.5" : "min-h-[80px] text-base md:text-sm py-2",
+                inputStart ? "pl-2" : "pl-3",
+                inputEnd ? "pr-2" : "pr-3",
+              )
             : "",
           className
         )}
@@ -83,7 +87,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             {inputStart}
           </span>
         )}
-        <div className={cn("flex-1 min-w-0", inputStart ? "pl-2" : "pl-3", inputEnd ? "pr-2" : "pr-0")}>
+        <div className="flex-1 min-w-0">
           {textareaEl}
         </div>
         {inputEnd && (
