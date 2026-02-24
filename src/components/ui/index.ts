@@ -141,8 +141,14 @@ export { ScrollArea, ScrollBar } from "./scroll-area";
 /** Заглушка-скелетон загрузки */
 export { Skeleton, SkeletonCircle, SkeletonText, SkeletonAvatar } from "./skeleton";
 
-/** Аватар с фоллбэком */
-export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+/** Аватар с размерами и статус-индикатором */
+export { Avatar, AvatarImage, AvatarFallback, avatarVariants } from "./avatar";
+
+/** Toggle-переключатель */
+export { Toggle, toggleVariants } from "./toggle";
+
+/** Группа Toggle */
+export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
 /** Загрузчик файлов — три варианта (dropzone, кнопка, аватар) */
 export { FileUploadDropzone, FileUploadButton, FileUploadAvatar } from "./file-upload";

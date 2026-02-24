@@ -9,24 +9,16 @@ import { cn } from "@/lib/utils";
  *
  * @example
  * ```tsx
- * <RadioGroup defaultValue="option1" onValueChange={(v) => console.log(v)}>
- *   <div className="flex items-center gap-2">
- *     <RadioGroupItem value="option1" id="r1" />
- *     <Label htmlFor="r1">Вариант 1</Label>
- *   </div>
- * </RadioGroup>
- *
- * // С ошибкой валидации
- * <RadioGroup id="role" error={errors.role?.message ?? ""}>
- *   ...
+ * <RadioGroup defaultValue="option1">
+ *   <RadioGroupItem value="option1" id="r1" label="Вариант 1" />
+ *   <RadioGroupItem value="option2" id="r2" label="Вариант 2" />
  * </RadioGroup>
  * ```
  *
- * @prop error - Сообщение об ошибке. Резервирует место (min-h-[1rem]). Добавляет `aria-invalid`, `aria-describedby`
+ * @prop error - Сообщение об ошибке
  */
 
 interface RadioGroupProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> {
-  /** Сообщение об ошибке. Отображается под группой. Место зарезервировано даже без ошибки (форма не прыгает). */
   error?: string;
 }
 
@@ -64,13 +56,19 @@ const RadioGroup = React.forwardRef<
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
+interface RadioGroupItemProps extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {
+  /** Текст подписи рядом с радиокнопкой */
+  label?: React.ReactNode;
+}
+
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
->(({ className, ...props }, ref) => {
-  return (
+  RadioGroupItemProps
+>(({ className, label, id, ...props }, ref) => {
+  const radio = (
     <RadioGroupPrimitive.Item
       ref={ref}
+      id={id}
       className={cn(
         "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className,
@@ -82,6 +80,22 @@ const RadioGroupItem = React.forwardRef<
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
+
+  if (label) {
+    return (
+      <div className="flex items-center gap-2">
+        {radio}
+        <label
+          htmlFor={id}
+          className="text-sm font-normal leading-tight cursor-pointer"
+        >
+          {label}
+        </label>
+      </div>
+    );
+  }
+
+  return radio;
 });
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName;
 

@@ -11,11 +11,13 @@ const toggleVariants = cva(
       variant: {
         default: "bg-transparent",
         outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+        filled: "bg-muted data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
       },
       size: {
         default: "h-10 px-3",
         sm: "h-9 px-2.5",
         lg: "h-11 px-5",
+        icon: "h-10 w-10 p-0",
       },
     },
     defaultVariants: {
@@ -30,17 +32,13 @@ const toggleVariants = cva(
  *
  * @example
  * ```tsx
- * <Toggle aria-label="Жирный">
- *   <Bold className="h-4 w-4" />
- * </Toggle>
- *
- * <Toggle variant="outline" size="sm">
- *   <Italic className="h-4 w-4" />
- * </Toggle>
+ * <Toggle aria-label="Жирный"><Bold className="h-4 w-4" /></Toggle>
+ * <Toggle variant="outline" size="sm"><Italic className="h-4 w-4" /></Toggle>
+ * <Toggle variant="filled" size="icon"><Star className="h-4 w-4" /></Toggle>
  * ```
  *
- * @prop variant - `"default"` | `"outline"`
- * @prop size - `"sm"` | `"default"` | `"lg"`
+ * @prop variant - `"default"` | `"outline"` | `"filled"`
+ * @prop size - `"sm"` | `"default"` | `"lg"` | `"icon"`
  */
 const Toggle = React.forwardRef<
   React.ElementRef<typeof TogglePrimitive.Root>,
