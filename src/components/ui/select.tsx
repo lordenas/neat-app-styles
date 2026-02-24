@@ -32,8 +32,8 @@ interface SelectTriggerProps
   extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
   /** Сообщение об ошибке. Отображается под триггером. Место зарезервировано даже без ошибки. */
   error?: string;
-  /** Размер триггера: `"sm"` (h-8, text-xs) | `"default"` (h-10, text-sm) */
-  inputSize?: "sm" | "default";
+  /** Размер триггера: `"sm"` (h-8, text-xs) | `"default"` (h-10, text-sm) | `"lg"` (h-12, text-base) */
+  inputSize?: "sm" | "default" | "lg";
 }
 
 const SelectTrigger = React.forwardRef<
@@ -52,7 +52,7 @@ const SelectTrigger = React.forwardRef<
       aria-describedby={ariaDescribedBy}
       className={cn(
         "flex w-full items-center justify-between rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-        inputSize === "sm" ? "h-8 px-2.5 py-1 text-xs" : "h-10 px-3 py-2 text-sm",
+        inputSize === "sm" ? "h-8 px-2.5 py-1 text-xs" : inputSize === "lg" ? "h-12 px-4 py-3 text-base" : "h-10 px-3 py-2 text-sm",
         error && "border-destructive",
         className,
       )}

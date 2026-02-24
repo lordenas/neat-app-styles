@@ -196,3 +196,7 @@ export type { StatsCardProps } from "./stats-card";
 /** Кнопка копирования с анимацией */
 export { CopyButton } from "./copy-button";
 export type { CopyButtonProps } from "./copy-button";
+
+/** Обёртка для быстрого создания тултипа */
+export { SimpleTooltip } from "./simple-tooltip";
+export type { SimpleTooltipProps } from "./simple-tooltip";
