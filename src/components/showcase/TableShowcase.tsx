@@ -749,6 +749,393 @@ function KeyboardNavTable() {
   );
 }
 
+/* ─── 9. Kitchen Sink — все фичи в одной таблице ─── */
+type KSSortKey = "name" | "department" | "position" | "salary";
+
+const detailDataFull: Record<number, { tasks: string[]; email: string; phone: string }> = {
+  1: { tasks: ["Рефакторинг API", "Code review", "Документация"], email: "ivanov@co.ru", phone: "+7 900 111-22-33" },
+  2: { tasks: ["Макет главной", "UI Kit обновление"], email: "petrova@co.ru", phone: "+7 900 222-33-44" },
+  3: { tasks: ["Квартальный отчёт", "Найм", "OKR"], email: "sidorov@co.ru", phone: "+7 900 333-44-55" },
+  4: { tasks: ["Анализ метрик", "A/B тест"], email: "kozlova@co.ru", phone: "+7 900 444-55-66" },
+  5: { tasks: ["Автотесты", "Регрессия", "CI/CD"], email: "morozov@co.ru", phone: "+7 900 555-66-77" },
+  6: { tasks: ["Мудборды", "Прототипы"], email: "volkova@co.ru", phone: "+7 900 666-77-88" },
+  7: { tasks: ["Стратегия", "Бюджет Q2"], email: "novikov@co.ru", phone: "+7 900 777-88-99" },
+  8: { tasks: ["React 19 миграция", "SSR"], email: "fedorova@co.ru", phone: "+7 900 888-99-00" },
+  9: { tasks: ["Микросервисы", "gRPC"], email: "egorov@co.ru", phone: "+7 900 999-00-11" },
+  10: { tasks: ["Бренд-бук", "Ребрендинг"], email: "lebedeva@co.ru", phone: "+7 900 000-11-22" },
+  11: { tasks: ["Roadmap", "Спринт-планирование"], email: "smirnov@co.ru", phone: "+7 900 111-33-44" },
+  12: { tasks: ["Kubernetes", "Terraform"], email: "kuznecova@co.ru", phone: "+7 900 222-44-55" },
+};
+
+function KitchenSinkTable() {
+  // Search
+  const [query, setQuery] = useState("");
+  // Dept filter
+  const [deptFilter, setDeptFilter] = useState<string | null>(null);
+  const departments = useMemo(() => [...new Set(employees.map(e => e.department))], []);
+  // Sort
+  const [sortKey, setSortKey] = useState<KSSortKey>("name");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+  // Pagination
+  const pageSize = 5;
+  const [page, setPage] = useState(1);
+  // Selection
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  // Master-detail
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  // Keyboard
+  const [activeRow, setActiveRow] = useState<number | null>(null);
+  const [activeCol, setActiveCol] = useState(0);
+  // Copy
+  const [copied, setCopied] = useState(false);
+
+  const toggleSort = (key: KSSortKey) => {
+    if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortKey(key); setSortDir("asc"); }
+    setPage(1);
+  };
+
+  // Filter → Sort → Paginate
+  const filtered = useMemo(() => {
+    return employees.filter(e => {
+      const matchQ = !query ||
+        e.name.toLowerCase().includes(query.toLowerCase()) ||
+        e.position.toLowerCase().includes(query.toLowerCase());
+      const matchD = !deptFilter || e.department === deptFilter;
+      return matchQ && matchD;
+    });
+  }, [query, deptFilter]);
+
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "name") cmp = a.name.localeCompare(b.name, "ru");
+      if (sortKey === "department") cmp = a.department.localeCompare(b.department, "ru");
+      if (sortKey === "position") cmp = a.position.localeCompare(b.position, "ru");
+      if (sortKey === "salary") cmp = a.salary - b.salary;
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }, [filtered, sortKey, sortDir]);
+
+  const totalPages = Math.ceil(sorted.length / pageSize);
+  const paged = sorted.slice((page - 1) * pageSize, page * pageSize);
+
+  // Selection
+  const allOnPageSelected = paged.length > 0 && paged.every(r => selected.has(r.id));
+  const toggleAll = () => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (allOnPageSelected) paged.forEach(r => next.delete(r.id));
+      else paged.forEach(r => next.add(r.id));
+      return next;
+    });
+  };
+  const toggleOne = (id: number) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  // Expand
+  const toggleExpand = (id: number) => {
+    setExpanded(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  // Sort icon
+  const SortIcon = ({ col }: { col: KSSortKey }) => {
+    if (sortKey !== col) return <ArrowUpDown className="h-3 w-3 text-muted-foreground/40" />;
+    return sortDir === "asc"
+      ? <ArrowUp className="h-3 w-3 text-primary" />
+      : <ArrowDown className="h-3 w-3 text-primary" />;
+  };
+
+  const SortBtn = ({ col, children }: { col: KSSortKey; children: React.ReactNode }) => (
+    <button
+      onClick={() => toggleSort(col)}
+      className="inline-flex items-center gap-1 hover:text-foreground transition-colors"
+    >
+      {children} <SortIcon col={col} />
+    </button>
+  );
+
+  // Columns for keyboard nav
+  const cols = ["expand", "select", "name", "department", "position", "salary"] as const;
+  const colCount = cols.length;
+
+  const getCellText = (row: typeof employees[0], ci: number) => {
+    switch (cols[ci]) {
+      case "name": return row.name;
+      case "department": return row.department;
+      case "position": return row.position;
+      case "salary": return fmt(row.salary);
+      default: return "";
+    }
+  };
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, ri: number) => {
+    // Copy
+    if (e.key === "c" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      const text = getCellText(paged[ri], activeCol);
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        });
+      }
+      return;
+    }
+
+    let newRow = ri;
+    let newCol = activeCol;
+    switch (e.key) {
+      case "ArrowUp":    newRow = Math.max(0, ri - 1); break;
+      case "ArrowDown":  newRow = Math.min(paged.length - 1, ri + 1); break;
+      case "ArrowLeft":  newCol = Math.max(0, activeCol - 1); break;
+      case "ArrowRight": newCol = Math.min(colCount - 1, activeCol + 1); break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (cols[activeCol] === "expand") toggleExpand(paged[ri].id);
+        if (cols[activeCol] === "select") toggleOne(paged[ri].id);
+        return;
+      default: return;
+    }
+    e.preventDefault();
+    setActiveRow(newRow);
+    setActiveCol(newCol);
+  }, [activeCol, paged]);
+
+  // Reset page on filter change
+  useEffect(() => { setPage(1); }, [query, deptFilter]);
+
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted-foreground">
+        Поиск + фильтр по отделу + сортировка + пагинация + выделение строк + master-detail + навигация клавишами + <kbd className="px-1 py-0.5 bg-muted rounded border text-xs font-mono">Ctrl+C</kbd>
+      </p>
+
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            placeholder="Поиск…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            className="pl-8 pr-8"
+            inputSize="sm"
+          />
+          {query && (
+            <button onClick={() => setQuery("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Очистить">
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+        <div className="flex gap-1">
+          <Button variant={deptFilter === null ? "default" : "outline"} size="sm" onClick={() => setDeptFilter(null)}>Все</Button>
+          {departments.map(d => (
+            <Button key={d} variant={deptFilter === d ? "default" : "outline"} size="sm" onClick={() => setDeptFilter(deptFilter === d ? null : d)}>{d}</Button>
+          ))}
+        </div>
+        {selected.size > 0 && (
+          <Badge variant="secondary" className="text-xs">
+            Выбрано: {selected.size}
+          </Badge>
+        )}
+      </div>
+
+      {/* Table */}
+      <div className="rounded-md border">
+        <Table bordered striped>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-10" />
+              <TableHead className="w-10">
+                <input
+                  type="checkbox"
+                  checked={allOnPageSelected}
+                  onChange={toggleAll}
+                  className="rounded border-border accent-primary h-4 w-4 cursor-pointer"
+                  aria-label="Выбрать все на странице"
+                />
+              </TableHead>
+              <TableHead><SortBtn col="name">ФИО</SortBtn></TableHead>
+              <TableHead><SortBtn col="department">Отдел</SortBtn></TableHead>
+              <TableHead><SortBtn col="position">Должность</SortBtn></TableHead>
+              <TableHead className="text-right">
+                <span className="float-right"><SortBtn col="salary">Оклад</SortBtn></span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paged.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Ничего не найдено</TableCell>
+              </TableRow>
+            ) : (
+              paged.map((row, ri) => {
+                const isExp = expanded.has(row.id);
+                const isSel = selected.has(row.id);
+                const detail = detailDataFull[row.id];
+                return (
+                  <Fragment key={row.id}>
+                    <TableRow className={isSel ? "bg-primary/5" : ""}>
+                      {cols.map((col, ci) => {
+                        const isActive = activeRow === ri && activeCol === ci;
+                        const common = [
+                          "outline-none transition-all",
+                          isActive ? "ring-2 ring-primary ring-inset bg-primary/5" : "",
+                        ].filter(Boolean).join(" ");
+
+                        if (col === "expand") {
+                          return (
+                            <TableCell
+                              key={col}
+                              tabIndex={isActive ? 0 : -1}
+                              ref={el => { if (isActive && el) el.focus(); }}
+                              onClick={() => { toggleExpand(row.id); setActiveRow(ri); setActiveCol(ci); }}
+                              onKeyDown={e => handleKeyDown(e, ri)}
+                              className={`px-2 cursor-pointer ${common}`}
+                            >
+                              {isExp
+                                ? <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                : <ChevronRight className="h-4 w-4 text-muted-foreground" />}
+                            </TableCell>
+                          );
+                        }
+                        if (col === "select") {
+                          return (
+                            <TableCell
+                              key={col}
+                              tabIndex={isActive ? 0 : -1}
+                              ref={el => { if (isActive && el) el.focus(); }}
+                              onClick={() => { setActiveRow(ri); setActiveCol(ci); }}
+                              onKeyDown={e => handleKeyDown(e, ri)}
+                              className={common}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSel}
+                                onChange={() => toggleOne(row.id)}
+                                className="rounded border-border accent-primary h-4 w-4 cursor-pointer"
+                                aria-label={`Выбрать ${row.name}`}
+                              />
+                            </TableCell>
+                          );
+                        }
+                        return (
+                          <TableCell
+                            key={col}
+                            tabIndex={isActive ? 0 : -1}
+                            ref={el => { if (isActive && el) el.focus(); }}
+                            onClick={() => { setActiveRow(ri); setActiveCol(ci); }}
+                            onKeyDown={e => handleKeyDown(e, ri)}
+                            className={[
+                              common,
+                              col === "name" ? "font-medium" : "",
+                              col === "department" ? "" : "",
+                              col === "salary" ? "text-right font-mono" : "",
+                            ].filter(Boolean).join(" ")}
+                          >
+                            {col === "department" ? (
+                              <Badge variant="outline" className="text-xs font-normal">{row.department}</Badge>
+                            ) : (
+                              getCellText(row, ci)
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                    {isExp && detail && (
+                      <TableRow>
+                        <TableCell colSpan={2} />
+                        <TableCell colSpan={4} className="bg-muted/30 py-3">
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Контакты</p>
+                              <p>{detail.email}</p>
+                              <p>{detail.phone}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground mb-1">Текущие задачи</p>
+                              <ul className="list-disc list-inside space-y-0.5">
+                                {detail.tasks.map((t, i) => <li key={i}>{t}</li>)}
+                              </ul>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </Fragment>
+                );
+              })
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={5} className="text-right font-semibold">Итого (страница):</TableCell>
+              <TableCell className="text-right font-mono font-bold">
+                {fmt(paged.reduce((s, e) => s + e.salary, 0))}
+              </TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </div>
+
+      {/* Footer: pagination + status */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span>
+            {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, sorted.length)} из {sorted.length}
+          </span>
+          {activeRow !== null && (
+            <>
+              <span className="text-muted-foreground/50">|</span>
+              <span>Ячейка: [{activeRow + 1}, {activeCol + 1}]</span>
+            </>
+          )}
+          {copied && (
+            <>
+              <span className="text-muted-foreground/50">|</span>
+              <span className="text-success font-medium animate-in fade-in">✓ Скопировано</span>
+            </>
+          )}
+        </div>
+        {totalPages > 1 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <PaginationItem key={p}>
+                  <PaginationLink isActive={p === page} onClick={() => setPage(p)} className="cursor-pointer">{p}</PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  className={page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Export ─── */
 export function TableShowcase() {
   return (
@@ -766,6 +1153,7 @@ export function TableShowcase() {
         <TabsTrigger value="master">Master-Detail</TabsTrigger>
         <TabsTrigger value="lookup">Lookup-фильтр</TabsTrigger>
         <TabsTrigger value="keyboard">Клавиатура</TabsTrigger>
+        <TabsTrigger value="kitchen-sink">⚡ Всё вместе</TabsTrigger>
       </TabsList>
       <TabsContent value="default"><BasicTable /></TabsContent>
       <TabsContent value="striped"><BasicTable striped /></TabsContent>
@@ -779,6 +1167,7 @@ export function TableShowcase() {
       <TabsContent value="master"><MasterDetailTable /></TabsContent>
       <TabsContent value="lookup"><LookupFilterTable /></TabsContent>
       <TabsContent value="keyboard"><KeyboardNavTable /></TabsContent>
+      <TabsContent value="kitchen-sink"><KitchenSinkTable /></TabsContent>
     </Tabs>
   );
 }
