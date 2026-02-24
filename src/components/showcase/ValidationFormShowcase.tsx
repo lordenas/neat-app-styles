@@ -89,60 +89,57 @@ export function ValidationFormShowcase() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-lg" noValidate>
       {/* Name */}
-      <div className="space-y-1.5">
+      <div>
         <Label htmlFor="vf-name">Имя *</Label>
         <Input
           id="vf-name"
           placeholder="Иван Иванов"
+          className="mt-1.5"
           aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? "vf-name-err" : undefined}
+          aria-describedby="vf-name-err"
           {...register("name")}
         />
-        {errors.name && (
-          <p id="vf-name-err" className="text-xs text-destructive" role="alert">
-            {errors.name.message}
-          </p>
-        )}
+        <p id="vf-name-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.name?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Email */}
-      <div className="space-y-1.5">
+      <div>
         <Label htmlFor="vf-email">Email *</Label>
         <Input
           id="vf-email"
           type="email"
           placeholder="ivan@example.com"
+          className="mt-1.5"
           aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "vf-email-err" : undefined}
+          aria-describedby="vf-email-err"
           {...register("email")}
         />
-        {errors.email && (
-          <p id="vf-email-err" className="text-xs text-destructive" role="alert">
-            {errors.email.message}
-          </p>
-        )}
+        <p id="vf-email-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.email?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Phone */}
-      <div className="space-y-1.5">
+      <div>
         <Label htmlFor="vf-phone">Телефон *</Label>
         <Input
           id="vf-phone"
           type="tel"
           placeholder="+7 (999) 123-45-67"
+          className="mt-1.5"
           aria-invalid={!!errors.phone}
-          aria-describedby={errors.phone ? "vf-phone-err" : undefined}
+          aria-describedby="vf-phone-err"
           {...register("phone")}
         />
-        {errors.phone && (
-          <p id="vf-phone-err" className="text-xs text-destructive" role="alert">
-            {errors.phone.message}
-          </p>
-        )}
+        <p id="vf-phone-err" className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.phone?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Role select */}
-      <div className="space-y-1.5">
+      <div>
         <Label>Роль *</Label>
         <Controller
           name="role"
@@ -150,7 +147,7 @@ export function ValidationFormShowcase() {
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger
-                className="w-full"
+                className="w-full mt-1.5"
                 aria-invalid={!!errors.role}
                 onBlur={field.onBlur}
               >
@@ -165,41 +162,39 @@ export function ValidationFormShowcase() {
             </Select>
           )}
         />
-        {errors.role && (
-          <p className="text-xs text-destructive" role="alert">
-            {errors.role.message}
-          </p>
-        )}
+        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.role?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Avatar via FileUploadAvatar */}
-      <div className="space-y-1.5">
+      <div>
         <Label>Фото *</Label>
-        <Controller
-          name="avatar"
-          control={control}
-          render={({ field }) => (
-            <FileUploadAvatar
-              value={field.value as File[]}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-              name={field.name}
-              accept="image/png,image/jpeg,image/webp"
-              acceptLabel="PNG, JPG, WebP"
-              maxSizeMB={5}
-              label="Загрузите фото профиля"
-            />
-          )}
-        />
-        {errors.avatar && (
-          <p className="text-xs text-destructive" role="alert">
-            {errors.avatar.message}
-          </p>
-        )}
+        <div className="mt-1.5">
+          <Controller
+            name="avatar"
+            control={control}
+            render={({ field }) => (
+              <FileUploadAvatar
+                value={field.value as File[]}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                accept="image/png,image/jpeg,image/webp"
+                acceptLabel="PNG, JPG, WebP"
+                maxSizeMB={5}
+                label="Загрузите фото профиля"
+              />
+            )}
+          />
+        </div>
+        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.avatar?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Agreement checkbox */}
-      <div className="space-y-1.5">
+      <div>
         <Controller
           name="agree"
           control={control}
@@ -217,11 +212,9 @@ export function ValidationFormShowcase() {
             </div>
           )}
         />
-        {errors.agree && (
-          <p className="text-xs text-destructive" role="alert">
-            {errors.agree.message}
-          </p>
-        )}
+        <p className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
+          {errors.agree?.message ?? "\u00A0"}
+        </p>
       </div>
 
       {/* Actions */}
