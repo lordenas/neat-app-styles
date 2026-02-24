@@ -34,11 +34,6 @@ const stats = [
   { value: "100%", label: "Бесплатно" },
 ];
 
-const team = [
-  { name: "Алексей Иванов", role: "Основатель и разработчик", emoji: "👨‍💻" },
-  { name: "Мария Петрова", role: "Финансовый аналитик", emoji: "📊" },
-  { name: "Дмитрий Сидоров", role: "UX-дизайнер", emoji: "🎨" },
-];
 
 const About = () => (
   <div className="min-h-screen bg-background">
@@ -115,26 +110,27 @@ const About = () => (
         </div>
       </section>
 
-      {/* Team */}
+      {/* CTA */}
       <section className="py-16 sm:py-20">
-        <div className="container max-w-4xl space-y-10">
-          <div className="text-center space-y-3">
-            <h2 className="text-2xl sm:text-3xl font-bold">Команда</h2>
-            <p className="text-muted-foreground">Люди, которые стоят за CalcHub</p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {team.map(({ name, role, emoji }) => (
-              <Card key={name} className="text-center transition-all duration-200 hover:shadow-md">
-                <CardContent className="pt-8 pb-6 space-y-3">
-                  <div className="text-5xl">{emoji}</div>
-                  <div>
-                    <p className="font-semibold">{name}</p>
-                    <p className="text-sm text-muted-foreground">{role}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div className="container max-w-4xl">
+          <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-primary/20">
+            <CardContent className="pt-10 pb-10 text-center space-y-5">
+              <div className="mx-auto h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                <Calculator className="h-7 w-7" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold">Автоматизация расчётов любой сложности</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Нужен индивидуальный калькулятор для вашего бизнеса или нестандартная финансовая модель?
+                Мы разработаем решение под ваши задачи — от простых формул до сложных многофакторных расчётов.
+              </p>
+              <a
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Обратиться к нам
+              </a>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </main>
