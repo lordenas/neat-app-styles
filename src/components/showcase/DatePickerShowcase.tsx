@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { format, differenceInDays } from "date-fns";
 import { ru } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
@@ -9,15 +9,36 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Label } from "@/components/ui/label";
 import type { DateRange } from "react-day-picker";
 
+/* ── mask helpers ── */
+function applyDateMask(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 8);
+  let result = "";
+  for (let i = 0; i < digits.length; i++) {
+    if (i === 2 || i === 4) result += ".";
+    result += digits[i];
+  }
+  return result;
+}
+
+function parseMaskedDate(masked: string): Date | undefined {
+  if (masked.length !== 10) return undefined;
+  const [dd, mm, yyyy] = masked.split(".");
+  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
+  if (!d || !m || !y || m < 1 || m > 12 || d < 1 || d > 31) return undefined;
+  const date = new Date(y, m - 1, d);
+  if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
+  return undefined;
+}
+
 export function DatePickerShowcase() {
   const [date, setDate] = useState<Date>();
   const [range, setRange] = useState<DateRange | undefined>();
 
   return (
     <div className="space-y-6">
-      {/* Single date */}
+      {/* Single date — calendar only */}
       <div className="space-y-1.5">
-        <Label>Выберите дату</Label>
+        <Label>Только календарь</Label>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -45,6 +66,9 @@ export function DatePickerShowcase() {
           <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: ru })}</p>
         )}
       </div>
+
+      {/* Single date — input + calendar */}
+      <DateInputPicker />
 
       {/* Date range */}
       <div className="space-y-1.5">
@@ -92,6 +116,63 @@ export function DatePickerShowcase() {
 
       {/* Period picker */}
       <PeriodPicker />
+    </div>
+  );
+}
+
+function DateInputPicker() {
+  const [date, setDate] = useState<Date>();
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputValue(date ? format(date, "dd.MM.yyyy") : "");
+  }, [date]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const masked = applyDateMask(e.target.value);
+    setInputValue(masked);
+    const parsed = parseMaskedDate(masked);
+    if (parsed) setDate(parsed);
+  };
+
+  const handleCalendarSelect = (d: Date | undefined) => {
+    setDate(d);
+    setOpen(false);
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <Label>Ввод + календарь (с маской)</Label>
+      <Popover open={open} onOpenChange={setOpen}>
+        <div className="flex items-center w-[260px]">
+          <input
+            ref={inputRef}
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="дд.мм.гггг"
+            className="flex-1 min-w-0 rounded-l-md border border-r-0 border-input bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background transition-colors h-10 px-3 text-sm"
+          />
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="rounded-l-none border-l-0 px-2 shrink-0 h-10">
+              <CalendarIcon className="h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+        </div>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={handleCalendarSelect}
+            initialFocus
+            className="p-3 pointer-events-auto"
+          />
+        </PopoverContent>
+      </Popover>
+      {date && (
+        <p className="helper-text">Выбрано: {format(date, "d MMMM yyyy", { locale: ru })}</p>
+      )}
     </div>
   );
 }
