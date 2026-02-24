@@ -2,7 +2,7 @@ import * as React from "react";
 import { Upload, X, FileText, Image as ImageIcon, File, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 // ─── Shared Types ────────────────────────────────────────────
@@ -103,7 +103,7 @@ function filterValidFiles(fileList: FileList, types: string[], maxBytes: number,
   const valid: File[] = [];
   for (const file of Array.from(fileList)) {
     const error = validateFile(file, types, maxBytes, acceptLabel);
-    if (error) toast.error("Файл отклонён", { description: error });
+    if (error) toast({ title: "Файл отклонён", description: error, variant: "destructive" });
     else valid.push(file);
   }
   return valid;

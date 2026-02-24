@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import {
   Menubar,
   MenubarMenu,
@@ -28,10 +28,10 @@ export function MenubarShowcase() {
         <MenubarMenu>
           <MenubarTrigger>Файл</MenubarTrigger>
           <MenubarContent>
-            <MenubarItem onClick={() => toast.info("Новый файл")}>
+            <MenubarItem onClick={() => toast({ title: "Новый файл" })}>
               Новый <MenubarShortcut>⌘N</MenubarShortcut>
             </MenubarItem>
-            <MenubarItem onClick={() => toast.info("Открыть")}>
+            <MenubarItem onClick={() => toast({ title: "Открыть" })}>
               Открыть <MenubarShortcut>⌘O</MenubarShortcut>
             </MenubarItem>
             <MenubarSeparator />
@@ -44,7 +44,7 @@ export function MenubarShowcase() {
               </MenubarSubContent>
             </MenubarSub>
             <MenubarSeparator />
-            <MenubarItem onClick={() => toast.info("Сохранено")}>
+            <MenubarItem onClick={() => toast({ title: "Сохранено" })}>
               Сохранить <MenubarShortcut>⌘S</MenubarShortcut>
             </MenubarItem>
             <MenubarItem disabled>Сохранить как...</MenubarItem>

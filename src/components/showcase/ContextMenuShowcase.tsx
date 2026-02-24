@@ -14,7 +14,7 @@ import {
   ContextMenuLabel,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { Copy, Scissors, ClipboardPaste, Trash2, Share, Download, FolderOpen, FileText, Image, Code } from "lucide-react";
 
 export function ContextMenuShowcase() {
@@ -29,17 +29,17 @@ export function ContextMenuShowcase() {
           Правый клик здесь →
         </ContextMenuTrigger>
         <ContextMenuContent className="w-56">
-          <ContextMenuItem onClick={() => toast.info("Копировать")}>
+          <ContextMenuItem onClick={() => toast({ title: "Копировать" })}>
             <Copy className="mr-2 h-4 w-4" />
             Копировать
             <ContextMenuShortcut>⌘C</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem onClick={() => toast.info("Вырезать")}>
+          <ContextMenuItem onClick={() => toast({ title: "Вырезать" })}>
             <Scissors className="mr-2 h-4 w-4" />
             Вырезать
             <ContextMenuShortcut>⌘X</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem onClick={() => toast.info("Вставить")}>
+          <ContextMenuItem onClick={() => toast({ title: "Вставить" })}>
             <ClipboardPaste className="mr-2 h-4 w-4" />
             Вставить
             <ContextMenuShortcut>⌘V</ContextMenuShortcut>
@@ -52,7 +52,7 @@ export function ContextMenuShowcase() {
               Поделиться
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
-              <ContextMenuItem onClick={() => toast.info("Ссылка скопирована")}>Скопировать ссылку</ContextMenuItem>
+              <ContextMenuItem onClick={() => toast({ title: "Ссылка скопирована" })}>Скопировать ссылку</ContextMenuItem>
               <ContextMenuItem>Email</ContextMenuItem>
               <ContextMenuItem>Telegram</ContextMenuItem>
             </ContextMenuSubContent>
@@ -87,11 +87,11 @@ export function ContextMenuShowcase() {
           </ContextMenuRadioGroup>
 
           <ContextMenuSeparator />
-          <ContextMenuItem onClick={() => toast.info("Скачать")}>
+          <ContextMenuItem onClick={() => toast({ title: "Скачать" })}>
             <Download className="mr-2 h-4 w-4" />
             Скачать
           </ContextMenuItem>
-          <ContextMenuItem className="text-destructive" onClick={() => toast.error("Удалено")}>
+          <ContextMenuItem className="text-destructive" onClick={() => toast({ title: "Удалено", variant: "destructive" })}>
             <Trash2 className="mr-2 h-4 w-4" />
             Удалить
             <ContextMenuShortcut>⌘⌫</ContextMenuShortcut>

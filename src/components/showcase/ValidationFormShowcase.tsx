@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -80,7 +80,8 @@ export function ValidationFormShowcase() {
   const onSubmit = async (data: FormValues) => {
     // Simulate async submit
     await new Promise((r) => setTimeout(r, 1000));
-    toast.success("Форма отправлена", {
+    toast({
+      title: "Форма отправлена",
       description: `${data.name} (${data.email})`,
     });
     reset();
