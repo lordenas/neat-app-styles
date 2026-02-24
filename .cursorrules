@@ -218,6 +218,216 @@ tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
 - Пустые состояния: текст + иконка + CTA, не пустой экран
 - 404: перенаправляй на `/404` с кнопкой «На главную»
 
+## SEO-правила (Google + Яндекс)
+
+### Критические требования
+- ❌ НЕ создавай страницу без `<Helmet>` (react-helmet-async)
+- ❌ НЕ дублируй `<title>` и `<h1>` дословно — они должны быть близки по смыслу, но различаться
+- ❌ НЕ оставляй страницу без JSON-LD микроразметки
+- ❌ НЕ используй `<div>` где подходит семантический тег (`<main>`, `<section>`, `<article>`, `<nav>`, `<aside>`, `<header>`, `<footer>`)
+- ❌ НЕ забывай `alt` для всех `<img>` (описательный, с ключевым словом)
+- ✅ Каждая страница — уникальный `<title>` (≤55 символов) + `<meta name="description">` (≤155 символов)
+- ✅ Один `<h1>` на страницу, содержит основной ключевой запрос
+- ✅ `canonical` URL на каждой странице
+
+### Meta-теги — шаблон Helmet
+```tsx
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  {/* Основные */}
+  <title>Калькулятор кредита онлайн — рассчитать платёж 2025</title>
+  <meta name="description" content="Рассчитайте ежемесячный платёж, переплату и график погашения. Аннуитетный и дифференцированный расчёт." />
+  <link rel="canonical" href="https://site.com/credit-calculator" />
+
+  {/* Языковые версии */}
+  <link rel="alternate" hrefLang="ru" href="https://site.com/ru/credit-calculator" />
+  <link rel="alternate" hrefLang="en" href="https://site.com/en/credit-calculator" />
+  <link rel="alternate" hrefLang="x-default" href="https://site.com/credit-calculator" />
+
+  {/* Open Graph */}
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Калькулятор кредита — рассчитать платёж" />
+  <meta property="og:description" content="Расчёт ежемесячного платежа и переплаты по кредиту" />
+  <meta property="og:image" content="https://site.com/og/credit-calculator.jpg" />
+  <meta property="og:url" content="https://site.com/credit-calculator" />
+  <meta property="og:locale" content="ru_RU" />
+
+  {/* Twitter Card */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Калькулятор кредита онлайн" />
+  <meta name="twitter:description" content="Рассчитайте кредит за 30 секунд" />
+  <meta name="twitter:image" content="https://site.com/og/credit-calculator.jpg" />
+
+  {/* Яндекс */}
+  <meta name="yandex-verification" content="VERIFICATION_CODE" />
+</Helmet>
+```
+
+### JSON-LD микроразметка — шаблоны
+
+#### Калькулятор (WebApplication)
+```tsx
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Кредитный калькулятор",
+  "description": "Онлайн расчёт ежемесячного платежа по кредиту",
+  "url": "https://site.com/credit-calculator",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+  "inLanguage": ["ru", "en"],
+  "author": { "@type": "Organization", "name": "SiteName" }
+})}</script>
+```
+
+#### Хлебные крошки (BreadcrumbList)
+```tsx
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Главная", "item": "https://site.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Калькулятор кредита", "item": "https://site.com/credit-calculator" }
+  ]
+})}</script>
+```
+
+#### FAQ (FAQPage)
+```tsx
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "Как рассчитать ежемесячный платёж?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Введите сумму, ставку и срок. Калькулятор автоматически рассчитает платёж."
+    }
+  }]
+})}</script>
+```
+
+#### HowTo — пошаговые инструкции
+```tsx
+<script type="application/ld+json">{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Как рассчитать кредит",
+  "step": [
+    { "@type": "HowToStep", "position": 1, "name": "Укажите сумму", "text": "Введите желаемую сумму кредита" },
+    { "@type": "HowToStep", "position": 2, "name": "Выберите срок", "text": "Укажите срок в месяцах" },
+    { "@type": "HowToStep", "position": 3, "name": "Получите результат", "text": "Нажмите «Рассчитать»" }
+  ]
+})}</script>
+```
+
+### Семантическая HTML-структура
+```tsx
+<main>
+  <nav aria-label="Breadcrumb"><Breadcrumb>...</Breadcrumb></nav>
+  <article>
+    <header>
+      <h1>Калькулятор кредита онлайн</h1>
+      <p>Краткое описание с ключевыми словами</p>
+    </header>
+    <section aria-label="Параметры расчёта">{/* Форма */}</section>
+    <section aria-label="Результаты"><h2>Результаты</h2></section>
+    <section aria-label="Инструкция"><h2>Как пользоваться</h2></section>
+    <section aria-label="Сравнение"><h2>Сравнение типов платежей</h2></section>
+    <section aria-label="FAQ"><h2>Вопросы и ответы</h2><Accordion>...</Accordion></section>
+  </article>
+</main>
+```
+
+### Мультиязычность (hreflang)
+- `<link rel="alternate" hrefLang="ru" href="..." />` на каждой странице
+- Обязательно `hrefLang="x-default"` — версия по умолчанию
+- URL: `/ru/calculator` и `/en/calculator` (или поддомены)
+- `<html lang="ru">` в `index.html`
+- JSON-LD: `"inLanguage": ["ru", "en"]`
+
+### Яндекс-специфичные правила
+- `<meta name="yandex-verification">` — верификация
+- SPA хуже индексируется → pre-rendering или `<meta name="fragment" content="!">`
+- Поддерживает JSON-LD schema.org — те же схемы что для Google
+- `robots.txt`: обязательно `Host:` и `Sitemap:`
+- Поведенческие факторы: быстрая загрузка + удобный UX критичны
+- Турбо-страницы не для SPA-калькуляторов
+
+### Google-специфичные правила
+- Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1
+- `loading="lazy"` для изображений ниже fold
+- `<link rel="preconnect">` для внешних ресурсов
+- Валидация: https://search.google.com/test/rich-results
+- `<meta name="robots" content="index, follow">`
+
+### SEO-контент под калькулятором
+```
+1. Иллюстрация (img с alt + ключевое слово)
+2. "Как пользоваться" — <h2> + <ol> пошагово
+3. Сравнение — 2 Card: "Хороший" vs "Плохой" пример
+4. Информационный блок — <h2> + <p> с ключами
+5. FAQ — <h2> + Accordion
+```
+
+### Изображения
+- WebP (с JPEG fallback), SVG для иконок
+- `alt` описательный, 5-15 слов, с ключевым словом
+- `width` + `height` явно (избежать CLS)
+- `loading="lazy"` ниже fold
+- OG-изображения: 1200×630px, JPG, ≤300KB
+
+### sitemap.xml (мультиязычный)
+```xml
+<url>
+  <loc>https://site.com/credit-calculator</loc>
+  <lastmod>2025-01-15</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+  <xhtml:link rel="alternate" hreflang="ru" href="https://site.com/ru/credit-calculator"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://site.com/en/credit-calculator"/>
+</url>
+```
+
+### robots.txt
+```
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Sitemap: https://site.com/sitemap.xml
+Host: https://site.com
+```
+
+### Чеклист SEO-аудита страницы
+- [ ] `<title>` уникальный ≤55 символов, содержит ключ
+- [ ] `<meta description>` ≤155 символов, с CTA
+- [ ] `<link rel="canonical">` на каноничный URL
+- [ ] `hreflang` для всех языков + `x-default`
+- [ ] Один `<h1>` с ключевым словом
+- [ ] Иерархия H1 → H2 → H3 без пропусков
+- [ ] JSON-LD: WebApplication + BreadcrumbList + FAQPage
+- [ ] Все `<img>`: `alt`, `width`, `height`, `loading="lazy"`
+- [ ] Семантические теги: `<main>`, `<article>`, `<section>`, `<nav>`
+- [ ] OG + Twitter Card заполнены
+- [ ] `robots.txt` с `Sitemap` и `Host`
+- [ ] Страница в `sitemap.xml` с `lastmod`
+- [ ] Core Web Vitals в зелёной зоне
+- [ ] Контент: инструкция + сравнение + FAQ
+
+### Типичные SEO-ошибки
+- ❌ Одинаковый `<title>` на всех страницах
+- ❌ `<h1>` внутри карточки (ломает иерархию)
+- ❌ Несколько `<h1>` на странице
+- ❌ `alt=""` на значимых изображениях
+- ❌ JSON-LD с синтаксическими ошибками
+- ❌ `canonical` на несуществующую страницу
+- ❌ Текст скрыт через `display:none` (санкции)
+- ❌ `meta keywords` (устарело)
+
 ## Полный справочник
 
 Смотри файл `COMPONENTS.md` для полного API каждого компонента с примерами.
