@@ -45,7 +45,7 @@ import { OTPInputShowcase } from "@/components/showcase/OTPInputShowcase";
 import { ContextMenuShowcase } from "@/components/showcase/ContextMenuShowcase";
 import { HoverCardShowcase } from "@/components/showcase/HoverCardShowcase";
 import { RatingShowcase } from "@/components/showcase/RatingShowcase";
-import { CarouselShowcase } from "@/components/showcase/CarouselShowcase";
+
 import { AlertDialogShowcase } from "@/components/showcase/AlertDialogShowcase";
 import { NavigationMenuShowcase } from "@/components/showcase/NavigationMenuShowcase";
 import { MenubarShowcase } from "@/components/showcase/MenubarShowcase";
@@ -58,7 +58,7 @@ import { PinInputShowcase } from "@/components/showcase/PinInputShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tag Input", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Charts", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Carousel", "Inline Edit", "OTP Input", "Pin Input", "Drawer", "Sheet", "Hover Card", "Scroll Area", "Aspect Ratio", "Sortable List", "Navigation Menu", "Menubar", "App Shell"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Combobox", "Multiselect", "Chips", "Tag Input", "Tabs", "Table", "DataTable", "Cards", "Stats Cards", "Rating", "Charts", "Date Pickers", "Date Range Picker", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Alert Dialog", "Dropdown Enhanced", "Context Menu", "Notifications", "Progress & Stepper", "Stepper", "Timeline", "Skeleton", "Accordion", "Copy", "Copy Button", "Empty State", "File Upload", "Pagination", "Command Palette", "Color Picker", "Inline Edit", "OTP Input", "Pin Input", "Drawer", "Sheet", "Hover Card", "Scroll Area", "Aspect Ratio", "Sortable List", "Navigation Menu", "Menubar", "App Shell"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр", "Валидация"] },
 ];
 
@@ -233,9 +233,6 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Alert Dialog" description="Блокирующий диалог подтверждения">
               <AlertDialogShowcase />
-            </ShowcaseSection>
-            <ShowcaseSection title="Carousel" description="Слайдер карточек">
-              <CarouselShowcase />
             </ShowcaseSection>
             <ShowcaseSection title="Navigation Menu" description="Mega-меню для лендингов">
               <NavigationMenuShowcase />
