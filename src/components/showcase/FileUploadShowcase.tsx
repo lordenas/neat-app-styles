@@ -48,6 +48,16 @@ export function FileUploadShowcase() {
           onChange={(files) => console.log("avatar:", files)}
         />
       </div>
+
+      {/* Disabled states */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-muted-foreground">Disabled</h4>
+        <div className="space-y-4">
+          <FileUploadDropzone accept="image/*" maxSizeMB={10} disabled />
+          <FileUploadButton accept="image/*" maxSizeMB={10} disabled />
+          <FileUploadAvatar accept="image/*" maxSizeMB={5} disabled />
+        </div>
+      </div>
     </div>
   );
 }
