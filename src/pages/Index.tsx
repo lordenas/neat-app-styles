@@ -17,10 +17,11 @@ import { MultiselectShowcase } from "@/components/showcase/MultiselectShowcase";
 import { ExperienceCalculator } from "@/components/showcase/ExperienceCalculator";
 import { FilterForm } from "@/components/showcase/FilterForm";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationShowcase } from "@/components/showcase/NotificationShowcase";
 
 const navGroups = [
   { label: "Токены", items: ["Typography", "Colors", "Spacing"] },
-  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts"] },
+  { label: "Компоненты", items: ["Buttons", "Inputs", "Selects", "Multiselect", "Chips", "Tabs", "Table", "Cards", "Date Pickers", "Slider & Tooltip", "Breadcrumbs & Links", "Modal & Alerts", "Notifications"] },
   { label: "Примеры", items: ["Калькулятор", "Фильтр"] },
 ];
 
@@ -108,6 +109,9 @@ const Index = () => {
             </ShowcaseSection>
             <ShowcaseSection title="Modal & Alerts" description="Диалоги и уведомления">
               <ModalAlertsShowcase />
+            </ShowcaseSection>
+            <ShowcaseSection title="Notifications" description="Toast-уведомления (Sonner)">
+              <NotificationShowcase />
             </ShowcaseSection>
           </div>
         </section>
