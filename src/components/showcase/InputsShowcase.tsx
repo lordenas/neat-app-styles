@@ -91,9 +91,23 @@ export function InputsShowcase() {
 
       <div>
         <p className="text-xs text-muted-foreground mb-3">Textarea</p>
-        <div className="space-y-1.5">
-          <Label htmlFor="textarea">Многострочное поле</Label>
-          <Textarea id="textarea" placeholder="Введите описание..." rows={3} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="textarea">Обычное поле</Label>
+            <Textarea id="textarea" placeholder="Введите описание..." rows={3} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="textarea-sm">Маленький размер (inputSize="sm")</Label>
+            <Textarea id="textarea-sm" inputSize="sm" placeholder="Компактное поле..." rows={2} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="textarea-err">С ошибкой</Label>
+            <Textarea id="textarea-err" error="Поле обязательно для заполнения" placeholder="Введите текст..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="textarea-ok">Без ошибки (место зарезервировано)</Label>
+            <Textarea id="textarea-ok" error="" placeholder="Ошибки нет, но место занято" />
+          </div>
         </div>
       </div>
     </div>
