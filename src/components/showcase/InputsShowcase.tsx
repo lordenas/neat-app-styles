@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Search, Mail, Calendar, DollarSign, Hash, MessageSquare, Lock, Loader2 } from "lucide-react";
 
 export function InputsShowcase() {
+  const [clearVal, setClearVal] = useState("Текст для очистки");
+  const [clearSearch, setClearSearch] = useState("");
   return (
     <div className="space-y-6">
       <div>
@@ -112,6 +115,20 @@ export function InputsShowcase() {
           <div className="space-y-1.5">
             <Label>Input с loading + иконка</Label>
             <Input loading inputStart={<Mail />} placeholder="Валидация email..." />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs text-muted-foreground mb-3">Очистка (clearable)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <Label>Clearable с значением</Label>
+            <Input clearable value={clearVal} onChange={e => setClearVal(e.target.value)} placeholder="Введите текст..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Поиск с clearable</Label>
+            <Input clearable inputStart={<Search />} value={clearSearch} onChange={e => setClearSearch(e.target.value)} placeholder="Поиск..." />
           </div>
         </div>
       </div>
