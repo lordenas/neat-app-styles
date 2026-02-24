@@ -128,3 +128,7 @@ export { Skeleton } from "./skeleton";
 
 /** Аватар с фоллбэком */
 export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+
+/** Загрузчик файлов — три варианта (dropzone, кнопка, аватар) */
+export { FileUploadDropzone, FileUploadButton, FileUploadAvatar } from "./file-upload";
+export type { FileUploadBaseProps, FileUploadDropzoneProps, FileUploadButtonProps, FileUploadAvatarProps, UploadedFile } from "./file-upload";
