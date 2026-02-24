@@ -1,0 +1,166 @@
+{
+  "site": {
+    "name": "CalcHub",
+    "tagline": "Financial calculators for every country",
+    "description": "Accurate calculations using banking formulas for 20+ countries"
+  },
+  "nav": {
+    "home": "Home",
+    "calculators": "Calculators",
+    "skipToContent": "Skip to content"
+  },
+  "hero": {
+    "title": "Financial Calculators",
+    "subtitle": "for every country",
+    "description": "Loans, mortgages, deposits, taxes — accurate calculations using banking formulas adapted to local regulations.",
+    "cta": "Start calculating",
+    "stats": {
+      "calculators": "20+ calculators",
+      "countries": "20+ countries",
+      "languages": "12 languages",
+      "free": "Free"
+    }
+  },
+  "categories": {
+    "title": "Calculator Categories",
+    "subtitle": "Choose a section to quickly find the right calculator",
+    "credit": {
+      "title": "Loans & Credits",
+      "description": "Loan calculator with early repayment, annuity and differentiated payments",
+      "count": "5 calculators"
+    },
+    "mortgage": {
+      "title": "Mortgage",
+      "description": "Mortgage calculation with down payment, refinancing options",
+      "count": "4 calculators"
+    },
+    "deposit": {
+      "title": "Deposits & Savings",
+      "description": "Deposit yield, compound interest, savings accounts",
+      "count": "3 calculators"
+    },
+    "tax": {
+      "title": "Taxes & Salary",
+      "description": "Income tax, net salary, tax deductions by country",
+      "count": "4 calculators"
+    },
+    "business": {
+      "title": "Business",
+      "description": "Profitability, break-even point, ROI, margins",
+      "count": "3 calculators"
+    },
+    "currency": {
+      "title": "Currency & Investments",
+      "description": "Currency converter, investment returns, inflation",
+      "count": "3 calculators"
+    }
+  },
+  "popular": {
+    "title": "Popular Calculators",
+    "subtitle": "Most requested financial planning tools",
+    "creditCalc": {
+      "title": "Loan Calculator",
+      "description": "Calculate monthly payment, overpayment and repayment schedule with early payments"
+    },
+    "mortgageCalc": {
+      "title": "Mortgage Calculator",
+      "description": "Full mortgage calculation with down payment, insurance and refinancing"
+    },
+    "depositCalc": {
+      "title": "Deposit Calculator",
+      "description": "Find out deposit yield with capitalization and partial withdrawal"
+    },
+    "salaryCalc": {
+      "title": "Salary Calculator",
+      "description": "Calculate net salary after all taxes and contributions"
+    },
+    "refinanceCalc": {
+      "title": "Refinancing",
+      "description": "Evaluate the benefit of refinancing your current loan at a new rate"
+    },
+    "roiCalc": {
+      "title": "ROI Calculator",
+      "description": "Calculate return on investment and project payback period"
+    }
+  },
+  "features": {
+    "title": "Why CalcHub?",
+    "accurate": {
+      "title": "Accurate Formulas",
+      "description": "We use banking formulas approved by regulators"
+    },
+    "local": {
+      "title": "Country-Specific",
+      "description": "Taxes, rates and laws adapted to your region"
+    },
+    "free": {
+      "title": "Completely Free",
+      "description": "No registration, no limits, no ads"
+    },
+    "private": {
+      "title": "Private",
+      "description": "All calculations happen in your browser"
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "disclaimer": "Calculation results are for informational purposes only and do not constitute financial advice."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ar": "العربية",
+    "pes": "فارسی",
+    "pl": "Polski",
+    "uk": "Українська",
+    "es": "Español",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "sv": "Svenska"
+  },
+  "country": {
+    "label": "Country",
+    "global": "Global",
+    "ru": "Russia",
+    "us": "USA",
+    "uk": "United Kingdom",
+    "de": "Germany",
+    "fr": "France",
+    "iran": "Iran",
+    "pl": "Poland",
+    "ua": "Ukraine",
+    "es": "Spain",
+    "kz": "Kazakhstan",
+    "br": "Brazil",
+    "in": "India",
+    "by": "Belarus",
+    "uz": "Uzbekistan",
+    "eg": "Egypt",
+    "ae": "UAE",
+    "sa": "Saudi Arabia",
+    "qa": "Qatar",
+    "nl": "Netherlands",
+    "se": "Sweden"
+  },
+  "accessibility": {
+    "toggleLabel": "Accessibility mode",
+    "toggleDescription": "Apply accessibility profile for your region",
+    "openMenu": "Open accessibility settings",
+    "profileLabel": "Accessibility profile",
+    "contrastHigh": "High contrast",
+    "contrastDefault": "Default contrast",
+    "contrastBlackWhite": "Black & white",
+    "motionReduce": "Reduce motion",
+    "motionDefault": "Default animation",
+    "fontScaleLarge": "Large text",
+    "fontScaleDefault": "Default text size",
+    "fontScaleXLarge": "Extra large text",
+    "reset": "Reset",
+    "contrast": "Contrast",
+    "motion": "Motion",
+    "fontSize": "Font size"
+  }
+}
