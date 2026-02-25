@@ -89,15 +89,17 @@ const Index = () => {
     if (!search.trim()) return popularCalcs;
     const q = search.toLowerCase();
     return allCalcsWithPaths.filter((c) => {
-      return c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
+      const name = t(`calculatorNames.${c.id}`, c.name).toLowerCase();
+      const desc = t(`calculatorDescriptions.${c.id}`, c.description).toLowerCase();
+      return name.includes(q) || desc.includes(q);
     });
-  }, [search]);
+  }, [search, t]);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: t("site.name"),
-    description: t("site.description"),
+    name: t("site.name", "CalcHub"),
+    description: t("site.description", ""),
     url: "https://neat-app-styles.lovable.app",
     inLanguage: i18n.language,
     potentialAction: {
@@ -110,10 +112,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{t("hero.title")} — {t("site.name")}</title>
-        <meta name="description" content={t("site.description")} />
-        <meta property="og:title" content={`${t("hero.title")} — ${t("site.name")}`} />
-        <meta property="og:description" content={t("site.description")} />
+        <title>{t("home.hero.title", t("site.name", "CalcHub"))} — {t("site.name", "CalcHub")}</title>
+        <meta name="description" content={t("site.description", "")} />
+        <meta property="og:title" content={`${t("home.hero.title")} — ${t("site.name", "CalcHub")}`} />
+        <meta property="og:description" content={t("site.description", "")} />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="https://neat-app-styles.lovable.app/" />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
@@ -124,7 +126,6 @@ const Index = () => {
       <main id="main-content">
         {/* Hero */}
         <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
-          {/* Decorative blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
             <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/[0.06] blur-3xl" />
             <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-info/[0.05] blur-3xl" />
@@ -137,22 +138,21 @@ const Index = () => {
             </Badge>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-              {t("hero.title")}{" "}
-              <span className="text-primary">{t("hero.subtitle")}</span>
+              {t("home.hero.title")}{" "}
+              <span className="text-primary">{t("home.hero.subtitle")}</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              {t("hero.description")}
+              {t("home.hero.description")}
             </p>
 
-            {/* Search */}
             <div className="max-w-lg mx-auto relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t("hero.searchPlaceholder")}
+                placeholder={t("home.searchPlaceholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10 h-12 text-base bg-card border-border-strong shadow-sm"
-                aria-label={t("hero.searchPlaceholder")}
+                aria-label={t("home.searchPlaceholder")}
               />
             </div>
 
@@ -198,32 +198,34 @@ const Index = () => {
         <section id="categories" className="py-16 sm:py-20 scroll-mt-20">
           <div className="container max-w-6xl space-y-10">
             <div className="text-center space-y-3">
-              <h2 className="text-2xl sm:text-3xl">{t("categories.title")}</h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">{t("categories.subtitle")}</p>
+              <h2 className="text-2xl sm:text-3xl">{t("home.categories.title")}</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">{t("home.categories.subtitle")}</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {calcCategories.map((cat, i) => {
                 const calcs = calculatorsByCategory[cat.id] ?? [];
                 return (
-                <Link key={cat.id} to={`/categories/${cat.id}`} className="group" style={{ animationDelay: `${i * 60}ms` }}>
-                  <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer border-border">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
-                          {cat.icon ? iconMap[cat.icon] : <Calculator className="h-6 w-6" />}
+                  <Link key={cat.id} to={`/categories/${cat.id}`} className="group" style={{ animationDelay: `${i * 60}ms` }}>
+                    <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer border-border">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
+                            {cat.icon ? iconMap[cat.icon] : <Calculator className="h-6 w-6" />}
+                          </div>
+                          <div className="min-w-0">
+                            <CardTitle className="text-base">{t(`category.${cat.id}`, cat.name)}</CardTitle>
+                            <span className="text-xs text-muted-foreground">
+                              {t("home.categories.count", { count: calcs.length, defaultValue: `${calcs.length}` })}
+                            </span>
+                          </div>
+                          <ArrowRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
                         </div>
-                        <div className="min-w-0">
-                          <CardTitle className="text-base">{cat.name}</CardTitle>
-                          <span className="text-xs text-muted-foreground">{calcs.length} калькуляторов</span>
-                        </div>
-                        <ArrowRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription>{cat.description}</CardDescription>
-                    </CardContent>
-                  </Card>
-                </Link>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription>{t(`categoryDescription.${cat.id}`, cat.description)}</CardDescription>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>
@@ -234,11 +236,11 @@ const Index = () => {
         <section className="py-16 sm:py-20 bg-[hsl(var(--section-bg))]">
           <div className="container max-w-6xl space-y-10">
             <div className="text-center space-y-3">
-              <h2 className="text-2xl sm:text-3xl">{t("popular.title")}</h2>
-              <p className="text-muted-foreground max-w-xl mx-auto">{t("popular.subtitle")}</p>
+              <h2 className="text-2xl sm:text-3xl">{t("home.popular.title")}</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto">{t("home.popular.subtitle")}</p>
             </div>
             {filteredCalcs.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">{t("popular.noResults")}</p>
+              <p className="text-center text-muted-foreground py-8">{t("home.popular.noResults")}</p>
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCalcs.map((calc) => (
@@ -250,13 +252,13 @@ const Index = () => {
                             <Calculator className="h-5 w-5" />
                           </div>
                           <CardTitle className="text-base group-hover:text-primary transition-colors">
-                            {calc.name}
+                            {t(`calculatorNames.${calc.id}`, calc.name)}
                           </CardTitle>
                           <ArrowRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <CardDescription>{calc.description}</CardDescription>
+                        <CardDescription>{t(`calculatorDescriptions.${calc.id}`, calc.description)}</CardDescription>
                       </CardContent>
                     </Card>
                   </Link>
