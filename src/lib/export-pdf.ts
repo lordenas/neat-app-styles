@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import { getCyrillicFont } from "./cyrillic-font";
 
 interface ScheduleRow {
   n: number;
@@ -24,6 +25,13 @@ function fmt(n: number) {
 
 export async function exportCalculationPdf(data: PdfExportData) {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+  // Load and register Cyrillic font
+  const fontBase64 = await getCyrillicFont();
+  doc.addFileToVFS("Roboto-Regular.ttf", fontBase64);
+  doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+  doc.setFont("Roboto", "normal");
+
   const pageW = doc.internal.pageSize.getWidth();
   const margin = 14;
   const contentW = pageW - margin * 2;
@@ -40,8 +48,6 @@ export async function exportCalculationPdf(data: PdfExportData) {
   y += 6;
 
   // --- Summary cards ---
-  doc.setFontSize(9);
-  doc.setTextColor(100, 100, 100);
   const cols = 3;
   const cellW = contentW / cols;
 
@@ -62,7 +68,7 @@ export async function exportCalculationPdf(data: PdfExportData) {
 
   y += Math.ceil(data.summary.length / cols) * 16 + 4;
 
-  // --- Pie chart as text breakdown ---
+  // --- Breakdown bar ---
   doc.setDrawColor(200, 200, 200);
   doc.line(margin, y, pageW - margin, y);
   y += 6;
@@ -76,13 +82,12 @@ export async function exportCalculationPdf(data: PdfExportData) {
   const principalPct = ((data.debtBreakdown.principal / total) * 100).toFixed(1);
   const interestPct = ((data.debtBreakdown.interest / total) * 100).toFixed(1);
 
-  // Principal bar
   const barH = 8;
   const principalW = (data.debtBreakdown.principal / total) * contentW;
 
-  doc.setFillColor(76, 175, 80); // green
+  doc.setFillColor(76, 175, 80);
   doc.rect(margin, y, principalW, barH, "F");
-  doc.setFillColor(239, 83, 80); // red
+  doc.setFillColor(239, 83, 80);
   doc.rect(margin + principalW, y, contentW - principalW, barH, "F");
   y += barH + 4;
 
