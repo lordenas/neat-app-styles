@@ -381,8 +381,11 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   };
 
   return (
-    <CalculatorLayout calculatorId="credit-early-repayment" categoryName="Финансы" categoryPath="/#categories">
-      <div className="space-y-6">
+    <CalculatorLayout
+      calculatorId="credit-early-repayment"
+      categoryName="Финансы"
+      categoryPath="/#categories"
+      title={
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             {t("calculatorNames.credit-early-repayment")}
@@ -391,7 +394,9 @@ export default function CreditEarlyRepaymentCalculatorPage() {
             {t("calculatorDescriptions.credit-early-repayment")}
           </p>
         </div>
-
+      }
+    >
+      <div className="space-y-6">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* ── Left column ── */}
           <div className="flex-1 min-w-0 space-y-5">

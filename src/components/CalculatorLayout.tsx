@@ -18,6 +18,7 @@ type CalculatorLayoutProps = {
   calculatorId: string;
   categoryName?: string;
   categoryPath?: string;
+  title?: ReactNode;
   children: ReactNode;
 };
 
@@ -25,6 +26,7 @@ export function CalculatorLayout({
   calculatorId,
   categoryName,
   categoryPath,
+  title,
   children,
 }: CalculatorLayoutProps) {
   const meta = calculatorMetadata[calculatorId] ?? {
@@ -96,6 +98,7 @@ export function CalculatorLayout({
 
       <main id="main-content" className="flex-grow">
         <div className="container max-w-6xl py-8">
+          {title && <div className="mb-6">{title}</div>}
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Main content */}
             <div className="flex-1 min-w-0">
