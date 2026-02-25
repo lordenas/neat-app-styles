@@ -147,12 +147,12 @@ const Index = () => {
             </div>
 
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-              <Link to="/credit-calculator">
+              <a href="#categories">
                 <Button size="lg" className="gap-2 shadow-md">
                   {t("hero.cta")}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
-              </Link>
+              </a>
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 pt-2">
@@ -185,7 +185,7 @@ const Index = () => {
         </section>
 
         {/* Categories */}
-        <section className="py-16 sm:py-20">
+        <section id="categories" className="py-16 sm:py-20 scroll-mt-20">
           <div className="container max-w-6xl space-y-10">
             <div className="text-center space-y-3">
               <h2 className="text-2xl sm:text-3xl">{t("categories.title")}</h2>
@@ -298,12 +298,12 @@ const Index = () => {
           <div className="container max-w-3xl text-center space-y-8">
             <h2 className="text-2xl sm:text-3xl">{t("cta.title")}</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">{t("cta.description")}</p>
-            <Link to="/credit-calculator">
+            <a href="#categories">
               <Button size="lg" className="gap-2 shadow-md">
                 {t("cta.button")}
                 <ArrowRight className="h-4 w-4" />
               </Button>
-            </Link>
+            </a>
           </div>
         </section>
       </main>
