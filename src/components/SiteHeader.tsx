@@ -34,8 +34,8 @@ export function SiteHeader() {
   const [country, setCountry] = useState("global");
 
   const currentLang = i18n.language;
-  const availableLangs = languages.filter((l) => l === "ru" || l === "en");
-  const unavailableLangs = languages.filter((l) => l !== "ru" && l !== "en");
+  const availableLangs = [...languages];
+  const unavailableLangs: string[] = [];
 
   return (
     <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
