@@ -198,8 +198,6 @@ function SectionToggle({ title, icon, count, children, defaultOpen = false }: {
 
 /* ───────────── Main page ───────────── */
 
-let nextId = 1;
-
 function addMonths(date: Date, months: number): Date {
   const d = new Date(date);
   d.setMonth(d.getMonth() + months);
@@ -209,6 +207,8 @@ function addMonths(date: Date, months: number): Date {
 export default function CreditEarlyRepaymentCalculatorPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const nextIdRef = React.useRef(1);
+  const nextId = () => nextIdRef.current++;
   const navigate = useNavigate();
 
   // --- Form state ---
@@ -264,7 +264,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   /* ── early payments CRUD ── */
   const addEarlyPayment = () => {
     setEarlyPayments((p) => [...p, {
-      id: nextId++,
+      id: nextId(),
       date: format(addMonths(issueDate, 6), "dd.MM.yyyy"),
       amount: 300_000,
       mode: "reduce_term",
@@ -278,7 +278,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   /* ── rate changes CRUD ── */
   const addRateChange = () => {
     setRateChanges((p) => [...p, {
-      id: nextId++,
+      id: nextId(),
       date: format(addMonths(issueDate, 12), "dd.MM.yyyy"),
       ratePercent: rate,
       recalcMode: "payment",
@@ -291,7 +291,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   /* ── credit holidays CRUD ── */
   const addCreditHoliday = () => {
     setCreditHolidays((p) => [...p, {
-      id: nextId++,
+      id: nextId(),
       startDate: format(addMonths(issueDate, 3), "dd.MM.yyyy"),
       months: 3,
       type: "interest",
