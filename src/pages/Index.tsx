@@ -295,7 +295,7 @@ const Index = () => {
 
         {/* CTA */}
         <section className="py-16 sm:py-20">
-          <div className="container max-w-3xl text-center space-y-6">
+          <div className="container max-w-3xl text-center space-y-8">
             <h2 className="text-2xl sm:text-3xl">{t("cta.title")}</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">{t("cta.description")}</p>
             <Link to="/credit-calculator">
