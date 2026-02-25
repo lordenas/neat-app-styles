@@ -1,13 +1,12 @@
 import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
-
 import { TooltipProvider } from "@/components/ui/tooltip";
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AuthProvider } from "@/hooks/useAuth";
 import "@/i18n";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -20,9 +19,9 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const Faq = lazy(() => import("./pages/FAQ"));
 const Partners = lazy(() => import("./pages/Partners"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-
-
 
 function PageSkeleton() {
   return (
@@ -37,11 +36,11 @@ function PageSkeleton() {
 const App = () => (
   <HelmetProvider>
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-        <TooltipProvider>
-          <Toaster />
-          
-          <ErrorBoundary>
-            <BrowserRouter>
+      <TooltipProvider>
+        <Toaster />
+        <ErrorBoundary>
+          <BrowserRouter>
+            <AuthProvider>
               <Suspense fallback={<PageSkeleton />}>
                 <Routes>
                   <Route path="/" element={<Index />} />
@@ -53,13 +52,16 @@ const App = () => (
                   <Route path="/glossary" element={<Glossary />} />
                   <Route path="/faq" element={<Faq />} />
                   <Route path="/partners" element={<Partners />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/showcase" element={<Showcase />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
-            </BrowserRouter>
-          </ErrorBoundary>
-        </TooltipProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </ErrorBoundary>
+      </TooltipProvider>
     </ThemeProvider>
   </HelmetProvider>
 );

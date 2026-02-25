@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail } from "lucide-react";
+import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail, User, LogIn } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,6 +30,7 @@ const countryFlags: Record<string, string> = {
 
 export function SiteHeader() {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const [country, setCountry] = useState("global");
 
   const currentLang = i18n.language;
@@ -126,6 +128,12 @@ export function SiteHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
 
+          <Link to={user ? "/dashboard" : "/auth"}>
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
+              {user ? <User className="h-3.5 w-3.5" /> : <LogIn className="h-3.5 w-3.5" />}
+              <span className="hidden sm:inline">{user ? "Кабинет" : "Войти"}</span>
+            </Button>
+          </Link>
           <AccessibilityMenu />
           <ThemeToggle />
         </div>
