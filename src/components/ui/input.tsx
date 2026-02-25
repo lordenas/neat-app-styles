@@ -228,10 +228,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (error !== undefined) {
       return (
-        <div>
+        <div className="relative">
           {renderInput()}
-          <p id={errorId} className="text-xs text-destructive mt-1.5 min-h-[1rem]" role="alert">
-            {error || "\u00A0"}
+          <p id={errorId} className="absolute left-0 top-full text-xs text-destructive mt-0.5 whitespace-nowrap" role="alert">
+            {error || ""}
           </p>
         </div>
       );
