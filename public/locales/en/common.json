@@ -942,7 +942,46 @@
   "auth": {
     "loginRequired": "Sign in required",
     "loginToSave": "You need to sign in to save calculations."
-  }
-}
+  },
+  "site": {
+    "name": "CalcHub",
+    "tagline": "Financial calculators for every country",
+    "description": "Accurate calculations using banking formulas for 20+ countries"
+  },
+  "hero": {
+    "title": "Financial Calculators",
+    "subtitle": "for every country",
+    "description": "Loans, mortgages, deposits, taxes — accurate calculations using banking formulas adapted to local regulations.",
+    "cta": "Start calculating",
+    "badge": "Free · No sign-up required",
+    "searchPlaceholder": "Find a calculator...",
+    "stats": { "calculators": "20+ calculators", "countries": "20+ countries", "languages": "12 languages", "free": "Free" }
+  },
+  "trust": {
+    "users": { "value": "150K+", "label": "Monthly users" },
+    "calculations": { "value": "2M+", "label": "Calculations made" },
+    "countries": { "value": "20+", "label": "Countries supported" },
+    "uptime": { "value": "99.9%", "label": "Service uptime" }
+  },
+  "features": {
+    "title": "Why CalcHub?",
+    "accurate": { "title": "Accurate Formulas", "description": "We use banking formulas approved by regulators" },
+    "local": { "title": "Country-Specific", "description": "Taxes, rates and laws adapted to your region" },
+    "free": { "title": "Completely Free", "description": "No registration, no limits, no ads" },
+    "private": { "title": "Private", "description": "All calculations happen in your browser" }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to the most common questions about CalcHub",
+    "faq1": { "q": "How accurate are CalcHub calculations?", "a": "We use banking formulas approved by financial regulators." },
+    "faq2": { "q": "Do I need to register?", "a": "No, all calculators are completely free and available without registration." },
+    "faq3": { "q": "How does CalcHub account for my country?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each country." },
+    "faq4": { "q": "Is it safe to enter financial data?", "a": "All calculations are performed locally in your browser." },
+    "faq5": { "q": "Can I use CalcHub on mobile?", "a": "Yes, CalcHub is fully responsive." }
+  },
+  "cta": {
+    "title": "Ready to calculate?",
+    "description": "Choose a calculator and get an accurate result in seconds.",
+    "button": "Go to calculator"
   }
 }
