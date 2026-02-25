@@ -36,6 +36,7 @@ import {
   calculateEarlyRepayment,
   type EarlyPaymentEntry,
   type RepaymentMode,
+  type RecurringFrequency,
   type RateChangeEntry,
   type CreditHolidayEntry,
 } from "@/lib/calculators/early-repayment";
@@ -267,6 +268,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       date: format(addMonths(issueDate, 6), "dd.MM.yyyy"),
       amount: 300_000,
       mode: "reduce_term",
+      recurring: false,
     }]);
   };
   const removeEarlyPayment = (id: number) => setEarlyPayments((p) => p.filter((r) => r.id !== id));
@@ -580,33 +582,73 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   defaultOpen={earlyPayments.length > 0}
                 >
                   {earlyPayments.map((ep) => (
-                    <div key={ep.id} className="flex items-center gap-2 flex-wrap">
-                      <DatePick
-                        small
-                        value={parseMaskedDateExt(ep.date)}
-                        onChange={(d) => updateEarlyPayment(ep.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
-                      />
-                      <Input
-                        type="text" inputSize="sm" placeholder="Сумма" className="w-28"
-                        value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
-                        onChange={(e) => {
-                          const digits = e.target.value.replace(/\D/g, "");
-                          updateEarlyPayment(ep.id, { amount: digits ? parseInt(digits) : 0 });
-                        }}
-                      />
-                      <Select
-                        value={ep.mode}
-                        onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
-                      >
-                        <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="reduce_term">Уменьшить срок</SelectItem>
-                          <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(ep.id)} aria-label="Удалить">
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
+                    <div key={ep.id} className="flex flex-col gap-1.5 pb-2 border-b border-border last:border-0">
+                      {/* Row 1: тип, дата, сумма, режим, удалить */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Select
+                          value={ep.recurring ? "recurring" : "once"}
+                          onValueChange={(v) => updateEarlyPayment(ep.id, {
+                            recurring: v === "recurring",
+                            ...(v === "recurring" && !ep.frequency ? { frequency: "monthly" as RecurringFrequency } : {}),
+                            ...(v === "recurring" && !ep.endDate ? { endDate: format(addMonths(issueDate, 12), "dd.MM.yyyy") } : {}),
+                          })}
+                        >
+                          <SelectTrigger className="h-8 text-xs w-28"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="once">Разовый</SelectItem>
+                            <SelectItem value="recurring">Регулярный</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <DatePick
+                          small
+                          value={parseMaskedDateExt(ep.date)}
+                          onChange={(d) => updateEarlyPayment(ep.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
+                        />
+                        <Input
+                          type="text" inputSize="sm" placeholder="Сумма" className="w-28"
+                          value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
+                          onChange={(e) => {
+                            const digits = e.target.value.replace(/\D/g, "");
+                            updateEarlyPayment(ep.id, { amount: digits ? parseInt(digits) : 0 });
+                          }}
+                        />
+                        <Select
+                          value={ep.mode}
+                          onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
+                        >
+                          <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="reduce_term">Уменьшить срок</SelectItem>
+                            <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(ep.id)} aria-label="Удалить">
+                          <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                        </Button>
+                      </div>
+                      {/* Row 2: поля регулярного платежа */}
+                      {ep.recurring && (
+                        <div className="flex items-center gap-2 flex-wrap pl-1">
+                          <span className="text-xs text-muted-foreground">по</span>
+                          <Select
+                            value={ep.frequency ?? "monthly"}
+                            onValueChange={(v) => updateEarlyPayment(ep.id, { frequency: v as RecurringFrequency })}
+                          >
+                            <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="monthly">каждый месяц</SelectItem>
+                              <SelectItem value="quarterly">каждый квартал</SelectItem>
+                              <SelectItem value="yearly">каждый год</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <span className="text-xs text-muted-foreground">до</span>
+                          <DatePick
+                            small
+                            value={parseMaskedDateExt(ep.endDate ?? "")}
+                            onChange={(d) => updateEarlyPayment(ep.id, { endDate: d ? format(d, "dd.MM.yyyy") : "" })}
+                          />
+                        </div>
+                      )}
                     </div>
                   ))}
                   <button type="button" onClick={addEarlyPayment}
