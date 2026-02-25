@@ -19,6 +19,7 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
@@ -26,12 +27,18 @@ import {
 import {
   Plus, Trash2, Info, Calculator, ChevronDown, ChevronRight,
   TrendingDown, CalendarIcon, Printer, FileDown, Save,
-  CheckCircle2, XCircle,
+  CheckCircle2, XCircle, TrendingUp, CalendarOff,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-import { calculateEarlyRepayment, type EarlyPaymentEntry, type RepaymentMode } from "@/lib/calculators/early-repayment";
+import {
+  calculateEarlyRepayment,
+  type EarlyPaymentEntry,
+  type RepaymentMode,
+  type RateChangeEntry,
+  type CreditHolidayEntry,
+} from "@/lib/calculators/early-repayment";
 
 /* ───────────── helpers ───────────── */
 
@@ -71,6 +78,14 @@ function parseMaskedDate(masked: string): Date | undefined {
   const date = new Date(y, m - 1, d);
   if (date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) return date;
   return undefined;
+}
+
+function parseMaskedDateExt(s: string): Date | undefined {
+  if (!s || s.length !== 10) return undefined;
+  const [dd, mm, yyyy] = s.split(".");
+  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
+  if (!d || !m || !y) return undefined;
+  return new Date(y, m - 1, d);
 }
 
 function DatePick({
@@ -184,6 +199,12 @@ function SectionToggle({ title, icon, count, children, defaultOpen = false }: {
 
 let nextId = 1;
 
+function addMonths(date: Date, months: number): Date {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
+}
+
 export default function CreditEarlyRepaymentCalculatorPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -196,6 +217,15 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   const [termUnit, setTermUnit] = useState<"years" | "months">("years");
   const [issueDate, setIssueDate] = useState<Date>(new Date(2026, 1, 22));
   const [earlyPayments, setEarlyPayments] = useState<EarlyPaymentEntry[]>([]);
+
+  // --- 5 new features ---
+  const [rateChanges, setRateChanges] = useState<RateChangeEntry[]>([]);
+  const [creditHolidays, setCreditHolidays] = useState<CreditHolidayEntry[]>([]);
+  const [firstPayInterest, setFirstPayInterest] = useState(false);
+  const [roundPay, setRoundPay] = useState(false);
+  const [roundTo, setRoundTo] = useState<"rub" | "hundred">("rub");
+  const [transferWeekend, setTransferWeekend] = useState(false);
+  const [transferDir, setTransferDir] = useState<"next" | "prev">("next");
 
   // --- Save dialog ---
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
@@ -217,9 +247,20 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   // --- Calculation ---
   const result = useMemo(() => {
     if (loanAmount <= 0 || termMonths <= 0 || rate <= 0) return null;
-    return calculateEarlyRepayment(loanAmount, rate, termMonths, issueDate, earlyPayments);
-  }, [loanAmount, rate, termMonths, issueDate, earlyPayments]);
+    return calculateEarlyRepayment(
+      loanAmount, rate, termMonths, issueDate,
+      earlyPayments, rateChanges, creditHolidays,
+      firstPayInterest, roundPay, roundTo,
+      transferWeekend, transferDir,
+    );
+  }, [
+    loanAmount, rate, termMonths, issueDate,
+    earlyPayments, rateChanges, creditHolidays,
+    firstPayInterest, roundPay, roundTo,
+    transferWeekend, transferDir,
+  ]);
 
+  /* ── early payments CRUD ── */
   const addEarlyPayment = () => {
     setEarlyPayments((p) => [...p, {
       id: nextId++,
@@ -228,20 +269,37 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       mode: "reduce_term",
     }]);
   };
-
-  function addMonths(date: Date, months: number): Date {
-    const d = new Date(date);
-    d.setMonth(d.getMonth() + months);
-    return d;
-  }
-
-  const removeEarlyPayment = (id: number) =>
-    setEarlyPayments((p) => p.filter((r) => r.id !== id));
-
+  const removeEarlyPayment = (id: number) => setEarlyPayments((p) => p.filter((r) => r.id !== id));
   const updateEarlyPayment = (id: number, patch: Partial<EarlyPaymentEntry>) =>
     setEarlyPayments((p) => p.map((r) => (r.id === id ? { ...r, ...patch } : r)));
 
-  // --- Actions ---
+  /* ── rate changes CRUD ── */
+  const addRateChange = () => {
+    setRateChanges((p) => [...p, {
+      id: nextId++,
+      date: format(addMonths(issueDate, 12), "dd.MM.yyyy"),
+      ratePercent: rate,
+      recalcMode: "payment",
+    }]);
+  };
+  const removeRateChange = (id: number) => setRateChanges((p) => p.filter((r) => r.id !== id));
+  const updateRateChange = (id: number, patch: Partial<RateChangeEntry>) =>
+    setRateChanges((p) => p.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+
+  /* ── credit holidays CRUD ── */
+  const addCreditHoliday = () => {
+    setCreditHolidays((p) => [...p, {
+      id: nextId++,
+      startDate: format(addMonths(issueDate, 3), "dd.MM.yyyy"),
+      months: 3,
+      type: "interest",
+    }]);
+  };
+  const removeCreditHoliday = (id: number) => setCreditHolidays((p) => p.filter((r) => r.id !== id));
+  const updateCreditHoliday = (id: number, patch: Partial<CreditHolidayEntry>) =>
+    setCreditHolidays((p) => p.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+
+  /* ── Actions ── */
   const handleSave = async () => {
     if (!user) {
       toast({ title: "Войдите в аккаунт", description: "Для сохранения расчётов нужна авторизация.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
@@ -300,13 +358,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
     });
   };
 
-  // Chart data
-  const pieData = result ? [
-    { name: "Основной долг", value: loanAmount },
-    { name: "Проценты (с досрочными)", value: result.totalInterest },
-    { name: "Экономия на %", value: Math.max(0, result.interestSaved) },
-  ] : [];
-
+  /* ── Chart data ── */
   const barData = result ? result.schedule.slice(0, 60).map((row) => ({
     date: row.date.slice(3),
     principal: row.principal,
@@ -318,6 +370,13 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   const totalPrincipal = loanAmount;
   const totalInterest = result?.totalInterest ?? 0;
   const totalEarly = result?.totalEarlyPaid ?? 0;
+
+  /* ── Row type badge helper ── */
+  const rowTypeBadge = (type?: string) => {
+    if (type === "holiday_none") return <span className="ml-1 text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded px-1">каникулы</span>;
+    if (type === "holiday_interest") return <span className="ml-1 text-[10px] bg-blue-500/15 text-blue-600 dark:text-blue-400 rounded px-1">%</span>;
+    return null;
+  };
 
   return (
     <CalculatorLayout calculatorId="credit-early-repayment" categoryName="Финансы" categoryPath="/#categories">
@@ -345,9 +404,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     value={loanAmountStr}
                     onChange={(e) => {
                       const digits = e.target.value.replace(/\D/g, "");
-                      setLoanAmountStr(
-                        digits ? parseInt(digits).toLocaleString("ru-RU") : ""
-                      );
+                      setLoanAmountStr(digits ? parseInt(digits).toLocaleString("ru-RU") : "");
                     }}
                     placeholder="5 000 000"
                     className="max-w-52"
@@ -358,17 +415,12 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 <FormRow label="Срок">
                   <div className="flex gap-2">
                     <Input
-                      type="number"
-                      min={1}
-                      value={termValue}
+                      type="number" min={1} value={termValue}
                       onChange={(e) => setTermValue(e.target.value)}
-                      placeholder="15"
-                      className="max-w-20"
+                      placeholder="15" className="max-w-20"
                     />
                     <Select value={termUnit} onValueChange={(v) => setTermUnit(v as "years" | "months")}>
-                      <SelectTrigger className="w-28">
-                        <SelectValue />
-                      </SelectTrigger>
+                      <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="years">лет</SelectItem>
                         <SelectItem value="months">месяцев</SelectItem>
@@ -382,23 +434,145 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 </FormRow>
 
                 <FormRow label="Ставка" tooltip="Годовая процентная ставка по кредиту">
-                  <Input
-                    type="number"
-                    step={0.1}
-                    min={0}
-                    value={annualRate}
-                    onChange={(e) => setAnnualRate(e.target.value)}
-                    placeholder="18"
-                    className="max-w-28"
-                    inputEnd={<span className="text-sm font-medium">%</span>}
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      type="number" step={0.1} min={0}
+                      value={annualRate}
+                      onChange={(e) => setAnnualRate(e.target.value)}
+                      placeholder="18"
+                      className="max-w-28"
+                      inputEnd={<span className="text-sm font-medium">%</span>}
+                    />
+                    {/* Rate changes inline table */}
+                    {rateChanges.length > 0 && (
+                      <div className="rounded-md border border-border overflow-hidden mt-2">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-muted/50 border-b border-border">
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Дата изменения</th>
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Ставка, %</th>
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Пересчитать</th>
+                              <th className="w-8" />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {rateChanges.map((rc) => (
+                              <tr key={rc.id} className="border-b border-border last:border-0">
+                                <td className="px-2 py-1">
+                                  <DatePick
+                                    small
+                                    value={parseMaskedDateExt(rc.date)}
+                                    onChange={(d) => updateRateChange(rc.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
+                                  />
+                                </td>
+                                <td className="px-2 py-1">
+                                  <Input
+                                    type="number" step={0.1} min={0}
+                                    inputSize="sm"
+                                    className="w-20"
+                                    value={rc.ratePercent}
+                                    onChange={(e) => updateRateChange(rc.id, { ratePercent: parseFloat(e.target.value) || 0 })}
+                                    inputEnd={<span className="text-xs">%</span>}
+                                  />
+                                </td>
+                                <td className="px-2 py-1">
+                                  <Select
+                                    value={rc.recalcMode}
+                                    onValueChange={(v) => updateRateChange(rc.id, { recalcMode: v as "payment" | "term" })}
+                                  >
+                                    <SelectTrigger className="h-8 text-xs w-32"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="payment">Платёж</SelectItem>
+                                      <SelectItem value="term">Срок</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </td>
+                                <td className="px-2 py-1">
+                                  <Button variant="ghost" size="icon-sm" onClick={() => removeRateChange(rc.id)} aria-label="Удалить">
+                                    <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={addRateChange}
+                      className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors mt-1"
+                    >
+                      <Plus className="h-3 w-3" /> Изменение ставки
+                    </button>
+                  </div>
                 </FormRow>
               </div>
 
               <Separator />
 
-              {/* Early payments section */}
+              {/* ── Options ── */}
               <div className="space-y-3">
+                {/* First payment interest-only */}
+                <div className="flex items-center gap-2 sm:pl-52">
+                  <Checkbox
+                    id="first-pay-interest"
+                    checked={firstPayInterest}
+                    onCheckedChange={(v) => setFirstPayInterest(!!v)}
+                  />
+                  <Label htmlFor="first-pay-interest" className="text-sm cursor-pointer">
+                    Первый платёж – только проценты
+                  </Label>
+                </div>
+
+                {/* Round payment */}
+                <div className="flex items-center gap-2 sm:pl-52 flex-wrap">
+                  <Checkbox
+                    id="round-pay"
+                    checked={roundPay}
+                    onCheckedChange={(v) => setRoundPay(!!v)}
+                  />
+                  <Label htmlFor="round-pay" className="text-sm cursor-pointer">
+                    Округлять платёж
+                  </Label>
+                  {roundPay && (
+                    <Select value={roundTo} onValueChange={(v) => setRoundTo(v as "rub" | "hundred")}>
+                      <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="rub">До рублей</SelectItem>
+                        <SelectItem value="hundred">До сотен рублей</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+
+                {/* Transfer weekends */}
+                <div className="flex items-center gap-2 sm:pl-52 flex-wrap">
+                  <Checkbox
+                    id="transfer-weekend"
+                    checked={transferWeekend}
+                    onCheckedChange={(v) => setTransferWeekend(!!v)}
+                  />
+                  <Label htmlFor="transfer-weekend" className="text-sm cursor-pointer">
+                    Переносить с выходных
+                  </Label>
+                  {transferWeekend && (
+                    <Select value={transferDir} onValueChange={(v) => setTransferDir(v as "next" | "prev")}>
+                      <SelectTrigger className="h-8 text-xs w-44"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="next">На следующий рабочий</SelectItem>
+                        <SelectItem value="prev">На предыдущий рабочий</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* ── Collapsible sections ── */}
+              <div className="space-y-3">
+                {/* Early payments */}
                 <SectionToggle
                   title="Досрочные погашения"
                   icon={<TrendingDown className="h-4 w-4" />}
@@ -413,10 +587,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         onChange={(d) => updateEarlyPayment(ep.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
                       />
                       <Input
-                        type="text"
-                        inputSize="sm"
-                        placeholder="Сумма"
-                        className="w-28"
+                        type="text" inputSize="sm" placeholder="Сумма" className="w-28"
                         value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
                         onChange={(e) => {
                           const digits = e.target.value.replace(/\D/g, "");
@@ -427,9 +598,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         value={ep.mode}
                         onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
                       >
-                        <SelectTrigger className="h-8 text-xs w-40">
-                          <SelectValue />
-                        </SelectTrigger>
+                        <SelectTrigger className="h-8 text-xs w-40"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="reduce_term">Уменьшить срок</SelectItem>
                           <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
@@ -440,9 +609,55 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       </Button>
                     </div>
                   ))}
-                  <button
-                    type="button"
-                    onClick={addEarlyPayment}
+                  <button type="button" onClick={addEarlyPayment}
+                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+                  >
+                    <Plus className="h-4 w-4" /> Добавить
+                  </button>
+                </SectionToggle>
+
+                {/* Credit holidays */}
+                <SectionToggle
+                  title="Кредитные каникулы"
+                  icon={<CalendarOff className="h-4 w-4" />}
+                  count={creditHolidays.length}
+                  defaultOpen={creditHolidays.length > 0}
+                >
+                  <p className="text-xs text-muted-foreground -mt-1">
+                    Период, в котором платёж отсутствует или выплачиваются только проценты. После каникул платёж пересчитывается.
+                  </p>
+                  {creditHolidays.map((h) => (
+                    <div key={h.id} className="flex items-center gap-2 flex-wrap">
+                      <DatePick
+                        small
+                        value={parseMaskedDateExt(h.startDate)}
+                        onChange={(d) => updateCreditHoliday(h.id, { startDate: d ? format(d, "dd.MM.yyyy") : "" })}
+                      />
+                      <div className="flex items-center gap-1">
+                        <Input
+                          type="number" inputSize="sm" min={1} max={24}
+                          placeholder="3" className="w-16"
+                          value={h.months}
+                          onChange={(e) => updateCreditHoliday(h.id, { months: parseInt(e.target.value) || 1 })}
+                        />
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">мес.</span>
+                      </div>
+                      <Select
+                        value={h.type}
+                        onValueChange={(v) => updateCreditHoliday(h.id, { type: v as "none" | "interest" })}
+                      >
+                        <SelectTrigger className="h-8 text-xs w-44"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="interest">Только проценты</SelectItem>
+                          <SelectItem value="none">Без платежей</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button variant="ghost" size="icon-sm" onClick={() => removeCreditHoliday(h.id)} aria-label="Удалить">
+                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={addCreditHoliday}
                     className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
                   >
                     <Plus className="h-4 w-4" /> Добавить
@@ -466,15 +681,9 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <h2 id="results-heading" className="text-lg font-semibold">Результаты расчёта</h2>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>
-                      Печать
-                    </Button>
-                    <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>
-                      Сохранить в PDF
-                    </Button>
-                    <Button variant="outline" size="sm" icon={<Save />} onClick={handleSave}>
-                      Сохранить
-                    </Button>
+                    <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>Печать</Button>
+                    <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>PDF</Button>
+                    <Button variant="outline" size="sm" icon={<Save />} onClick={handleSave}>Сохранить</Button>
                   </div>
                 </div>
 
@@ -484,7 +693,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     {
                       label: "Платёж без досрочных",
                       value: fmtMoney(result.baseMonthlyPayment) + " ₽",
-                      sub: earlyPayments.length ? `→ пересчитан после погашений` : undefined,
+                      sub: earlyPayments.length ? `→ изменится после погашений` : undefined,
                     },
                     {
                       label: "Переплата без досрочных",
@@ -499,7 +708,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     {
                       label: "Экономия на процентах",
                       value: fmtMoney(result.interestSaved) + " ₽",
-                      color: "text-[hsl(var(--success))]",
+                      color: result.interestSaved > 0 ? "text-[hsl(var(--success))]" : "text-foreground",
                     },
                     {
                       label: "Сокращение срока",
@@ -533,6 +742,35 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         <span className="text-muted-foreground"> и сокращаете срок на {termLabel(result.termSavedMonths)}</span>
                       )}
                     </p>
+                  </div>
+                )}
+
+                {/* Active features badges */}
+                {(firstPayInterest || roundPay || transferWeekend || rateChanges.length > 0 || creditHolidays.length > 0) && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {firstPayInterest && (
+                      <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">1-й платёж: только %</span>
+                    )}
+                    {roundPay && (
+                      <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">
+                        Округление: {roundTo === "rub" ? "до рублей" : "до сотен"}
+                      </span>
+                    )}
+                    {transferWeekend && (
+                      <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">
+                        Перенос: {transferDir === "next" ? "следующий рабочий" : "предыдущий рабочий"}
+                      </span>
+                    )}
+                    {rateChanges.length > 0 && (
+                      <span className="text-xs bg-primary/10 text-primary rounded-full px-2.5 py-1">
+                        Изменений ставки: {rateChanges.length}
+                      </span>
+                    )}
+                    {creditHolidays.length > 0 && (
+                      <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full px-2.5 py-1">
+                        Каникулы: {creditHolidays.reduce((s, h) => s + h.months, 0)} мес.
+                      </span>
+                    )}
                   </div>
                 )}
 
@@ -647,12 +885,8 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                     <h3 className="text-sm font-medium">График погашения</h3>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>
-                        PDF
-                      </Button>
-                      <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>
-                        Печать
-                      </Button>
+                      <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>PDF</Button>
+                      <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>Печать</Button>
                     </div>
                   </div>
                   <div className="rounded-md border relative overflow-auto max-h-[480px]">
@@ -670,12 +904,21 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       </TableHeader>
                       <TableBody>
                         {result.schedule.map((row) => (
-                          <TableRow key={row.n}>
+                          <TableRow
+                            key={row.n}
+                            className={cn(
+                              row.rowType === "holiday_none" && "bg-amber-500/5",
+                              row.rowType === "holiday_interest" && "bg-blue-500/5",
+                            )}
+                          >
                             <TableCell className="font-mono text-muted-foreground text-xs">{row.n}</TableCell>
-                            <TableCell className="text-xs">{row.date}</TableCell>
+                            <TableCell className="text-xs">
+                              {row.date}
+                              {rowTypeBadge(row.rowType)}
+                            </TableCell>
                             <TableCell className="text-right font-mono text-xs">{fmt(row.payment)}</TableCell>
                             <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">
-                              {fmt(row.principal)}
+                              {row.principal > 0 ? fmt(row.principal) : <span className="text-muted-foreground">—</span>}
                             </TableCell>
                             <TableCell className="text-right font-mono text-xs text-destructive">
                               {fmt(row.interest)}
@@ -734,13 +977,4 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       </Dialog>
     </CalculatorLayout>
   );
-}
-
-/* helper to parse dd.mm.yyyy into Date */
-function parseMaskedDateExt(s: string): Date | undefined {
-  if (!s || s.length !== 10) return undefined;
-  const [dd, mm, yyyy] = s.split(".");
-  const d = parseInt(dd, 10), m = parseInt(mm, 10), y = parseInt(yyyy, 10);
-  if (!d || !m || !y) return undefined;
-  return new Date(y, m - 1, d);
 }
