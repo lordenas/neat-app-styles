@@ -40,6 +40,11 @@ const RefinancingCalculator = lazy(() => import("./pages/calculators/Refinancing
 const MicroloanCalculator = lazy(() => import("./pages/calculators/MicroloanCalculator"));
 const InflationCalculator = lazy(() => import("./pages/calculators/InflationCalculator"));
 const LoanInterestCalculator = lazy(() => import("./pages/calculators/LoanInterestCalculator"));
+const OsagoCalculator = lazy(() => import("./pages/calculators/OsagoCalculator"));
+const TransportTaxCalculator = lazy(() => import("./pages/calculators/TransportTaxCalculator"));
+const RastamozhkaCalculator = lazy(() => import("./pages/calculators/RastamozhkaCalculator"));
+const AutoLoanCalculator = lazy(() => import("./pages/calculators/AutoLoanCalculator"));
+const FuelConsumptionCalculator = lazy(() => import("./pages/calculators/FuelConsumptionCalculator"));
 
 function PageSkeleton() {
   return (
@@ -90,6 +95,11 @@ const App = () => (
                   <Route path="/microloan" element={<MicroloanCalculator />} />
                   <Route path="/inflation" element={<InflationCalculator />} />
                   <Route path="/loan-interest" element={<LoanInterestCalculator />} />
+                  <Route path="/osago" element={<OsagoCalculator />} />
+                  <Route path="/transport-tax" element={<TransportTaxCalculator />} />
+                  <Route path="/rastamozhka-auto" element={<RastamozhkaCalculator />} />
+                  <Route path="/auto-loan" element={<AutoLoanCalculator />} />
+                  <Route path="/fuel-consumption" element={<FuelConsumptionCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
