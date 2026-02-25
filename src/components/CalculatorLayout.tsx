@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { calculatorMetadata } from "@/lib/calculators/calculator-data";
+import { calculatorMetadata, calculatorsByCategory, categories } from "@/lib/calculators/calculator-data";
 
 type CalculatorLayoutProps = {
   calculatorId: string;
@@ -32,6 +32,17 @@ export function CalculatorLayout({
     description: "",
     searches: [],
   };
+
+  // Find the category this calculator belongs to
+  const currentCategoryId = Object.entries(calculatorsByCategory).find(
+    ([, calcs]) => calcs.some((c) => c.id === calculatorId)
+  )?.[0];
+
+  const relatedCalcs = currentCategoryId
+    ? (calculatorsByCategory[currentCategoryId] ?? []).filter((c) => c.id !== calculatorId)
+    : [];
+
+  const otherCategories = categories.filter((c) => c.id !== currentCategoryId);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -83,7 +94,61 @@ export function CalculatorLayout({
 
       <main id="main-content" className="flex-grow">
         <div className="container max-w-6xl py-8">
-          {children}
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Main content */}
+            <div className="flex-1 min-w-0">
+              {children}
+            </div>
+
+            {/* Right sidebar */}
+            <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6 lg:self-start">
+              {/* Ad block */}
+              <div className="rounded-lg border border-border bg-card p-4">
+                <p className="text-xs text-muted-foreground mb-2">Реклама</p>
+                <div className="rounded-md bg-muted/50 border border-dashed border-border flex items-center justify-center h-60">
+                  <span className="text-xs text-muted-foreground">Рекламный блок</span>
+                </div>
+              </div>
+
+              {/* Related calculators */}
+              {relatedCalcs.length > 0 && (
+                <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    {categoryName ?? "Похожие калькуляторы"}
+                  </p>
+                  <nav aria-label="Похожие калькуляторы" className="space-y-1">
+                    {relatedCalcs.map((c) => (
+                      <Link
+                        key={c.id}
+                        to={c.path ?? "#"}
+                        className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                      >
+                        {c.name}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              )}
+
+              {/* Other categories */}
+              {otherCategories.length > 0 && (
+                <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
+                  <nav aria-label="Другие категории калькуляторов" className="space-y-1">
+                    {otherCategories.slice(0, 5).map((cat) => (
+                      <Link
+                        key={cat.id}
+                        to={`/categories/${cat.id}`}
+                        className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              )}
+            </aside>
+          </div>
         </div>
       </main>
 
