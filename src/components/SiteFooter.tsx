@@ -21,6 +21,7 @@ export function SiteFooter() {
           <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">Контакты</Link>
           <Link to="/glossary" className="text-muted-foreground hover:text-foreground transition-colors">Глоссарий</Link>
           <Link to="/faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</Link>
+          <Link to="/partners" className="text-muted-foreground hover:text-foreground transition-colors">Партнёрам</Link>
         </nav>
         <p className="text-xs text-muted-foreground max-w-lg">
           {t("footer.disclaimer")}
