@@ -1,18 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 
-/**
- * Витрина Toast-уведомлений.
- * Демонстрирует все варианты: default, destructive, с действием.
- *
- * @example
- * ```tsx
- * import { toast } from "@/hooks/use-toast";
- * toast({ title: "Сохранено", description: "Описание" });
- * toast({ title: "Ошибка", description: "Описание", variant: "destructive" });
- * ```
- */
 export function NotificationShowcase() {
   return (
     <div className="space-y-4">
@@ -25,6 +15,8 @@ export function NotificationShowcase() {
             toast({
               title: "Расчёт сохранён",
               description: "График погашения обновлён успешно.",
+              variant: "success",
+              icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" />,
             })
           }
         >
@@ -40,6 +32,7 @@ export function NotificationShowcase() {
               title: "Ошибка расчёта",
               description: "Проверьте введённые параметры и попробуйте снова.",
               variant: "destructive",
+              icon: <XCircle className="h-5 w-5 text-destructive" />,
             })
           }
         >
@@ -54,6 +47,8 @@ export function NotificationShowcase() {
             toast({
               title: "Внимание",
               description: "Ставка выше средней по рынку — 18% годовых.",
+              variant: "warning",
+              icon: <AlertTriangle className="h-5 w-5 text-[hsl(var(--warning))]" />,
             })
           }
         >
@@ -68,6 +63,8 @@ export function NotificationShowcase() {
             toast({
               title: "Подсказка",
               description: "Вы можете добавить досрочные погашения для уменьшения переплаты.",
+              variant: "info",
+              icon: <Info className="h-5 w-5 text-[hsl(var(--info))]" />,
             })
           }
         >
@@ -81,6 +78,9 @@ export function NotificationShowcase() {
             toast({
               title: "Файл экспортирован",
               description: "График сохранён в формате PDF.",
+              variant: "success",
+              icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" />,
+              action: <ToastAction altText="Отменить">Отменить</ToastAction>,
             })
           }
         >
@@ -89,9 +89,13 @@ export function NotificationShowcase() {
       </div>
 
       <p className="helper-text">
-        Используется встроенный useToast. Вызов: <code className="text-xs bg-muted px-1 py-0.5 rounded">toast({"{"} title: "Текст" {"}"})</code>.
-        Варианты: <code className="text-xs bg-muted px-1 py-0.5 rounded">default</code> и{" "}
-        <code className="text-xs bg-muted px-1 py-0.5 rounded">destructive</code>.
+        Используется встроенный useToast. Варианты:{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">default</code>,{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">destructive</code>,{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">success</code>,{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">warning</code>,{" "}
+        <code className="text-xs bg-muted px-1 py-0.5 rounded">info</code>.
+        До 3 уведомлений одновременно, автозакрытие через 5 сек.
       </p>
     </div>
   );
