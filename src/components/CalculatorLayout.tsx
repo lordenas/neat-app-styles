@@ -56,21 +56,23 @@ export function CalculatorLayout({
 
       <SiteHeader />
 
-      <div className="border-b border-border">
-        <div className="container max-w-6xl py-3 flex items-center gap-4">
+      <div className="border-b border-border-subtle bg-muted/30">
+        <div className="container max-w-6xl py-2 flex items-center gap-2">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0 group"
           >
-            <ChevronLeft className="h-4 w-4" />
-            Назад
+            <ChevronLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <span>Назад</span>
           </Link>
 
+          <span className="text-border-subtle select-none">·</span>
+
           <Breadcrumb>
-            <BreadcrumbList>
+            <BreadcrumbList className="text-xs gap-1 sm:gap-1.5">
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link to="/">Главная</Link>
+                  <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Главная</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               {categoryName && (
@@ -78,14 +80,14 @@ export function CalculatorLayout({
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                      <Link to={categoryPath ?? "/"}>{categoryName}</Link>
+                      <Link to={categoryPath ?? "/"} className="text-muted-foreground hover:text-foreground transition-colors">{categoryName}</Link>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                 </>
               )}
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{meta.name}</BreadcrumbPage>
+                <BreadcrumbPage className="text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{meta.name}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
