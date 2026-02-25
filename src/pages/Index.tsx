@@ -18,6 +18,11 @@ import {
   Users,
   BarChart3,
   Shield,
+  Percent,
+  Building2,
+  Home,
+  Car,
+  Scale,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,26 +36,33 @@ import {
 } from "@/components/ui/accordion";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import {
+  categories as calcCategories,
+  calculatorsByCategory,
+  getAvailableCalculatorsByCategory,
+  type CategoryIconName,
+} from "@/lib/calculators/calculator-data";
 
-const categoryIcons: Record<string, React.ReactNode> = {
-  credit: <Calculator className="h-6 w-6" />,
-  mortgage: <Landmark className="h-6 w-6" />,
-  deposit: <PiggyBank className="h-6 w-6" />,
-  tax: <Receipt className="h-6 w-6" />,
-  business: <Briefcase className="h-6 w-6" />,
-  currency: <TrendingUp className="h-6 w-6" />,
+const iconMap: Record<CategoryIconName, React.ReactNode> = {
+  DollarSign: <Calculator className="h-6 w-6" />,
+  Percent: <Percent className="h-6 w-6" />,
+  TrendingUp: <TrendingUp className="h-6 w-6" />,
+  Building2: <Building2 className="h-6 w-6" />,
+  Briefcase: <Briefcase className="h-6 w-6" />,
+  Home: <Home className="h-6 w-6" />,
+  Car: <Car className="h-6 w-6" />,
+  Scale: <Scale className="h-6 w-6" />,
 };
 
-const categoryKeys = ["credit", "mortgage", "deposit", "tax", "business", "currency"] as const;
+// Flatten all calculators with paths for search & popular
+const allCalcsWithPaths = Object.values(calculatorsByCategory)
+  .flat()
+  .filter((c) => c.path);
 
-const popularCalcs = [
-  { key: "creditCalc", link: "/credit-calculator", icon: <Calculator className="h-5 w-5" /> },
-  { key: "mortgageCalc", link: "/credit-calculator", icon: <Landmark className="h-5 w-5" /> },
-  { key: "depositCalc", link: "/credit-calculator", icon: <PiggyBank className="h-5 w-5" /> },
-  { key: "salaryCalc", link: "/credit-calculator", icon: <Receipt className="h-5 w-5" /> },
-  { key: "refinanceCalc", link: "/credit-calculator", icon: <TrendingUp className="h-5 w-5" /> },
-  { key: "roiCalc", link: "/credit-calculator", icon: <Briefcase className="h-5 w-5" /> },
-] as const;
+const popularCalcIds = ["vat", "ndfl", "peni", "mortgage", "deposit", "refinancing"];
+const popularCalcs = popularCalcIds
+  .map((id) => allCalcsWithPaths.find((c) => c.id === id))
+  .filter(Boolean) as typeof allCalcsWithPaths;
 
 const featureIcons: Record<string, React.ReactNode> = {
   accurate: <Sparkles className="h-6 w-6" />,
@@ -76,12 +88,10 @@ const Index = () => {
   const filteredCalcs = useMemo(() => {
     if (!search.trim()) return popularCalcs;
     const q = search.toLowerCase();
-    return popularCalcs.filter(({ key }) => {
-      const title = t(`popular.${key}.title`).toLowerCase();
-      const desc = t(`popular.${key}.description`).toLowerCase();
-      return title.includes(q) || desc.includes(q);
+    return allCalcsWithPaths.filter((c) => {
+      return c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q);
     });
-  }, [search, t]);
+  }, [search]);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -192,27 +202,32 @@ const Index = () => {
               <p className="text-muted-foreground max-w-xl mx-auto">{t("categories.subtitle")}</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categoryKeys.map((key, i) => (
-                <Link key={key} to="/credit-calculator" className="group" style={{ animationDelay: `${i * 60}ms` }}>
+              {calcCategories.map((cat, i) => {
+                const calcs = calculatorsByCategory[cat.id] ?? [];
+                const firstWithPath = calcs.find((c) => c.path);
+                const link = firstWithPath?.path ?? "/";
+                return (
+                <Link key={cat.id} to={link} className="group" style={{ animationDelay: `${i * 60}ms` }}>
                   <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer border-border">
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-3">
                         <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
-                          {categoryIcons[key]}
+                          {cat.icon ? iconMap[cat.icon] : <Calculator className="h-6 w-6" />}
                         </div>
                         <div className="min-w-0">
-                          <CardTitle className="text-base">{t(`categories.${key}.title`)}</CardTitle>
-                          <span className="text-xs text-muted-foreground">{t(`categories.${key}.count`)}</span>
+                          <CardTitle className="text-base">{cat.name}</CardTitle>
+                          <span className="text-xs text-muted-foreground">{calcs.length} калькуляторов</span>
                         </div>
                         <ArrowRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription>{t(`categories.${key}.description`)}</CardDescription>
+                      <CardDescription>{cat.description}</CardDescription>
                     </CardContent>
                   </Card>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -228,22 +243,22 @@ const Index = () => {
               <p className="text-center text-muted-foreground py-8">{t("popular.noResults")}</p>
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCalcs.map(({ key, link, icon }) => (
-                  <Link key={key} to={link} className="group">
+                {filteredCalcs.map((calc) => (
+                  <Link key={calc.id} to={calc.path ?? "/"} className="group">
                     <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer">
                       <CardHeader className="pb-2">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                            {icon}
+                            <Calculator className="h-5 w-5" />
                           </div>
                           <CardTitle className="text-base group-hover:text-primary transition-colors">
-                            {t(`popular.${key}.title`)}
+                            {calc.name}
                           </CardTitle>
                           <ArrowRight className="h-4 w-4 text-muted-foreground ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <CardDescription>{t(`popular.${key}.description`)}</CardDescription>
+                        <CardDescription>{calc.description}</CardDescription>
                       </CardContent>
                     </Card>
                   </Link>

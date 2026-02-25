@@ -25,6 +25,11 @@ const Compare = lazy(() => import("./pages/Compare"));
 const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+// Calculator pages
+const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
+const NdflCalculator = lazy(() => import("./pages/calculators/NdflCalculator"));
+const PeniCalculator = lazy(() => import("./pages/calculators/PeniCalculator"));
+
 function PageSkeleton() {
   return (
     <div className="min-h-screen bg-background p-6 space-y-4">
@@ -59,6 +64,10 @@ const App = () => (
                   <Route path="/showcase" element={<Showcase />} />
                   <Route path="/compare" element={<Compare />} />
                   <Route path="/shared/:token" element={<SharedCalculation />} />
+                  {/* Calculator pages */}
+                  <Route path="/vat" element={<VatCalculator />} />
+                  <Route path="/ndfl" element={<NdflCalculator />} />
+                  <Route path="/peni" element={<PeniCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
