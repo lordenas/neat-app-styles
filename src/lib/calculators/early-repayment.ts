@@ -7,6 +7,7 @@ import { isWorkday } from "@/lib/calculators/production-calendar-ru";
 import { format, addDays } from "date-fns";
 
 export type RepaymentMode = "reduce_term" | "reduce_payment";
+export type RecurringFrequency = "monthly" | "quarterly" | "yearly";
 
 export interface EarlyPaymentEntry {
   id: number;
@@ -14,6 +15,12 @@ export interface EarlyPaymentEntry {
   date: string;
   amount: number;
   mode: RepaymentMode;
+  /** Регулярный платёж */
+  recurring?: boolean;
+  /** Частота для регулярного платежа */
+  frequency?: RecurringFrequency;
+  /** Дата окончания регулярного платежа — dd.MM.yyyy */
+  endDate?: string;
 }
 
 export interface RateChangeEntry {
@@ -197,8 +204,32 @@ export function calculateEarlyRepayment(
   const baseTotalInterest = baseSchedule.reduce((s, r) => s + r.interest, 0);
   const baseTotalPayment = baseSchedule.reduce((s, r) => s + r.payment, 0);
 
+  /* ── Expand recurring early payments into individual entries ── */
+  let expandedEarlyPayments: EarlyPaymentEntry[] = [];
+  let recurringIdSeq = 100_000;
+  for (const ep of earlyPayments) {
+    if (!ep.recurring || !ep.frequency || !ep.endDate) {
+      expandedEarlyPayments.push(ep);
+      continue;
+    }
+    const startD = parseDate(ep.date);
+    const endD = parseDate(ep.endDate);
+    if (!startD || !endD) { expandedEarlyPayments.push(ep); continue; }
+    const stepMonths = ep.frequency === "monthly" ? 1 : ep.frequency === "quarterly" ? 3 : 12;
+    let cur = new Date(startD);
+    while (cur <= endD) {
+      expandedEarlyPayments.push({
+        id: recurringIdSeq++,
+        date: formatDateDMY(cur),
+        amount: ep.amount,
+        mode: ep.mode,
+      });
+      cur = addMonths(cur, stepMonths);
+    }
+  }
+
   /* ── Prepare early payments ── */
-  const sortedEarly = [...earlyPayments]
+  const sortedEarly = expandedEarlyPayments
     .filter((ep) => ep.amount > 0 && ep.date)
     .sort((a, b) => (parseDate(a.date)?.getTime() ?? 0) - (parseDate(b.date)?.getTime() ?? 0));
 
