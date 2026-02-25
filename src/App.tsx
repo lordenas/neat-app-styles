@@ -34,6 +34,12 @@ const PenaltyContractCalculator = lazy(() => import("./pages/calculators/Penalty
 const PenaltyDduCalculator = lazy(() => import("./pages/calculators/PenaltyDduCalculator"));
 const PropertyDeductionCalculator = lazy(() => import("./pages/calculators/PropertyDeductionCalculator"));
 const PropertySaleTaxCalculator = lazy(() => import("./pages/calculators/PropertySaleTaxCalculator"));
+const MortgageCalculator = lazy(() => import("./pages/calculators/MortgageCalculator"));
+const CreditEarlyRepaymentCalculator = lazy(() => import("./pages/calculators/CreditEarlyRepaymentCalculator"));
+const RefinancingCalculator = lazy(() => import("./pages/calculators/RefinancingCalculator"));
+const MicroloanCalculator = lazy(() => import("./pages/calculators/MicroloanCalculator"));
+const InflationCalculator = lazy(() => import("./pages/calculators/InflationCalculator"));
+const LoanInterestCalculator = lazy(() => import("./pages/calculators/LoanInterestCalculator"));
 
 function PageSkeleton() {
   return (
@@ -78,6 +84,12 @@ const App = () => (
                   <Route path="/penalty-ddu" element={<PenaltyDduCalculator />} />
                   <Route path="/property-deduction" element={<PropertyDeductionCalculator />} />
                   <Route path="/property-sale-tax" element={<PropertySaleTaxCalculator />} />
+                  <Route path="/mortgage" element={<MortgageCalculator />} />
+                  <Route path="/credit-early-repayment" element={<CreditEarlyRepaymentCalculator />} />
+                  <Route path="/refinancing" element={<RefinancingCalculator />} />
+                  <Route path="/microloan" element={<MicroloanCalculator />} />
+                  <Route path="/inflation" element={<InflationCalculator />} />
+                  <Route path="/loan-interest" element={<LoanInterestCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
