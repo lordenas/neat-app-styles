@@ -719,6 +719,27 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       label: "Всего досрочно внесено",
                       value: fmtMoney(result.totalEarlyPaid) + " ₽",
                     },
+                    {
+                      label: "Фактический срок",
+                      value: termLabel(result.actualTermMonths),
+                      sub: result.termSavedMonths > 0 ? `из ${termLabel(result.baseTermMonths)}` : undefined,
+                      color: result.termSavedMonths > 0 ? "text-[hsl(var(--success))]" : "text-foreground",
+                    },
+                    {
+                      label: "Переплата в %",
+                      value: loanAmount > 0
+                        ? ((result.totalInterest / loanAmount) * 100).toFixed(1) + "%"
+                        : "—",
+                      sub: loanAmount > 0
+                        ? `без доср.: ${((result.baseTotalInterest / loanAmount) * 100).toFixed(1)}%`
+                        : undefined,
+                      color: "text-destructive",
+                    },
+                    {
+                      label: "Всего выплат",
+                      value: fmtMoney(loanAmount + result.totalInterest) + " ₽",
+                      sub: `долг ${fmtMoney(loanAmount)} + % ${fmtMoney(result.totalInterest)}`,
+                    },
                   ].map((item) => (
                     <div key={item.label} className="form-section space-y-1">
                       <p className="text-xs text-muted-foreground">{item.label}</p>
