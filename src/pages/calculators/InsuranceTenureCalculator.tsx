@@ -86,15 +86,15 @@ export default function InsuranceTenureCalculator() {
                     value={p.startDate}
                     onChange={(e) => updatePeriod(i, "startDate", e.target.value)}
                   />
-                  <div className="space-y-0">
+                  <div className="relative">
                     <Input
                       type="date"
                       value={p.endDate}
                       onChange={(e) => updatePeriod(i, "endDate", e.target.value)}
                     />
-                    {days !== null && isValid && (
-                      <p className="text-[10px] text-muted-foreground mt-0.5 pl-1">{days.toLocaleString("ru-RU")} дн.</p>
-                    )}
+                    <p className="text-[10px] text-muted-foreground mt-0.5 pl-1 h-3">
+                      {days !== null && isValid ? `${days.toLocaleString("ru-RU")} дн.` : ""}
+                    </p>
                   </div>
                   <Button
                     variant="ghost"
