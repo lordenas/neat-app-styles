@@ -43,6 +43,8 @@ export interface ScheduleRow {
   interest: number;
   early: number;
   balance: number;
+  /** Годовая ставка в % на этот период */
+  ratePercent: number;
   /** Тип строки: normal, holiday_none, holiday_interest */
   rowType?: "normal" | "holiday_none" | "holiday_interest";
 }
@@ -130,6 +132,7 @@ function buildBaseSchedule(
 
   const rows: ScheduleRow[] = [];
   let balance = principal;
+  const annualRatePercent = rMonthly * 12 * 100;
   for (let i = 1; i <= termMonths && balance > 0.01; i++) {
     const rawDate = addMonths(issueDate, i);
     const payDate = transferWeekends ? shiftToWorkday(rawDate, transferDirection) : rawDate;
@@ -155,6 +158,7 @@ function buildBaseSchedule(
       interest: Math.round(interest * 100) / 100,
       early: 0,
       balance: Math.round(balance * 100) / 100,
+      ratePercent: Math.round(annualRatePercent * 100) / 100,
       rowType: "normal",
     });
   }
@@ -228,36 +232,43 @@ export function calculateEarlyRepayment(
   let rMonthly = baseRateMonthly;
   let currentPayment = annuityPayment(loanAmount, rMonthly, termMonths);
   if (roundPayment) currentPayment = roundPaymentValue(currentPayment, roundTo);
-  let remainingTermMonths = termMonths;
+  // remainingTerm tracks how many months remain for annuity recalc
+  // starts at termMonths, decrements each period, adjusted after early reduce_term payments
+  let remainingTerm = termMonths;
   let monthIndex = 0;
   let totalEarlyPaid = 0;
 
   // Track which early payments have been applied
   const appliedEarlyIds = new Set<number>();
+  // Track applied rate changes to avoid double-apply
+  const appliedRateIds = new Set<number>();
 
   while (balance > 0.01 && monthIndex < termMonths * 3) {
     monthIndex++;
+    // remainingTerm = months left BEFORE this payment (i.e., payments yet to be made including this one)
+    remainingTerm = Math.max(1, remainingTerm - 1);
     const rawDate = addMonths(issueDate, monthIndex);
     const payDate = transferWeekends ? shiftToWorkday(rawDate, transferDirection) : rawDate;
 
-    // --- Apply rate changes that fall in this month or earlier (not yet applied) ---
+    // --- Apply rate changes that fall in this month ---
     for (const rc of sortedRateChanges) {
+      if (appliedRateIds.has(rc.id)) continue;
       const rcDate = parseDate(rc.date);
       if (!rcDate) continue;
       const prevDate = addMonths(issueDate, monthIndex - 1);
       if (rcDate > prevDate && rcDate <= rawDate) {
-        // Rate change applies starting this period
-        const newRMonthly = rc.ratePercent / 100 / 12;
-        rMonthly = newRMonthly;
-        const remaining = remainingTermMonths - (monthIndex - 1);
-        if (remaining > 0) {
-          if (rc.recalcMode === "payment") {
-            // Recalculate payment at new rate, same remaining term
-            currentPayment = annuityPayment(balance, rMonthly, remaining);
+        appliedRateIds.add(rc.id);
+        rMonthly = rc.ratePercent / 100 / 12;
+        if (rc.recalcMode === "payment") {
+          // Recalculate payment at new rate, keeping same remaining term
+          // remainingTerm already decremented, so +1 to include current month
+          const rem = remainingTerm + 1;
+          if (rem > 0) {
+            currentPayment = annuityPayment(balance, rMonthly, rem);
             if (roundPayment) currentPayment = roundPaymentValue(currentPayment, roundTo);
           }
-          // "term" mode: keep same payment, term will naturally change
         }
+        // "term" mode: keep same payment, term will naturally shorten/extend
       }
     }
 
@@ -322,6 +333,7 @@ export function calculateEarlyRepayment(
       interest: Math.round(Math.abs(interest) * 100) / 100,
       early: Math.round(actualEarly * 100) / 100,
       balance: Math.round(balance * 100) / 100,
+      ratePercent: Math.round(rMonthly * 12 * 100 * 100) / 100,
       rowType,
     });
 
@@ -329,19 +341,31 @@ export function calculateEarlyRepayment(
 
     // --- Recalculate after early payment ---
     if (actualEarly > 0) {
-      const remaining = remainingTermMonths - monthIndex;
-      if (modeThisMonth === "reduce_payment" && remaining > 0) {
-        currentPayment = annuityPayment(balance, rMonthly, remaining);
-        if (roundPayment) currentPayment = roundPaymentValue(currentPayment, roundTo);
+      if (modeThisMonth === "reduce_payment") {
+        // Reduce payment: recalculate annuity on remaining term
+        if (remainingTerm > 0) {
+          currentPayment = annuityPayment(balance, rMonthly, remainingTerm);
+          if (roundPayment) currentPayment = roundPaymentValue(currentPayment, roundTo);
+        }
+      } else {
+        // reduce_term: keep same payment; but update remainingTerm to reflect new shorter remaining
+        // Estimate new remaining term from balance and current payment
+        if (rMonthly > 0 && currentPayment > balance * rMonthly) {
+          const newRem = Math.ceil(
+            Math.log(currentPayment / (currentPayment - balance * rMonthly)) /
+            Math.log(1 + rMonthly)
+          );
+          remainingTerm = Math.max(1, newRem);
+        } else {
+          remainingTerm = Math.max(1, Math.ceil(balance / (currentPayment - balance * rMonthly + 0.01)));
+        }
       }
-      // reduce_term: keep same payment
     }
 
     // --- After holiday, recalculate payment on remaining balance/term ---
     if (holidayType) {
-      const remaining = remainingTermMonths - monthIndex;
-      if (remaining > 0) {
-        currentPayment = annuityPayment(balance, rMonthly, remaining);
+      if (remainingTerm > 0) {
+        currentPayment = annuityPayment(balance, rMonthly, remainingTerm);
         if (roundPayment) currentPayment = roundPaymentValue(currentPayment, roundTo);
       }
     }

@@ -898,6 +898,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           <TableHead className="text-right">Платёж</TableHead>
                           <TableHead className="text-right">Осн. долг</TableHead>
                           <TableHead className="text-right">Проценты</TableHead>
+                          <TableHead className="text-right">Ставка</TableHead>
                           <TableHead className="text-right">Досрочное</TableHead>
                           <TableHead className="text-right">Остаток</TableHead>
                         </TableRow>
@@ -923,6 +924,9 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                             <TableCell className="text-right font-mono text-xs text-destructive">
                               {fmt(row.interest)}
                             </TableCell>
+                            <TableCell className="text-right font-mono text-xs text-muted-foreground">
+                              {row.ratePercent}%
+                            </TableCell>
                             <TableCell className="text-right font-mono text-xs">
                               {row.early > 0
                                 ? <span className="text-primary font-medium">{fmt(row.early)}</span>
@@ -932,12 +936,13 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           </TableRow>
                         ))}
                       </TableBody>
-                      <TableFooter className="sticky bottom-0 z-10 bg-card shadow-[0_-1px_0_0_hsl(var(--border))]">
+                        <TableFooter className="sticky bottom-0 z-10 bg-card shadow-[0_-1px_0_0_hsl(var(--border))]">
                         <TableRow className="border-t-0 font-semibold">
                           <TableCell colSpan={2} className="text-xs">Итого</TableCell>
                           <TableCell className="text-right font-mono text-xs">{fmt(totalPayment)}</TableCell>
                           <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalPrincipal)}</TableCell>
                           <TableCell className="text-right font-mono text-xs text-destructive">{fmt(totalInterest)}</TableCell>
+                          <TableCell className="text-right font-mono text-xs text-muted-foreground">—</TableCell>
                           <TableCell className="text-right font-mono text-xs text-primary">{fmt(totalEarly)}</TableCell>
                           <TableCell className="text-right font-mono text-xs">—</TableCell>
                         </TableRow>
