@@ -27,7 +27,7 @@ import {
 import {
   Plus, Trash2, Info, Calculator, ChevronDown, ChevronRight,
   TrendingDown, CalendarIcon, Printer, FileDown, Save,
-  CheckCircle2, XCircle, TrendingUp, CalendarOff,
+  CheckCircle2, XCircle, TrendingUp, CalendarOff, Repeat2, Minus as MinusIcon, ArrowRight,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -581,29 +581,51 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   count={earlyPayments.length}
                   defaultOpen={earlyPayments.length > 0}
                 >
-                  {earlyPayments.map((ep) => (
-                    <div key={ep.id} className="flex flex-col gap-1.5 pb-2 border-b border-border last:border-0">
-                      {/* Row 1: тип, дата, сумма, режим, удалить */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Select
-                          value={ep.recurring ? "recurring" : "once"}
-                          onValueChange={(v) => updateEarlyPayment(ep.id, {
-                            recurring: v === "recurring",
-                            ...(v === "recurring" && !ep.frequency ? { frequency: "monthly" as RecurringFrequency } : {}),
-                            ...(v === "recurring" && !ep.endDate ? { endDate: format(addMonths(issueDate, 12), "dd.MM.yyyy") } : {}),
+                  {earlyPayments.map((ep) => {
+                    // Вычислить количество регулярных платежей для бейджа
+                    let recurringCount: number | null = null;
+                    if (ep.recurring && ep.frequency && ep.date && ep.endDate) {
+                      const startD = parseMaskedDateExt(ep.date);
+                      const endD = parseMaskedDateExt(ep.endDate);
+                      if (startD && endD && endD >= startD) {
+                        const stepM = ep.frequency === "monthly" ? 1 : ep.frequency === "quarterly" ? 3 : 12;
+                        let cur = new Date(startD);
+                        let cnt = 0;
+                        while (cur <= endD) { cnt++; cur = new Date(cur.getFullYear(), cur.getMonth() + stepM, cur.getDate()); }
+                        recurringCount = cnt;
+                      }
+                    }
+                    return (
+                    <div key={ep.id} className="flex flex-col gap-0 rounded-lg border border-border bg-muted/30 overflow-hidden">
+                      {/* Строка 1: сумма, режим, тип-переключатель, удалить */}
+                      <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
+                        {/* Тип: кнопка-переключатель */}
+                        <button
+                          type="button"
+                          title={ep.recurring ? "Регулярный платёж — нажмите для смены на разовый" : "Разовый платёж — нажмите для смены на регулярный"}
+                          onClick={() => updateEarlyPayment(ep.id, {
+                            recurring: !ep.recurring,
+                            ...(!ep.recurring && !ep.frequency ? { frequency: "monthly" as RecurringFrequency } : {}),
+                            ...(!ep.recurring && !ep.endDate ? { endDate: format(addMonths(issueDate, 12), "dd.MM.yyyy") } : {}),
                           })}
+                          className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors border ${
+                            ep.recurring
+                              ? "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+                              : "bg-muted text-muted-foreground border-border hover:bg-muted/80"
+                          }`}
                         >
-                          <SelectTrigger className="h-8 text-xs w-28"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="once">Разовый</SelectItem>
-                            <SelectItem value="recurring">Регулярный</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          {ep.recurring
+                            ? <><Repeat2 className="h-3 w-3" /> Регулярный</>
+                            : <><MinusIcon className="h-3 w-3" /> Разовый</>
+                          }
+                        </button>
+                        {/* Дата начала */}
                         <DatePick
                           small
                           value={parseMaskedDateExt(ep.date)}
                           onChange={(d) => updateEarlyPayment(ep.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
                         />
+                        {/* Сумма */}
                         <Input
                           type="text" inputSize="sm" placeholder="Сумма" className="w-28"
                           value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
@@ -612,6 +634,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                             updateEarlyPayment(ep.id, { amount: digits ? parseInt(digits) : 0 });
                           }}
                         />
+                        {/* Режим */}
                         <Select
                           value={ep.mode}
                           onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
@@ -622,19 +645,21 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                             <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
                           </SelectContent>
                         </Select>
+                        <div className="flex-1" />
+                        {/* Удалить */}
                         <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(ep.id)} aria-label="Удалить">
                           <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
                       </div>
-                      {/* Row 2: поля регулярного платежа */}
+                      {/* Строка 2: параметры регулярного (только если recurring) */}
                       {ep.recurring && (
-                        <div className="flex items-center gap-2 flex-wrap pl-1">
-                          <span className="text-xs text-muted-foreground">по</span>
+                        <div className="flex items-center gap-2 px-3 py-2 flex-wrap border-t border-border/50 bg-primary/5">
+                          <Repeat2 className="h-3.5 w-3.5 text-primary shrink-0" />
                           <Select
                             value={ep.frequency ?? "monthly"}
                             onValueChange={(v) => updateEarlyPayment(ep.id, { frequency: v as RecurringFrequency })}
                           >
-                            <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                            <SelectTrigger className="h-7 text-xs w-36 bg-background"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="monthly">каждый месяц</SelectItem>
                               <SelectItem value="quarterly">каждый квартал</SelectItem>
@@ -647,10 +672,16 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                             value={parseMaskedDateExt(ep.endDate ?? "")}
                             onChange={(d) => updateEarlyPayment(ep.id, { endDate: d ? format(d, "dd.MM.yyyy") : "" })}
                           />
+                          {recurringCount !== null && (
+                            <span className="ml-auto text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
+                              {recurringCount} платежей
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
-                  ))}
+                    );
+                  })}
                   <button type="button" onClick={addEarlyPayment}
                     className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
                   >
