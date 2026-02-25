@@ -27,7 +27,7 @@ import {
 import {
   Plus, Trash2, Info, Calculator, ChevronDown, ChevronRight,
   TrendingDown, CalendarIcon, Printer, FileDown, Save,
-  CheckCircle2, XCircle, TrendingUp, CalendarOff, Repeat2, Minus as MinusIcon, ArrowRight,
+  CheckCircle2, XCircle, CalendarOff, Repeat2, Minus as MinusIcon,
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -51,12 +51,13 @@ function fmtMoney(n: number) {
   return n.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function termLabel(months: number) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function termLabel(months: number, tFn: (k: string, opts?: any) => any) {
   const y = Math.floor(months / 12);
   const m = months % 12;
-  if (y === 0) return `${m} мес.`;
-  if (m === 0) return `${y} лет`;
-  return `${y} л. ${m} мес.`;
+  if (y === 0) return `${m} ${tFn("calculator.creditEarly.monthsShort")}`;
+  if (m === 0) return `${y} ${tFn("calculator.creditEarly.yearsShort")}`;
+  return `${y} ${tFn("calculator.creditEarly.yearsShort")} ${m} ${tFn("calculator.creditEarly.monthsShort")}`;
 }
 
 /* ───────────── DatePick ───────────── */
@@ -120,7 +121,7 @@ function DatePick({
           value={inputValue}
           onChange={handleInputChange}
           placeholder={placeholder}
-          aria-label="Выберите дату"
+          aria-label="date"
           className={cn(
             "flex-1 min-w-0 rounded-l-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none",
             small ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
@@ -132,7 +133,7 @@ function DatePick({
               "shrink-0 flex items-center justify-center rounded-r-md bg-background text-muted-foreground hover:text-foreground transition-colors focus:outline-none",
               small ? "h-8 w-8" : "h-10 w-10"
             )}
-            aria-label="Открыть календарь"
+            aria-label="open calendar"
           >
             <CalendarIcon className={small ? "h-3 w-3" : "h-4 w-4"} />
           </button>
@@ -210,6 +211,9 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   const nextIdRef = React.useRef(1);
   const nextId = () => nextIdRef.current++;
   const navigate = useNavigate();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tl = (key: string, opts?: any) => t(key, opts);
 
   // --- Form state ---
   const [loanAmountStr, setLoanAmountStr] = useState("5 000 000");
@@ -304,7 +308,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   /* ── Actions ── */
   const handleSave = async () => {
     if (!user) {
-      toast({ title: "Войдите в аккаунт", description: "Для сохранения расчётов нужна авторизация.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
+      toast({ title: t("auth.loginRequired"), description: t("auth.loginToSave"), variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
       navigate("/auth");
       return;
     }
@@ -331,23 +335,23 @@ export default function CreditEarlyRepaymentCalculatorPage() {
     setSaveDialogOpen(false);
     setSaveTitle("");
     if (error) {
-      toast({ title: "Ошибка", description: "Не удалось сохранить расчёт.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
+      toast({ title: t("common.error"), description: t("common.saveFailed"), variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
     } else {
-      toast({ title: "Сохранено", description: "Расчёт добавлен в личный кабинет.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
+      toast({ title: t("common.saved"), description: t("common.savedDescription"), variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
     }
   };
 
   const handleExportPdf = () => {
     if (!result) return;
     exportCalculationPdf({
-      title: "Калькулятор досрочного погашения — Результаты",
+      title: t("calculatorNames.credit-early-repayment") + " — " + t("calculator.results"),
       summary: [
-        { label: "Платёж без досрочных", value: fmtMoney(result.baseMonthlyPayment) + " ₽" },
-        { label: "Переплата без досрочных", value: fmtMoney(result.baseTotalInterest) + " ₽" },
-        { label: "Переплата с досрочными", value: fmtMoney(result.totalInterest) + " ₽" },
-        { label: "Сэкономлено на %", value: fmtMoney(result.interestSaved) + " ₽" },
-        { label: "Сокращение срока", value: termLabel(result.termSavedMonths) },
-        { label: "Всего досрочно", value: fmtMoney(result.totalEarlyPaid) + " ₽" },
+        { label: t("calculator.creditEarly.kpi.basePayment"), value: fmtMoney(result.baseMonthlyPayment) + " ₽" },
+        { label: t("calculator.creditEarly.kpi.overpaymentWithoutEarly"), value: fmtMoney(result.baseTotalInterest) + " ₽" },
+        { label: t("calculator.creditEarly.kpi.totalInterest"), value: fmtMoney(result.totalInterest) + " ₽" },
+        { label: t("calculator.creditEarly.kpi.savings"), value: fmtMoney(result.interestSaved) + " ₽" },
+        { label: t("calculator.creditEarly.kpi.termReductionMonths"), value: termLabel(result.termSavedMonths, tl) },
+        { label: t("calculator.creditEarly.summary.totalEarlyRepayments"), value: fmtMoney(result.totalEarlyPaid) + " ₽" },
       ],
       debtBreakdown: { principal: loanAmount, interest: result.totalInterest },
       schedule: result.schedule,
@@ -375,15 +379,15 @@ export default function CreditEarlyRepaymentCalculatorPage() {
 
   /* ── Row type badge helper ── */
   const rowTypeBadge = (type?: string) => {
-    if (type === "holiday_none") return <span className="ml-1 text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded px-1">каникулы</span>;
-    if (type === "holiday_interest") return <span className="ml-1 text-[10px] bg-blue-500/15 text-blue-600 dark:text-blue-400 rounded px-1">%</span>;
+    if (type === "holiday_none") return <span className="ml-1 text-[10px] bg-amber-500/15 text-amber-600 dark:text-amber-400 rounded px-1">{t("calculator.creditEarly.holidayNone")}</span>;
+    if (type === "holiday_interest") return <span className="ml-1 text-[10px] bg-blue-500/15 text-blue-600 dark:text-blue-400 rounded px-1">{t("calculator.creditEarly.holidayInterestBadge")}</span>;
     return null;
   };
 
   return (
     <CalculatorLayout
       calculatorId="credit-early-repayment"
-      categoryName="Финансы"
+      categoryName={t("category.finance")}
       categoryPath="/#categories"
       title={
         <div>
@@ -405,7 +409,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
             <div className="section-card space-y-5">
               <div className="space-y-4">
 
-                <FormRow label="Сумма кредита">
+                <FormRow label={t("calculator.creditEarly.fields.loanAmount")}>
                   <Input
                     formatNumber
                     value={loanAmountStr}
@@ -419,7 +423,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   />
                 </FormRow>
 
-                <FormRow label="Срок">
+                <FormRow label={t("calculator.creditEarly.fields.term")}>
                   <div className="flex gap-2">
                     <Input
                       type="number" min={1} value={termValue}
@@ -429,18 +433,18 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     <Select value={termUnit} onValueChange={(v) => setTermUnit(v as "years" | "months")}>
                       <SelectTrigger className="w-28"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="years">лет</SelectItem>
-                        <SelectItem value="months">месяцев</SelectItem>
+                        <SelectItem value="years">{t("calculator.years")}</SelectItem>
+                        <SelectItem value="months">{t("calculator.months")}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </FormRow>
 
-                <FormRow label="Дата выдачи">
+                <FormRow label={t("calculator.creditEarly.fields.issueDate")}>
                   <DatePick value={issueDate} onChange={(d) => d && setIssueDate(d)} />
                 </FormRow>
 
-                <FormRow label="Ставка" tooltip="Годовая процентная ставка по кредиту">
+                <FormRow label={t("calculator.creditEarly.fields.rate")} tooltip={t("calculator.creditEarly.rateTooltip")}>
                   <div className="space-y-2">
                     <Input
                       type="number" step={0.1} min={0}
@@ -456,9 +460,9 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         <table className="w-full text-xs">
                           <thead>
                             <tr className="bg-muted/50 border-b border-border">
-                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Дата изменения</th>
-                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Ставка, %</th>
-                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">Пересчитать</th>
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">{t("calculator.creditEarly.rateChangeDate")}</th>
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">{t("calculator.creditEarly.rateChangeValue")}</th>
+                              <th className="text-left px-2 py-1.5 font-medium text-muted-foreground">{t("calculator.creditEarly.rateChangeRecalc")}</th>
                               <th className="w-8" />
                             </tr>
                           </thead>
@@ -489,13 +493,13 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                                   >
                                     <SelectTrigger inputSize="sm" className="w-32"><SelectValue /></SelectTrigger>
                                     <SelectContent>
-                                      <SelectItem value="payment">Платёж</SelectItem>
-                                      <SelectItem value="term">Срок</SelectItem>
+                                      <SelectItem value="payment">{t("calculator.creditEarly.recalc.payment")}</SelectItem>
+                                      <SelectItem value="term">{t("calculator.creditEarly.recalc.term")}</SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </td>
                                 <td className="px-2 py-1">
-                                  <Button variant="ghost" size="icon-sm" onClick={() => removeRateChange(rc.id)} aria-label="Удалить">
+                                  <Button variant="ghost" size="icon-sm" onClick={() => removeRateChange(rc.id)} aria-label={t("calculator.creditEarly.fields.remove")}>
                                     <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                                   </Button>
                                 </td>
@@ -510,7 +514,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       onClick={addRateChange}
                       className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors mt-1"
                     >
-                      <Plus className="h-3 w-3" /> Изменение ставки
+                      <Plus className="h-3 w-3" /> {t("calculator.creditEarly.addRateChange")}
                     </button>
                   </div>
                 </FormRow>
@@ -528,7 +532,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     onCheckedChange={(v) => setFirstPayInterest(!!v)}
                   />
                   <Label htmlFor="first-pay-interest" className="text-sm cursor-pointer">
-                    Первый платёж – только проценты
+                    {t("calculator.creditEarly.fields.firstPaymentInterestOnly")}
                   </Label>
                 </div>
 
@@ -540,14 +544,14 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     onCheckedChange={(v) => setRoundPay(!!v)}
                   />
                   <Label htmlFor="round-pay" className="text-sm cursor-pointer">
-                    Округлять платёж
+                    {t("calculator.creditEarly.fields.roundPayment")}
                   </Label>
                   {roundPay && (
                     <Select value={roundTo} onValueChange={(v) => setRoundTo(v as "rub" | "hundred")}>
                       <SelectTrigger inputSize="sm" className="w-36"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="rub">До рублей</SelectItem>
-                        <SelectItem value="hundred">До сотен рублей</SelectItem>
+                        <SelectItem value="rub">{t("calculator.creditEarly.roundToRub")}</SelectItem>
+                        <SelectItem value="hundred">{t("calculator.creditEarly.roundToHundred")}</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -561,14 +565,14 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     onCheckedChange={(v) => setTransferWeekend(!!v)}
                   />
                   <Label htmlFor="transfer-weekend" className="text-sm cursor-pointer">
-                    Переносить с выходных
+                    {t("calculator.creditEarly.fields.shiftWeekend")}
                   </Label>
                   {transferWeekend && (
                     <Select value={transferDir} onValueChange={(v) => setTransferDir(v as "next" | "prev")}>
                       <SelectTrigger inputSize="sm" className="w-44"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="next">На следующий рабочий</SelectItem>
-                        <SelectItem value="prev">На предыдущий рабочий</SelectItem>
+                        <SelectItem value="next">{t("calculator.creditEarly.shiftNext")}</SelectItem>
+                        <SelectItem value="prev">{t("calculator.creditEarly.shiftPrev")}</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
@@ -581,13 +585,12 @@ export default function CreditEarlyRepaymentCalculatorPage() {
               <div className="space-y-3">
                 {/* Early payments */}
                 <SectionToggle
-                  title="Досрочные погашения"
+                  title={t("calculator.creditEarly.fields.earlyRepayments")}
                   icon={<TrendingDown className="h-4 w-4" />}
                   count={earlyPayments.length}
                   defaultOpen={earlyPayments.length > 0}
                 >
                   {earlyPayments.map((ep) => {
-                    // Вычислить количество регулярных платежей для бейджа
                     let recurringCount: number | null = null;
                     if (ep.recurring && ep.frequency && ep.date && ep.endDate) {
                       const startD = parseMaskedDateExt(ep.date);
@@ -602,12 +605,14 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     }
                     return (
                     <div key={ep.id} className="flex flex-col gap-0 rounded-lg border border-border bg-muted/30">
-                      {/* Строка 1: сумма, режим, тип-переключатель, удалить */}
+                      {/* Row 1: amount, mode, type-toggle, delete */}
                       <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
-                        {/* Тип: кнопка-переключатель */}
+                        {/* Type toggle button */}
                         <button
                           type="button"
-                          title={ep.recurring ? "Регулярный платёж — нажмите для смены на разовый" : "Разовый платёж — нажмите для смены на регулярный"}
+                          title={ep.recurring
+                            ? t("calculator.creditEarly.recurringToggleToOneTime")
+                            : t("calculator.creditEarly.oneTimeToggleToRecurring")}
                           onClick={() => updateEarlyPayment(ep.id, {
                             recurring: !ep.recurring,
                             ...(!ep.recurring && !ep.frequency ? { frequency: "monthly" as RecurringFrequency } : {}),
@@ -620,44 +625,44 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           }`}
                         >
                           {ep.recurring
-                            ? <><Repeat2 className="h-3 w-3" /> Регулярный</>
-                            : <><MinusIcon className="h-3 w-3" /> Разовый</>
+                            ? <><Repeat2 className="h-3 w-3" /> {t("calculator.creditEarly.fields.regular")}</>
+                            : <><MinusIcon className="h-3 w-3" /> {t("calculator.creditEarly.fields.oneTime")}</>
                           }
                         </button>
-                        {/* Дата начала */}
+                        {/* Start date */}
                         <DatePick
                           small
                           value={parseMaskedDateExt(ep.date)}
                           onChange={(d) => updateEarlyPayment(ep.id, { date: d ? format(d, "dd.MM.yyyy") : "" })}
                         />
-                        {/* Сумма */}
+                        {/* Amount */}
                         <Input
-                          type="text" inputSize="sm" placeholder="Сумма" className="w-28"
+                          type="text" inputSize="sm" placeholder={t("calculator.creditEarly.fields.amount")} className="w-28"
                           value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
-                          error={ep.amount > loanAmount ? `Макс. ${loanAmount.toLocaleString("ru-RU")} ₽` : ""}
+                          error={ep.amount > loanAmount ? `${t("calculator.creditEarly.maxAmount")} ${loanAmount.toLocaleString("ru-RU")} ₽` : ""}
                           onChange={(e) => {
                             const digits = e.target.value.replace(/\D/g, "");
                             updateEarlyPayment(ep.id, { amount: digits ? parseInt(digits) : 0 });
                           }}
                         />
-                        {/* Режим */}
+                        {/* Mode */}
                         <Select
                           value={ep.mode}
                           onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
                         >
                           <SelectTrigger inputSize="sm" className="w-36"><SelectValue /></SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="reduce_term">Уменьшить срок</SelectItem>
-                            <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
+                            <SelectItem value="reduce_term">{t("calculator.creditEarly.reduceTerm")}</SelectItem>
+                            <SelectItem value="reduce_payment">{t("calculator.creditEarly.reducePayment")}</SelectItem>
                           </SelectContent>
                         </Select>
                         <div className="flex-1" />
-                        {/* Удалить */}
-                        <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(ep.id)} aria-label="Удалить">
+                        {/* Delete */}
+                        <Button variant="ghost" size="icon-sm" onClick={() => removeEarlyPayment(ep.id)} aria-label={t("calculator.creditEarly.fields.remove")}>
                           <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                         </Button>
                       </div>
-                      {/* Строка 2: параметры регулярного (только если recurring) */}
+                      {/* Row 2: recurring params */}
                       {ep.recurring && (
                         <div className="flex items-center gap-2 px-3 py-2 flex-wrap border-t border-border/50 bg-primary/5">
                           <Repeat2 className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -667,12 +672,12 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           >
                             <SelectTrigger inputSize="sm" className="w-36 bg-background"><SelectValue /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="monthly">каждый месяц</SelectItem>
-                              <SelectItem value="quarterly">каждый квартал</SelectItem>
-                              <SelectItem value="yearly">каждый год</SelectItem>
+                              <SelectItem value="monthly">{t("calculator.creditEarly.freqMonthly")}</SelectItem>
+                              <SelectItem value="quarterly">{t("calculator.creditEarly.freqQuarterly")}</SelectItem>
+                              <SelectItem value="yearly">{t("calculator.creditEarly.freqYearly")}</SelectItem>
                             </SelectContent>
                           </Select>
-                          <span className="text-xs text-muted-foreground">до</span>
+                          <span className="text-xs text-muted-foreground">{t("calculator.creditEarly.until")}</span>
                           <DatePick
                             small
                             value={parseMaskedDateExt(ep.endDate ?? "")}
@@ -680,7 +685,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           />
                           {recurringCount !== null && (
                             <span className="ml-auto text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
-                              {recurringCount} платежей
+                              {recurringCount} {t("calculator.creditEarly.payments")}
                             </span>
                           )}
                         </div>
@@ -691,19 +696,19 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   <button type="button" onClick={addEarlyPayment}
                     className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    <Plus className="h-4 w-4" /> Добавить
+                    <Plus className="h-4 w-4" /> {t("calculator.creditEarly.fields.add")}
                   </button>
                 </SectionToggle>
 
                 {/* Credit holidays */}
                 <SectionToggle
-                  title="Кредитные каникулы"
+                  title={t("calculator.creditEarly.fields.loanHoliday")}
                   icon={<CalendarOff className="h-4 w-4" />}
                   count={creditHolidays.length}
                   defaultOpen={creditHolidays.length > 0}
                 >
                   <p className="text-xs text-muted-foreground -mt-1">
-                    Период, в котором платёж отсутствует или выплачиваются только проценты. После каникул платёж пересчитывается.
+                    {t("calculator.creditEarly.fields.loanHolidayHelp")}
                   </p>
                   {creditHolidays.map((h) => (
                     <div key={h.id} className="flex items-center gap-2 flex-wrap">
@@ -719,7 +724,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           value={h.months}
                           onChange={(e) => updateCreditHoliday(h.id, { months: parseInt(e.target.value) || 1 })}
                         />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">мес.</span>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{t("calculator.creditEarly.monthsShort")}</span>
                       </div>
                       <Select
                         value={h.type}
@@ -727,11 +732,11 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       >
                         <SelectTrigger inputSize="sm" className="w-44"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="interest">Только проценты</SelectItem>
-                          <SelectItem value="none">Без платежей</SelectItem>
+                          <SelectItem value="interest">{t("calculator.creditEarly.holidayInterestOnly")}</SelectItem>
+                          <SelectItem value="none">{t("calculator.creditEarly.holidayNonePayment")}</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Button variant="ghost" size="icon-sm" onClick={() => removeCreditHoliday(h.id)} aria-label="Удалить">
+                      <Button variant="ghost" size="icon-sm" onClick={() => removeCreditHoliday(h.id)} aria-label={t("calculator.creditEarly.fields.remove")}>
                         <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
                       </Button>
                     </div>
@@ -739,7 +744,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   <button type="button" onClick={addCreditHoliday}
                     className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    <Plus className="h-4 w-4" /> Добавить
+                    <Plus className="h-4 w-4" /> {t("calculator.creditEarly.fields.add")}
                   </button>
                 </SectionToggle>
               </div>
@@ -748,7 +753,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
 
               <div className="flex items-center gap-3 sm:pl-52">
                 <Button icon={<Calculator className="h-4 w-4" />}>
-                  Рассчитать
+                  {t("calculator.calculate")}
                 </Button>
               </div>
             </div>
@@ -758,11 +763,11 @@ export default function CreditEarlyRepaymentCalculatorPage() {
               <section className="section-card space-y-5" aria-labelledby="results-heading">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <h2 id="results-heading" className="text-lg font-semibold">Результаты расчёта</h2>
+                  <h2 id="results-heading" className="text-lg font-semibold">{t("calculator.results")}</h2>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>Печать</Button>
-                    <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>PDF</Button>
-                    <Button variant="outline" size="sm" icon={<Save />} onClick={handleSave}>Сохранить</Button>
+                    <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>{t("calculator.print")}</Button>
+                    <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>{t("calculator.downloadPdf")}</Button>
+                    <Button variant="outline" size="sm" icon={<Save />} onClick={handleSave}>{t("common.save")}</Button>
                   </div>
                 </div>
 
@@ -770,54 +775,54 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {[
                     {
-                      label: "Платёж без досрочных",
+                      label: t("calculator.creditEarly.kpi.basePayment"),
                       value: fmtMoney(result.baseMonthlyPayment) + " ₽",
-                      sub: earlyPayments.length ? `→ изменится после погашений` : undefined,
+                      sub: earlyPayments.length ? t("calculator.creditEarly.willChangeAfterEarly") : undefined,
                     },
                     {
-                      label: "Переплата без досрочных",
+                      label: t("calculator.creditEarly.kpi.overpaymentWithoutEarly"),
                       value: fmtMoney(result.baseTotalInterest) + " ₽",
                       color: "text-destructive",
                     },
                     {
-                      label: "Переплата с досрочными",
+                      label: t("calculator.creditEarly.kpi.totalInterest"),
                       value: fmtMoney(result.totalInterest) + " ₽",
                       color: "text-destructive",
                     },
                     {
-                      label: "Экономия на процентах",
+                      label: t("calculator.creditEarly.kpi.savings"),
                       value: fmtMoney(result.interestSaved) + " ₽",
                       color: result.interestSaved > 0 ? "text-[hsl(var(--success))]" : "text-foreground",
                     },
                     {
-                      label: "Сокращение срока",
-                      value: result.termSavedMonths > 0 ? termLabel(result.termSavedMonths) : "—",
+                      label: t("calculator.creditEarly.kpi.termReductionMonths"),
+                      value: result.termSavedMonths > 0 ? termLabel(result.termSavedMonths, tl) : "—",
                       color: result.termSavedMonths > 0 ? "text-[hsl(var(--success))]" : undefined,
                     },
                     {
-                      label: "Всего досрочно внесено",
+                      label: t("calculator.creditEarly.summary.totalEarlyRepayments"),
                       value: fmtMoney(result.totalEarlyPaid) + " ₽",
                     },
                     {
-                      label: "Фактический срок",
-                      value: termLabel(result.actualTermMonths),
-                      sub: result.termSavedMonths > 0 ? `из ${termLabel(result.baseTermMonths)}` : undefined,
+                      label: t("calculator.creditEarly.actualTerm"),
+                      value: termLabel(result.actualTermMonths, tl),
+                      sub: result.termSavedMonths > 0 ? `${t("calculator.creditEarly.outOf")} ${termLabel(result.baseTermMonths, tl)}` : undefined,
                       color: result.termSavedMonths > 0 ? "text-[hsl(var(--success))]" : "text-foreground",
                     },
                     {
-                      label: "Переплата в %",
+                      label: t("calculator.creditEarly.kpi.overpaymentPercent"),
                       value: loanAmount > 0
                         ? ((result.totalInterest / loanAmount) * 100).toFixed(1) + "%"
                         : "—",
                       sub: loanAmount > 0
-                        ? `без доср.: ${((result.baseTotalInterest / loanAmount) * 100).toFixed(1)}%`
+                        ? `${t("calculator.creditEarly.withoutEarlyShort")}: ${((result.baseTotalInterest / loanAmount) * 100).toFixed(1)}%`
                         : undefined,
                       color: "text-destructive",
                     },
                     {
-                      label: "Всего выплат",
+                      label: t("calculator.creditEarly.kpi.totalPayment"),
                       value: fmtMoney(loanAmount + result.totalInterest) + " ₽",
-                      sub: `долг ${fmtMoney(loanAmount)} + % ${fmtMoney(result.totalInterest)}`,
+                      sub: `${t("calculator.creditEarly.debtLabel")} ${fmtMoney(loanAmount)} + % ${fmtMoney(result.totalInterest)}`,
                     },
                   ].map((item) => (
                     <div key={item.label} className="form-section space-y-1">
@@ -836,10 +841,10 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))] shrink-0" />
                     <p className="text-sm">
                       <span className="font-semibold text-[hsl(var(--success))]">
-                        Вы экономите {fmtMoney(result.interestSaved)} ₽
+                        {t("calculator.creditEarly.youSave")} {fmtMoney(result.interestSaved)} ₽
                       </span>
                       {result.termSavedMonths > 0 && (
-                        <span className="text-muted-foreground"> и сокращаете срок на {termLabel(result.termSavedMonths)}</span>
+                        <span className="text-muted-foreground"> {t("calculator.creditEarly.andShortenTermBy")} {termLabel(result.termSavedMonths, tl)}</span>
                       )}
                     </p>
                   </div>
@@ -849,43 +854,43 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 {(firstPayInterest || roundPay || transferWeekend || rateChanges.length > 0 || creditHolidays.length > 0) && (
                   <div className="flex flex-wrap gap-1.5">
                     {firstPayInterest && (
-                      <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">1-й платёж: только %</span>
+                      <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">{t("calculator.creditEarly.badge.firstPayInterest")}</span>
                     )}
                     {roundPay && (
                       <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">
-                        Округление: {roundTo === "rub" ? "до рублей" : "до сотен"}
+                        {t("calculator.creditEarly.badge.rounding")}: {roundTo === "rub" ? t("calculator.creditEarly.roundToRub") : t("calculator.creditEarly.roundToHundred")}
                       </span>
                     )}
                     {transferWeekend && (
                       <span className="text-xs bg-muted text-muted-foreground rounded-full px-2.5 py-1">
-                        Перенос: {transferDir === "next" ? "следующий рабочий" : "предыдущий рабочий"}
+                        {t("calculator.creditEarly.badge.shift")}: {transferDir === "next" ? t("calculator.creditEarly.shiftNext") : t("calculator.creditEarly.shiftPrev")}
                       </span>
                     )}
                     {rateChanges.length > 0 && (
                       <span className="text-xs bg-primary/10 text-primary rounded-full px-2.5 py-1">
-                        Изменений ставки: {rateChanges.length}
+                        {t("calculator.creditEarly.badge.rateChanges")}: {rateChanges.length}
                       </span>
                     )}
                     {creditHolidays.length > 0 && (
                       <span className="text-xs bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-full px-2.5 py-1">
-                        Каникулы: {creditHolidays.reduce((s, h) => s + h.months, 0)} мес.
+                        {t("calculator.creditEarly.badge.holidays")}: {creditHolidays.reduce((s, h) => s + h.months, 0)} {t("calculator.creditEarly.monthsShort")}
                       </span>
                     )}
                   </div>
                 )}
 
                 {/* Donut chart */}
-                <div role="figure" aria-label="Структура выплат">
-                  <h3 className="text-sm font-medium mb-3">Структура выплат</h3>
+                <div role="figure" aria-label={t("calculator.creditEarly.chart.paymentStructure")}>
+                  <h3 className="text-sm font-medium mb-3">{t("calculator.creditEarly.chart.paymentStructure")}</h3>
                   <div className="flex flex-col sm:flex-row items-center gap-6">
                     <div className="w-48 h-48">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
                             data={[
-                              { name: "Основной долг", value: loanAmount },
-                              { name: "Проценты (итого)", value: result.totalInterest },
-                              ...(result.interestSaved > 0 ? [{ name: "Сэкономлено", value: result.interestSaved }] : []),
+                              { name: t("calculator.creditEarly.chart.principal"), value: loanAmount },
+                              { name: t("calculator.creditEarly.chart.interest"), value: result.totalInterest },
+                              ...(result.interestSaved > 0 ? [{ name: t("calculator.creditEarly.chart.saved"), value: result.interestSaved }] : []),
                             ]}
                             cx="50%" cy="50%"
                             innerRadius={50} outerRadius={80}
@@ -911,18 +916,18 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-[hsl(var(--success))]" />
-                        <span className="text-sm text-muted-foreground">Основной долг</span>
+                        <span className="text-sm text-muted-foreground">{t("calculator.creditEarly.chart.principal")}</span>
                         <span className="text-sm font-semibold font-mono">{fmt(loanAmount)} ₽</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-destructive" />
-                        <span className="text-sm text-muted-foreground">Проценты</span>
+                        <span className="text-sm text-muted-foreground">{t("calculator.creditEarly.chart.interest")}</span>
                         <span className="text-sm font-semibold font-mono">{fmt(result.totalInterest)} ₽</span>
                       </div>
                       {result.interestSaved > 0 && (
                         <div className="flex items-center gap-2">
                           <span className="w-3 h-3 rounded-full bg-primary" />
-                          <span className="text-sm text-muted-foreground">Сэкономлено</span>
+                          <span className="text-sm text-muted-foreground">{t("calculator.creditEarly.chart.saved")}</span>
                           <span className="text-sm font-semibold font-mono text-primary">{fmt(result.interestSaved)} ₽</span>
                         </div>
                       )}
@@ -931,8 +936,8 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 </div>
 
                 {/* Bar chart */}
-                <div role="figure" aria-label="Разбивка платежей по месяцам">
-                  <h3 className="text-sm font-medium mb-3">Разбивка платежей по месяцам</h3>
+                <div role="figure" aria-label={t("calculator.creditEarly.chart.paymentBreakdown")}>
+                  <h3 className="text-sm font-medium mb-3">{t("calculator.creditEarly.chart.paymentBreakdown")}</h3>
                   <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={barData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
@@ -952,7 +957,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         <RechartsTooltip
                           formatter={(value: number, name: string) => [
                             fmt(value) + " ₽",
-                            name === "principal" ? "Основной долг" : name === "interest" ? "Проценты" : "Досрочное",
+                            name === "principal" ? t("calculator.creditEarly.chart.principal") : name === "interest" ? t("calculator.creditEarly.chart.interest") : t("calculator.creditEarly.chart.early"),
                           ]}
                           contentStyle={{
                             backgroundColor: "hsl(var(--popover))",
@@ -964,7 +969,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         />
                         <Legend
                           formatter={(value) =>
-                            value === "principal" ? "Основной долг" : value === "interest" ? "Проценты" : "Досрочное"
+                            value === "principal" ? t("calculator.creditEarly.chart.principal") : value === "interest" ? t("calculator.creditEarly.chart.interest") : t("calculator.creditEarly.chart.early")
                           }
                           wrapperStyle={{ fontSize: "0.75rem" }}
                         />
@@ -983,10 +988,10 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                 {/* Schedule table */}
                 <div>
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
-                    <h3 className="text-sm font-medium">График погашения</h3>
+                    <h3 className="text-sm font-medium">{t("calculator.creditEarly.scheduleTitle")}</h3>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>PDF</Button>
-                      <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>Печать</Button>
+                      <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>{t("calculator.downloadPdf")}</Button>
+                      <Button variant="outline" size="sm" icon={<Printer />} onClick={() => window.print()}>{t("calculator.print")}</Button>
                     </div>
                   </div>
                   <div className="rounded-md border relative overflow-auto max-h-[480px]">
@@ -994,13 +999,13 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       <TableHeader className="sticky top-0 z-10 bg-card shadow-[0_1px_0_0_hsl(var(--border))]">
                         <TableRow className="border-b-0">
                           <TableHead className="w-10">#</TableHead>
-                          <TableHead>Дата</TableHead>
-                          <TableHead className="text-right">Платёж</TableHead>
-                          <TableHead className="text-right">Осн. долг</TableHead>
-                          <TableHead className="text-right">Проценты</TableHead>
-                          <TableHead className="text-right">Ставка</TableHead>
-                          <TableHead className="text-right">Досрочное</TableHead>
-                          <TableHead className="text-right">Остаток</TableHead>
+                          <TableHead>{t("calculator.creditEarly.col.date")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.payment")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.principal")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.interest")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.rate")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.early")}</TableHead>
+                          <TableHead className="text-right">{t("calculator.creditEarly.col.balance")}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1038,7 +1043,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       </TableBody>
                         <TableFooter className="sticky bottom-0 z-10 bg-card shadow-[0_-1px_0_0_hsl(var(--border))]">
                         <TableRow className="border-t-0 font-semibold">
-                          <TableCell colSpan={2} className="text-xs">Итого</TableCell>
+                          <TableCell colSpan={2} className="text-xs">{t("common.total")}</TableCell>
                           <TableCell className="text-right font-mono text-xs">{fmt(totalPayment)}</TableCell>
                           <TableCell className="text-right font-mono text-xs text-[hsl(var(--success))]">{fmt(totalPrincipal)}</TableCell>
                           <TableCell className="text-right font-mono text-xs text-destructive">{fmt(totalInterest)}</TableCell>
@@ -1060,22 +1065,22 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Сохранить расчёт</DialogTitle>
+            <DialogTitle>{t("common.saveCalculation")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
-            <Label htmlFor="save-title-er">Название расчёта</Label>
+            <Label htmlFor="save-title-er">{t("common.calculationName")}</Label>
             <Input
               id="save-title-er"
-              placeholder="Например: Ипотека с досрочным 500к"
+              placeholder={t("common.calculationNamePlaceholder")}
               value={saveTitle}
               onChange={(e) => setSaveTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && confirmSave()}
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>Отмена</Button>
+            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>{t("common.cancel")}</Button>
             <Button onClick={confirmSave} disabled={!saveTitle.trim() || saving}>
-              {saving ? "Сохранение…" : "Сохранить"}
+              {saving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

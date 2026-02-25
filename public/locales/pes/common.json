@@ -456,6 +456,61 @@
         "monthsCount_one": "{{count}} ماه",
         "monthsCount_other": "{{count}} ماه",
         "and": "و"
+      },
+      "yearsShort": "سال",
+      "rateTooltip": "نرخ بهره سالانه وام",
+      "rateChangeDate": "تاریخ تغییر",
+      "rateChangeValue": "نرخ، %",
+      "rateChangeRecalc": "محاسبه مجدد",
+      "addRateChange": "افزودن تغییر نرخ",
+      "roundToRub": "گرد کردن به عدد صحیح",
+      "roundToHundred": "گرد کردن به صدتا",
+      "shiftNext": "روز کاری بعدی",
+      "shiftPrev": "روز کاری قبلی",
+      "recurringToggleToOneTime": "دوره‌ای — برای تغییر به یک‌بار کلیک کنید",
+      "oneTimeToggleToRecurring": "یک‌بار — برای تغییر به دوره‌ای کلیک کنید",
+      "maxAmount": "حداکثر",
+      "reduceTerm": "کاهش مدت",
+      "reducePayment": "کاهش قسط",
+      "freqMonthly": "هر ماه",
+      "freqQuarterly": "هر فصل",
+      "freqYearly": "هر سال",
+      "until": "تا",
+      "payments": "پرداخت",
+      "holidayInterestOnly": "فقط بهره",
+      "holidayNonePayment": "بدون پرداخت",
+      "holidayNone": "تعطیلات",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ پس از بازپرداخت تغییر می‌کند",
+      "actualTerm": "مدت واقعی",
+      "outOf": "از",
+      "withoutEarlyShort": "بدون پیش‌پرداخت",
+      "debtLabel": "بدهی",
+      "andShortenTermBy": "و مدت را به اندازه",
+      "badge": {
+        "firstPayInterest": "قسط اول: فقط بهره",
+        "rounding": "گرد کردن",
+        "shift": "انتقال",
+        "rateChanges": "تغییر نرخ",
+        "holidays": "تعطیلات پرداخت"
+      },
+      "chart": {
+        "paymentStructure": "ساختار پرداخت‌ها",
+        "paymentBreakdown": "تجزیه ماهانه پرداخت‌ها",
+        "principal": "اصل وام",
+        "interest": "بهره",
+        "saved": "صرفه‌جویی",
+        "early": "پرداخت زودهنگام"
+      },
+      "scheduleTitle": "جدول بازپرداخت",
+      "col": {
+        "date": "تاریخ",
+        "payment": "قسط",
+        "principal": "اصل",
+        "interest": "بهره",
+        "rate": "نرخ",
+        "early": "زودهنگام",
+        "balance": "مانده"
       }
     }
   },
@@ -749,4 +804,7 @@
       "description": "سؤال یا بازخورد دارید؟ با ما تماس بگیرید تا پاسخ دهیم."
     }
   }
+,
+  "common": { "total": "مجموع", "save": "ذخیره", "saving": "در حال ذخیره…", "saved": "ذخیره شد", "savedDescription": "محاسبه ذخیره شد.", "saveFailed": "ذخیره ناموفق.", "error": "خطا", "cancel": "لغو", "saveCalculation": "ذخیره محاسبه", "calculationName": "نام محاسبه", "calculationNamePlaceholder": "مثال: وام با بازپرداخت زودهنگام" },
+  "auth": { "loginRequired": "ورود لازم است", "loginToSave": "برای ذخیره محاسبات وارد شوید." }
 }

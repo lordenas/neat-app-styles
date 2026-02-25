@@ -416,6 +416,61 @@
         "monthsCount_one": "{{count}} month",
         "monthsCount_other": "{{count}} months",
         "and": "and"
+      },
+      "yearsShort": "yr.",
+      "rateTooltip": "Annual interest rate on the loan",
+      "rateChangeDate": "Date of change",
+      "rateChangeValue": "Rate, %",
+      "rateChangeRecalc": "Recalculate",
+      "addRateChange": "Add rate change",
+      "roundToRub": "Round to whole",
+      "roundToHundred": "Round to hundreds",
+      "shiftNext": "To next business day",
+      "shiftPrev": "To previous business day",
+      "recurringToggleToOneTime": "Recurring — click to switch to one-time",
+      "oneTimeToggleToRecurring": "One-time — click to switch to recurring",
+      "maxAmount": "Max.",
+      "reduceTerm": "Reduce term",
+      "reducePayment": "Reduce payment",
+      "freqMonthly": "Every month",
+      "freqQuarterly": "Every quarter",
+      "freqYearly": "Every year",
+      "until": "until",
+      "payments": "payments",
+      "holidayInterestOnly": "Interest only",
+      "holidayNonePayment": "No payments",
+      "holidayNone": "holiday",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ will change after repayments",
+      "actualTerm": "Actual term",
+      "outOf": "of",
+      "withoutEarlyShort": "without early",
+      "debtLabel": "debt",
+      "andShortenTermBy": "and shorten the term by",
+      "badge": {
+        "firstPayInterest": "1st payment: interest only",
+        "rounding": "Rounding",
+        "shift": "Shift",
+        "rateChanges": "Rate changes",
+        "holidays": "Holidays"
+      },
+      "chart": {
+        "paymentStructure": "Payment structure",
+        "paymentBreakdown": "Payment breakdown by month",
+        "principal": "Principal",
+        "interest": "Interest",
+        "saved": "Saved",
+        "early": "Early"
+      },
+      "scheduleTitle": "Repayment schedule",
+      "col": {
+        "date": "Date",
+        "payment": "Payment",
+        "principal": "Principal",
+        "interest": "Interest",
+        "rate": "Rate",
+        "early": "Early",
+        "balance": "Balance"
       }
     },
     "refinancing": {
@@ -859,6 +914,24 @@
     "contact": {
       "title": "Contact",
       "description": "Have questions or feedback? Reach out and we will get back to you."
-    }
+,
+  "common": {
+    "total": "Total",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "savedDescription": "Calculation added to your account.",
+    "saveFailed": "Failed to save calculation.",
+    "error": "Error",
+    "cancel": "Cancel",
+    "saveCalculation": "Save calculation",
+    "calculationName": "Calculation name",
+    "calculationNamePlaceholder": "e.g. Mortgage with early 50k"
+  },
+  "auth": {
+    "loginRequired": "Sign in required",
+    "loginToSave": "You need to sign in to save calculations."
+  }
+}
   }
 }

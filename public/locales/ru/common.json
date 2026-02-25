@@ -596,6 +596,61 @@
         "monthsCount_few": "{{count}} месяца",
         "monthsCount_many": "{{count}} месяцев",
         "and": "и"
+      },
+      "yearsShort": "л.",
+      "rateTooltip": "Годовая процентная ставка по кредиту",
+      "rateChangeDate": "Дата изменения",
+      "rateChangeValue": "Ставка, %",
+      "rateChangeRecalc": "Пересчитать",
+      "addRateChange": "Изменение ставки",
+      "roundToRub": "До рублей",
+      "roundToHundred": "До сотен рублей",
+      "shiftNext": "На следующий рабочий",
+      "shiftPrev": "На предыдущий рабочий",
+      "recurringToggleToOneTime": "Регулярный платёж — нажмите для смены на разовый",
+      "oneTimeToggleToRecurring": "Разовый платёж — нажмите для смены на регулярный",
+      "maxAmount": "Макс.",
+      "reduceTerm": "Уменьшить срок",
+      "reducePayment": "Уменьшить платёж",
+      "freqMonthly": "Каждый месяц",
+      "freqQuarterly": "Каждый квартал",
+      "freqYearly": "Каждый год",
+      "until": "до",
+      "payments": "платежей",
+      "holidayInterestOnly": "Только проценты",
+      "holidayNonePayment": "Без платежей",
+      "holidayNone": "каникулы",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ изменится после погашений",
+      "actualTerm": "Фактический срок",
+      "outOf": "из",
+      "withoutEarlyShort": "без доср.",
+      "debtLabel": "долг",
+      "andShortenTermBy": "и сокращаете срок на",
+      "badge": {
+        "firstPayInterest": "1-й платёж: только %",
+        "rounding": "Округление",
+        "shift": "Перенос",
+        "rateChanges": "Изменений ставки",
+        "holidays": "Каникулы"
+      },
+      "chart": {
+        "paymentStructure": "Структура выплат",
+        "paymentBreakdown": "Разбивка платежей по месяцам",
+        "principal": "Основной долг",
+        "interest": "Проценты",
+        "saved": "Сэкономлено",
+        "early": "Досрочное"
+      },
+      "scheduleTitle": "График погашения",
+      "col": {
+        "date": "Дата",
+        "payment": "Платёж",
+        "principal": "Осн. долг",
+        "interest": "Проценты",
+        "rate": "Ставка",
+        "early": "Досрочное",
+        "balance": "Остаток"
       }
     },
     "refinancing": {
@@ -1366,5 +1421,23 @@
       "title": "Контакты",
       "description": "Есть вопросы или предложения? Напишите нам, и мы ответим."
     }
+  }
+,
+  "common": {
+    "total": "Итого",
+    "save": "Сохранить",
+    "saving": "Сохранение…",
+    "saved": "Сохранено",
+    "savedDescription": "Расчёт добавлен в личный кабинет.",
+    "saveFailed": "Не удалось сохранить расчёт.",
+    "error": "Ошибка",
+    "cancel": "Отмена",
+    "saveCalculation": "Сохранить расчёт",
+    "calculationName": "Название расчёта",
+    "calculationNamePlaceholder": "Например: Ипотека с досрочным 500к"
+  },
+  "auth": {
+    "loginRequired": "Войдите в аккаунт",
+    "loginToSave": "Для сохранения расчётов нужна авторизация."
   }
 }

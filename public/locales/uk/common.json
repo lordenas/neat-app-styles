@@ -369,6 +369,61 @@
         "yearsCount_many": "{{count}} років",
         "monthsCount_few": "{{count}} місяці",
         "monthsCount_many": "{{count}} місяців"
+      },
+      "yearsShort": "р.",
+      "rateTooltip": "Річна відсоткова ставка по кредиту",
+      "rateChangeDate": "Дата зміни",
+      "rateChangeValue": "Ставка, %",
+      "rateChangeRecalc": "Перерахувати",
+      "addRateChange": "Зміна ставки",
+      "roundToRub": "До цілого числа",
+      "roundToHundred": "До сотень",
+      "shiftNext": "На наступний робочий",
+      "shiftPrev": "На попередній робочий",
+      "recurringToggleToOneTime": "Регулярний — натисніть для переходу на разовий",
+      "oneTimeToggleToRecurring": "Разовий — натисніть для переходу на регулярний",
+      "maxAmount": "Макс.",
+      "reduceTerm": "Зменшити строк",
+      "reducePayment": "Зменшити платіж",
+      "freqMonthly": "Щомісяця",
+      "freqQuarterly": "Щокварталу",
+      "freqYearly": "Щороку",
+      "until": "до",
+      "payments": "платежів",
+      "holidayInterestOnly": "Лише відсотки",
+      "holidayNonePayment": "Без платежів",
+      "holidayNone": "канікули",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ зміниться після погашень",
+      "actualTerm": "Фактичний строк",
+      "outOf": "з",
+      "withoutEarlyShort": "без достр.",
+      "debtLabel": "борг",
+      "andShortenTermBy": "і скорочуєте строк на",
+      "badge": {
+        "firstPayInterest": "1-й платіж: лише %",
+        "rounding": "Округлення",
+        "shift": "Перенесення",
+        "rateChanges": "Змін ставки",
+        "holidays": "Канікули"
+      },
+      "chart": {
+        "paymentStructure": "Структура виплат",
+        "paymentBreakdown": "Розбивка платежів по місяцях",
+        "principal": "Основний борг",
+        "interest": "Відсотки",
+        "saved": "Зекономлено",
+        "early": "Дострокове"
+      },
+      "scheduleTitle": "Графік погашення",
+      "col": {
+        "date": "Дата",
+        "payment": "Платіж",
+        "principal": "Осн. борг",
+        "interest": "Відсотки",
+        "rate": "Ставка",
+        "early": "Дострокове",
+        "balance": "Залишок"
       }
     },
     "refinancing": {
@@ -753,4 +808,7 @@
       "description": "Є питання або відгуки? Напишіть нам — ми відповімо."
     }
   }
+,
+  "common": { "total": "Разом", "save": "Зберегти", "saving": "Збереження…", "saved": "Збережено", "savedDescription": "Розрахунок збережено.", "saveFailed": "Не вдалося зберегти.", "error": "Помилка", "cancel": "Скасувати", "saveCalculation": "Зберегти розрахунок", "calculationName": "Назва розрахунку", "calculationNamePlaceholder": "напр. Кредит з достроковим погашенням" },
+  "auth": { "loginRequired": "Потрібна авторизація", "loginToSave": "Увійдіть, щоб зберігати розрахунки." }
 }

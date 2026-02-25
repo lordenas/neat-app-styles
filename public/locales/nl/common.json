@@ -365,6 +365,61 @@
         "monthsCount_one": "{{count}} maand",
         "monthsCount_other": "{{count}} maanden",
         "and": "en"
+      },
+      "yearsShort": "j.",
+      "rateTooltip": "Jaarlijkse rentevoet van de lening",
+      "rateChangeDate": "Wijzigingsdatum",
+      "rateChangeValue": "Rente, %",
+      "rateChangeRecalc": "Herberekenen",
+      "addRateChange": "Rentewijziging toevoegen",
+      "roundToRub": "Afronden op hele eenheden",
+      "roundToHundred": "Afronden op honderdtallen",
+      "shiftNext": "Volgende werkdag",
+      "shiftPrev": "Vorige werkdag",
+      "recurringToggleToOneTime": "Terugkerend — klik om te wisselen naar eenmalig",
+      "oneTimeToggleToRecurring": "Eenmalig — klik om te wisselen naar terugkerend",
+      "maxAmount": "Max.",
+      "reduceTerm": "Looptijd verkorten",
+      "reducePayment": "Termijn verlagen",
+      "freqMonthly": "Maandelijks",
+      "freqQuarterly": "Driemaandelijks",
+      "freqYearly": "Jaarlijks",
+      "until": "tot",
+      "payments": "betalingen",
+      "holidayInterestOnly": "Alleen rente",
+      "holidayNonePayment": "Geen betalingen",
+      "holidayNone": "pauze",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ wijzigt na aflossingen",
+      "actualTerm": "Werkelijke looptijd",
+      "outOf": "van",
+      "withoutEarlyShort": "zonder vervroegd",
+      "debtLabel": "schuld",
+      "andShortenTermBy": "en verkortin looptijd met",
+      "badge": {
+        "firstPayInterest": "1e betaling: alleen rente",
+        "rounding": "Afronding",
+        "shift": "Verschuiving",
+        "rateChanges": "Rentewijzigingen",
+        "holidays": "Betalingspauze"
+      },
+      "chart": {
+        "paymentStructure": "Betalingsstructuur",
+        "paymentBreakdown": "Maandelijkse betalingsverdeling",
+        "principal": "Hoofdsom",
+        "interest": "Rente",
+        "saved": "Bespaard",
+        "early": "Vervroegde aflossing"
+      },
+      "scheduleTitle": "Aflossingsschema",
+      "col": {
+        "date": "Datum",
+        "payment": "Betaling",
+        "principal": "Hoofdsom",
+        "interest": "Rente",
+        "rate": "Rente",
+        "early": "Vervroegd",
+        "balance": "Saldo"
       }
     },
     "refinancing": {
@@ -749,4 +804,7 @@
       "description": "Vragen of feedback? Neem contact op en we reageren."
     }
   }
+,
+  "common": { "total": "Totaal", "save": "Opslaan", "saving": "Opslaan…", "saved": "Opgeslagen", "savedDescription": "Berekening opgeslagen.", "saveFailed": "Opslaan mislukt.", "error": "Fout", "cancel": "Annuleren", "saveCalculation": "Berekening opslaan", "calculationName": "Naam van de berekening", "calculationNamePlaceholder": "bijv. Lening met vervroegde aflossing" },
+  "auth": { "loginRequired": "Aanmelden vereist", "loginToSave": "Log in om berekeningen op te slaan." }
 }
