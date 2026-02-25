@@ -77,8 +77,8 @@ export default function InsuranceTenureCalculator() {
                 : null;
               const isValid = p.startDate && p.endDate && new Date(p.endDate) >= new Date(p.startDate);
               return (
-                <div key={i} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-center">
-                  <span className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                <div key={i} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-start">
+                  <span className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-1 ${isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
                     {i + 1}
                   </span>
                   <div>
@@ -103,7 +103,7 @@ export default function InsuranceTenureCalculator() {
                     variant="ghost"
                     size="icon"
                     onClick={() => removePeriod(i)}
-                    className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                    className="h-8 w-8 shrink-0 mt-1 text-muted-foreground hover:text-destructive"
                     disabled={periods.length <= 1}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
