@@ -471,7 +471,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                                   <Input
                                     type="number" step={0.1} min={0}
                                     inputSize="sm"
-                                    className="w-20"
+                                    className="w-20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                     value={rc.ratePercent}
                                     onChange={(e) => updateRateChange(rc.id, { ratePercent: parseFloat(e.target.value) || 0 })}
                                     inputEnd={<span className="text-xs">%</span>}
