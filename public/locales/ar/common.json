@@ -456,6 +456,61 @@
         "monthsCount_one": "{{count}} شهر",
         "monthsCount_other": "{{count}} أشهر",
         "and": "و"
+      },
+      "yearsShort": "سنة",
+      "rateTooltip": "معدل الفائدة السنوي للقرض",
+      "rateChangeDate": "تاريخ التغيير",
+      "rateChangeValue": "معدل الفائدة، %",
+      "rateChangeRecalc": "إعادة الحساب",
+      "addRateChange": "إضافة تغيير معدل",
+      "roundToRub": "تقريب إلى عدد صحيح",
+      "roundToHundred": "تقريب إلى المئات",
+      "shiftNext": "يوم العمل التالي",
+      "shiftPrev": "يوم العمل السابق",
+      "recurringToggleToOneTime": "متكرر — انقر للتبديل إلى مرة واحدة",
+      "oneTimeToggleToRecurring": "مرة واحدة — انقر للتبديل إلى متكرر",
+      "maxAmount": "الحد الأقصى",
+      "reduceTerm": "تقليل المدة",
+      "reducePayment": "تقليل الدفعة",
+      "freqMonthly": "كل شهر",
+      "freqQuarterly": "كل ربع سنة",
+      "freqYearly": "كل سنة",
+      "until": "حتى",
+      "payments": "دفعات",
+      "holidayInterestOnly": "الفائدة فقط",
+      "holidayNonePayment": "لا دفعات",
+      "holidayNone": "عطلة",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ سيتغير بعد السداد المبكر",
+      "actualTerm": "المدة الفعلية",
+      "outOf": "من",
+      "withoutEarlyShort": "بدون مبكر",
+      "debtLabel": "دين",
+      "andShortenTermBy": "وتقليل المدة بمقدار",
+      "badge": {
+        "firstPayInterest": "الدفعة الأولى: فائدة فقط",
+        "rounding": "تقريب",
+        "shift": "تحويل",
+        "rateChanges": "تغييرات معدل الفائدة",
+        "holidays": "عطلة سداد"
+      },
+      "chart": {
+        "paymentStructure": "هيكل الدفعات",
+        "paymentBreakdown": "توزيع الدفعات الشهرية",
+        "principal": "أصل الدين",
+        "interest": "الفائدة",
+        "saved": "المدخرات",
+        "early": "سداد مبكر"
+      },
+      "scheduleTitle": "جدول السداد",
+      "col": {
+        "date": "التاريخ",
+        "payment": "الدفعة",
+        "principal": "أصل الدين",
+        "interest": "الفائدة",
+        "rate": "المعدل",
+        "early": "مبكر",
+        "balance": "الرصيد"
       }
     }
   },
@@ -749,4 +804,7 @@
       "description": "لديك أسئلة أو ملاحظات؟ تواصل معنا وسنرد عليك."
     }
   }
+,
+  "common": { "total": "الإجمالي", "save": "حفظ", "saving": "جارٍ الحفظ…", "saved": "تم الحفظ", "savedDescription": "تم حفظ الحساب.", "saveFailed": "فشل الحفظ.", "error": "خطأ", "cancel": "إلغاء", "saveCalculation": "حفظ الحساب", "calculationName": "اسم الحساب", "calculationNamePlaceholder": "مثال: قرض مع سداد مبكر" },
+  "auth": { "loginRequired": "تسجيل الدخول مطلوب", "loginToSave": "سجّل الدخول لحفظ الحسابات." }
 }

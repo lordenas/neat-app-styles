@@ -456,6 +456,61 @@
         "monthsCount_one": "{{count}} Monat",
         "monthsCount_other": "{{count}} Monate",
         "and": "und"
+      },
+      "yearsShort": "J.",
+      "rateTooltip": "Jährlicher Zinssatz des Kredits",
+      "rateChangeDate": "Änderungsdatum",
+      "rateChangeValue": "Zinssatz, %",
+      "rateChangeRecalc": "Neuberechnen",
+      "addRateChange": "Zinsänderung hinzufügen",
+      "roundToRub": "Auf ganze Einheit runden",
+      "roundToHundred": "Auf Hundert runden",
+      "shiftNext": "Nächster Werktag",
+      "shiftPrev": "Vorheriger Werktag",
+      "recurringToggleToOneTime": "Regelmäßig — klicken zum Wechsel auf einmalig",
+      "oneTimeToggleToRecurring": "Einmalig — klicken zum Wechsel auf regelmäßig",
+      "maxAmount": "Max.",
+      "reduceTerm": "Laufzeit verkürzen",
+      "reducePayment": "Rate reduzieren",
+      "freqMonthly": "Monatlich",
+      "freqQuarterly": "Vierteljährlich",
+      "freqYearly": "Jährlich",
+      "until": "bis",
+      "payments": "Zahlungen",
+      "holidayInterestOnly": "Nur Zinsen",
+      "holidayNonePayment": "Keine Zahlungen",
+      "holidayNone": "Pause",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ ändert sich nach Tilgungen",
+      "actualTerm": "Tatsächliche Laufzeit",
+      "outOf": "von",
+      "withoutEarlyShort": "ohne Sondert.",
+      "debtLabel": "Schulden",
+      "andShortenTermBy": "und kürzen die Laufzeit um",
+      "badge": {
+        "firstPayInterest": "1. Rate: nur Zinsen",
+        "rounding": "Rundung",
+        "shift": "Verschiebung",
+        "rateChanges": "Zinsänderungen",
+        "holidays": "Zahlungspause"
+      },
+      "chart": {
+        "paymentStructure": "Zahlungsstruktur",
+        "paymentBreakdown": "Monatliche Zahlungsaufteilung",
+        "principal": "Tilgung",
+        "interest": "Zinsen",
+        "saved": "Ersparnis",
+        "early": "Sondertilgung"
+      },
+      "scheduleTitle": "Tilgungsplan",
+      "col": {
+        "date": "Datum",
+        "payment": "Rate",
+        "principal": "Tilgung",
+        "interest": "Zinsen",
+        "rate": "Zinssatz",
+        "early": "Sondertilgung",
+        "balance": "Restschuld"
       }
     }
   },
@@ -749,4 +804,7 @@
       "description": "Fragen oder Feedback? Schreiben Sie uns und wir melden uns."
     }
   }
+,
+  "common": { "total": "Gesamt", "save": "Speichern", "saving": "Speichern…", "saved": "Gespeichert", "savedDescription": "Berechnung wurde gespeichert.", "saveFailed": "Speichern fehlgeschlagen.", "error": "Fehler", "cancel": "Abbrechen", "saveCalculation": "Berechnung speichern", "calculationName": "Name der Berechnung", "calculationNamePlaceholder": "z.B. Kredit mit Sondertilgung" },
+  "auth": { "loginRequired": "Anmeldung erforderlich", "loginToSave": "Bitte melden Sie sich an, um Berechnungen zu speichern." }
 }

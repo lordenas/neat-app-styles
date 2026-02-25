@@ -365,6 +365,61 @@
         "monthsCount_one": "{{count}} mês",
         "monthsCount_other": "{{count}} meses",
         "and": "e"
+      },
+      "yearsShort": "ano",
+      "rateTooltip": "Taxa de juros anual do empréstimo",
+      "rateChangeDate": "Data de alteração",
+      "rateChangeValue": "Taxa, %",
+      "rateChangeRecalc": "Recalcular",
+      "addRateChange": "Adicionar alteração de taxa",
+      "roundToRub": "Arredondar para inteiro",
+      "roundToHundred": "Arredondar para centenas",
+      "shiftNext": "Próximo dia útil",
+      "shiftPrev": "Dia útil anterior",
+      "recurringToggleToOneTime": "Recorrente — clique para mudar para único",
+      "oneTimeToggleToRecurring": "Único — clique para mudar para recorrente",
+      "maxAmount": "Máx.",
+      "reduceTerm": "Reduzir prazo",
+      "reducePayment": "Reduzir parcela",
+      "freqMonthly": "Mensal",
+      "freqQuarterly": "Trimestral",
+      "freqYearly": "Anual",
+      "until": "até",
+      "payments": "pagamentos",
+      "holidayInterestOnly": "Apenas juros",
+      "holidayNonePayment": "Sem pagamentos",
+      "holidayNone": "carência",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ mudará após amortizações",
+      "actualTerm": "Prazo real",
+      "outOf": "de",
+      "withoutEarlyShort": "sem antecip.",
+      "debtLabel": "dívida",
+      "andShortenTermBy": "e reduz o prazo em",
+      "badge": {
+        "firstPayInterest": "1ª parcela: só juros",
+        "rounding": "Arredondamento",
+        "shift": "Deslocamento",
+        "rateChanges": "Alterações de taxa",
+        "holidays": "Carência"
+      },
+      "chart": {
+        "paymentStructure": "Estrutura de pagamentos",
+        "paymentBreakdown": "Detalhamento mensal de pagamentos",
+        "principal": "Capital",
+        "interest": "Juros",
+        "saved": "Economizado",
+        "early": "Amortização antecipada"
+      },
+      "scheduleTitle": "Tabela de amortização",
+      "col": {
+        "date": "Data",
+        "payment": "Parcela",
+        "principal": "Capital",
+        "interest": "Juros",
+        "rate": "Taxa",
+        "early": "Antecip.",
+        "balance": "Saldo"
       }
     },
     "refinancing": {
@@ -749,4 +804,7 @@
       "description": "Dúvidas ou feedback? Entre em contato e responderemos."
     }
   }
+,
+  "common": { "total": "Total", "save": "Guardar", "saving": "Guardando…", "saved": "Guardado", "savedDescription": "Cálculo guardado.", "saveFailed": "Erro ao guardar.", "error": "Erro", "cancel": "Cancelar", "saveCalculation": "Guardar cálculo", "calculationName": "Nome do cálculo", "calculationNamePlaceholder": "ex. Empréstimo com amortização antecipada" },
+  "auth": { "loginRequired": "Login necessário", "loginToSave": "Inicie sessão para guardar cálculos." }
 }

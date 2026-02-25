@@ -456,6 +456,61 @@
         "monthsCount_one": "{{count}} mois",
         "monthsCount_other": "{{count}} mois",
         "and": "et"
+      },
+      "yearsShort": "an",
+      "rateTooltip": "Taux d'intérêt annuel du prêt",
+      "rateChangeDate": "Date de modification",
+      "rateChangeValue": "Taux, %",
+      "rateChangeRecalc": "Recalculer",
+      "addRateChange": "Ajouter une modification de taux",
+      "roundToRub": "Arrondir à l'entier",
+      "roundToHundred": "Arrondir à la centaine",
+      "shiftNext": "Jour ouvrable suivant",
+      "shiftPrev": "Jour ouvrable précédent",
+      "recurringToggleToOneTime": "Récurrent — cliquer pour passer en ponctuel",
+      "oneTimeToggleToRecurring": "Ponctuel — cliquer pour passer en récurrent",
+      "maxAmount": "Max.",
+      "reduceTerm": "Réduire la durée",
+      "reducePayment": "Réduire la mensualité",
+      "freqMonthly": "Chaque mois",
+      "freqQuarterly": "Chaque trimestre",
+      "freqYearly": "Chaque année",
+      "until": "jusqu'à",
+      "payments": "versements",
+      "holidayInterestOnly": "Intérêts seulement",
+      "holidayNonePayment": "Aucun paiement",
+      "holidayNone": "pause",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ changera après remboursements",
+      "actualTerm": "Durée réelle",
+      "outOf": "sur",
+      "withoutEarlyShort": "sans anticip.",
+      "debtLabel": "capital",
+      "andShortenTermBy": "et raccourcissez la durée de",
+      "badge": {
+        "firstPayInterest": "1re mensualité : intérêts seuls",
+        "rounding": "Arrondi",
+        "shift": "Report",
+        "rateChanges": "Modifications de taux",
+        "holidays": "Pause de paiement"
+      },
+      "chart": {
+        "paymentStructure": "Structure des paiements",
+        "paymentBreakdown": "Répartition mensuelle des paiements",
+        "principal": "Capital",
+        "interest": "Intérêts",
+        "saved": "Économisé",
+        "early": "Remboursement anticipé"
+      },
+      "scheduleTitle": "Tableau d'amortissement",
+      "col": {
+        "date": "Date",
+        "payment": "Mensualité",
+        "principal": "Capital",
+        "interest": "Intérêts",
+        "rate": "Taux",
+        "early": "Anticipé",
+        "balance": "Solde"
       }
     }
   },
@@ -749,4 +804,7 @@
       "description": "Des questions ou des retours ? Contactez-nous et nous vous répondrons."
     }
   }
+,
+  "common": { "total": "Total", "save": "Enregistrer", "saving": "Enregistrement…", "saved": "Enregistré", "savedDescription": "Calcul enregistré.", "saveFailed": "Échec de l'enregistrement.", "error": "Erreur", "cancel": "Annuler", "saveCalculation": "Enregistrer le calcul", "calculationName": "Nom du calcul", "calculationNamePlaceholder": "ex. Prêt avec remboursement anticipé" },
+  "auth": { "loginRequired": "Connexion requise", "loginToSave": "Veuillez vous connecter pour enregistrer les calculs." }
 }

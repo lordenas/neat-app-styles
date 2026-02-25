@@ -365,6 +365,61 @@
         "monthsCount_one": "{{count}} månad",
         "monthsCount_other": "{{count}} månader",
         "and": "och"
+      },
+      "yearsShort": "år",
+      "rateTooltip": "Årsränta på lånet",
+      "rateChangeDate": "Ändringsdatum",
+      "rateChangeValue": "Ränta, %",
+      "rateChangeRecalc": "Beräkna om",
+      "addRateChange": "Lägg till ränteändring",
+      "roundToRub": "Avrunda till heltal",
+      "roundToHundred": "Avrunda till hundratal",
+      "shiftNext": "Nästa arbetsdag",
+      "shiftPrev": "Föregående arbetsdag",
+      "recurringToggleToOneTime": "Återkommande — klicka för att byta till engångs",
+      "oneTimeToggleToRecurring": "Engångs — klicka för att byta till återkommande",
+      "maxAmount": "Max.",
+      "reduceTerm": "Förkorta löptid",
+      "reducePayment": "Sänk betalning",
+      "freqMonthly": "Varje månad",
+      "freqQuarterly": "Varje kvartal",
+      "freqYearly": "Varje år",
+      "until": "till",
+      "payments": "betalningar",
+      "holidayInterestOnly": "Enbart ränta",
+      "holidayNonePayment": "Inga betalningar",
+      "holidayNone": "uppehåll",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ ändras efter amorteringar",
+      "actualTerm": "Faktisk löptid",
+      "outOf": "av",
+      "withoutEarlyShort": "utan förtida",
+      "debtLabel": "skuld",
+      "andShortenTermBy": "och förkortar löptiden med",
+      "badge": {
+        "firstPayInterest": "1:a betalning: enbart ränta",
+        "rounding": "Avrundning",
+        "shift": "Förflyttning",
+        "rateChanges": "Ränteändringar",
+        "holidays": "Betalningsuppehåll"
+      },
+      "chart": {
+        "paymentStructure": "Betalningsstruktur",
+        "paymentBreakdown": "Månadsvis betalningsfördelning",
+        "principal": "Amortering",
+        "interest": "Ränta",
+        "saved": "Sparat",
+        "early": "Förtida amortering"
+      },
+      "scheduleTitle": "Amorteringsplan",
+      "col": {
+        "date": "Datum",
+        "payment": "Betalning",
+        "principal": "Amortering",
+        "interest": "Ränta",
+        "rate": "Ränta",
+        "early": "Förtida",
+        "balance": "Saldo"
       }
     },
     "refinancing": {
@@ -749,4 +804,7 @@
       "description": "Frågor eller feedback? Kontakta oss så återkommer vi."
     }
   }
+,
+  "common": { "total": "Totalt", "save": "Spara", "saving": "Sparar…", "saved": "Sparat", "savedDescription": "Beräkning sparad.", "saveFailed": "Det gick inte att spara.", "error": "Fel", "cancel": "Avbryt", "saveCalculation": "Spara beräkning", "calculationName": "Namn på beräkning", "calculationNamePlaceholder": "t.ex. Lån med förtida amortering" },
+  "auth": { "loginRequired": "Inloggning krävs", "loginToSave": "Logga in för att spara beräkningar." }
 }

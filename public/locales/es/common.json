@@ -365,6 +365,61 @@
         "monthsCount_one": "{{count}} mes",
         "monthsCount_other": "{{count}} meses",
         "and": "y"
+      },
+      "yearsShort": "a.",
+      "rateTooltip": "Tasa de interés anual del préstamo",
+      "rateChangeDate": "Fecha de cambio",
+      "rateChangeValue": "Tasa, %",
+      "rateChangeRecalc": "Recalcular",
+      "addRateChange": "Añadir cambio de tasa",
+      "roundToRub": "Redondear a entero",
+      "roundToHundred": "Redondear a centenas",
+      "shiftNext": "Siguiente día hábil",
+      "shiftPrev": "Día hábil anterior",
+      "recurringToggleToOneTime": "Recurrente — clic para cambiar a único",
+      "oneTimeToggleToRecurring": "Único — clic para cambiar a recurrente",
+      "maxAmount": "Máx.",
+      "reduceTerm": "Reducir plazo",
+      "reducePayment": "Reducir cuota",
+      "freqMonthly": "Cada mes",
+      "freqQuarterly": "Cada trimestre",
+      "freqYearly": "Cada año",
+      "until": "hasta",
+      "payments": "pagos",
+      "holidayInterestOnly": "Solo intereses",
+      "holidayNonePayment": "Sin pagos",
+      "holidayNone": "pausa",
+      "holidayInterestBadge": "%",
+      "willChangeAfterEarly": "→ cambiará tras amortizaciones",
+      "actualTerm": "Plazo real",
+      "outOf": "de",
+      "withoutEarlyShort": "sin anticip.",
+      "debtLabel": "deuda",
+      "andShortenTermBy": "y acortas el plazo en",
+      "badge": {
+        "firstPayInterest": "1ª cuota: solo intereses",
+        "rounding": "Redondeo",
+        "shift": "Traslado",
+        "rateChanges": "Cambios de tasa",
+        "holidays": "Carencia"
+      },
+      "chart": {
+        "paymentStructure": "Estructura de pagos",
+        "paymentBreakdown": "Desglose mensual de pagos",
+        "principal": "Capital",
+        "interest": "Intereses",
+        "saved": "Ahorrado",
+        "early": "Amortización anticipada"
+      },
+      "scheduleTitle": "Tabla de amortización",
+      "col": {
+        "date": "Fecha",
+        "payment": "Cuota",
+        "principal": "Capital",
+        "interest": "Intereses",
+        "rate": "Tasa",
+        "early": "Anticip.",
+        "balance": "Saldo"
       }
     },
     "refinancing": {
@@ -749,4 +804,7 @@
       "description": "¿Preguntas o comentarios? Escríbenos y te responderemos."
     }
   }
+,
+  "common": { "total": "Total", "save": "Guardar", "saving": "Guardando…", "saved": "Guardado", "savedDescription": "Cálculo guardado.", "saveFailed": "Error al guardar.", "error": "Error", "cancel": "Cancelar", "saveCalculation": "Guardar cálculo", "calculationName": "Nombre del cálculo", "calculationNamePlaceholder": "ej. Hipoteca con amortización anticipada" },
+  "auth": { "loginRequired": "Inicio de sesión requerido", "loginToSave": "Inicie sesión para guardar cálculos." }
 }
