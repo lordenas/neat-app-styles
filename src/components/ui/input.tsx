@@ -230,7 +230,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       return (
         <div className="relative">
           {renderInput()}
-          <p id={errorId} className="absolute left-0 top-full text-xs text-destructive mt-0.5 whitespace-nowrap" role="alert">
+          <p id={errorId} className="absolute left-0 top-full z-10 text-xs text-destructive mt-0.5 whitespace-nowrap bg-background/90 rounded px-0.5" role="alert">
             {error || ""}
           </p>
         </div>
