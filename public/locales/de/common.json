@@ -392,16 +392,16 @@
         "monthlyPayment": "Monatliche Rate",
         "overpayment": "Gesamtzinsen"
       },
-      "goToResults": "Go to results",
+      "goToResults": "Zu den Ergebnissen",
       "mainParamsLabel": "Hauptparameter",
       "inputHint": "Das Ergebnis aktualisiert sich automatisch bei Änderung der Eingaben.",
-      "quickSummary": "Key metrics",
-      "analysisTitle": "Calculation details",
-      "eventsTimeline": "Loan events",
+      "quickSummary": "Kennzahlen",
+      "analysisTitle": "Berechnungsdetails",
+      "eventsTimeline": "Kreditereignisse",
       "tabs": {
-        "table": "Table",
-        "charts": "Charts",
-        "analytics": "Analytics"
+        "table": "Tabelle",
+        "charts": "Diagramme",
+        "analytics": "Analyse"
       },
       "issueDateHint": "Datum der Kreditauszahlung. Wird für die erste Zinsperiode verwendet.",
       "paymentParamsTitle": "Zahlungsart und -plan",
@@ -439,12 +439,12 @@
       },
       "kpi": {
         "overpaymentWithoutEarly": "Zinsen ohne Sondertilgung",
-        "totalInterest": "Overpayment",
+        "totalInterest": "Überzahlung",
         "totalPayment": "Gesamtzahlung",
         "savings": "Ersparnis",
         "termReductionMonths": "Laufzeitverkürzung",
         "termMonths": "Laufzeit (Mon.)",
-        "effectiveRate": "Effective load",
+        "effectiveRate": "Effektive Belastung",
         "overpaymentPercent": "Überzahlung, %"
       },
       "summary": {

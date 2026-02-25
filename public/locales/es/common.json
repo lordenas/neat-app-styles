@@ -301,16 +301,16 @@
         "monthlyPayment": "Pago mensual",
         "overpayment": "Intereses totales"
       },
-      "goToResults": "Go to results",
+      "goToResults": "Ver resultados",
       "mainParamsLabel": "Parámetros principales",
       "inputHint": "El resultado se actualiza automáticamente al cambiar los datos.",
-      "quickSummary": "Key metrics",
-      "analysisTitle": "Calculation details",
-      "eventsTimeline": "Loan events",
+      "quickSummary": "Indicadores clave",
+      "analysisTitle": "Detalles del cálculo",
+      "eventsTimeline": "Eventos del préstamo",
       "tabs": {
-        "table": "Table",
-        "charts": "Charts",
-        "analytics": "Analytics"
+        "table": "Tabla",
+        "charts": "Gráficos",
+        "analytics": "Análisis"
       },
       "issueDateHint": "Fecha de disposición del préstamo. Se usa para el primer período de intereses.",
       "paymentParamsTitle": "Tipo de pago y cuadro",
@@ -348,12 +348,12 @@
       },
       "kpi": {
         "overpaymentWithoutEarly": "Intereses sin amortización anticipada",
-        "totalInterest": "Overpayment",
+        "totalInterest": "Sobrecoste total",
         "totalPayment": "Total a pagar",
         "savings": "Ahorro",
         "termReductionMonths": "Reducción de plazo",
         "termMonths": "Plazo (meses)",
-        "effectiveRate": "Effective load",
+        "effectiveRate": "Carga efectiva",
         "overpaymentPercent": "Surpago, %"
       },
       "summary": {
