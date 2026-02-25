@@ -1,0 +1,72 @@
+{
+  "site": { "name": "CalcHub", "tagline": "Calculadoras financieras para cada país", "description": "Cálculos precisos con fórmulas bancarias para 20+ países" },
+  "nav": { "home": "Inicio", "calculators": "Calculadoras", "skipToContent": "Ir al contenido" },
+  "hero": {
+    "title": "Calculadoras financieras", "subtitle": "para cada país", "description": "Préstamos, hipotecas, depósitos, impuestos — cálculos precisos adaptados a la normativa local.",
+    "cta": "Empezar a calcular", "badge": "Gratis · Sin registro", "searchPlaceholder": "Buscar calculadora...",
+    "stats": { "calculators": "20+ calculadoras", "countries": "20+ países", "languages": "12 idiomas", "free": "Gratis" }
+  },
+  "trust": {
+    "users": { "value": "150K+", "label": "Usuarios mensuales" }, "calculations": { "value": "2M+", "label": "Cálculos realizados" },
+    "countries": { "value": "20+", "label": "Países soportados" }, "uptime": { "value": "99.9%", "label": "Disponibilidad" }
+  },
+  "categories": {
+    "title": "Categorías de calculadoras", "subtitle": "Elija una sección para encontrar rápidamente la calculadora adecuada",
+    "credit": { "title": "Préstamos y créditos", "description": "Calculadora con amortización anticipada", "count": "5 calculadoras" },
+    "mortgage": { "title": "Hipoteca", "description": "Cálculo hipotecario con entrada inicial", "count": "4 calculadoras" },
+    "deposit": { "title": "Depósitos y ahorro", "description": "Rendimiento, interés compuesto, cuentas de ahorro", "count": "3 calculadoras" },
+    "tax": { "title": "Impuestos y salario", "description": "IRPF, salario neto, deducciones", "count": "4 calculadoras" },
+    "business": { "title": "Empresa", "description": "Rentabilidad, punto de equilibrio, ROI", "count": "3 calculadoras" },
+    "currency": { "title": "Divisas e inversiones", "description": "Conversor, rendimiento, inflación", "count": "3 calculadoras" }
+  },
+  "popular": {
+    "title": "Calculadoras populares", "subtitle": "Las herramientas de planificación financiera más solicitadas", "noResults": "No se encontraron calculadoras.",
+    "creditCalc": { "title": "Calculadora de préstamos", "description": "Cuota mensual, sobrecoste y tabla de amortización" },
+    "mortgageCalc": { "title": "Calculadora hipotecaria", "description": "Cálculo completo con entrada y refinanciación" },
+    "depositCalc": { "title": "Calculadora de depósitos", "description": "Rendimiento con capitalización y retiro parcial" },
+    "salaryCalc": { "title": "Calculadora de salario", "description": "Salario neto después de impuestos y cotizaciones" },
+    "refinanceCalc": { "title": "Refinanciación", "description": "Evalúe el beneficio de refinanciar su préstamo" },
+    "roiCalc": { "title": "Calculadora ROI", "description": "Retorno de inversión y período de recuperación" }
+  },
+  "features": {
+    "title": "¿Por qué CalcHub?",
+    "accurate": { "title": "Fórmulas precisas", "description": "Fórmulas bancarias aprobadas por reguladores" },
+    "local": { "title": "Específico del país", "description": "Impuestos y leyes adaptados a su región" },
+    "free": { "title": "Totalmente gratis", "description": "Sin registro, sin límites, sin anuncios" },
+    "private": { "title": "Privado", "description": "Todos los cálculos se realizan en su navegador" }
+  },
+  "faq": {
+    "title": "Preguntas frecuentes", "subtitle": "Respuestas a las preguntas más comunes sobre CalcHub",
+    "faq1": { "q": "¿Qué tan precisos son los cálculos?", "a": "Utilizamos fórmulas bancarias aprobadas por reguladores financieros." },
+    "faq2": { "q": "¿Necesito registrarme?", "a": "No, todas las calculadoras son gratuitas y sin registro." },
+    "faq3": { "q": "¿Cómo tiene en cuenta mi país?", "a": "Adaptamos las fórmulas a la legislación fiscal de cada país." },
+    "faq4": { "q": "¿Son seguros mis datos?", "a": "Todos los cálculos se realizan localmente en su navegador." },
+    "faq5": { "q": "¿Puedo usar CalcHub en el móvil?", "a": "Sí, CalcHub es totalmente responsive." }
+  },
+  "cta": { "title": "¿Listo para calcular?", "description": "Elija una calculadora y obtenga un resultado preciso en segundos.", "button": "Ir a la calculadora" },
+  "footer": { "rights": "Todos los derechos reservados", "disclaimer": "Los resultados son solo informativos y no constituyen asesoramiento financiero." },
+  "language": { "label": "Idioma", "en": "English", "ru": "Русский", "fr": "Français", "de": "Deutsch", "ar": "العربية", "pes": "فارسی", "pl": "Polski", "uk": "Українська", "es": "Español", "pt": "Português", "nl": "Nederlands", "sv": "Svenska" },
+  "country": { "label": "País", "global": "Global", "ru": "Rusia", "us": "EE.UU.", "uk": "Reino Unido", "de": "Alemania", "fr": "Francia", "iran": "Irán", "pl": "Polonia", "ua": "Ucrania", "es": "España", "kz": "Kazajistán", "br": "Brasil", "in": "India", "by": "Bielorrusia", "uz": "Uzbekistán", "eg": "Egipto", "ae": "EAU", "sa": "Arabia Saudí", "qa": "Catar", "nl": "Países Bajos", "se": "Suecia" },
+  "accessibility": { "toggleLabel": "Accesibilidad", "toggleDescription": "Aplicar perfil de accesibilidad", "openMenu": "Abrir configuración", "profileLabel": "Perfil de accesibilidad", "contrastHigh": "Alto contraste", "contrastDefault": "Contraste por defecto", "contrastBlackWhite": "Blanco y negro", "motionReduce": "Reducir movimiento", "motionDefault": "Animación por defecto", "fontScaleLarge": "Texto grande", "fontScaleDefault": "Tamaño por defecto", "fontScaleXLarge": "Texto muy grande", "reset": "Restablecer", "contrast": "Contraste", "motion": "Animación", "fontSize": "Tamaño de texto" },
+  "common": {
+    "params": "Parámetros", "result": "Resultado", "details": "Detalles", "total": "Total", "amount": "Importe",
+    "rate": "Tasa", "term": "Plazo", "months": "meses", "years": "años", "currency": "€",
+    "calculate": "Calcular", "schedule": "Tabla de amortización", "show": "Mostrar", "hide": "Ocultar",
+    "aboutCalc": "Sobre esta calculadora", "formula": "Fórmulas", "monthly": "Mensual", "quarterly": "Trimestral",
+    "endOfTerm": "Al final del plazo", "loanAmount": "Importe del préstamo", "monthlyPayment": "Cuota mensual",
+    "totalPayment": "Total a pagar", "overpayment": "Sobrecoste", "interestTotal": "Intereses totales",
+    "principalDebt": "Capital", "interest": "Intereses", "balance": "Saldo", "payment": "Pago",
+    "month": "Mes", "year": "Año", "no": "N.º", "back": "Volver", "home": "Inicio"
+  },
+  "calc": {
+    "vat": { "title": "Calculadora de IVA", "description": "Añadir o extraer el IVA al tipo de cualquier país", "operation": "Operación", "addVat": "Añadir IVA", "excludeVat": "Extraer IVA", "country": "País", "vatRate": "Tipo (%)", "amountExcl": "Importe sin IVA", "vatAmount": "IVA", "amountIncl": "Importe con IVA", "enterAmount": "Introduzca un importe", "aboutTitle": "Sobre el IVA", "aboutText": "El IVA es un impuesto indirecto incluido en el precio de bienes y servicios.", "formulaAdd": "Añadir: Con IVA = Sin IVA × (1 + Tipo / 100)", "formulaExclude": "Extraer: Sin IVA = Con IVA ÷ (1 + Tipo / 100)", "ratesTitle": "Tipos de IVA por país", "standard": "Estándar (%)", "reduced": "Reducido (%)" },
+    "mortgage": { "title": "Calculadora hipotecaria", "description": "Cuotas con tabla de amortización", "propertyPrice": "Precio del inmueble", "downPayment": "Entrada", "annualRate": "Tasa anual (%)", "termYears": "Plazo (años)", "scheduleByYear": "Plan por año", "moreYears": "... {{count}} años más", "downPaymentExceeds": "La entrada no puede superar el precio del inmueble", "aboutText": "Cálculo por la fórmula de anualidad: M = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)" },
+    "deposit": { "title": "Calculadora de depósitos", "description": "Rendimiento con capitalización, aportes y retiradas", "initialAmount": "Importe del depósito", "annualRate": "Tasa anual (%)", "termMonths": "Plazo (meses)", "capitalization": "Capitalización", "capMonthly": "Mensual", "capQuarterly": "Trimestral", "capEndOfTerm": "Al final del plazo", "capNone": "Sin capitalización", "topUpWithdraw": "Aportes, retiradas e impuestos", "monthlyTopUp": "Aporte mensual", "monthlyWithdrawal": "Retirada mensual", "maxKeyRate": "Tasa directora máx. (%)", "totalToReceive": "Total a recibir", "inclInterest": "incluyendo intereses", "income": "Ingresos", "accruedInterest": "Intereses acumulados", "effectiveRate": "Tasa efectiva", "topUps": "Aportes", "withdrawals": "Retiradas", "tax": "Impuesto", "taxFreeThreshold": "Umbral exento", "taxableIncome": "Ingreso gravable", "ndfl13": "Impuesto sobre la renta", "netIncome": "Ingreso neto", "openBalance": "Saldo inicial", "closeBalance": "Saldo final" },
+    "refinancing": { "title": "Calculadora de refinanciación", "description": "Compare su préstamo actual con nuevas condiciones", "currentLoan": "Préstamo actual", "newLoan": "Nuevas condiciones", "remainingDebt": "Deuda restante", "remainingTerm": "Plazo restante (meses)", "currentRate": "Tasa actual (%)", "newRate": "Nueva tasa (%)", "newTerm": "Nuevo plazo (meses)", "savings": "Ahorro" },
+    "microloan": { "title": "Calculadora de microcrédito", "description": "Intereses, penalización por mora y total a devolver", "loanAmount": "Importe del préstamo", "dailyRate": "Tasa diaria (%)", "loanDays": "Plazo (días)", "overdueDays": "Días de mora", "overdueRate": "Penalización (% por día)", "interestAccrued": "Intereses acumulados", "penalty": "Penalización por mora", "totalRepayment": "Total a devolver" },
+    "inflation": { "title": "Calculadora de inflación", "description": "Inflación, variación de precios y pérdida de poder adquisitivo", "startYear": "Año inicial", "endYear": "Año final", "purchasePower": "Poder adquisitivo", "cumulativeInflation": "Inflación acumulada", "priceChange": "Variación de precios" },
+    "creditEarlyRepayment": { "title": "Crédito con amortización anticipada", "description": "Cuotas con pagos anticipados y cambios de tasa", "loanAmount": "Importe del crédito", "annualRate": "Tasa anual (%)", "termMonths": "Plazo (meses)", "paymentType": "Tipo de pago", "annuity": "Anualidad", "differentiated": "Diferenciado" },
+    "autoLoan": { "title": "Calculadora de crédito auto", "description": "Cuota mensual, intereses y tabla de amortización", "carPrice": "Precio del vehículo", "downPayment": "Entrada", "annualRate": "Tasa anual (%)", "termMonths": "Plazo (meses)" },
+    "fuelConsumption": { "title": "Calculadora de consumo", "description": "Consumo de combustible y coste por 100 km", "calcConsumption": "Calcular consumo", "planTrip": "Planificar viaje", "tripData": "Datos del viaje", "planning": "Planificación", "distance": "Distancia (km)", "fuelUsed": "Combustible usado (L)", "fuelPrice": "Precio por litro", "consumption": "Consumo", "per100km": "L/100km", "tripCost": "Coste del viaje", "costPerKm": "Coste por km", "consumptionRate": "Consumo (L/100km)", "fuelNeeded": "Combustible necesario" }
+  }
+}

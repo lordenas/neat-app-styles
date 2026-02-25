@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
 export default function MicroloanCalculatorPage() {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState(30000);
   const [termDays, setTermDays] = useState(30);
   const [rate, setRate] = useState(0.8);
@@ -37,8 +39,8 @@ export default function MicroloanCalculatorPage() {
     <CalculatorLayout calculatorId="microloan" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор микрозайма</h1>
-          <p className="text-muted-foreground mt-1">Расчёт процентов, переплаты и штрафов по микрозайму</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.microloan.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calc.microloan.description")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

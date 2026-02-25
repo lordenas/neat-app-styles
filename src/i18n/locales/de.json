@@ -1,0 +1,72 @@
+{
+  "site": { "name": "CalcHub", "tagline": "Finanzrechner für jedes Land", "description": "Genaue Berechnungen mit Bankformeln für 20+ Länder" },
+  "nav": { "home": "Startseite", "calculators": "Rechner", "skipToContent": "Zum Inhalt springen" },
+  "hero": {
+    "title": "Finanzrechner", "subtitle": "für jedes Land", "description": "Kredite, Hypotheken, Einlagen, Steuern — präzise Berechnungen mit lokalen Vorschriften.",
+    "cta": "Berechnung starten", "badge": "Kostenlos · Ohne Anmeldung", "searchPlaceholder": "Rechner suchen...",
+    "stats": { "calculators": "20+ Rechner", "countries": "20+ Länder", "languages": "12 Sprachen", "free": "Kostenlos" }
+  },
+  "trust": {
+    "users": { "value": "150K+", "label": "Monatliche Nutzer" }, "calculations": { "value": "2M+", "label": "Berechnungen" },
+    "countries": { "value": "20+", "label": "Unterstützte Länder" }, "uptime": { "value": "99.9%", "label": "Verfügbarkeit" }
+  },
+  "categories": {
+    "title": "Rechner-Kategorien", "subtitle": "Wählen Sie einen Bereich für den schnellen Zugang",
+    "credit": { "title": "Kredite", "description": "Kreditrechner mit Sondertilgung", "count": "5 Rechner" },
+    "mortgage": { "title": "Hypothek", "description": "Hypothekenberechnung mit Anzahlung", "count": "4 Rechner" },
+    "deposit": { "title": "Einlagen", "description": "Zinsberechnung, Zinseszins", "count": "3 Rechner" },
+    "tax": { "title": "Steuern & Gehalt", "description": "Einkommensteuer, Nettogehalt", "count": "4 Rechner" },
+    "business": { "title": "Unternehmen", "description": "Rentabilität, ROI, Margen", "count": "3 Rechner" },
+    "currency": { "title": "Währung & Investitionen", "description": "Währungsrechner, Rendite, Inflation", "count": "3 Rechner" }
+  },
+  "popular": {
+    "title": "Beliebte Rechner", "subtitle": "Meistgenutzte Finanzplanungs-Tools", "noResults": "Keine Rechner gefunden.",
+    "creditCalc": { "title": "Kreditrechner", "description": "Monatliche Rate, Überzahlung und Tilgungsplan berechnen" },
+    "mortgageCalc": { "title": "Hypothekenrechner", "description": "Hypothekenberechnung mit Anzahlung und Umschuldung" },
+    "depositCalc": { "title": "Einlagenrechner", "description": "Rendite mit Zinseszins und Teilabhebung" },
+    "salaryCalc": { "title": "Gehaltsrechner", "description": "Nettogehalt nach Steuern und Abgaben" },
+    "refinanceCalc": { "title": "Umschuldungsrechner", "description": "Vorteil einer Umschuldung bewerten" },
+    "roiCalc": { "title": "ROI-Rechner", "description": "Kapitalrendite und Amortisationszeit berechnen" }
+  },
+  "features": {
+    "title": "Warum CalcHub?",
+    "accurate": { "title": "Genaue Formeln", "description": "Bankformeln, die von Regulierern genehmigt sind" },
+    "local": { "title": "Landesspezifisch", "description": "Steuern und Gesetze an Ihre Region angepasst" },
+    "free": { "title": "Völlig kostenlos", "description": "Ohne Anmeldung, ohne Grenzen, ohne Werbung" },
+    "private": { "title": "Privat", "description": "Alle Berechnungen erfolgen in Ihrem Browser" }
+  },
+  "faq": {
+    "title": "Häufige Fragen", "subtitle": "Antworten auf die häufigsten Fragen zu CalcHub",
+    "faq1": { "q": "Wie genau sind die CalcHub-Berechnungen?", "a": "Wir verwenden von Finanzaufsichtsbehörden genehmigte Bankformeln." },
+    "faq2": { "q": "Muss ich mich registrieren?", "a": "Nein, alle Rechner sind kostenlos und ohne Registrierung verfügbar." },
+    "faq3": { "q": "Wie berücksichtigt CalcHub mein Land?", "a": "Wir passen Formeln an Steuerrecht, Zinssätze und Standards jedes Landes an." },
+    "faq4": { "q": "Ist die Eingabe von Finanzdaten sicher?", "a": "Alle Berechnungen erfolgen lokal in Ihrem Browser." },
+    "faq5": { "q": "Kann ich CalcHub auf dem Handy nutzen?", "a": "Ja, CalcHub ist vollständig responsiv." }
+  },
+  "cta": { "title": "Bereit zu rechnen?", "description": "Wählen Sie einen Rechner und erhalten Sie in Sekunden ein genaues Ergebnis.", "button": "Zum Rechner" },
+  "footer": { "rights": "Alle Rechte vorbehalten", "disclaimer": "Berechnungsergebnisse dienen nur zu Informationszwecken." },
+  "language": { "label": "Sprache", "en": "English", "ru": "Русский", "fr": "Français", "de": "Deutsch", "ar": "العربية", "pes": "فارسی", "pl": "Polski", "uk": "Українська", "es": "Español", "pt": "Português", "nl": "Nederlands", "sv": "Svenska" },
+  "country": { "label": "Land", "global": "Global", "ru": "Russland", "us": "USA", "uk": "Vereinigtes Königreich", "de": "Deutschland", "fr": "Frankreich", "iran": "Iran", "pl": "Polen", "ua": "Ukraine", "es": "Spanien", "kz": "Kasachstan", "br": "Brasilien", "in": "Indien", "by": "Belarus", "uz": "Usbekistan", "eg": "Ägypten", "ae": "VAE", "sa": "Saudi-Arabien", "qa": "Katar", "nl": "Niederlande", "se": "Schweden" },
+  "accessibility": { "toggleLabel": "Barrierefreiheit", "toggleDescription": "Barrierefreiheitsprofil anwenden", "openMenu": "Einstellungen öffnen", "profileLabel": "Barrierefreiheitsprofil", "contrastHigh": "Hoher Kontrast", "contrastDefault": "Standard", "contrastBlackWhite": "Schwarz-Weiß", "motionReduce": "Weniger Bewegung", "motionDefault": "Standard-Animation", "fontScaleLarge": "Großer Text", "fontScaleDefault": "Standardgröße", "fontScaleXLarge": "Sehr großer Text", "reset": "Zurücksetzen", "contrast": "Kontrast", "motion": "Animation", "fontSize": "Schriftgröße" },
+  "common": {
+    "params": "Parameter", "result": "Ergebnis", "details": "Details", "total": "Gesamt", "amount": "Betrag",
+    "rate": "Zinssatz", "term": "Laufzeit", "months": "Mon.", "years": "Jahre", "currency": "€",
+    "calculate": "Berechnen", "schedule": "Tilgungsplan", "show": "Anzeigen", "hide": "Ausblenden",
+    "aboutCalc": "Über diesen Rechner", "formula": "Formeln", "monthly": "Monatlich", "quarterly": "Vierteljährlich",
+    "endOfTerm": "Am Laufzeitende", "loanAmount": "Kreditbetrag", "monthlyPayment": "Monatliche Rate",
+    "totalPayment": "Gesamtzahlung", "overpayment": "Überzahlung", "interestTotal": "Zinsen gesamt",
+    "principalDebt": "Tilgung", "interest": "Zinsen", "balance": "Restschuld", "payment": "Rate",
+    "month": "Monat", "year": "Jahr", "no": "Nr.", "back": "Zurück", "home": "Startseite"
+  },
+  "calc": {
+    "vat": { "title": "MwSt-Rechner", "description": "MwSt hinzufügen oder herausrechnen", "operation": "Vorgang", "addVat": "MwSt hinzufügen", "excludeVat": "MwSt herausrechnen", "country": "Land", "vatRate": "Satz (%)", "amountExcl": "Betrag ohne MwSt", "vatAmount": "MwSt", "amountIncl": "Betrag mit MwSt", "enterAmount": "Betrag eingeben", "aboutTitle": "Über den MwSt-Rechner", "aboutText": "Die Mehrwertsteuer ist eine indirekte Steuer auf Waren und Dienstleistungen.", "formulaAdd": "Hinzufügen: Brutto = Netto × (1 + Satz / 100)", "formulaExclude": "Herausrechnen: Netto = Brutto ÷ (1 + Satz / 100)", "ratesTitle": "MwSt-Sätze nach Land", "standard": "Standard (%)", "reduced": "Ermäßigt (%)" },
+    "mortgage": { "title": "Hypothekenrechner", "description": "Annuitäten-Hypothekenraten mit Tilgungsplan", "propertyPrice": "Immobilienpreis", "downPayment": "Anzahlung", "annualRate": "Jahreszins (%)", "termYears": "Laufzeit (Jahre)", "scheduleByYear": "Plan nach Jahr", "moreYears": "... {{count}} weitere Jahre", "downPaymentExceeds": "Anzahlung darf den Immobilienpreis nicht übersteigen", "aboutText": "Berechnung mit der Annuitätenformel: M = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)" },
+    "deposit": { "title": "Einlagenrechner", "description": "Rendite mit Zinseszins, Ein-/Auszahlungen und Steuer", "initialAmount": "Einlage", "annualRate": "Jahreszins (%)", "termMonths": "Laufzeit (Mon.)", "capitalization": "Zinskapitalisierung", "capMonthly": "Monatlich", "capQuarterly": "Vierteljährlich", "capEndOfTerm": "Am Laufzeitende", "capNone": "Ohne Kapitalisierung", "topUpWithdraw": "Ein-/Auszahlungen & Steuer", "monthlyTopUp": "Monatliche Einzahlung", "monthlyWithdrawal": "Monatliche Auszahlung", "maxKeyRate": "Max. Leitzins (%)", "totalToReceive": "Auszahlungsbetrag", "inclInterest": "inkl. Zinserträge", "income": "Ertrag", "accruedInterest": "Aufgelaufene Zinsen", "effectiveRate": "Effektiver Zins", "topUps": "Einzahlungen", "withdrawals": "Auszahlungen", "tax": "Steuer", "taxFreeThreshold": "Steuerfreibetrag", "taxableIncome": "Steuerpflichtiger Ertrag", "ndfl13": "Einkommensteuer", "netIncome": "Nettoertrag", "openBalance": "Anfangssaldo", "closeBalance": "Endsaldo" },
+    "refinancing": { "title": "Umschuldungsrechner", "description": "Vergleichen Sie Ihren Kredit mit neuen Konditionen", "currentLoan": "Aktueller Kredit", "newLoan": "Neue Konditionen", "remainingDebt": "Restschuld", "remainingTerm": "Restlaufzeit (Mon.)", "currentRate": "Aktueller Zins (%)", "newRate": "Neuer Zins (%)", "newTerm": "Neue Laufzeit (Mon.)", "savings": "Ersparnis" },
+    "microloan": { "title": "Kurzkreditrechner", "description": "Zinsen, Verzugszinsen und Gesamtrückzahlung berechnen", "loanAmount": "Kreditbetrag", "dailyRate": "Tageszins (%)", "loanDays": "Laufzeit (Tage)", "overdueDays": "Verzugstage", "overdueRate": "Verzugszins (% pro Tag)", "interestAccrued": "Aufgelaufene Zinsen", "penalty": "Verzugsgebühr", "totalRepayment": "Gesamtrückzahlung" },
+    "inflation": { "title": "Inflationsrechner", "description": "Inflation, Preisänderung und Kaufkraftverlust berechnen", "startYear": "Anfangsjahr", "endYear": "Endjahr", "purchasePower": "Kaufkraft", "cumulativeInflation": "Kumulative Inflation", "priceChange": "Preisänderung" },
+    "creditEarlyRepayment": { "title": "Kreditrechner mit Sondertilgung", "description": "Kreditraten mit Sondertilgungen und Zinsänderungen", "loanAmount": "Kreditbetrag", "annualRate": "Jahreszins (%)", "termMonths": "Laufzeit (Mon.)", "paymentType": "Zahlungsart", "annuity": "Annuität", "differentiated": "Differenziert" },
+    "autoLoan": { "title": "Autokredit-Rechner", "description": "Monatliche Rate, Zinsen und Tilgungsplan für Autokredite", "carPrice": "Fahrzeugpreis", "downPayment": "Anzahlung", "annualRate": "Jahreszins (%)", "termMonths": "Laufzeit (Mon.)" },
+    "fuelConsumption": { "title": "Kraftstoffverbrauchsrechner", "description": "Kraftstoffverbrauch und Kosten pro 100 km berechnen", "calcConsumption": "Verbrauch berechnen", "planTrip": "Reise planen", "tripData": "Fahrtdaten", "planning": "Planung", "distance": "Entfernung (km)", "fuelUsed": "Verbrauch (L)", "fuelPrice": "Preis pro Liter", "consumption": "Verbrauch", "per100km": "L/100km", "tripCost": "Fahrtkosten", "costPerKm": "Kosten pro km", "consumptionRate": "Verbrauch (L/100km)", "fuelNeeded": "Kraftstoffbedarf" }
+  }
+}

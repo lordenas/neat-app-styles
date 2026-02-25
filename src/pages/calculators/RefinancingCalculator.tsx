@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
 export default function RefinancingCalculatorPage() {
+  const { t } = useTranslation();
   const [remainingDebt, setRemainingDebt] = useState(5_000_000);
   const [remainingTerm, setRemainingTerm] = useState(15);
   const [termUnit, setTermUnit] = useState<TermUnit>("years");
@@ -36,8 +38,8 @@ export default function RefinancingCalculatorPage() {
     <CalculatorLayout calculatorId="refinancing" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор рефинансирования</h1>
-          <p className="text-muted-foreground mt-1">Сравнение текущего кредита с новыми условиями рефинансирования</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.refinancing.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calc.refinancing.description")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

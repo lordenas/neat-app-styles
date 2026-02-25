@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,7 @@ const MAX_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, i) => MIN_YEAR + i);
 
 export default function InflationCalculatorPage() {
+  const { t } = useTranslation();
   const [startMonth, setStartMonth] = useState(1);
   const [startYear, setStartYear] = useState(2020);
   const [endMonth, setEndMonth] = useState(new Date().getMonth() + 1);
@@ -47,8 +49,8 @@ export default function InflationCalculatorPage() {
     <CalculatorLayout calculatorId="inflation" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор инфляции</h1>
-          <p className="text-muted-foreground mt-1">Расчёт обесценения денег и изменения покупательной способности</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.inflation.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calc.inflation.description")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
