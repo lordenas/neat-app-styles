@@ -13,3 +13,8 @@ export * from "./refinancing";
 export * from "./microloan";
 export * from "./inflation";
 export { calcLoanInterest, formatRuDate, type LoanInterestInput, type LoanInterestResult, type LoanInterestRow } from "./loan-interest";
+export { calcOsago, type OsagoInput, type OsagoResult, type VehicleCategory, POPULAR_REGIONS, REGION_NAMES, getRegionName } from "./osago";
+export { calcTransportTax, type TransportTaxInput, type TransportTaxResult } from "./transport-tax";
+export { calcRastamozhka, type RastamozhkaInput, type RastamozhkaResult } from "./rastamozhka";
+export { calcAutoLoan, type AutoLoanInput, type AutoLoanResult, type AutoLoanRow } from "./auto-loan";
+export { calcFuelConsumption, calcFuelNeeded, type FuelInput, type FuelResult } from "./fuel-consumption";
