@@ -12,18 +12,22 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="flex gap-3 items-start w-full">
-              {icon && <span className="mt-0.5 shrink-0">{icon}</span>}
-              <div className="grid gap-1 flex-1">
+              {icon && (
+                <span className="mt-0.5 shrink-0 flex items-center justify-center w-5 h-5">
+                  {icon}
+                </span>
+              )}
+              <div className="grid gap-0.5 flex-1">
                 {title && <ToastTitle>{title}</ToastTitle>}
                 {description && <ToastDescription>{description}</ToastDescription>}
               </div>
             </div>
             {action}
             <ToastClose />
-            {/* Progress bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-foreground/10">
+            {/* Sonner-style progress bar */}
+            <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground/5 rounded-b-lg overflow-hidden">
               <div
-                className="h-full bg-foreground/25 animate-[toast-progress_5s_linear_forwards]"
+                className="h-full bg-foreground/15 animate-[toast-progress_5s_linear_forwards] rounded-b-lg"
                 style={{ animationDuration: `${TOAST_DURATION}ms` }}
               />
             </div>
