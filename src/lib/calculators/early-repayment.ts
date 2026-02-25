@@ -421,7 +421,7 @@ export function calculateEarlyRepayment(
     totalEarlyPaid: Math.round(totalEarlyPaid * 100) / 100,
     baseTermMonths: termMonths,
     actualTermMonths,
-    interestSaved: Math.round((baseTotalInterest - totalInterest) * 100) / 100,
+    interestSaved: Math.max(0, Math.round((baseTotalInterest - totalInterest) * 100) / 100),
     termSavedMonths: Math.max(0, termMonths - actualTermMonths),
   };
 }
