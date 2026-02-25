@@ -21,3 +21,5 @@ export { calcFuelConsumption, calcFuelNeeded, type FuelInput, type FuelResult } 
 export { calcOtpusknye, type OtpusknyeInput, type OtpusknyeResult, type ExcludedPeriod } from "./otpusknye";
 export { calcUnusedVacation, type UnusedVacationInput, type UnusedVacationResult } from "./unused-vacation";
 export { calcInsuranceTenure, type TenurePeriod, type InsuranceTenureResult } from "./insurance-tenure";
+export { calcSubsistenceMinimum, PM_REGIONS, PM_BY_REGION, type SubsistenceMinimumInput, type SubsistenceMinimumResult, type PmCategory } from "./subsistence-minimum";
+export { calcAlimonyIndexation, PM_CHILD_HISTORY, type AlimonyIndexationInput, type AlimonyIndexationResult } from "./alimony-indexation";
