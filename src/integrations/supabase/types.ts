@@ -48,6 +48,7 @@ export type Database = {
           id: string
           parameters: Json
           result: Json
+          share_token: string | null
           title: string
           updated_at: string
           user_id: string
@@ -58,6 +59,7 @@ export type Database = {
           id?: string
           parameters?: Json
           result?: Json
+          share_token?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -68,6 +70,7 @@ export type Database = {
           id?: string
           parameters?: Json
           result?: Json
+          share_token?: string | null
           title?: string
           updated_at?: string
           user_id?: string

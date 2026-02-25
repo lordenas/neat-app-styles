@@ -21,6 +21,8 @@ const Faq = lazy(() => import("./pages/FAQ"));
 const Partners = lazy(() => import("./pages/Partners"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Compare = lazy(() => import("./pages/Compare"));
+const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function PageSkeleton() {
@@ -55,6 +57,8 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/showcase" element={<Showcase />} />
+                  <Route path="/compare" element={<Compare />} />
+                  <Route path="/shared/:token" element={<SharedCalculation />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

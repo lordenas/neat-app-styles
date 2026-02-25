@@ -3,7 +3,10 @@ import { Helmet } from "react-helmet-async";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,7 +44,17 @@ import {
   CalendarIcon,
   Printer,
   FileDown,
+  Save,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 /* ───────────────────── date picker ───────────────────── */
 
@@ -288,6 +301,41 @@ function fmt(n: number) {
 let nextId = 1;
 
 const CreditCalculator = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [saveTitle, setSaveTitle] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    if (!user) {
+      toast({ title: "Войдите в аккаунт", description: "Для сохранения расчётов нужна авторизация.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
+      navigate("/auth");
+      return;
+    }
+    setSaveDialogOpen(true);
+  };
+
+  const confirmSave = async () => {
+    if (!user || !saveTitle.trim()) return;
+    setSaving(true);
+    const { error } = await supabase.from("saved_calculations").insert({
+      user_id: user.id,
+      title: saveTitle.trim(),
+      calculator_type: "credit",
+      parameters: { amount: "10 500 000 ₽", rate: "4%", term: "25 лет", type: "Аннуитетный" },
+      result: { monthlyPayment: "50 109 ₽", overpayment: "7 783 442 ₽", totalPayment: "18 283 442 ₽" },
+    });
+    setSaving(false);
+    setSaveDialogOpen(false);
+    setSaveTitle("");
+    if (error) {
+      toast({ title: "Ошибка", description: "Не удалось сохранить расчёт.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
+    } else {
+      toast({ title: "Сохранено", description: "Расчёт добавлен в личный кабинет.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
+    }
+  };
+
   const [rates, setRates] = useState<RateRow[]>([]);
   const addRate = () => setRates((p) => [...p, { id: nextId++, date: "", rate: "", recalc: "payment" }]);
   const removeRate = (id: number) => setRates((p) => p.filter((r) => r.id !== id));
@@ -714,6 +762,14 @@ const CreditCalculator = () => {
               >
                 Сохранить в PDF
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<Save />}
+                onClick={handleSave}
+              >
+                Сохранить
+              </Button>
             </div>
           </div>
 
@@ -977,6 +1033,30 @@ const CreditCalculator = () => {
           </p>
         </div>
       </footer>
+      {/* Save dialog */}
+      <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Сохранить расчёт</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <Label htmlFor="save-title">Название расчёта</Label>
+            <Input
+              id="save-title"
+              placeholder="Например: Ипотека Сбербанк 4%"
+              value={saveTitle}
+              onChange={(e) => setSaveTitle(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && saveTitle.trim() && confirmSave()}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>Отмена</Button>
+            <Button onClick={confirmSave} disabled={!saveTitle.trim() || saving}>
+              {saving ? "Сохранение..." : "Сохранить"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

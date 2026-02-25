@@ -8,16 +8,21 @@ import {
   Clock,
   User,
   FileText,
+  Share2,
+  BarChart3,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CopyButton } from "@/components/ui/copy-button";
 
 interface SavedCalculation {
   id: string;
@@ -26,6 +31,7 @@ interface SavedCalculation {
   parameters: Record<string, unknown>;
   result: Record<string, unknown>;
   created_at: string;
+  share_token?: string | null;
 }
 
 const typeLabels: Record<string, string> = {
@@ -41,17 +47,14 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [calculations, setCalculations] = useState<SavedCalculation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
+    if (!authLoading && !user) navigate("/auth");
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (user) {
-      fetchCalculations();
-    }
+    if (user) fetchCalculations();
   }, [user]);
 
   const fetchCalculations = async () => {
@@ -60,30 +63,50 @@ export default function Dashboard() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error && data) {
-      setCalculations(data as SavedCalculation[]);
-    }
+    if (!error && data) setCalculations(data as SavedCalculation[]);
     setLoading(false);
   };
 
   const deleteCalculation = async (id: string) => {
     const { error } = await supabase.from("saved_calculations").delete().eq("id", id);
     if (error) {
-      toast({
-        title: "Ошибка",
-        description: "Не удалось удалить расчёт.",
-        variant: "destructive",
-        icon: <XCircle className="h-5 w-5 text-destructive" />,
-      });
+      toast({ title: "Ошибка", description: "Не удалось удалить расчёт.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
     } else {
       setCalculations((prev) => prev.filter((c) => c.id !== id));
-      toast({
-        title: "Удалено",
-        description: "Расчёт удалён из истории.",
-        variant: "success",
-        icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" />,
-      });
+      setSelected((prev) => { const n = new Set(prev); n.delete(id); return n; });
+      toast({ title: "Удалено", description: "Расчёт удалён из истории.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
     }
+  };
+
+  const shareCalculation = async (calc: SavedCalculation) => {
+    const token = calc.share_token || crypto.randomUUID();
+    if (!calc.share_token) {
+      const { error } = await supabase
+        .from("saved_calculations")
+        .update({ share_token: token } as any)
+        .eq("id", calc.id);
+      if (error) {
+        toast({ title: "Ошибка", description: "Не удалось создать ссылку.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
+        return;
+      }
+      setCalculations((prev) => prev.map((c) => c.id === calc.id ? { ...c, share_token: token } : c));
+    }
+    const url = `${window.location.origin}/shared/${token}`;
+    await navigator.clipboard.writeText(url);
+    toast({ title: "Ссылка скопирована", description: "Поделитесь ею с кем угодно.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else if (n.size < 3) n.add(id);
+      return n;
+    });
+  };
+
+  const handleCompare = () => {
+    navigate(`/compare?ids=${[...selected].join(",")}`);
   };
 
   const handleSignOut = async () => {
@@ -91,18 +114,13 @@ export default function Dashboard() {
     navigate("/");
   };
 
-  if (authLoading || !user) {
-    return null;
-  }
+  if (authLoading || !user) return null;
 
   const displayName = user.user_metadata?.display_name || user.email;
 
   return (
     <>
-      <Helmet>
-        <title>Личный кабинет — CalcHub</title>
-      </Helmet>
-
+      <Helmet><title>Личный кабинет — CalcHub</title></Helmet>
       <SiteHeader />
 
       <main className="min-h-screen bg-background">
@@ -119,8 +137,7 @@ export default function Dashboard() {
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1.5">
-              <LogOut className="h-4 w-4" />
-              Выйти
+              <LogOut className="h-4 w-4" /> Выйти
             </Button>
           </div>
         </section>
@@ -156,8 +173,7 @@ export default function Dashboard() {
           <div className="container max-w-4xl space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Сохранённые расчёты
+                <FileText className="h-5 w-5" /> Сохранённые расчёты
               </h2>
             </div>
 
@@ -173,14 +189,8 @@ export default function Dashboard() {
                       Сделайте расчёт в калькуляторе и сохраните результат
                     </p>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate("/credit-calculator")}
-                    className="gap-1.5"
-                  >
-                    <Calculator className="h-4 w-4" />
-                    Перейти к калькулятору
+                  <Button variant="outline" size="sm" onClick={() => navigate("/credit-calculator")} className="gap-1.5">
+                    <Calculator className="h-4 w-4" /> Перейти к калькулятору
                   </Button>
                 </CardContent>
               </Card>
@@ -190,23 +200,43 @@ export default function Dashboard() {
                   <Card key={calc.id} className="transition-shadow hover:shadow-md">
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-3">
-                        <div className="space-y-1">
-                          <CardTitle className="text-base">{calc.title}</CardTitle>
-                          <CardDescription className="flex items-center gap-2 text-xs">
-                            <Clock className="h-3 w-3" />
-                            {new Date(calc.created_at).toLocaleDateString("ru", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </CardDescription>
+                        <div className="flex items-start gap-3">
+                          <Checkbox
+                            checked={selected.has(calc.id)}
+                            onCheckedChange={() => toggleSelect(calc.id)}
+                            disabled={!selected.has(calc.id) && selected.size >= 3}
+                            className="mt-1"
+                          />
+                          <div className="space-y-1">
+                            <CardTitle className="text-base">{calc.title}</CardTitle>
+                            <CardDescription className="flex items-center gap-2 text-xs">
+                              <Clock className="h-3 w-3" />
+                              {new Date(calc.created_at).toLocaleDateString("ru", {
+                                day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
+                              })}
+                            </CardDescription>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                           <Badge variant="secondary" className="text-xs">
                             {typeLabels[calc.calculator_type] || calc.calculator_type}
                           </Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => shareCalculation(calc)}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+                            title="Поделиться"
+                          >
+                            <Share2 className="h-4 w-4" />
+                          </Button>
+                          {calc.share_token && (
+                            <CopyButton
+                              value={`${window.location.origin}/shared/${calc.share_token}`}
+                              variant="ghost"
+                              size="icon-sm"
+                            />
+                          )}
                           <Button
                             variant="ghost"
                             size="sm"
@@ -233,6 +263,16 @@ export default function Dashboard() {
             )}
           </div>
         </section>
+
+        {/* Floating compare button */}
+        {selected.size >= 2 && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+            <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Сравнить ({selected.size})
+            </Button>
+          </div>
+        )}
       </main>
 
       <SiteFooter />
