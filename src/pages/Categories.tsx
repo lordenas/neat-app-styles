@@ -89,18 +89,19 @@ const Categories = () => {
 
               return (
                 <section key={cat.id} id={cat.id}>
-                  <div className="flex items-center gap-3 mb-4">
+                  <Link to={`/categories/${cat.id}`} className="flex items-center gap-3 mb-4 group">
                     <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                       {cat.icon ? iconMap[cat.icon] : <Calculator className="h-6 w-6" />}
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold">{cat.name}</h2>
+                      <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">{cat.name}</h2>
                       <p className="text-sm text-muted-foreground">{cat.description}</p>
                     </div>
                     <Badge variant="secondary" className="ml-auto shrink-0">
                       {filtered.length}
                     </Badge>
-                  </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  </Link>
 
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {filtered.map((calc) => (
