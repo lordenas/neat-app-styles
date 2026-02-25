@@ -27,7 +27,7 @@ export default function MortgageCalculatorPage() {
   const downPercent = propertyPrice > 0 ? Math.round((downPayment / propertyPrice) * 100) : 0;
 
   return (
-    <CalculatorLayout calculatorId="mortgage" categoryName="Финансы" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="mortgage" categoryName="Финансы" categoryPath="/categories/finance">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.mortgage")}</h1>

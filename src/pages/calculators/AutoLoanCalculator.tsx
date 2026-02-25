@@ -20,7 +20,7 @@ export default function AutoLoanCalculator() {
   const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
   return (
-    <CalculatorLayout calculatorId="auto-loan" categoryName="Automotive" categoryPath="/#automotive">
+    <CalculatorLayout calculatorId="auto-loan" categoryName="Automotive" categoryPath="/categories/automotive">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.auto-loan")}</h1>

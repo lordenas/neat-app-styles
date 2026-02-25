@@ -40,7 +40,7 @@ export default function OtpusknyeCalculator() {
   );
 
   return (
-    <CalculatorLayout calculatorId="otpusknye" categoryName="Зарплатные" categoryPath="/#salary" title={title}>
+    <CalculatorLayout calculatorId="otpusknye" categoryName="Зарплатные" categoryPath="/categories/salary" title={title}>
       <div className="space-y-6">
         {/* Main params */}
         <Card>

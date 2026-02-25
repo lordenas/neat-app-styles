@@ -49,7 +49,7 @@ export default function PropertyDeductionCalculatorPage() {
   }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, annualIncome]);
 
   return (
-    <CalculatorLayout calculatorId="property-deduction" categoryName="Налоги" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="property-deduction" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Имущественный вычет</h1>

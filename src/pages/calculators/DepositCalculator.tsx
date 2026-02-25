@@ -41,7 +41,7 @@ export default function DepositCalculator() {
   const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
   return (
-    <CalculatorLayout calculatorId="deposit" categoryName="Финансовые" categoryPath="/#finance">
+    <CalculatorLayout calculatorId="deposit" categoryName="Финансовые" categoryPath="/categories/finance">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.deposit")}</h1>

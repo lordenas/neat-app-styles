@@ -31,7 +31,7 @@ export default function RastamozhkaCalculator() {
   const fmt = (n: number) => n.toLocaleString("ru-RU");
 
   return (
-    <CalculatorLayout calculatorId="rastamozhka-auto" categoryName="Автомобильные" categoryPath="/#automotive">
+    <CalculatorLayout calculatorId="rastamozhka-auto" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="grid lg:grid-cols-[1fr_360px] gap-6">
         <Card>
           <CardHeader><CardTitle>Параметры ввоза</CardTitle></CardHeader>

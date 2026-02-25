@@ -36,7 +36,7 @@ export default function MicroloanCalculatorPage() {
   }, [amount, termDays, rate, rateUnit, hasOverdue, overduePeriod, overdueUnit, overdueRate, overdueRateUnit, penaltyAmount]);
 
   return (
-    <CalculatorLayout calculatorId="microloan" categoryName="Финансы" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="microloan" categoryName="Финансы" categoryPath="/categories/finance">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.microloan")}</h1>

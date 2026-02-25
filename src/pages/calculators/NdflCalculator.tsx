@@ -106,7 +106,7 @@ export default function NdflCalculatorPage() {
   const fmt = (v: number) => new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
   return (
-    <CalculatorLayout calculatorId="ndfl" categoryName="Налоги" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="ndfl" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор НДФЛ</h1>

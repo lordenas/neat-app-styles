@@ -36,7 +36,7 @@ export default function PropertySaleTaxCalculatorPage() {
   }, [ownershipBefore2016, acquisitionType, isSoleHousing, yearsHeld, salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025]);
 
   return (
-    <CalculatorLayout calculatorId="property-sale-tax" categoryName="Налоги" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="property-sale-tax" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Налог с продажи квартиры</h1>

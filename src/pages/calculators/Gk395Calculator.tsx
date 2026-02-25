@@ -102,7 +102,7 @@ export default function Gk395CalculatorPage() {
   );
 
   return (
-    <CalculatorLayout calculatorId="gk395" categoryName="Налоги" categoryPath="/#categories" title={title}>
+    <CalculatorLayout calculatorId="gk395" categoryName="Налоги" categoryPath="/categories/taxes" title={title}>
       <div className="space-y-6">
         {/* Form */}
         <Card className="h-fit">

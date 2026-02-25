@@ -16,7 +16,7 @@ export default function UnusedVacationCalculator() {
   const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
   return (
-    <CalculatorLayout calculatorId="unused-vacation" categoryName="Зарплатные" categoryPath="/#salary">
+    <CalculatorLayout calculatorId="unused-vacation" categoryName="Зарплатные" categoryPath="/categories/salary">
       <div className="grid lg:grid-cols-[1fr_340px] gap-6">
         <Card>
           <CardHeader><CardTitle>Параметры</CardTitle></CardHeader>
