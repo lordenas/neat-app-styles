@@ -95,62 +95,60 @@ export function CalculatorLayout({
       </div>
 
       <main id="main-content" className="flex-grow">
-        <div className="container max-w-6xl py-8">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Main content */}
-            <div className="flex-1 min-w-0">
-              {children}
+        <div className="container max-w-6xl py-8 flex flex-col gap-6">
+          {/* Main content — full width */}
+          <div className="w-full min-w-0">
+            {children}
+          </div>
+
+          {/* Sidebar below — horizontal layout */}
+          <aside className="w-full grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Ad block */}
+            <div className="section-card">
+              <p className="text-xs text-muted-foreground mb-2">Реклама</p>
+              <div className="rounded-md bg-muted/50 border border-dashed border-border-subtle flex items-center justify-center h-32">
+                <span className="text-xs text-muted-foreground">Рекламный блок</span>
+              </div>
             </div>
 
-            {/* Right sidebar */}
-            <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6 lg:self-start">
-              {/* Ad block */}
-              <div className="section-card">
-                <p className="text-xs text-muted-foreground mb-2">Реклама</p>
-                <div className="rounded-md bg-muted/50 border border-dashed border-border-subtle flex items-center justify-center h-60">
-                  <span className="text-xs text-muted-foreground">Рекламный блок</span>
-                </div>
+            {/* Related calculators */}
+            {relatedCalcs.length > 0 && (
+              <div className="section-card space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  {categoryName ?? "Похожие калькуляторы"}
+                </p>
+                <nav aria-label="Похожие калькуляторы" className="space-y-1">
+                  {relatedCalcs.map((c) => (
+                    <Link
+                      key={c.id}
+                      to={c.path ?? "#"}
+                      className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                    >
+                      {c.name}
+                    </Link>
+                  ))}
+                </nav>
               </div>
+            )}
 
-              {/* Related calculators */}
-              {relatedCalcs.length > 0 && (
-                <div className="section-card space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    {categoryName ?? "Похожие калькуляторы"}
-                  </p>
-                  <nav aria-label="Похожие калькуляторы" className="space-y-1">
-                    {relatedCalcs.map((c) => (
-                      <Link
-                        key={c.id}
-                        to={c.path ?? "#"}
-                        className="block text-sm text-foreground hover:text-primary transition-colors py-1"
-                      >
-                        {c.name}
-                      </Link>
-                    ))}
-                  </nav>
-                </div>
-              )}
-
-              {/* Other categories */}
-              {otherCategories.length > 0 && (
-                <div className="section-card space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
-                  <nav aria-label="Другие категории калькуляторов" className="space-y-1">
-                    {otherCategories.slice(0, 5).map((cat) => (
-                      <Link
-                        key={cat.id}
-                        to={`/categories/${cat.id}`}
-                        className="block text-sm text-foreground hover:text-primary transition-colors py-1"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </nav>
-                </div>
-              )}
-            </aside>
-          </div>
+            {/* Other categories */}
+            {otherCategories.length > 0 && (
+              <div className="section-card space-y-2">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
+                <nav aria-label="Другие категории калькуляторов" className="space-y-1">
+                  {otherCategories.slice(0, 5).map((cat) => (
+                    <Link
+                      key={cat.id}
+                      to={`/categories/${cat.id}`}
+                      className="block text-sm text-foreground hover:text-primary transition-colors py-1"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+            )}
+          </aside>
         </div>
       </main>
 
