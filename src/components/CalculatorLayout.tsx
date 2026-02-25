@@ -103,16 +103,16 @@ export function CalculatorLayout({
             {/* Right sidebar */}
             <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6 lg:self-start">
               {/* Ad block */}
-              <div className="rounded-lg border border-border bg-card p-4">
+              <div className="section-card">
                 <p className="text-xs text-muted-foreground mb-2">Реклама</p>
-                <div className="rounded-md bg-muted/50 border border-dashed border-border flex items-center justify-center h-60">
+                <div className="rounded-md bg-muted/50 border border-dashed border-border-subtle flex items-center justify-center h-60">
                   <span className="text-xs text-muted-foreground">Рекламный блок</span>
                 </div>
               </div>
 
               {/* Related calculators */}
               {relatedCalcs.length > 0 && (
-                <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                <div className="section-card space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     {categoryName ?? "Похожие калькуляторы"}
                   </p>
@@ -132,7 +132,7 @@ export function CalculatorLayout({
 
               {/* Other categories */}
               {otherCategories.length > 0 && (
-                <div className="rounded-lg border border-border bg-card p-4 space-y-2">
+                <div className="section-card space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
                   <nav aria-label="Другие категории калькуляторов" className="space-y-1">
                     {otherCategories.slice(0, 5).map((cat) => (
