@@ -482,7 +482,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                                     value={rc.recalcMode}
                                     onValueChange={(v) => updateRateChange(rc.id, { recalcMode: v as "payment" | "term" })}
                                   >
-                                    <SelectTrigger className="h-8 text-xs w-32"><SelectValue /></SelectTrigger>
+                                    <SelectTrigger inputSize="sm" className="w-32"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="payment">Платёж</SelectItem>
                                       <SelectItem value="term">Срок</SelectItem>
@@ -539,7 +539,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   </Label>
                   {roundPay && (
                     <Select value={roundTo} onValueChange={(v) => setRoundTo(v as "rub" | "hundred")}>
-                      <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                      <SelectTrigger inputSize="sm" className="w-36"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="rub">До рублей</SelectItem>
                         <SelectItem value="hundred">До сотен рублей</SelectItem>
@@ -560,7 +560,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                   </Label>
                   {transferWeekend && (
                     <Select value={transferDir} onValueChange={(v) => setTransferDir(v as "next" | "prev")}>
-                      <SelectTrigger className="h-8 text-xs w-44"><SelectValue /></SelectTrigger>
+                      <SelectTrigger inputSize="sm" className="w-44"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="next">На следующий рабочий</SelectItem>
                         <SelectItem value="prev">На предыдущий рабочий</SelectItem>
@@ -639,7 +639,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                           value={ep.mode}
                           onValueChange={(v) => updateEarlyPayment(ep.id, { mode: v as RepaymentMode })}
                         >
-                          <SelectTrigger className="h-8 text-xs w-36"><SelectValue /></SelectTrigger>
+                          <SelectTrigger inputSize="sm" className="w-36"><SelectValue /></SelectTrigger>
                           <SelectContent>
                             <SelectItem value="reduce_term">Уменьшить срок</SelectItem>
                             <SelectItem value="reduce_payment">Уменьшить платёж</SelectItem>
@@ -659,7 +659,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                             value={ep.frequency ?? "monthly"}
                             onValueChange={(v) => updateEarlyPayment(ep.id, { frequency: v as RecurringFrequency })}
                           >
-                            <SelectTrigger className="h-7 text-xs w-36 bg-background"><SelectValue /></SelectTrigger>
+                            <SelectTrigger inputSize="sm" className="w-36 bg-background"><SelectValue /></SelectTrigger>
                             <SelectContent>
                               <SelectItem value="monthly">каждый месяц</SelectItem>
                               <SelectItem value="quarterly">каждый квартал</SelectItem>
@@ -719,7 +719,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         value={h.type}
                         onValueChange={(v) => updateCreditHoliday(h.id, { type: v as "none" | "interest" })}
                       >
-                        <SelectTrigger className="h-8 text-xs w-44"><SelectValue /></SelectTrigger>
+                        <SelectTrigger inputSize="sm" className="w-44"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           <SelectItem value="interest">Только проценты</SelectItem>
                           <SelectItem value="none">Без платежей</SelectItem>
