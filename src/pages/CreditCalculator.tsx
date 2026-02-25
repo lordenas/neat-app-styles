@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { exportCalculationPdf } from "@/lib/export-pdf";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -334,6 +335,23 @@ const CreditCalculator = () => {
     } else {
       toast({ title: "Сохранено", description: "Расчёт добавлен в личный кабинет.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
     }
+  };
+
+  const handleExportPdf = () => {
+    exportCalculationPdf({
+      title: "Кредитный калькулятор — Результаты расчёта",
+      summary: [
+        { label: "Ежемесячный платёж", value: "50 109 ₽" },
+        { label: "Начисленные проценты", value: "7 783 442 ₽" },
+        { label: "Досрочные погашения", value: "180 000 ₽" },
+        { label: "Фактический срок", value: "24 года 8 мес." },
+        { label: "Переплата", value: "74.1%" },
+        { label: "Итого выплачено", value: "18 283 442 ₽" },
+      ],
+      debtBreakdown: { principal: totalPrincipal, interest: totalInterest },
+      schedule: fakeSchedule,
+      totals: { payment: totalPayment, principal: totalPrincipal, interest: totalInterest, early: totalEarly },
+    });
   };
 
   const [rates, setRates] = useState<RateRow[]>([]);
@@ -759,6 +777,7 @@ const CreditCalculator = () => {
                 variant="outline"
                 size="sm"
                 icon={<FileDown />}
+                onClick={handleExportPdf}
               >
                 Сохранить в PDF
               </Button>
@@ -901,7 +920,7 @@ const CreditCalculator = () => {
                 <Button variant="outline" size="sm" icon={<FileDown />}>
                   Excel
                 </Button>
-                <Button variant="outline" size="sm" icon={<FileDown />}>
+                <Button variant="outline" size="sm" icon={<FileDown />} onClick={handleExportPdf}>
                   PDF
                 </Button>
                 <Button variant="outline" size="sm" icon={<Printer />}>
