@@ -596,7 +596,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                       }
                     }
                     return (
-                    <div key={ep.id} className="flex flex-col gap-0 rounded-lg border border-border bg-muted/30 overflow-hidden">
+                    <div key={ep.id} className="flex flex-col gap-0 rounded-lg border border-border bg-muted/30">
                       {/* Строка 1: сумма, режим, тип-переключатель, удалить */}
                       <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
                         {/* Тип: кнопка-переключатель */}
