@@ -30,31 +30,31 @@ export default function MortgageCalculatorPage() {
     <CalculatorLayout calculatorId="mortgage" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.mortgage.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("calc.mortgage.description")}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.mortgage")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calculatorDescriptions.mortgage")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1 h-fit lg:sticky lg:top-24">
-            <CardHeader className="pb-3"><CardTitle className="text-base">{t("common.params")}</CardTitle></CardHeader>
+            <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.inputTitle")}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
-                <Label>{t("calc.mortgage.propertyPrice")}</Label>
+                <Label>{t("calculator.fields.propertyPrice")}</Label>
                 <Input type="text" inputMode="numeric" value={formatNumberInput(propertyPrice)}
                   onChange={(e) => setPropertyPrice(Math.max(0, parseNumberInput(e.target.value)))} />
               </div>
               <div className="space-y-1.5">
-                <Label>{t("calc.mortgage.downPayment")} — {downPercent}%</Label>
+                <Label>{t("calculator.fields.downPayment")} — {downPercent}%</Label>
                 <Input type="text" inputMode="numeric" value={formatNumberInput(downPayment)}
                   onChange={(e) => setDownPayment(Math.max(0, parseNumberInput(e.target.value)))} />
               </div>
               <div className="space-y-1.5">
-                <Label>{t("calc.mortgage.annualRate")}</Label>
+                <Label>{t("calculator.fields.interestRate")}</Label>
                 <Input type="number" step={0.1} min={0} max={100} value={annualRate}
                   onChange={(e) => setAnnualRate(Math.max(0, Number(e.target.value) || 0))} />
               </div>
               <div className="space-y-1.5">
-                <Label>{t("calc.mortgage.termYears")}</Label>
+                <Label>{t("calculator.fields.loanTerm")}</Label>
                 <Input type="number" min={1} max={50} value={termYears}
                   onChange={(e) => setTermYears(Math.max(1, Number(e.target.value) || 1))} />
               </div>
@@ -63,34 +63,34 @@ export default function MortgageCalculatorPage() {
 
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardHeader className="pb-3"><CardTitle className="text-base">{t("common.result")}</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.results")}</CardTitle></CardHeader>
               <CardContent>
                 {result.principal > 0 ? (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       <div className="bg-primary/5 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("common.loanAmount")}</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.fields.principalAmount")}</p>
                         <p className="text-lg font-bold">{fmt(result.principal)} ₽</p>
                       </div>
                       <div className="bg-accent/10 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("common.monthlyPayment")}</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.monthlyPayment")}</p>
                         <p className="text-lg font-bold text-primary">{fmt(result.monthlyPayment)} ₽</p>
                       </div>
                       <div className="bg-destructive/10 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("common.overpayment")}</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.stats.overpayment")}</p>
                         <p className="text-lg font-bold text-destructive">{fmt(result.totalInterest)} ₽</p>
                       </div>
                       <div className="bg-primary/5 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("common.totalPayment")}</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.totalAmount")}</p>
                         <p className="text-lg font-bold">{fmt(result.totalPayment)} ₽</p>
                       </div>
                     </div>
 
                     {schedule && schedule.rows.length > 0 && (
                       <div className="text-sm space-y-1 pt-2">
-                        <p className="font-medium text-foreground">{t("calc.mortgage.scheduleByYear")}:</p>
+                        <p className="font-medium text-foreground">{t("calculator.paymentBreakdown")}:</p>
                         <div className="grid grid-cols-5 gap-1 text-xs font-medium text-muted-foreground border-b border-border pb-1">
-                          <span>{t("common.year")}</span><span>{t("common.payment")}</span><span>{t("common.principalDebt")}</span><span>{t("common.interest")}</span><span>{t("common.balance")}</span>
+                          <span>{t("calculator.table.year")}</span><span>{t("calculator.table.payment")}</span><span>{t("calculator.charts.labels.principal")}</span><span>{t("calculator.table.interest")}</span><span>{t("calculator.table.balance")}</span>
                         </div>
                         {schedule.rows.slice(0, 10).map((r, i) => (
                           <div key={i} className="grid grid-cols-5 gap-1 text-xs py-0.5 border-b border-border/50">
@@ -101,22 +101,19 @@ export default function MortgageCalculatorPage() {
                             <span>{fmt(r.balance)}</span>
                           </div>
                         ))}
-                        {schedule.rows.length > 10 && (
-                          <p className="text-xs text-muted-foreground">{t("calc.mortgage.moreYears", { count: schedule.rows.length - 10 })}</p>
-                        )}
                       </div>
                     )}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">{t("calc.mortgage.downPaymentExceeds")}</p>
+                  <p className="text-sm text-muted-foreground">{t("calculator.mortgage.downPaymentExceeds", "Первоначальный взнос превышает стоимость")}</p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-3"><CardTitle className="text-base">{t("common.aboutCalc")}</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.about.title")}</CardTitle></CardHeader>
               <CardContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
-                <p>{t("calc.mortgage.aboutText")}</p>
+                <p>{t("calculator.about.description")}</p>
               </CardContent>
             </Card>
           </div>

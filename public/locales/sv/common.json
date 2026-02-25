@@ -1,0 +1,752 @@
+{
+  "language": {
+    "en": "English",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ar": "العربية",
+    "pes": "فارسی",
+    "pl": "Polski",
+    "uk": "Українська",
+    "es": "Español",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "sv": "Svenska"
+  },
+  "country": {
+    "global": "Globalt",
+    "ru": "Ryssland",
+    "us": "USA",
+    "uk": "Storbritannien",
+    "de": "Tyskland",
+    "fr": "Frankrike",
+    "iran": "Iran",
+    "pl": "Polen",
+    "ua": "Ukraina",
+    "es": "Spanien",
+    "kz": "Kazakstan",
+    "br": "Brasilien",
+    "in": "Indien",
+    "by": "Vitryssland",
+    "uz": "Uzbekistan",
+    "eg": "Egypten",
+    "ae": "Förenade Arabemiraten",
+    "sa": "Saudiarabien",
+    "qa": "Qatar",
+    "nl": "Nederländerna",
+    "se": "Sverige"
+  },
+  "header": {
+    "searchPlaceholder": "Sök kalkylatorer..."
+  },
+  "accessibility": {
+    "toggleLabel": "Tillgänglighetsläge",
+    "toggleDescription": "Använd tillgänglighetsprofil för din region",
+    "currentProfile": "Profil: {{profile}}",
+    "openMenu": "Öppna tillgänglighetsalternativ",
+    "profileLabel": "Tillgänglighetsprofil",
+    "useDefault": "Standard för region",
+    "contrastHigh": "Hög kontrast",
+    "contrastDefault": "Standardkontrast",
+    "contrastBlackWhite": "Svart/vitt",
+    "motionReduce": "Minska rörelse",
+    "motionDefault": "Standardrörelse",
+    "fontScaleLarge": "Större text",
+    "fontScaleDefault": "Standardtextstorlek",
+    "fontScaleXLarge": "Störst text",
+    "profile_EN301549_WCAG21_AA": "EU (EN 301 549 / WCAG 2.1 AA)",
+    "profile_UK_WCAG21_AA": "Storbritannien (WCAG 2.1 AA)",
+    "profile_SECTION508_WCAG21_AA": "USA (Section 508 / WCAG 2.1 AA)",
+    "profile_WCAG21_AA_AR": "Arabisk region (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_CIS": "CIS (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_FA": "Iran (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_DEFAULT": "Standard (WCAG 2.1 AA)"
+  },
+  "nav": {
+    "calculators": "Kalkylatorer",
+    "categories": "Kategorier",
+    "about": "Om oss"
+  },
+  "breadcrumbs": {
+    "home": "Hem"
+  },
+  "home": {
+    "hero": {
+      "title": "Online kalkylatorer",
+      "subtitle": "Finansiella och vardagliga beräkningar förenklat",
+      "description": "Gratis, noggranna och enkla verktyg för alla"
+    },
+    "searchPlaceholder": "Sök kalkylatorer (t.ex. bolån, skatt, lön)...",
+    "quick": {
+      "mortgage": "Bolån",
+      "taxReturn": "Skatteåterbäring",
+      "salary": "Lön"
+    },
+    "categories": {
+      "title": "Kalkylatorkategorier",
+      "subtitle": "Bläddra efter kategori för att hitta vad du behöver",
+      "viewAll": "Visa alla"
+    },
+    "popular": {
+      "title": "Populära kalkylatorer",
+      "subtitle": "Mest använda av våra användare",
+      "found": "{{count}} kalkylatorer hittades",
+      "uses": "{{count}} användningar",
+      "open": "Öppna",
+      "noResults": "Inga kalkylatorer hittades för din sökning.",
+      "clearSearch": "Rensa sökning"
+    },
+    "about": {
+      "title": "Om våra kalkylatorer",
+      "paragraph1": "Calcify erbjuder en samling gratis online kalkylatorer för finansiella och vardagliga beräkningar. Oavsett om du planerar bostadsköp, deklaration eller investeringar — våra verktyg hjälper dig att fatta beslut snabbt och noggrant.",
+      "paragraph2": "Varje kalkylator använder aktuella formler och regelverk. Plattformen stöder flera valutor och format. Alla beräkningar görs lokalt i din webbläsare.",
+      "paragraph3": "Från bolån och lån till skatter och investeringar — vi täcker ett brett spektrum av scenarier. Det intuitiva gränssnittet gör det enkelt att justera parametrar och se resultat i realtid.",
+      "disclaimer": "Anmärkning: Dessa kalkylatorer är endast för informativa och utbildande ändamål och utgör inte finansiell rådgivning. Konsultera en behörig professionell för finansiella eller juridiska frågor."
+    }
+  },
+  "category": {
+    "finance": "Finanser",
+    "taxes": "Skatter",
+    "salary": "Lön",
+    "investments": "Investeringar",
+    "business": "Företag",
+    "home": "Hem & vardag",
+    "automotive": "Bilkalkylatorer",
+    "backToCategories": "Tillbaka till kategorier",
+    "title": "{{name}}-kalkylatorer",
+    "open": "Öppna",
+    "uses": "{{count}} användningar",
+    "noCalculators": "Inga kalkylatorer i denna kategori ännu.",
+    "browseOtherCategories": "Bläddra bland andra kategorier"
+  },
+  "categoryDescription": {
+    "finance": "Låne-, bolåne- och investeringskalkylatorer",
+    "taxes": "Skatteberäkningar och avdrag",
+    "salary": "Lön och inkomstberäkningar",
+    "investments": "Investeringar och portföljanalys",
+    "business": "Företags- och redovisningsverktyg",
+    "home": "Vardagliga hushållsberäkningar",
+    "automotive": "Trafikförsäkring och fordonskostnader"
+  },
+  "calculator": {
+    "autoLoan": {
+      "inputTitle": "Billåneparametrar",
+      "modeLabel": "Beräkningsläge",
+      "modeByCost": "Efter bilpris",
+      "modeByLoan": "Efter lånebelopp",
+      "carCost": "Bilpris",
+      "downPayment": "Kontantinsats",
+      "loanAmount": "Lånebelopp",
+      "balloonPayment": "Restskuld",
+      "loanTerm": "Lånetid",
+      "termUnit": "Tidsenhet",
+      "interestRate": "Ränta",
+      "paymentType": "Betalningstyp",
+      "calculatedLoanAmount": "Beräknat lånebelopp",
+      "downPaymentAmount": "Kontantinsats",
+      "errors": {
+        "invalidTerm": "Ange en giltig lånetid.",
+        "invalidBalloon": "Restskulden måste vara lägre än lånebeloppet.",
+        "invalidValues": "Kontrollera de angivna värdena."
+      },
+      "resultCardTitle": "Beräkningsresultat"
+    },
+    "fuelConsumption": {
+      "modeTrip": "Bränsle för resan",
+      "modeAverage": "Medel per 100 km",
+      "unitsMetric": "Metriskt (L, km)",
+      "unitsImperial": "Imperial (gallon, mil)",
+      "consumptionL100km": "L / 100 km",
+      "consumptionKmL": "km / L",
+      "consumptionMpg": "mpg",
+      "consumptionGal100mi": "gal / 100 mi",
+      "modeLabel": "Beräkningsläge",
+      "unitsLabel": "Enheter",
+      "consumptionLabel": "Medelförbrukning",
+      "distanceLabel": "Sträcka",
+      "fuelUsedLabel": "Bränsle förbrukat",
+      "priceLabel": "Pris per liter (valfritt)",
+      "priceHint": "Ange för att beräkna reskostnad",
+      "resultFuelUsed": "Bränsle förbrukat",
+      "resultConsumptionPer100": "Medelförbrukning",
+      "or": "eller",
+      "resultCost": "Bränslekostnad"
+    },
+    "backToCalculators": "Tillbaka till kalkylatorer",
+    "inputTitle": "Indata",
+    "fields": {
+      "propertyPrice": "Fastighetspris",
+      "downPayment": "Kontantinsats",
+      "interestRate": "Ränta (%)",
+      "loanTerm": "Lånetid",
+      "paymentType": "Betalningstyp",
+      "principalAmount": "Huvudbelopp",
+      "timePeriod": "Tidsperiod (år)"
+    },
+    "placeholders": {
+      "amount": "Ange belopp",
+      "rate": "Ange ränta",
+      "years": "Ange år"
+    },
+    "years": "År",
+    "months": "Månader",
+    "paymentType": {
+      "annuity": "Annuitet",
+      "annuityDesc": "Lika månadsbetalningar under hela lånetiden",
+      "differentiated": "Differentierad",
+      "differentiatedDesc": "Högre betalningar i början, minskande över tid"
+    },
+    "mortgage": {
+      "propertyPriceHint": "Full köpeskilling enligt avtal.",
+      "downPaymentHint": "Kontantinsats. Till höger — andel av köpeskillingen.",
+      "interestRateHint": "Årlig ränta på lånet.",
+      "loanTermHint": "Lånetid i år eller månader."
+    },
+    "calculate": "Beräkna",
+    "tip": "💡 Justera värdena för att se resultat i realtid.",
+    "tipEarlyRepayment": "Planera extra amorteringar: <1>Lånekalkylator med tidig amortering</1>.",
+    "results": "Resultat",
+    "download": "Ladda ner",
+    "print": "Skriv ut",
+    "downloadPdf": "Ladda ner PDF",
+    "generatingPdf": "Genererar PDF…",
+    "monthlyPayment": "Månadsbetalning",
+    "totalInterest": "Total ränta",
+    "totalAmount": "Totalt belopp",
+    "paymentBreakdown": "Betalningsfördelning",
+    "table": {
+      "year": "År",
+      "payment": "Betalning",
+      "interest": "Ränta",
+      "balance": "Saldo"
+    },
+    "charts": {
+      "principalVsInterest": "Amortisation vs. ränta",
+      "balanceOverTime": "Lånesaldo över tid",
+      "annualBreakdown": "Årlig fördelning",
+      "totalBreakdown": "Total översikt",
+      "cumulative": "Ackumulerade betalningar",
+      "labels": {
+        "principal": "Amortisation",
+        "interest": "Ränta",
+        "totalPrincipal": "Total amortisation",
+        "totalInterest": "Total ränta"
+      }
+    },
+    "stats": {
+      "monthlyPayment": "Månadsbetalning",
+      "monthlyPaymentRange": "{{first}} – {{last}}",
+      "accruedInterest": "Upplupen ränta",
+      "debtPlusInterest": "Skuld + ränta",
+      "overpayment": "Överbetalning"
+    },
+    "about": {
+      "title": "Om denna kalkylator",
+      "description": "Denna kalkylator använder standardfinansiella formler. Beräkningarna görs lokalt i din webbläsare.",
+      "formula": "Formel",
+      "formulaNote": "Där: A = Belopp, P = Principal, r = Ränta, t = Tid"
+    },
+    "creditEarly": {
+      "fields": {
+        "loanAmount": "Lånebelopp",
+        "term": "Lånetid",
+        "termUnit": "Tidsenhet",
+        "issueDate": "Utbetalningsdatum",
+        "rate": "Ränta (%)",
+        "rateChanges": "Ränteförändringar",
+        "addRate": "Lägg till ränta",
+        "remove": "Ta bort",
+        "noRateChanges": "Inga ränteförändringar än.",
+        "paymentDay": "Månadsbetalningsdag",
+        "firstPaymentInterestOnly": "Första betalningen endast ränta",
+        "skipFirstMonth": "Hoppa över första månaden",
+        "increaseToInterest": "Öka betalning till räntebelopp",
+        "roundPayment": "Avrunda betalning",
+        "shiftWeekend": "Flytta betalning från helg",
+        "paymentDayChanged": "Betalningsdag ändrad",
+        "paymentDayChangeInterest": "Om mellanrummet efter datumändring överstiger en månad, betala mellanränta",
+        "earlyRepayments": "Tidiga amorteringar",
+        "addEarlyRepayment": "Lägg till tidig amortering",
+        "oneTime": "Engångs",
+        "regular": "Regelbunden",
+        "date": "Datum",
+        "amount": "Belopp",
+        "recalc": "Omräkning",
+        "principalOnly": "Hela beloppet till amortering",
+        "nextPaymentInterestOnly": "Nästa betalning endast ränta",
+        "period": "Frekvens",
+        "tieToPaymentDate": "Koppla till månadsbetalningsdag",
+        "periodStart": "Startdatum",
+        "periodEnd": "Slutdatum",
+        "add": "Lägg till",
+        "noEarlyRepayments": "Inga tidiga amorteringar än.",
+        "overallPayment": "Total månadsbetalning",
+        "overallPaymentHelp": "Ange det belopp du planerar att betala varje månad. En del täcker planerad betalning, resten räknas som tidig amortering.",
+        "loanHoliday": "Betalningsfria perioder",
+        "loanHolidayHelp": "Under betalningsfri period löper räntan vidare.",
+        "holidayStart": "Start",
+        "holidayDuration": "Löptid (mån)",
+        "holidayPayment": "Betalning",
+        "holidayPaymentNone": "Ingen",
+        "holidayPaymentInterest": "Endast ränta",
+        "principal": "Amortering",
+        "extraPayment": "Tidig amortering"
+      },
+      "microHints": {
+        "loanAmount": "Tidig amortering möjlig",
+        "term": "Påverkar total kostnad",
+        "rate": "Banken kan ändra räntan"
+      },
+      "preview": {
+        "monthlyPayment": "Månadsbetalning",
+        "overpayment": "Total ränta"
+      },
+      "goToResults": "Till resultat",
+      "quickSummary": "Nyckeltal",
+      "analysisTitle": "Beräkningsdetaljer",
+      "eventsTimeline": "Lånehändelser",
+      "tabs": {
+        "table": "Tabell",
+        "charts": "Diagram",
+        "analytics": "Analys"
+      },
+      "mainParamsLabel": "Huvudparametrar",
+      "inputHint": "Resultatet uppdateras automatiskt när du ändrar indata.",
+      "issueDateHint": "Datum då lånet utbetaldes. Används för första ränteperioden.",
+      "paymentParamsTitle": "Betalningstyp och schema",
+      "paymentParamsHint": "Ange belopp, ränta, tid och utbetalningsdatum — beräkningen uppdateras automatiskt.",
+      "paymentDayHint": "Dag i månaden eller kopplat till utbetalningsdatum.",
+      "rateChangeExplainer": "Om räntan ändras under löptiden (t.ex. efter kampanjränta), lägg till ändringen här.",
+      "rateChangeFrom": "Från {{date}}",
+      "rateChangeRate": "Ränta: {{rate}}%",
+      "paymentTypeBlock": "Betalningstyp",
+      "additionalBlock": "Fler alternativ",
+      "earlyBlockActive": "Aktiv",
+      "resultWithoutEarly": "Utan tidig amortering",
+      "resultWithEarly": "Med tidig amortering",
+      "youSave": "Du sparar",
+      "termLessBy": "Löptid kortare med",
+      "monthsShort": "mån",
+      "loanClosesSooner": "Lånet avslutas {{count}} mån tidigare",
+      "disclaimerCalculation": "Denna beräkning är endast informativ och inte ett erbjudande.",
+      "recalc": {
+        "payment": "Betalning",
+        "term": "Löptid"
+      },
+      "paymentDay": {
+        "issue": "På utbetalningsdatum",
+        "last": "Sista dagen i månaden",
+        "dayOfMonth": "Dag {{day}} varje månad"
+      },
+      "periods": {
+        "1W": "Varje vecka",
+        "1M": "Månadsvis",
+        "2M": "Var 2:a månad",
+        "3M": "Kvartalsvis",
+        "6M": "Var 6:e månad",
+        "1Y": "Årligen"
+      },
+      "kpi": {
+        "overpaymentWithoutEarly": "Ränta utan tidig amortering",
+        "totalInterest": "Overränta",
+        "totalPayment": "Total betalning",
+        "savings": "Besparing",
+        "termReductionMonths": "Löptidsförkortning",
+        "termMonths": "Löptid (mån)",
+        "effectiveRate": "Effektiv belastning",
+        "overpaymentPercent": "Overränta, %"
+      },
+      "summary": {
+        "totalEarlyRepayments": "Summa tidiga amorteringar",
+        "savingsText": "Tidiga amorteringar minskade lånekostnaden med {{savings}}. Löptiden förkortades med {{duration}}.",
+        "savingsOnly": "Tidiga amorteringar minskade lånekostnaden med {{savings}}.",
+        "yearsCount_one": "{{count}} år",
+        "yearsCount_other": "{{count}} år",
+        "monthsCount_one": "{{count}} månad",
+        "monthsCount_other": "{{count}} månader",
+        "and": "och"
+      }
+    },
+    "refinancing": {
+      "remainingDebt": "Återstående skuld",
+      "remainingTerm": "Återstående tid",
+      "currentRate": "Nuvarande ränta",
+      "perYear": "% per år",
+      "refinancingParams": "Refinansieringsparametrar",
+      "amountChanged": "Belopp ändrat",
+      "newAmount": "Nytt belopp",
+      "termChanged": "Tid ändrad",
+      "newTerm": "Ny tid",
+      "termUnit": "Tidsenhet",
+      "rateChanged": "Ränta ändrad",
+      "newRate": "Ny ränta",
+      "monthlyPayment": "Månadsbetalning",
+      "totalInterest": "Total ränta",
+      "afterRefinancing": "Efter refinansiering",
+      "monthlyPaymentWithRef": "Månadsbetalning efter refinansiering",
+      "totalInterestWithRef": "Total ränta efter refinansiering",
+      "savings": "Besparing",
+      "monthlySavings": "Månadsbetalningen minskar med {{amount}}",
+      "monthlyIncrease": "Månadsbetalningen ökar med {{amount}}",
+      "interestSavings": "Total ränta minskar med {{amount}}",
+      "interestIncrease": "Total ränta ökar med {{amount}}",
+      "repaymentChartTitle": "Amorteringsschema: huvudbelopp och ränta per år",
+      "byYear": "Per år",
+      "byMonth": "Per månad",
+      "month": "Månad",
+      "monthShort": "M{{n}}",
+      "total": "Totalt",
+      "exportExcel": "Ladda ner Excel",
+      "exportPdfTable": "Tabell PDF",
+      "printTable": "Skriv ut tabell",
+      "printFull": "Skriv ut beräkning",
+      "downloadPdfFull": "Ladda ner PDF",
+      "inputParameters": "Indataparametrar"
+    },
+    "microloan": {
+      "amount": "Belopp",
+      "loanTermDays": "Lånetid (dagar)",
+      "rate": "Ränta",
+      "ratePerDay": "% per dag",
+      "ratePerMonth": "% per månad",
+      "hasOverdue": "Förfallen",
+      "overduePeriod": "Förfalloperiod",
+      "overdueDays": "dagar",
+      "overdueMonths": "månader",
+      "overdueRate": "Förfallen ränta",
+      "penaltyAmount": "Straffbelopp",
+      "interestAccrued": "Upplupen ränta",
+      "totalToRepay": "Totalt att återbetala",
+      "overdueInterest": "Förfallen ränta",
+      "overdueTotal": "Total förfallen",
+      "grandTotal": "Summa",
+      "day": "Dag",
+      "chartTitle": "Ränteupplupningsschema"
+    },
+    "inflation": {
+      "startMonth": "Startmånad",
+      "endMonth": "Slutmånad",
+      "month": "Månad",
+      "year": "År",
+      "calculatePriceChange": "Beräkna prisändring",
+      "calculateSavingsDepreciation": "Beräkna avskrivning av besparingar",
+      "amount": "Belopp",
+      "inflationForPeriod": "Inflation under perioden",
+      "priceChangeResult": "Resultat prisändring",
+      "savingsDepreciationResult": "Avskrivning besparingar",
+      "annualRatesTable": "Årliga inflationsräntor",
+      "annualRate": "Ränta (%)",
+      "chartRates": "Årliga inflationsräntor",
+      "chartCumulative": "Ackumulerat prisindex",
+      "chartProgressive": "Progressiv inflation under perioden",
+      "cumulativeInflationPercent": "Ackumulerad inflation (%)",
+      "indexLabel": "Index",
+      "noData": "Inga inflationsdata tillgängliga för detta land.",
+      "loading": "Laddar inflationsdata…",
+      "months": {
+        "1": "Januari",
+        "2": "Februari",
+        "3": "Mars",
+        "4": "April",
+        "5": "Maj",
+        "6": "Juni",
+        "7": "Juli",
+        "8": "Augusti",
+        "9": "September",
+        "10": "Oktober",
+        "11": "November",
+        "12": "December"
+      }
+    }
+  },
+  "calculatorNames": {
+    "auto-loan": "Billånekalkylator",
+    "mortgage": "Bolånekalkylator",
+    "tax-return": "Skatteåterbäringskalkylator",
+    "salary": "Lönekalkylator",
+    "investment": "Investeringskalkylator",
+    "compound-interest": "Ränta-på-ränta kalkylator",
+    "loan": "Lånekalkylator",
+    "credit-early-repayment": "Lånekalkylator med tidig amortering",
+    "breakeven": "Nollpunktskalkylator",
+    "utility": "El- och värmekalkylator",
+    "refinancing": "Refinansieringskalkylator",
+    "microloan": "Mikrolånekalkylator",
+    "microloan_se": "Mikrolånekalkylator",
+    "inflation": "Inflationskalkylator",
+    "vat": "Momskalkylator",
+    "osago": "OSAGO-kalkylator",
+    "fuel-consumption": "Bränsleförbrukningskalkylator"
+  },
+  "calculatorDescriptions": {
+    "auto-loan": "Beräkna månadsbetalning, total kostnad och återbetalningsplan med valfri restskuld",
+    "mortgage": "Beräkna månadsbetalningar och amorteringsschema",
+    "tax-return": "Uppskatta din skatteåterbäring och deklarationsstatus",
+    "salary": "Beräkna nettolön och avdrag",
+    "investment": "Projicera avkastning på investeringar",
+    "compound-interest": "Beräkna ränta på besparingar",
+    "loan": "Beräkna lånebetalningar och total ränta",
+    "credit-early-repayment": "Beräkna betalningar med tidiga amorteringar och ränteförändringar",
+    "breakeven": "Bestäm när ditt företag blir lönsamt",
+    "utility": "Uppskatta månatliga elkostnader",
+    "refinancing": "Jämför nuvarande lån med refinansieringsvillkor och besparing",
+    "microloan": "Beräkna ränta, förseningsavgifter och total återbetalning",
+    "inflation": "Beräkna inflation och prisändring över tid",
+    "vat": "Beräkna moms: lägg till eller dra bort per land",
+    "osago": "Beräkna OSAGO-pris med bastariff och koefficienter",
+    "fuel-consumption": "Bränsle för resan eller medel per 100 km; metriskt och imperialt, valfri kostnad."
+  },
+  "vat": {
+    "amount": "Belopp",
+    "mode": "Läge",
+    "modeAdd": "Lägg till moms",
+    "modeExclude": "Dra bort moms",
+    "country": "Land",
+    "rate": "Sats",
+    "enterAmount": "Ange ett belopp.",
+    "result": {
+      "amountExcl": "Belopp exkl. moms",
+      "vatAmount": "Moms",
+      "amountWithVat": "Belopp inkl. moms"
+    },
+    "exportPdf": "Ladda ner PDF",
+    "exportExcel": "Exportera Excel",
+    "usSalesTaxNote": "USA: skatt per delstat.",
+    "countryName": {
+      "it": "Italien",
+      "be": "Belgien"
+    },
+    "taxName": {
+      "default": "Moms"
+    },
+    "about": {
+      "title": "Om momskalkylatorn",
+      "paragraph": "Moms (mervärdesskatt) är en konsumtionsskatt på varor och tjänster. Denna kalkylator hjälper dig att lägga till moms till ett belopp exkl. moms eller dra bort moms från ett belopp inkl. moms enligt standardräntan för valt land."
+    },
+    "formulas": {
+      "title": "Formler",
+      "addFormula": "Belopp inkl. moms = Belopp exkl. moms × (1 + Sats / 100)",
+      "excludeFormula": "Belopp exkl. moms = Belopp inkl. moms ÷ (1 + Sats / 100). Momsbelopp = Belopp inkl. moms − Belopp exkl. moms."
+    },
+    "ratesTable": {
+      "title": "Momsatser per land",
+      "country": "Land",
+      "taxName": "Skattens namn",
+      "standardRate": "Standardränta (%)",
+      "reducedRates": "Nedsatta satser"
+    },
+    "ru": {
+      "ratesTitle": "Momsatser i Ryssland",
+      "rates20": "20% — allmän sats (de flesta varor och tjänster).",
+      "rates10": "10% — livsmedel, barnartiklar, medicinska produkter, trycksaker.",
+      "rates0": "0% — export, internationell transport och vissa andra operationer.",
+      "historyTitle": "Historik momssats (Ryssland)",
+      "usn": "Förenklat skattesystem (USN): verksamheter under USN är vanligtvis inte momsbetalare (med undantag). Trösklar och regler kan ändras; kontrollera gällande lagstiftning 2025–2026."
+    },
+    "examples": {
+      "title": "Calculation examples",
+      "ex1": "Example 1: 1,000 net at 20% VAT → 1,000 × 1.20 = 1,200 gross; VAT amount = 200.",
+      "ex2": "Example 2: 2,400 gross at 20% VAT → 2,400 ÷ 1.20 = 2,000 net; VAT = 400.",
+      "ex3": "Example 3: 500 net at 10% (reduced rate) → 500 × 1.10 = 550 gross; VAT = 50."
+    },
+    "howToUse": {
+      "title": "How to use the calculator",
+      "step1": "Select country to use the standard VAT rate (or enter a custom rate).",
+      "step2": "Choose mode: add VAT to net amount or extract VAT from gross amount.",
+      "step3": "Enter the amount; the result updates automatically.",
+      "step4": "Use the table below for reference rates by country."
+    },
+    "keywords": "Popular searches: VAT calculator, add VAT, remove VAT, VAT rate by country, gross to net, net to gross."
+  },
+  "footer": {
+    "tagline": "Gratis online kalkylatorer för finanser, skatter och vardagliga beräkningar.",
+    "categoriesTitle": "Kategorier",
+    "countriesTitle": "Länder",
+    "legalTitle": "Juridiskt",
+    "connectTitle": "Kontakt",
+    "privacy": "Integritetspolicy",
+    "terms": "Användarvillkor",
+    "disclaimer": "Ansvarsfriskrivning",
+    "contact": "Kontakt",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "email": "E-post",
+    "countryCanada": "Kanada",
+    "copyright": "© 2024 Calcify. Alla rättigheter förbehållna.",
+    "disclaimerLong": "Endast för informativa ändamål. Ingen finansiell rådgivning."
+  },
+  "notFound": {
+    "title": "Sidan hittades inte",
+    "description": "Sidan du söker finns inte eller har flyttats. Tillbaka till startsidan.",
+    "backHome": "Till startsidan"
+  },
+  "seo": {
+    "autoLoan": {
+      "title": "Billånekalkylator: månadsbetalning och återbetalningsplan",
+      "intro": "Beräkna månadsbetalning, total ränta och överbetalning för billån. Stöd för beräkning från bilpris eller lånebelopp, kontantinsats, restskuld samt annuitets- eller differentierade betalningar.",
+      "formulaTitle": "Beräkningsformel",
+      "formula": "M = P × r × (1+r)^n / ((1+r)^n - 1)",
+      "formulaVars": "M är månadsbetalning, P är huvudbelopp, r är månadsränta (årsränta / 12), n är antal månader. Vid differentierade betalningar amorteras huvudbeloppet lika och räntekostnaden minskar varje månad.",
+      "examplesTitle": "Beräkningsexempel",
+      "example1": "Exempel 1: bilpris 300 000, kontantinsats 60 000, ränta 8 %, 60 månader, annuitet. Lånebelopp = 240 000.",
+      "example2": "Exempel 2: lån 200 000, restskuld 50 000, ränta 10 %, 48 månader, differentierade betalningar.",
+      "howToTitle": "Så använder du kalkylatorn",
+      "step1": "Välj läge: efter bilpris eller efter lånebelopp.",
+      "step2": "Ange kontantinsats, restskuld (vid behov), ränta, löptid och betalningstyp.",
+      "step3": "Granska månadsbetalning, total kostnad och plan per månad eller år."
+    },
+    "home": {
+      "title": "Gratis online kalkylatorer — Bolån, skatt, lön",
+      "description": "Använd gratis kalkylatorer för bolån, skatter, lön, investeringar och mer.",
+      "keywords": [
+        "kalkylator",
+        "bolånekalkylator",
+        "skattekalkylator",
+        "lönekalkylator",
+        "lånekalkylator",
+        "investeringskalkylator",
+        "gratis kalkylator",
+        "finansiell kalkylator"
+      ],
+      "siteName": "Calcify - Gratis online kalkylatorer",
+      "siteDescription": "Gratis online kalkylatorer för finanser, skatter, lön och investeringar"
+    },
+    "category": {
+      "title": "{{name}}-kalkylatorer | Calcify",
+      "description": "Samling gratis {{name}}-kalkylatorer. {{description}}",
+      "keywords": [
+        "{{name}} kalkylator",
+        "gratis {{name}}",
+        "kalkylator",
+        "online kalkylator"
+      ]
+    },
+    "calculator": {
+      "titleFallback": "Kalkylator",
+      "descriptionFallback": "Beräkna finansiella indikatorer med vår gratis online kalkylator.",
+      "keywordsFallback": "finansiell kalkylator"
+    },
+    "inflation": {
+      "titleInCountry": "Inflationskalkylator i {{country}}"
+    },
+    "vat": {
+      "titleInCountry": "Momskalkylator — {{country}}"
+    },
+    "refinancing": {
+      "title": "Refinancing calculator",
+      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
+      "howItWorksTitle": "How the comparison works",
+      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
+      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the remaining balance and current loan rate and term.",
+      "step2": "Set the new loan rate and term (and any fees if applicable).",
+      "step3": "Compare total interest and repayment schedule of both options.",
+      "step4": "Check the charts for principal vs interest and repayment over time.",
+      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+    },
+    "inflationBlock": {
+      "title": "Inflation calculator",
+      "description": "See how inflation erodes the purchasing power of money over time. Enter a starting amount and annual inflation rate to get the equivalent value in future years and the total inflation index.",
+      "formulaTitle": "Formula",
+      "formula": "Value after n years = Initial amount × (1 + rate/100)^n. The inflation index is (1 + rate/100)^n; the table shows year-by-year growth.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 10,000 at 5% for 10 years → 10,000 × 1.05^10 ≈ 16,289; purchasing power halves in about 14 years at 5%.",
+      "example2": "Example 2: 1,000 at 3% for 5 years → 1,000 × 1.03^5 ≈ 1,159; index ≈ 1.16.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the initial amount and the annual inflation rate (%).",
+      "step2": "Set the number of years to project.",
+      "step3": "Read the equivalent value and inflation index in the results and table.",
+      "keywords": "Popular searches: inflation calculator, purchasing power, inflation rate, money value over time, inflation index."
+    },
+    "microloan": {
+      "title": "Microloan calculator",
+      "description": "Calculate the cost of a short-term microloan: interest and late-payment penalties. Enter the principal, annual rate, term, and optional penalty rate to see the repayment schedule and total to repay.",
+      "howItWorksTitle": "How interest and penalties work",
+      "howItWorks": "Interest is applied to the principal over the loan term. If you add a penalty rate, it is applied per day on the overdue amount after the due date. Total to repay = principal + interest + penalties (if any).",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 5,000 at 1% per day for 14 days → interest depends on the method (e.g. simple); total repayment is shown in the schedule.",
+      "example2": "Example 2: Same loan with 0.5% daily penalty and 5 days late → penalty accrues on the outstanding amount for 5 days.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, annual interest rate, and term (days or months).",
+      "step2": "Optionally set a penalty rate for late payment.",
+      "step3": "View the schedule and total interest and total to repay.",
+      "keywords": "Popular searches: microloan calculator, short-term loan calculator, loan interest calculator, late payment penalty calculator."
+    },
+    "creditEarlyRepayment": {
+      "title": "Early repayment calculator",
+      "description": "See how making extra payments or a lump sum reduces your loan term and total interest. The calculator shows the impact of one-time or recurring early repayments on the schedule and total cost.",
+      "howItWorksTitle": "How early repayment works",
+      "howItWorks": "Extra payments reduce the principal, so less interest accrues. You can add a one-time lump sum and/or a recurring extra payment. The schedule is recalculated so that the loan is paid off sooner with less total interest.",
+      "exampleTitle": "Example",
+      "example": "Loan 1,000,000 at 12% for 60 months. Without early repayment: total interest ≈ 333,000. With a one-time 100,000 at month 12: term shortens and total interest drops; the chart and table show the new schedule.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, rate, and term (annuity or differentiated).",
+      "step2": "Optionally add a one-time early repayment and/or recurring extra payment.",
+      "step3": "View the updated schedule, total interest saved, and charts.",
+      "keywords": "Popular searches: early repayment calculator, lump sum calculator, extra payment loan, reduce loan term, pay off loan faster."
+    },
+    "mortgage": {
+      "title": "Bolånekalkylator: månadsbetalning och amorteringsplan",
+      "description": "Bolånekalkylatorn hjälper dig att uppskatta månadsbetalningen och totalkostnaden innan du ansöker. Oavsett om du köper din första bostad eller refinansierar gör kunskap om din betalning och ränta över lånets löptid att du tar bättre beslut. Verktyget använder standardamorteringsformler och stöder både annuitetslån (lika betalningar) och serielån (minskande betalningar).",
+      "toolExplanation": "Ett bolån är ett långsiktigt lån med bostaden som säkerhet. I Sverige erbjuder banker fast och rörlig ränta; kalkylatorn antar fast årsränta. Du anger bostadsvärde, kontantinsats, ränta och löptid och får månadsbetalningen samt en full amorteringsplan. Svenska regler (ränteavdrag, amorteringskrav) påverkar den faktiska kostnaden — kontrollera hos din bank.",
+      "howToUseTitle": "Så använder du kalkylatorn",
+      "step1": "Ange det fulla bostadsvärdet (köpeskilling eller värdering som banken använder).",
+      "step2": "Ange din kontantinsats; kalkylatorn visar lånebelopp och kontantinsats i procent.",
+      "step3": "Sätt årsräntan och lånets löptid (i år eller månader).",
+      "step4": "Välj annuitet (lika månadsbetalning) eller serielån (minskande betalning). Resultat och plan uppdateras automatiskt.",
+      "methodologyTitle": "Beräkningsmetod",
+      "formula": "Annuitet: M = P × [r(1+r)^n] / [(1+r)^n − 1]. Serielån: amortering = P/n per månad; ränta = restskuld × r.",
+      "formulaNote": "M = månadsbetalning, P = huvudstol, r = månadsränta (årsränta ÷ 12), n = antal månader.",
+      "countrySpecificsTitle": "Svenska förhållanden",
+      "countrySpecifics": "I Sverige är annuitetslån vanliga; amorteringskrav gäller över vissa belopp. Ränteavdrag minskar den verkliga kostnaden. Pantbrev och lagfartsavgifter tillkommer. Kontrollera villkoren för tidig amortering med din bank.",
+      "examplesTitle": "Räkneexempel",
+      "example1": "Exempel 1 (SEK): bostad 3 500 000 kr, kontantinsats 700 000 kr, 4 % ränta, 25 år → lån 2 800 000 kr, månadsbetalning (annuitet) ≈ 14 780 kr, total ränta ≈ 1 634 000 kr.",
+      "example2": "Exempel 2: samma lån som serielån → första betalning ≈ 18 667 kr, sista ≈ 9 333 kr; total ränta lägre än annuitet.",
+      "example3": "Exempel 3: 2 800 000 kr till 4 % över 20 år → månadsbetalning ≈ 16 970 kr; kortare löptid, mindre ränta.",
+      "commonMistakesTitle": "Vanliga misstag",
+      "commonMistakes": "Blanda ihop bostadsvärde och lånebelopp. Glömma pantbrev, lagfart och försäkringar. Jämföra bara månadsbetalning utan total ränta. Ignorera räntetyp (fast vs rörlig) och regler för tidig amortering.",
+      "faqTitle": "Vanliga frågor",
+      "faq1q": "Vad är skillnaden mellan annuitet och serielån?",
+      "faq1a": "Annuitet: lika månadsbetalning; i början mer ränta, sen mer amortering. Serielån: fast amortering per månad plus ränta på restskulden; betalningarna börjar högre och sjunker; total ränta är oftast lägre.",
+      "faq2q": "Ingår skatter och försäkringar?",
+      "faq2a": "Nej. Endast huvudstol och ränta beräknas. Lägg till eventuell fastighetsskatt, hemförsäkring och livförsäkring för din verkliga månadskostnad.",
+      "faq3q": "Kan jag använda för refinansiering?",
+      "faq3a": "Ja. Ange det nya lånebeloppet (t.ex. restskuld), ny ränta och ny löptid för att se den nya betalningen och planen.",
+      "faq4q": "Hur exakt är resultatet?",
+      "faq4a": "Beräkningen är exakt för angivna data. Verkliga erbjudanden kan skilja på grund av avgifter, avrundning eller rörlig ränta. Använd för jämförelse och planering; bekräfta siffrorna med din bank.",
+      "faq5q": "Vilken ränta ska jag använda?",
+      "faq5a": "Använd den effektiva årsräntan eller den nominella ränta som din bank anger för amorteringsplanen. Vid kampanjränta: räkna både kampanj- och ordinarie period.",
+      "conclusion": "Använd denna bolånekalkylator för att jämföra scenarier, se hur kontantinsats och löptid påverkar betalning och total ränta och planera din budget. För svenska regler och villkor: konsultera din bank eller en rådgivare.",
+      "keywords": "Populära sökningar: bolånekalkylator, månadsbetalning bolån, amorteringsplan, annuitet vs serielån, bolåneränta."
+    },
+    "fuelConsumption": {
+      "title": "Bränsleförbrukningskalkylator: per 100 km och reskostnad",
+      "intro": "Beräkna bränsle för en resa från medelförbrukning och sträcka, eller medelförbrukning per 100 km från sträcka och förbrukat bränsle. Metriska (L/100 km, km/L) och imperiala (mpg) enheter. Ange pris per liter för reskostnad.",
+      "howToTitle": "Så använder du",
+      "step1": "Välj läge: «Bränsle för resan» (du vet förbrukning och sträcka) eller «Medel per 100 km» (du vet sträcka och förbrukat bränsle).",
+      "step2": "Välj enheter (metriskt eller imperialt), ange värden. Valfritt: pris per liter för reskostnad."
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Integritetspolicy",
+      "description": "Vi respekterar din integritet. Denna sida förklarar hur data hanteras när du använder våra kalkylatorer."
+    },
+    "terms": {
+      "title": "Användarvillkor",
+      "description": "Dessa villkor beskriver reglerna för användning av webbplatsen och kalkylatorer."
+    },
+    "disclaimer": {
+      "title": "Ansvarsfriskrivning",
+      "description": "Alla kalkylatorer tillhandahålls endast i informativt syfte och utgör inte finansiell rådgivning."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "description": "Frågor eller feedback? Kontakta oss så återkommer vi."
+    }
+  }
+}
