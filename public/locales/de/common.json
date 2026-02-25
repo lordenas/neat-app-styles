@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Sprache",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Rechner",
     "categories": "Kategorien",
-    "about": "Über"
+    "about": "Über",
+    "blog": "Blog",
+    "contacts": "Kontakt",
+    "cabinet": "Konto",
+    "login": "Anmelden"
   },
-  "breadcrumbs": {
-    "home": "Start"
-  },
+  "breadcrumbs": { "home": "Start" },
+  "layout": { "ad": "Werbung", "adBlock": "Werbeblock", "relatedCalculators": "Ähnliche Rechner", "otherCategories": "Andere Kategorien" },
   "home": {
     "hero": {
       "title": "Online-Rechner",

@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
@@ -29,13 +30,11 @@ export function CalculatorLayout({
   title,
   children,
 }: CalculatorLayoutProps) {
-  const meta = calculatorMetadata[calculatorId] ?? {
-    name: calculatorId,
-    description: "",
-    searches: [],
-  };
+  const { t } = useTranslation();
+  const meta = calculatorMetadata[calculatorId] ?? { name: calculatorId, description: "", searches: [] };
+  const translatedName = t(`calculatorNames.${calculatorId}`, meta.name);
+  const translatedDesc = t(`calculatorDescriptions.${calculatorId}`, meta.description);
 
-  // Find the category this calculator belongs to
   const currentCategoryId = Object.entries(calculatorsByCategory).find(
     ([, calcs]) => calcs.some((c) => c.id === calculatorId)
   )?.[0];
@@ -49,10 +48,10 @@ export function CalculatorLayout({
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>{meta.name} — CalcHub</title>
-        <meta name="description" content={meta.description} />
-        <meta property="og:title" content={`${meta.name} — CalcHub`} />
-        <meta property="og:description" content={meta.description} />
+        <title>{translatedName} — CalcHub</title>
+        <meta name="description" content={translatedDesc} />
+        <meta property="og:title" content={`${translatedName} — CalcHub`} />
+        <meta property="og:description" content={translatedDesc} />
         <link rel="canonical" href={`https://neat-app-styles.lovable.app/${calculatorId}`} />
       </Helmet>
 
@@ -65,7 +64,7 @@ export function CalculatorLayout({
             className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0 group"
           >
             <ChevronLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-            <span>Назад</span>
+            <span>{t("common.back", "Назад")}</span>
           </Link>
 
           <span className="text-border-subtle select-none">·</span>
@@ -74,7 +73,9 @@ export function CalculatorLayout({
             <BreadcrumbList className="text-xs gap-1 sm:gap-1.5">
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">Главная</Link>
+                  <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                    {t("breadcrumbs.home", "Главная")}
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               {categoryName && (
@@ -89,7 +90,7 @@ export function CalculatorLayout({
               )}
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage className="text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{meta.name}</BreadcrumbPage>
+                <BreadcrumbPage className="text-foreground font-medium truncate max-w-[200px] sm:max-w-xs">{translatedName}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -100,53 +101,50 @@ export function CalculatorLayout({
         <div className="container max-w-6xl py-8">
           {title && <div className="mb-6">{title}</div>}
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Main content */}
             <div className="flex-1 min-w-0">
               {children}
             </div>
 
-            {/* Right sidebar */}
             <aside className="w-full lg:w-72 shrink-0 space-y-5 lg:sticky lg:top-6 lg:self-start">
-              {/* Ad block */}
               <div className="section-card">
-                <p className="text-xs text-muted-foreground mb-2">Реклама</p>
+                <p className="text-xs text-muted-foreground mb-2">{t("layout.ad", "Реклама")}</p>
                 <div className="rounded-md bg-muted/50 border border-dashed border-border-subtle flex items-center justify-center h-60">
-                  <span className="text-xs text-muted-foreground">Рекламный блок</span>
+                  <span className="text-xs text-muted-foreground">{t("layout.adBlock", "Рекламный блок")}</span>
                 </div>
               </div>
 
-              {/* Related calculators */}
               {relatedCalcs.length > 0 && (
                 <div className="section-card space-y-2">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    {categoryName ?? "Похожие калькуляторы"}
+                    {categoryName ?? t("layout.relatedCalculators", "Похожие калькуляторы")}
                   </p>
-                  <nav aria-label="Похожие калькуляторы" className="space-y-1">
+                  <nav className="space-y-1">
                     {relatedCalcs.map((c) => (
                       <Link
                         key={c.id}
                         to={c.path ?? "#"}
                         className="block text-sm text-foreground hover:text-primary transition-colors py-1"
                       >
-                        {c.name}
+                        {t(`calculatorNames.${c.id}`, c.name)}
                       </Link>
                     ))}
                   </nav>
                 </div>
               )}
 
-              {/* Other categories */}
               {otherCategories.length > 0 && (
                 <div className="section-card space-y-2">
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Другие категории</p>
-                  <nav aria-label="Другие категории калькуляторов" className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    {t("layout.otherCategories", "Другие категории")}
+                  </p>
+                  <nav className="space-y-1">
                     {otherCategories.slice(0, 5).map((cat) => (
                       <Link
                         key={cat.id}
                         to={`/categories/${cat.id}`}
                         className="block text-sm text-foreground hover:text-primary transition-colors py-1"
                       >
-                        {cat.name}
+                        {t(`category.${cat.id}`, cat.name)}
                       </Link>
                     ))}
                   </nav>

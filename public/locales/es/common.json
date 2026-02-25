@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Idioma",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Calculadoras",
     "categories": "Categorías",
-    "about": "Sobre nosotros"
+    "about": "Sobre nosotros",
+    "blog": "Blog",
+    "contacts": "Contacto",
+    "cabinet": "Panel",
+    "login": "Iniciar sesión"
   },
-  "breadcrumbs": {
-    "home": "Inicio"
-  },
+  "breadcrumbs": { "home": "Inicio" },
+  "layout": { "ad": "Publicidad", "adBlock": "Bloque de anuncios", "relatedCalculators": "Calculadoras similares", "otherCategories": "Otras categorías" },
   "home": {
     "hero": {
       "title": "Calculadoras online",

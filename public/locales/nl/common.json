@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Taal",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Rekenmachines",
     "categories": "Categorieën",
-    "about": "Over ons"
+    "about": "Over ons",
+    "blog": "Blog",
+    "contacts": "Contact",
+    "cabinet": "Dashboard",
+    "login": "Inloggen"
   },
-  "breadcrumbs": {
-    "home": "Home"
-  },
+  "breadcrumbs": { "home": "Home" },
+  "layout": { "ad": "Advertentie", "adBlock": "Advertentieblok", "relatedCalculators": "Vergelijkbare rekenmachines", "otherCategories": "Andere categorieën" },
   "home": {
     "hero": {
       "title": "Online rekenmachines",

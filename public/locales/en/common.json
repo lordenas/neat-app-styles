@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Language",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,10 +66,20 @@
   "nav": {
     "calculators": "Calculators",
     "categories": "Categories",
-    "about": "About"
+    "about": "About",
+    "blog": "Blog",
+    "contacts": "Contacts",
+    "cabinet": "Dashboard",
+    "login": "Sign In"
   },
   "breadcrumbs": {
     "home": "Home"
+  },
+  "layout": {
+    "ad": "Advertisement",
+    "adBlock": "Ad block",
+    "relatedCalculators": "Related Calculators",
+    "otherCategories": "Other Categories"
   },
   "home": {
     "hero": {

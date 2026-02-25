@@ -53,19 +53,19 @@ export function SiteHeader() {
           <Link to="/blog">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               <BookOpen className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Блог</span>
+              <span className="hidden sm:inline">{t("nav.blog", "Блог")}</span>
             </Button>
           </Link>
           <Link to="/about">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               <Info className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">О нас</span>
+              <span className="hidden sm:inline">{t("nav.about", "О нас")}</span>
             </Button>
           </Link>
           <Link to="/contact">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               <Mail className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Контакты</span>
+              <span className="hidden sm:inline">{t("nav.contacts", "Контакты")}</span>
             </Button>
           </Link>
           {/* Language */}
@@ -131,7 +131,7 @@ export function SiteHeader() {
           <Link to={user ? "/dashboard" : "/auth"}>
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               {user ? <User className="h-3.5 w-3.5" /> : <LogIn className="h-3.5 w-3.5" />}
-              <span className="hidden sm:inline">{user ? "Кабинет" : "Войти"}</span>
+              <span className="hidden sm:inline">{user ? t("nav.cabinet", "Кабинет") : t("nav.login", "Войти")}</span>
             </Button>
           </Link>
           <AccessibilityMenu />
