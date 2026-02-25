@@ -51,7 +51,7 @@ const SelectTrigger = React.forwardRef<
       aria-invalid={ariaInvalid}
       aria-describedby={ariaDescribedBy}
       className={cn(
-        "flex w-full items-center justify-between rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        "flex w-full items-center justify-between rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 [&>span]:pl-0",
         inputSize === "sm" ? "h-8 px-2.5 py-1 text-xs" : inputSize === "lg" ? "h-12 px-4 py-3 text-base" : "h-10 px-3 py-2 text-sm",
         error && "border-destructive",
         className,
