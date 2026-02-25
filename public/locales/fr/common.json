@@ -1,0 +1,752 @@
+{
+  "language": {
+    "en": "English",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ar": "العربية",
+    "pes": "فارسی",
+    "pl": "Polski",
+    "uk": "Українська",
+    "es": "Español",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "sv": "Svenska"
+  },
+  "country": {
+    "global": "Global",
+    "ru": "Russie",
+    "us": "États-Unis",
+    "uk": "Royaume-Uni",
+    "de": "Allemagne",
+    "fr": "France",
+    "iran": "Iran",
+    "pl": "Pologne",
+    "ua": "Ukraine",
+    "es": "Espagne",
+    "kz": "Kazakhstan",
+    "br": "Brésil",
+    "in": "Inde",
+    "by": "Biélorussie",
+    "uz": "Ouzbékistan",
+    "eg": "Égypte",
+    "ae": "Émirats arabes unis",
+    "sa": "Arabie saoudite",
+    "qa": "Qatar",
+    "nl": "Pays-Bas",
+    "se": "Suède"
+  },
+  "header": {
+    "searchPlaceholder": "Rechercher des calculateurs..."
+  },
+  "accessibility": {
+    "toggleLabel": "Mode accessibilité",
+    "toggleDescription": "Appliquer le profil d'accessibilité pour votre région (contraste, focus, réduction des animations)",
+    "currentProfile": "Profil : {{profile}}",
+    "openMenu": "Ouvrir les options d'accessibilité",
+    "profileLabel": "Profil d'accessibilité",
+    "useDefault": "Par défaut pour la région",
+    "contrastHigh": "Contraste élevé",
+    "contrastDefault": "Contraste par défaut",
+    "contrastBlackWhite": "Noir/blanc",
+    "motionReduce": "Réduire les animations",
+    "motionDefault": "Animations par défaut",
+    "fontScaleLarge": "Texte agrandi",
+    "fontScaleDefault": "Taille de texte par défaut",
+    "fontScaleXLarge": "Très grand texte",
+    "profile_EN301549_WCAG21_AA": "UE (EN 301 549 / WCAG 2.1 AA)",
+    "profile_UK_WCAG21_AA": "Royaume-Uni (WCAG 2.1 AA)",
+    "profile_SECTION508_WCAG21_AA": "États-Unis (Section 508 / WCAG 2.1 AA)",
+    "profile_WCAG21_AA_AR": "Région arabe (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_CIS": "CEI (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_FA": "Iran (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_DEFAULT": "Par défaut (WCAG 2.1 AA)"
+  },
+  "nav": {
+    "calculators": "Calculateurs",
+    "categories": "Catégories",
+    "about": "À propos"
+  },
+  "breadcrumbs": {
+    "home": "Accueil"
+  },
+  "home": {
+    "hero": {
+      "title": "Calculateurs en ligne",
+      "subtitle": "Des calculs financiers et quotidiens simplifiés",
+      "description": "Des outils gratuits, précis et faciles à utiliser"
+    },
+    "searchPlaceholder": "Rechercher un calculateur (ex. prêt, impôt, salaire)...",
+    "quick": {
+      "mortgage": "Hypothèque",
+      "taxReturn": "Impôts",
+      "salary": "Salaire"
+    },
+    "categories": {
+      "title": "Catégories de calculateurs",
+      "subtitle": "Parcourez par catégorie pour trouver ce dont vous avez besoin",
+      "viewAll": "Voir tout"
+    },
+    "popular": {
+      "title": "Calculateurs populaires",
+      "subtitle": "Les calculateurs les plus utilisés",
+      "found": "{{count}} calculateurs trouvés",
+      "uses": "{{count}} utilisations",
+      "open": "Ouvrir",
+      "noResults": "Aucun calculateur ne correspond à votre recherche.",
+      "clearSearch": "Effacer la recherche"
+    },
+    "about": {
+      "title": "À propos de nos calculateurs",
+      "paragraph1": "Calcify propose une large collection de calculateurs en ligne gratuits pour simplifier les calculs financiers et quotidiens. Achat immobilier, impôts ou investissements : nos outils vous aident à décider rapidement et précisément.",
+      "paragraph2": "Chaque calculateur utilise des formules à jour. La plateforme prend en charge plusieurs devises et formats, utile partout dans le monde. Les calculs sont effectués localement dans votre navigateur pour plus de confidentialité.",
+      "paragraph3": "Des prêts immobiliers aux estimations fiscales et projections d'investissement, nous couvrons de nombreux scénarios. L'interface intuitive permet d'ajuster les paramètres et de voir les résultats en temps réel.",
+      "disclaimer": "Avertissement : ces calculateurs sont fournis à des fins informatives et éducatives uniquement. Ils ne constituent pas un conseil financier. Consultez toujours un professionnel qualifié."
+    }
+  },
+  "category": {
+    "finance": "Finance",
+    "taxes": "Impôts",
+    "salary": "Salaire",
+    "investments": "Investissements",
+    "business": "Entreprise",
+    "home": "Maison & Vie",
+    "automotive": "Calculateurs automobiles",
+    "backToCategories": "Retour aux catégories",
+    "title": "Calculateurs {{name}}",
+    "open": "Ouvrir",
+    "uses": "{{count}} utilisations",
+    "noCalculators": "Aucun calculateur dans cette catégorie pour le moment.",
+    "browseOtherCategories": "Voir d'autres catégories"
+  },
+  "categoryDescription": {
+    "finance": "Calculateurs de prêt, d'hypothèque et d'investissement",
+    "taxes": "Calculs d'impôts et déductions",
+    "salary": "Calculs de salaire et de revenu",
+    "investments": "Analyse d'investissement et de portefeuille",
+    "business": "Outils pour l'entreprise et la comptabilité",
+    "home": "Calculs domestiques du quotidien",
+    "automotive": "Assurance auto et coûts du véhicule"
+  },
+  "calculator": {
+    "autoLoan": {
+      "inputTitle": "Paramètres du crédit auto",
+      "modeLabel": "Mode de calcul",
+      "modeByCost": "Selon le prix du véhicule",
+      "modeByLoan": "Selon le montant du prêt",
+      "carCost": "Prix du véhicule",
+      "downPayment": "Apport initial",
+      "loanAmount": "Montant du prêt",
+      "balloonPayment": "Paiement final (ballon)",
+      "loanTerm": "Durée du prêt",
+      "termUnit": "Unité de durée",
+      "interestRate": "Taux d'intérêt",
+      "paymentType": "Type de paiement",
+      "calculatedLoanAmount": "Montant du prêt calculé",
+      "downPaymentAmount": "Montant de l'apport",
+      "errors": {
+        "invalidTerm": "Saisissez une durée de prêt valide.",
+        "invalidBalloon": "Le paiement final doit être inférieur au montant du prêt.",
+        "invalidValues": "Vérifiez les valeurs saisies et recommencez."
+      },
+      "resultCardTitle": "Résultat du calcul"
+    },
+    "fuelConsumption": {
+      "modeTrip": "Carburant pour le trajet",
+      "modeAverage": "Moyenne aux 100 km",
+      "unitsMetric": "Métrique (L, km)",
+      "unitsImperial": "Impérial (gallon, miles)",
+      "consumptionL100km": "L / 100 km",
+      "consumptionKmL": "km / L",
+      "consumptionMpg": "mpg",
+      "consumptionGal100mi": "gal / 100 mi",
+      "modeLabel": "Mode de calcul",
+      "unitsLabel": "Unités",
+      "consumptionLabel": "Consommation moyenne",
+      "distanceLabel": "Distance",
+      "fuelUsedLabel": "Carburant utilisé",
+      "priceLabel": "Prix au litre (optionnel)",
+      "priceHint": "Saisir pour calculer le coût du trajet",
+      "resultFuelUsed": "Carburant utilisé",
+      "resultConsumptionPer100": "Consommation moyenne",
+      "or": "ou",
+      "resultCost": "Coût du carburant"
+    },
+    "backToCalculators": "Retour aux calculateurs",
+    "inputTitle": "Saisie",
+    "fields": {
+      "propertyPrice": "Prix du bien",
+      "downPayment": "Apport initial",
+      "interestRate": "Taux d'intérêt (%)",
+      "loanTerm": "Durée du prêt",
+      "paymentType": "Type de paiement",
+      "principalAmount": "Montant principal",
+      "timePeriod": "Durée (années)"
+    },
+    "placeholders": {
+      "amount": "Saisir le montant",
+      "rate": "Saisir le taux",
+      "years": "Saisir les années"
+    },
+    "years": "Années",
+    "months": "Mois",
+    "paymentType": {
+      "annuity": "Annuité",
+      "annuityDesc": "Paiements mensuels égaux sur toute la durée",
+      "differentiated": "Dégressif",
+      "differentiatedDesc": "Paiements plus élevés au début puis décroissants"
+    },
+    "mortgage": {
+      "propertyPriceHint": "Prix total du bien selon le contrat.",
+      "downPaymentHint": "Montant de l'apport. À droite — part du prix en pourcentage.",
+      "interestRateHint": "Taux d'intérêt annuel du prêt.",
+      "loanTermHint": "Durée du prêt en années ou mois."
+    },
+    "calculate": "Calculer",
+    "tip": "💡 Astuce : ajustez les valeurs pour voir les résultats en temps réel.",
+    "tipEarlyRepayment": "Planifiez les remboursements anticipés : <1>Calculateur de crédit avec remboursement anticipé</1>.",
+    "results": "Résultats",
+    "download": "Télécharger",
+    "print": "Imprimer",
+    "downloadPdf": "Télécharger le PDF",
+    "generatingPdf": "Génération du PDF…",
+    "monthlyPayment": "Paiement mensuel",
+    "totalInterest": "Intérêts totaux",
+    "totalAmount": "Montant total",
+    "paymentBreakdown": "Détail des paiements",
+    "table": {
+      "year": "Année",
+      "payment": "Paiement",
+      "interest": "Intérêt",
+      "balance": "Solde"
+    },
+    "charts": {
+      "principalVsInterest": "Capital vs intérêts",
+      "balanceOverTime": "Solde du prêt dans le temps",
+      "annualBreakdown": "Répartition annuelle des paiements",
+      "totalBreakdown": "Répartition totale",
+      "cumulative": "Paiements cumulés",
+      "labels": {
+        "principal": "Principal",
+        "interest": "Intérêts",
+        "totalPrincipal": "Total du principal",
+        "totalInterest": "Total des intérêts"
+      }
+    },
+    "stats": {
+      "monthlyPayment": "Paiement mensuel",
+      "monthlyPaymentRange": "{{first}} – {{last}}",
+      "accruedInterest": "Intérêts cumulés",
+      "debtPlusInterest": "Dette + intérêts",
+      "overpayment": "Surpaiement"
+    },
+    "about": {
+      "title": "À propos de ce calculateur",
+      "description": "Ce calculateur utilise des formules financières standard pour des résultats précis. Les calculs sont effectués localement dans votre navigateur.",
+      "formula": "Formule",
+      "formulaNote": "Où : A = Montant, P = Principal, r = Taux, t = Durée"
+    },
+    "refinancing": {
+      "remainingDebt": "Solde restant dû",
+      "remainingTerm": "Durée restante",
+      "currentRate": "Taux d'intérêt actuel",
+      "perYear": "% par an",
+      "refinancingParams": "Paramètres de refinancement",
+      "amountChanged": "Le montant a changé",
+      "newAmount": "Nouveau montant",
+      "termChanged": "La durée a changé",
+      "newTerm": "Nouvelle durée",
+      "termUnit": "Unité de durée",
+      "rateChanged": "Le taux a changé",
+      "newRate": "Nouveau taux",
+      "monthlyPayment": "Paiement mensuel",
+      "totalInterest": "Intérêts totaux",
+      "afterRefinancing": "Après refinancement",
+      "monthlyPaymentWithRef": "Paiement mensuel après refinancement",
+      "totalInterestWithRef": "Intérêts totaux avec refinancement",
+      "savings": "Économies",
+      "monthlySavings": "Le paiement mensuel diminue de {{amount}}",
+      "monthlyIncrease": "Le paiement mensuel augmente de {{amount}}",
+      "interestSavings": "Les intérêts totaux diminuent de {{amount}}",
+      "interestIncrease": "Les intérêts totaux augmentent de {{amount}}",
+      "repaymentChartTitle": "Tableau d'amortissement : capital et intérêts par année",
+      "byYear": "Par année",
+      "byMonth": "Par mois",
+      "month": "Mois",
+      "monthShort": "M{{n}}",
+      "total": "Total",
+      "exportExcel": "Télécharger Excel",
+      "exportPdfTable": "PDF du tableau",
+      "printTable": "Imprimer le tableau",
+      "printFull": "Imprimer le calcul",
+      "downloadPdfFull": "Télécharger le PDF du calcul",
+      "inputParameters": "Paramètres d'entrée"
+    },
+    "microloan": {
+      "amount": "Montant",
+      "loanTermDays": "Durée du prêt (jours)",
+      "rate": "Taux",
+      "ratePerDay": "% par jour",
+      "ratePerMonth": "% par mois",
+      "hasOverdue": "Retard de paiement",
+      "overduePeriod": "Période de retard",
+      "overdueDays": "jours",
+      "overdueMonths": "mois",
+      "overdueRate": "Taux de retard",
+      "penaltyAmount": "Montant des pénalités",
+      "interestAccrued": "Intérêts courus",
+      "totalToRepay": "Total à rembourser",
+      "overdueInterest": "Intérêts de retard",
+      "overdueTotal": "Total retard",
+      "grandTotal": "Total général",
+      "day": "Jour",
+      "chartTitle": "Plan d'accumulation des intérêts"
+    },
+    "inflation": {
+      "startMonth": "Mois de début",
+      "endMonth": "Mois de fin",
+      "month": "Mois",
+      "year": "Année",
+      "calculatePriceChange": "Calculer l'évolution des prix",
+      "calculateSavingsDepreciation": "Calculer la dépréciation de l'épargne",
+      "amount": "Montant",
+      "inflationForPeriod": "Inflation sur la période",
+      "priceChangeResult": "Résultat évolution des prix",
+      "savingsDepreciationResult": "Dépréciation de l'épargne",
+      "annualRatesTable": "Taux d'inflation annuels",
+      "annualRate": "Taux (%)",
+      "chartRates": "Taux d'inflation annuels",
+      "chartCumulative": "Indice des prix cumulé",
+      "chartProgressive": "Inflation progressive sur la période",
+      "cumulativeInflationPercent": "Inflation cumulée (%)",
+      "indexLabel": "Indice",
+      "noData": "Aucune donnée d'inflation pour ce pays.",
+      "loading": "Chargement des données d'inflation…",
+      "months": {
+        "1": "Janvier",
+        "2": "Février",
+        "3": "Mars",
+        "4": "Avril",
+        "5": "Mai",
+        "6": "Juin",
+        "7": "Juillet",
+        "8": "Août",
+        "9": "Septembre",
+        "10": "Octobre",
+        "11": "Novembre",
+        "12": "Décembre"
+      }
+    },
+    "creditEarly": {
+      "fields": {
+        "loanAmount": "Montant du prêt",
+        "term": "Durée du prêt",
+        "termUnit": "Unité de durée",
+        "issueDate": "Date de déblocage",
+        "rate": "Taux d'intérêt (%)",
+        "rateChanges": "Changements de taux",
+        "addRate": "Ajouter un taux",
+        "remove": "Supprimer",
+        "noRateChanges": "Aucun changement de taux pour l'instant.",
+        "paymentDay": "Jour du paiement mensuel",
+        "firstPaymentInterestOnly": "Premier paiement — intérêts seuls",
+        "skipFirstMonth": "Ignorer le premier mois",
+        "increaseToInterest": "Augmenter le paiement au montant des intérêts",
+        "roundPayment": "Arrondir le paiement",
+        "shiftWeekend": "Décaler le paiement tombant un week-end",
+        "paymentDayChanged": "Jour de paiement modifié",
+        "paymentDayChangeInterest": "Si l'écart après changement dépasse un mois, payer les intérêts intermédiaires",
+        "earlyRepayments": "Remboursements anticipés",
+        "addEarlyRepayment": "Ajouter un remboursement anticipé",
+        "oneTime": "Ponctuel",
+        "regular": "Régulier",
+        "date": "Date",
+        "amount": "Montant",
+        "recalc": "Recalcul",
+        "principalOnly": "Tout le montant en capital",
+        "nextPaymentInterestOnly": "Prochain paiement — intérêts seuls",
+        "period": "Fréquence",
+        "tieToPaymentDate": "Lier à la date de paiement mensuel",
+        "periodStart": "Date de début",
+        "periodEnd": "Date de fin",
+        "add": "Ajouter",
+        "noEarlyRepayments": "Aucun remboursement anticipé pour l'instant.",
+        "overallPayment": "Paiement mensuel total",
+        "overallPaymentHelp": "Indiquez le montant que vous prévoyez de payer chaque mois. Une partie couvre l'échéance, le reste est traité en remboursement anticipé.",
+        "loanHoliday": "Différé",
+        "loanHolidayHelp": "Pendant le différé, les intérêts continuent de courir.",
+        "holidayStart": "Début",
+        "holidayDuration": "Durée (mois)",
+        "holidayPayment": "Paiement",
+        "holidayPaymentNone": "Aucun",
+        "holidayPaymentInterest": "Intérêts seuls",
+        "principal": "Capital",
+        "extraPayment": "Remboursement anticipé"
+      },
+      "microHints": {
+        "loanAmount": "Remboursement anticipé possible",
+        "term": "Influe sur le coût total",
+        "rate": "La banque peut modifier le taux"
+      },
+      "preview": {
+        "monthlyPayment": "Paiement mensuel",
+        "overpayment": "Intérêts totaux"
+      },
+      "goToResults": "Go to results",
+      "mainParamsLabel": "Paramètres principaux",
+      "inputHint": "Le résultat se met à jour automatiquement lorsque vous modifiez les données.",
+      "quickSummary": "Key metrics",
+      "analysisTitle": "Calculation details",
+      "eventsTimeline": "Loan events",
+      "tabs": {
+        "table": "Table",
+        "charts": "Charts",
+        "analytics": "Analytics"
+      },
+      "issueDateHint": "Date de déblocage du prêt. Utilisée pour la première période d'intérêts.",
+      "paymentParamsTitle": "Type de paiement et échéancier",
+      "paymentParamsHint": "Saisissez le montant, le taux, la durée et la date de déblocage — le calcul se met à jour automatiquement.",
+      "paymentDayHint": "Jour du mois ou lié à la date de déblocage.",
+      "rateChangeExplainer": "Si le taux change pendant la durée (ex. après un taux d'appel), ajoutez le changement ici.",
+      "rateChangeFrom": "À partir du {{date}}",
+      "rateChangeRate": "Taux : {{rate}} %",
+      "paymentTypeBlock": "Type de paiement",
+      "additionalBlock": "Options supplémentaires",
+      "earlyBlockActive": "Actif",
+      "resultWithoutEarly": "Sans anticipé",
+      "resultWithEarly": "Avec anticipé",
+      "youSave": "Vous économisez",
+      "termLessBy": "Durée raccourcie de",
+      "monthsShort": "mois",
+      "loanClosesSooner": "Prêt clôturé {{count}} mois plus tôt",
+      "disclaimerCalculation": "Ce calcul est à titre indicatif et ne constitue pas une offre.",
+      "recalc": {
+        "payment": "Paiement",
+        "term": "Durée"
+      },
+      "paymentDay": {
+        "issue": "À la date de déblocage",
+        "last": "Dernier jour du mois",
+        "dayOfMonth": "Le {{day}} de chaque mois"
+      },
+      "periods": {
+        "1W": "Hebdomadaire",
+        "1M": "Mensuel",
+        "2M": "Tous les 2 mois",
+        "3M": "Trimestriel",
+        "6M": "Tous les 6 mois",
+        "1Y": "Annuel"
+      },
+      "kpi": {
+        "overpaymentWithoutEarly": "Intérêts sans anticipé",
+        "totalInterest": "Overpayment",
+        "totalPayment": "Total des paiements",
+        "savings": "Économie",
+        "termReductionMonths": "Réduction de durée",
+        "termMonths": "Durée (mois)",
+        "effectiveRate": "Effective load",
+        "overpaymentPercent": "Surcoût, %"
+      },
+      "summary": {
+        "totalEarlyRepayments": "Total des remboursements anticipés",
+        "savingsText": "Les remboursements anticipés ont réduit le coût du prêt de {{savings}}. La durée a été raccourcie de {{duration}}.",
+        "savingsOnly": "Les remboursements anticipés ont réduit le coût du prêt de {{savings}}.",
+        "yearsCount_one": "{{count}} an",
+        "yearsCount_other": "{{count}} ans",
+        "monthsCount_one": "{{count}} mois",
+        "monthsCount_other": "{{count}} mois",
+        "and": "et"
+      }
+    }
+  },
+  "calculatorNames": {
+    "auto-loan": "Calculateur de crédit auto",
+    "mortgage": "Calculateur d'hypothèque",
+    "tax-return": "Calculateur de remboursement d'impôts",
+    "salary": "Calculateur de salaire",
+    "investment": "Calculateur d'investissement",
+    "compound-interest": "Calculateur d'intérêts composés",
+    "loan": "Calculateur de prêt",
+    "credit-early-repayment": "Calculateur de crédit avec remboursement anticipé",
+    "breakeven": "Calculateur du seuil de rentabilité",
+    "utility": "Calculateur des coûts de services publics",
+    "refinancing": "Calculateur de refinancement",
+    "microloan": "Calculateur de micro-prêt",
+    "microloan_fr": "Calculateur de micro-prêt",
+    "inflation": "Calculateur d'inflation",
+    "vat": "Calculateur TVA",
+    "osago": "Calculateur OSAGO",
+    "fuel-consumption": "Calculateur de consommation de carburant"
+  },
+  "calculatorDescriptions": {
+    "auto-loan": "Calculez la mensualité, le coût total et l'échéancier d'un crédit auto avec paiement final optionnel",
+    "mortgage": "Calculez les paiements mensuels et l'amortissement",
+    "tax-return": "Estimez votre remboursement d'impôts",
+    "salary": "Calculez le salaire net et les retenues",
+    "investment": "Projetez les rendements d'investissement",
+    "compound-interest": "Calculez les intérêts composés",
+    "loan": "Calculez les paiements et les intérêts totaux",
+    "credit-early-repayment": "Calculez les paiements avec remboursements anticipés et changement de taux",
+    "breakeven": "Déterminez le seuil de rentabilité",
+    "utility": "Estimez les factures mensuelles",
+    "refinancing": "Comparez le prêt actuel aux conditions de refinancement et voyez les économies",
+    "microloan": "Calculez les intérêts, pénalités de retard et total à rembourser",
+    "inflation": "Calculez l'inflation et l'évolution des prix sur une période",
+    "vat": "Calculez la TVA : ajouter ou extraire la taxe par pays",
+    "osago": "Calculez le prix de l'OSAGO selon le tarif de base et les coefficients",
+    "fuel-consumption": "Carburant pour un trajet ou moyenne aux 100 km ; unités métriques et impériales, coût optionnel."
+  },
+  "vat": {
+    "amount": "Montant",
+    "mode": "Mode de calcul",
+    "modeAdd": "Ajouter la TVA",
+    "modeExclude": "Extraire la TVA",
+    "country": "Pays (taux)",
+    "rate": "Taux",
+    "enterAmount": "Saisissez un montant.",
+    "result": {
+      "amountExcl": "Montant HT",
+      "vatAmount": "TVA",
+      "amountWithVat": "Montant TTC"
+    },
+    "exportPdf": "Télécharger PDF",
+    "exportExcel": "Exporter Excel",
+    "usSalesTaxNote": "Aux États-Unis, taxe par État ; taux indicatif.",
+    "countryName": {
+      "it": "Italie",
+      "be": "Belgique"
+    },
+    "taxName": {
+      "default": "TVA"
+    },
+    "about": {
+      "title": "À propos du calculateur TVA",
+      "paragraph": "La TVA (taxe sur la valeur ajoutée) est un impôt à la consommation appliqué aux biens et services. Ce calculateur permet d'ajouter la TVA à un montant HT ou d'extraire la TVA d'un montant TTC selon le taux standard du pays choisi."
+    },
+    "formulas": {
+      "title": "Formules",
+      "addFormula": "Montant TTC = Montant HT × (1 + Taux / 100)",
+      "excludeFormula": "Montant HT = Montant TTC ÷ (1 + Taux / 100). Montant TVA = Montant TTC − Montant HT."
+    },
+    "ratesTable": {
+      "title": "Taux de TVA par pays",
+      "country": "Pays",
+      "taxName": "Nom de la taxe",
+      "standardRate": "Taux normal (%)",
+      "reducedRates": "Taux réduits"
+    },
+    "ru": {
+      "ratesTitle": "Taux de TVA en Russie",
+      "rates20": "20 % — taux général (la plupart des biens et services).",
+      "rates10": "10 % — produits alimentaires, articles pour enfants, produits médicaux, imprimés.",
+      "rates0": "0 % — exportations, transports internationaux et certaines autres opérations.",
+      "historyTitle": "Historique du taux de TVA (Russie)",
+      "usn": "Régime fiscal simplifié (USN) : les entreprises au régime simplifié ne sont en général pas assujetties à la TVA (exceptions possibles). Seuils et règles susceptibles d'évoluer ; vérifier la législation en vigueur 2025–2026."
+    },
+    "examples": {
+      "title": "Exemples de calcul",
+      "ex1": "Exemple 1 : 1 000 € HT à 20 % TVA → 1 000 × 1,20 = 1 200 € TTC ; montant TVA = 200 €.",
+      "ex2": "Exemple 2 : 2 400 € TTC à 20 % TVA → 2 400 ÷ 1,20 = 2 000 € HT ; TVA = 400 €.",
+      "ex3": "Exemple 3 : 500 € HT à 10 % (taux réduit) → 500 × 1,10 = 550 € TTC ; TVA = 50 €."
+    },
+    "howToUse": {
+      "title": "Comment utiliser le calculateur",
+      "step1": "Choisissez le pays pour appliquer le taux de TVA standard (ou saisissez un taux personnalisé).",
+      "step2": "Choisissez le mode : ajouter la TVA au montant net ou extraire la TVA du montant TTC.",
+      "step3": "Saisissez le montant ; le résultat se met à jour automatiquement.",
+      "step4": "Consultez le tableau ci-dessous pour les taux par pays."
+    },
+    "keywords": "Recherches populaires : calculateur TVA, ajouter TVA, extraire TVA, taux TVA par pays."
+  },
+  "footer": {
+    "tagline": "Calculateurs en ligne gratuits pour la finance, les impôts et les calculs du quotidien.",
+    "categoriesTitle": "Catégories",
+    "countriesTitle": "Pays",
+    "legalTitle": "Mentions légales",
+    "connectTitle": "Réseaux",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "disclaimer": "Avertissement",
+    "contact": "Contact",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "email": "Email",
+    "countryCanada": "Canada",
+    "copyright": "© 2024 Calcify. Tous droits réservés.",
+    "disclaimerLong": "À des fins éducatives et informatives uniquement. Pas un conseil financier."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page demandée n'existe pas ou a été déplacée. Revenons sur la bonne voie.",
+    "backHome": "Retour à l'accueil"
+  },
+  "seo": {
+    "autoLoan": {
+      "title": "Calculateur de crédit auto : mensualité et échéancier",
+      "intro": "Ce calculateur de crédit auto permet d'estimer la mensualité, les intérêts totaux et le coût du financement. Il prend en charge le calcul par prix du véhicule ou montant du prêt, l'apport initial, le paiement final (ballon) et les échéances annuités ou différenciées.",
+      "formulaTitle": "Formule de calcul",
+      "formula": "M = P × r × (1+r)^n / ((1+r)^n - 1)",
+      "formulaVars": "M = mensualité, P = principal, r = taux mensuel (taux annuel / 12), n = nombre de mois. En mode différencié, le principal est remboursé en parts égales et les intérêts diminuent chaque mois.",
+      "examplesTitle": "Exemples de calcul",
+      "example1": "Exemple 1 : véhicule 30 000, apport 6 000, taux 8 %, durée 60 mois, annuité. Montant du prêt = 24 000.",
+      "example2": "Exemple 2 : prêt 20 000, paiement ballon 5 000, taux 10 %, durée 48 mois, paiements différenciés.",
+      "howToTitle": "Comment utiliser le calculateur",
+      "step1": "Choisissez le mode : par prix du véhicule ou par montant du prêt.",
+      "step2": "Saisissez l'apport, le paiement final (si nécessaire), le taux, la durée et le type de paiement.",
+      "step3": "Analysez la mensualité, le coût total et l'échéancier par mois ou par année."
+    },
+    "home": {
+      "title": "Calculateurs en ligne gratuits — prêt, impôts, salaire",
+      "description": "Utilisez des calculateurs en ligne gratuits pour les prêts, les impôts, le salaire, les investissements et plus.",
+      "keywords": [
+        "calculateur",
+        "calculateur hypothécaire",
+        "calculateur d'impôts",
+        "calculateur de salaire",
+        "calculateur de prêt",
+        "calculateur d'investissement",
+        "calculateur gratuit",
+        "calculateur financier"
+      ],
+      "siteName": "Calcify - Calculateurs en ligne gratuits",
+      "siteDescription": "Calculateurs en ligne gratuits pour la finance, les impôts, le salaire, les investissements et les calculs du quotidien"
+    },
+    "category": {
+      "title": "Calculateurs {{name}} | Calcify",
+      "description": "Découvrez notre collection de calculateurs {{name}} gratuits. {{description}}",
+      "keywords": [
+        "calculateur {{name}}",
+        "gratuit {{name}}",
+        "calculateur",
+        "calculateur en ligne"
+      ]
+    },
+    "calculator": {
+      "titleFallback": "Calculateur",
+      "descriptionFallback": "Calculez des indicateurs financiers avec notre calculateur en ligne gratuit.",
+      "keywordsFallback": "calculateur financier"
+    },
+    "inflation": {
+      "titleInCountry": "Calculateur d'inflation en {{country}}"
+    },
+    "vat": {
+      "titleInCountry": "Calculateur TVA — {{country}}"
+    },
+    "refinancing": {
+      "title": "Calculateur de refinancement",
+      "description": "Comparez votre prêt actuel à une nouvelle offre : voyez combien vous économisez en intérêts et en durée. Le calculateur utilise la même logique que le calculateur de prêt principal et affiche les échéanciers côte à côte.",
+      "howItWorksTitle": "Fonctionnement de la comparaison",
+      "howItWorks": "Vous saisissez le capital restant dû, le taux et la durée du prêt actuel, puis le taux et la durée du nouveau. Les intérêts et le remboursement total sont calculés pour les deux ; la différence est votre économie potentielle.",
+      "examplesTitle": "Exemples de calcul",
+      "example1": "Exemple 1 : 100 000 € restants à 15 % sur 24 mois. Intérêts totaux ≈ 16 100 €. Refinancement à 10 % sur 24 mois → intérêts ≈ 10 600 €. Économie ≈ 5 500 €.",
+      "example2": "Exemple 2 : 500 000 € restants à 12 % sur 36 mois. Refinancement à 9 % sur 36 mois réduit les intérêts d'environ 24 000 €.",
+      "howToUseTitle": "Comment utiliser le calculateur",
+      "step1": "Saisissez le solde restant dû, le taux et la durée du prêt actuel.",
+      "step2": "Indiquez le nouveau taux et la durée (et les frais éventuels).",
+      "step3": "Comparez les intérêts totaux et l'échéancier des deux options.",
+      "step4": "Consultez les graphiques : capital et intérêts, remboursements dans le temps.",
+      "keywords": "Recherches populaires : calculateur refinancement, comparer taux prêt, économie refinancement."
+    },
+    "inflationBlock": {
+      "title": "Calculateur d'inflation",
+      "description": "Voyez comment l'inflation réduit le pouvoir d'achat de l'argent dans le temps. Saisissez un montant initial et un taux d'inflation annuel pour obtenir la valeur équivalente dans les années futures et l'indice d'inflation total.",
+      "formulaTitle": "Formule",
+      "formula": "Valeur après n années = Montant initial × (1 + taux/100)^n. L'indice d'inflation est (1 + taux/100)^n ; le tableau montre la progression année par année.",
+      "examplesTitle": "Exemples de calcul",
+      "example1": "Exemple 1 : 10 000 € à 5 % sur 10 ans → 10 000 × 1,05^10 ≈ 16 289 € ; à 5 %, le pouvoir d'achat est environ divisé par deux en 14 ans.",
+      "example2": "Exemple 2 : 1 000 € à 3 % sur 5 ans → 1 000 × 1,03^5 ≈ 1 159 € ; indice ≈ 1,16.",
+      "howToUseTitle": "Comment utiliser le calculateur",
+      "step1": "Saisissez le montant initial et le taux d'inflation annuel (%).",
+      "step2": "Indiquez le nombre d'années à projeter.",
+      "step3": "Lisez la valeur équivalente et l'indice d'inflation dans les résultats et le tableau.",
+      "keywords": "Recherches populaires : calculateur inflation, pouvoir d'achat, taux d'inflation."
+    },
+    "microloan": {
+      "title": "Calculateur de microcrédit",
+      "description": "Calculez le coût d'un microcrédit à court terme : intérêts et pénalités de retard. Saisissez le capital, le taux annuel, la durée et éventuellement le taux de pénalité pour voir l'échéancier et le total à rembourser.",
+      "howItWorksTitle": "Intérêts et pénalités",
+      "howItWorks": "Les intérêts s'appliquent au capital sur la durée. Un taux de pénalité s'applique par jour au montant en retard après l'échéance. Total à rembourser = capital + intérêts + pénalités (le cas échéant).",
+      "examplesTitle": "Exemples de calcul",
+      "example1": "Exemple 1 : 5 000 € à 1 % par jour sur 14 jours — les intérêts dépendent de la méthode ; le total à rembourser figure dans l'échéancier.",
+      "example2": "Exemple 2 : Même prêt avec 0,5 % de pénalité par jour et 5 jours de retard — la pénalité s'accumule sur le solde pendant 5 jours.",
+      "howToUseTitle": "Comment utiliser le calculateur",
+      "step1": "Saisissez le montant du prêt, le taux d'intérêt annuel et la durée (jours ou mois).",
+      "step2": "Indiquez éventuellement un taux de pénalité pour retard.",
+      "step3": "Consultez l'échéancier, les intérêts totaux et le total à rembourser.",
+      "keywords": "Recherches populaires : calculateur microcrédit, prêt court terme, intérêts prêt."
+    },
+    "creditEarlyRepayment": {
+      "title": "Calculateur de remboursement anticipé",
+      "description": "Voyez comment des remboursements anticipés ou un versement unique réduisent la durée du prêt et les intérêts totaux. Le calculateur montre l'impact de remboursements ponctuels ou réguliers sur l'échéancier et le coût total.",
+      "howItWorksTitle": "Fonctionnement du remboursement anticipé",
+      "howItWorks": "Les remboursements anticipés réduisent le capital, donc moins d'intérêts. Vous pouvez ajouter un versement unique et/ou un remboursement régulier. L'échéancier est recalculé : le prêt est remboursé plus tôt avec moins d'intérêts.",
+      "exampleTitle": "Exemple",
+      "example": "Prêt de 1 000 000 € à 12 % sur 60 mois. Sans remboursement anticipé : intérêts totaux ≈ 333 000 €. Avec 100 000 € en mois 12 : la durée diminue, les intérêts baissent ; le nouvel échéancier apparaît dans le tableau et le graphique.",
+      "howToUseTitle": "Comment utiliser le calculateur",
+      "step1": "Saisissez le montant du prêt, le taux et la durée (annuités ou dégressif).",
+      "step2": "Ajoutez éventuellement un remboursement anticipé ponctuel et/ou régulier.",
+      "step3": "Consultez l'échéancier mis à jour, les intérêts économisés et les graphiques.",
+      "keywords": "Recherches populaires : calculateur remboursement anticipé, remboursement partiel, raccourcir durée prêt."
+    },
+    "mortgage": {
+      "title": "Calculateur de prêt immobilier : mensualités et amortissement",
+      "description": "Le calculateur de prêt immobilier vous aide à estimer les mensualités et le coût total avant de faire une demande. Que vous achetiez votre premier logement ou que vous refinanciez, connaître votre mensualité et les intérêts sur la durée du prêt facilite la décision. L'outil utilise les formules d'amortissement standard et gère l'annuité à taux fixe et le remboursement dégressif (in fine / linéaire).",
+      "toolExplanation": "Un prêt immobilier (crédit hypothécaire) est un emprunt à long terme garanti par le bien. En France, les banques proposent des taux fixes ou variables ; le calculateur suppose un taux annuel fixe. Vous saisissez le prix du bien, l'apport, le taux et la durée pour obtenir la mensualité et le tableau d'amortissement. Le PTZ, les prêts à taux zéro et les frais de notaire peuvent modifier le coût total — à vérifier auprès de votre organisme.",
+      "howToUseTitle": "Comment utiliser le calculateur",
+      "step1": "Saisissez le prix total du bien (prix d'achat ou valeur vénale utilisée par la banque).",
+      "step2": "Saisissez votre apport ; le calculateur affiche le montant emprunté et l'apport en pourcentage.",
+      "step3": "Indiquez le taux d'intérêt annuel et la durée du prêt (en années ou mois).",
+      "step4": "Choisissez annuités (mensualités constantes) ou dégressif (mensualités décroissantes). Les résultats et le tableau se mettent à jour automatiquement.",
+      "methodologyTitle": "Méthode de calcul",
+      "formula": "Annuités : M = P × [r(1+r)^n] / [(1+r)^n − 1]. Dégressif : part d'amortissement = P/n chaque mois ; intérêts = capital restant × r.",
+      "formulaNote": "M = mensualité, P = capital emprunté, r = taux mensuel (taux annuel ÷ 12), n = nombre de mois.",
+      "countrySpecificsTitle": "Spécificités en France",
+      "countrySpecifics": "En France, les prêts à taux fixe sur 15–25 ans sont courants. Le PTZ (prêt à taux zéro), l'épargne logement et les prêts d'action logement peuvent réduire la charge. Les frais de notaire et d'assurance dépendent du type de bien et du profil. Les remboursements anticipés sont en principe libres (indemnités éventuelles selon l'échéance) — vérifier le contrat.",
+      "examplesTitle": "Exemples de calcul",
+      "example1": "Exemple 1 (EUR) : bien 280 000 €, apport 56 000 €, taux 4 %, 20 ans → prêt 224 000 €, mensualité (annuités) ≈ 1 357 €, intérêts totaux ≈ 101 000 €.",
+      "example2": "Exemple 2 : même prêt en dégressif → première mensualité ≈ 1 493 €, dernière ≈ 934 € ; intérêts totaux inférieurs à l'annuité.",
+      "example3": "Exemple 3 : 224 000 € à 4 % sur 15 ans → mensualité ≈ 1 656 € ; durée plus courte, moins d'intérêts malgré une mensualité plus élevée.",
+      "commonMistakesTitle": "Erreurs fréquentes",
+      "commonMistakes": "Confondre prix du bien et montant emprunté. Oublier les frais de notaire, l'assurance et les taxes. Comparer uniquement la mensualité sans regarder les intérêts totaux. Ne pas tenir compte du type de taux (fixe/variable) ni des pénalités de remboursement anticipé.",
+      "faqTitle": "Questions fréquentes",
+      "faq1q": "Quelle est la différence entre annuités et dégressif ?",
+      "faq1a": "Annuités : mensualité constante ; au début surtout des intérêts, puis de plus en plus d'amortissement. Dégressif : part d'amortissement fixe chaque mois plus intérêts sur le capital restant, les mensualités commencent plus hautes et diminuent ; les intérêts totaux sont en général plus bas.",
+      "faq2q": "Les taxes et l'assurance sont-elles incluses ?",
+      "faq2a": "Non. Seuls le capital et les intérêts sont calculés. Il faut ajouter séparément les taxes foncières, l'assurance habitation et, le cas échéant, l'assurance de prêt pour le coût mensuel réel.",
+      "faq3q": "Puis-je l'utiliser pour un refinancement ?",
+      "faq3a": "Oui. Saisissez le nouveau montant (ex. capital restant dû), le nouveau taux et la nouvelle durée pour voir la nouvelle mensualité et le tableau.",
+      "faq4q": "Le résultat est-il exact ?",
+      "faq4a": "Le calcul est exact pour les données saisies. Les offres réelles peuvent différer (frais, arrondis, taux variable). Utilisez le calculateur pour comparer et planifier ; confirmez les chiffres auprès de votre banque.",
+      "faq5q": "Quel taux utiliser ?",
+      "faq5a": "Utilisez le TAEG (taux annuel effectif global) ou le taux nominal indiqué par votre banque pour l'échéancier. En cas de taux d'appel, calculez les deux périodes (taux d'appel puis taux de rappel).",
+      "conclusion": "Utilisez ce calculateur pour comparer des scénarios, voir l'impact de l'apport et de la durée sur la mensualité et les intérêts totaux, et planifier votre budget. Pour les dispositifs français (PTZ, prêts aidés) et les clauses de votre contrat, consultez un conseiller ou votre banque.",
+      "keywords": "Recherches populaires : calculateur prêt immobilier, mensualité prêt, tableau amortissement, crédit hypothécaire, annuités vs dégressif."
+    },
+    "fuelConsumption": {
+      "title": "Calculateur de consommation : aux 100 km et coût du trajet",
+      "intro": "Calculez le carburant pour un trajet à partir de la consommation moyenne et de la distance, ou la consommation moyenne aux 100 km à partir de la distance et du carburant utilisé. Unités métriques (L/100 km, km/L) et impériales (mpg). Saisissez le prix au litre pour le coût du trajet.",
+      "howToTitle": "Comment utiliser",
+      "step1": "Choisissez le mode : « Carburant pour le trajet » (vous connaissez la consommation et la distance) ou « Moyenne aux 100 km » (vous connaissez la distance et le carburant utilisé).",
+      "step2": "Sélectionnez les unités (métrique ou impérial), saisissez les valeurs. Optionnel : prix au litre pour le coût du trajet."
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "description": "Nous respectons votre vie privée. Cette page explique comment les données sont traitées lorsque vous utilisez nos calculateurs."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "description": "Ces conditions décrivent les règles d'utilisation du site et des calculateurs."
+    },
+    "disclaimer": {
+      "title": "Avertissement",
+      "description": "Les calculateurs sont fournis à titre informatif uniquement et ne constituent pas un conseil financier."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Des questions ou des retours ? Contactez-nous et nous vous répondrons."
+    }
+  }
+}

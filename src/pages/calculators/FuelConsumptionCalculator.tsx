@@ -25,32 +25,32 @@ export default function FuelConsumptionCalculator() {
     <CalculatorLayout calculatorId="fuel-consumption" categoryName="Automotive" categoryPath="/#automotive">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.fuelConsumption.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("calc.fuelConsumption.description")}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.fuel-consumption")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calculatorDescriptions.fuel-consumption")}</p>
         </div>
 
         <Tabs defaultValue="calc" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="calc">{t("calc.fuelConsumption.calcConsumption")}</TabsTrigger>
-            <TabsTrigger value="plan">{t("calc.fuelConsumption.planTrip")}</TabsTrigger>
+            <TabsTrigger value="calc">{t("calculator.fuelConsumption.modeAverage")}</TabsTrigger>
+            <TabsTrigger value="plan">{t("calculator.fuelConsumption.modeTrip")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="calc">
             <div className="grid lg:grid-cols-[1fr_340px] gap-6">
               <Card>
-                <CardHeader><CardTitle>{t("calc.fuelConsumption.tripData")}</CardTitle></CardHeader>
+                <CardHeader><CardTitle>{t("calculator.inputTitle")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="dist">{t("calc.fuelConsumption.distance")}</Label>
+                      <Label htmlFor="dist">{t("calculator.fuelConsumption.distanceLabel")}</Label>
                       <Input id="dist" type="number" value={distance} onChange={(e) => setDistance(+e.target.value)} min={0} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="fuel">{t("calc.fuelConsumption.fuelUsed")}</Label>
+                      <Label htmlFor="fuel">{t("calculator.fuelConsumption.fuelUsedLabel")}</Label>
                       <Input id="fuel" type="number" value={fuelUsed} onChange={(e) => setFuelUsed(+e.target.value)} min={0} step={0.1} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="fprice">{t("calc.fuelConsumption.fuelPrice")}</Label>
+                      <Label htmlFor="fprice">{t("calculator.fuelConsumption.priceLabel")}</Label>
                       <Input id="fprice" type="number" value={fuelPrice} onChange={(e) => setFuelPrice(+e.target.value)} min={0} step={0.1} />
                     </div>
                   </div>
@@ -59,15 +59,14 @@ export default function FuelConsumptionCalculator() {
 
               <div className="space-y-4">
                 <Card>
-                  <CardHeader><CardTitle>{t("calc.fuelConsumption.consumption")}</CardTitle></CardHeader>
+                  <CardHeader><CardTitle>{t("calculator.fuelConsumption.resultConsumptionPer100")}</CardTitle></CardHeader>
                   <CardContent>
-                    <p className="text-3xl font-bold text-primary">{result1.per100km} {t("calc.fuelConsumption.per100km")}</p>
+                    <p className="text-3xl font-bold text-primary">{result1.per100km} {t("calculator.fuelConsumption.consumptionL100km")}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="pt-6 space-y-2 text-sm">
-                    <div className="flex justify-between"><span>{t("calc.fuelConsumption.tripCost")}</span><Badge variant="outline">{result1.tripCost} ₽</Badge></div>
-                    <div className="flex justify-between"><span>{t("calc.fuelConsumption.costPerKm")}</span><Badge variant="outline">{result1.costPerKm} ₽</Badge></div>
+                    <div className="flex justify-between"><span>{t("calculator.fuelConsumption.resultCost")}</span><Badge variant="outline">{result1.tripCost} ₽</Badge></div>
                   </CardContent>
                 </Card>
               </div>
@@ -77,19 +76,19 @@ export default function FuelConsumptionCalculator() {
           <TabsContent value="plan">
             <div className="grid lg:grid-cols-[1fr_340px] gap-6">
               <Card>
-                <CardHeader><CardTitle>{t("calc.fuelConsumption.planning")}</CardTitle></CardHeader>
+                <CardHeader><CardTitle>{t("calculator.inputTitle")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="dist2">{t("calc.fuelConsumption.distance")}</Label>
+                      <Label htmlFor="dist2">{t("calculator.fuelConsumption.distanceLabel")}</Label>
                       <Input id="dist2" type="number" value={distance2} onChange={(e) => setDistance2(+e.target.value)} min={0} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="c100">{t("calc.fuelConsumption.consumptionRate")}</Label>
+                      <Label htmlFor="c100">{t("calculator.fuelConsumption.consumptionLabel")}</Label>
                       <Input id="c100" type="number" value={consumption100} onChange={(e) => setConsumption100(+e.target.value)} min={0} step={0.1} />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="fp2">{t("calc.fuelConsumption.fuelPrice")}</Label>
+                      <Label htmlFor="fp2">{t("calculator.fuelConsumption.priceLabel")}</Label>
                       <Input id="fp2" type="number" value={fuelPrice2} onChange={(e) => setFuelPrice2(+e.target.value)} min={0} step={0.1} />
                     </div>
                   </div>
@@ -98,14 +97,14 @@ export default function FuelConsumptionCalculator() {
 
               <div className="space-y-4">
                 <Card>
-                  <CardHeader><CardTitle>{t("calc.fuelConsumption.fuelNeeded")}</CardTitle></CardHeader>
+                  <CardHeader><CardTitle>{t("calculator.fuelConsumption.resultFuelUsed")}</CardTitle></CardHeader>
                   <CardContent>
                     <p className="text-3xl font-bold text-primary">{result2.liters} л</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="pt-6 text-sm">
-                    <div className="flex justify-between"><span>{t("calc.fuelConsumption.tripCost")}</span><Badge variant="outline">{result2.cost} ₽</Badge></div>
+                    <div className="flex justify-between"><span>{t("calculator.fuelConsumption.resultCost")}</span><Badge variant="outline">{result2.cost} ₽</Badge></div>
                   </CardContent>
                 </Card>
               </div>

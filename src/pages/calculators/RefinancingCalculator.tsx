@@ -38,52 +38,52 @@ export default function RefinancingCalculatorPage() {
     <CalculatorLayout calculatorId="refinancing" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.refinancing.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("calc.refinancing.description")}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.refinancing")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calculatorDescriptions.refinancing")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1 h-fit lg:sticky lg:top-24">
-            <CardHeader className="pb-3"><CardTitle className="text-base">Текущий кредит</CardTitle></CardHeader>
+            <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.refinancing.remainingDebt")}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
-                <Label>Остаток долга (₽)</Label>
+                <Label>{t("calculator.refinancing.remainingDebt")}</Label>
                 <Input type="text" inputMode="numeric" value={formatNumberInput(remainingDebt)}
                   onChange={(e) => setRemainingDebt(Math.max(0, parseNumberInput(e.target.value)))} />
               </div>
               <div className="space-y-1.5">
-                <Label>Оставшийся срок</Label>
+                <Label>{t("calculator.refinancing.remainingTerm")}</Label>
                 <div className="flex gap-2 items-end">
                   <Input type="number" min={1} value={remainingTerm} className="flex-1"
                     onChange={(e) => setRemainingTerm(Math.max(1, Number(e.target.value) || 1))} />
                   <div className="flex gap-1">
-                    <Badge variant={termUnit === "years" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setTermUnit("years")}>лет</Badge>
-                    <Badge variant={termUnit === "months" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setTermUnit("months")}>мес</Badge>
+                    <Badge variant={termUnit === "years" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setTermUnit("years")}>{t("calculator.years")}</Badge>
+                    <Badge variant={termUnit === "months" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setTermUnit("months")}>{t("calculator.months")}</Badge>
                   </div>
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label>Текущая ставка (%)</Label>
+                <Label>{t("calculator.refinancing.currentRate")}</Label>
                 <Input type="number" step={0.1} min={0} value={currentRate}
                   onChange={(e) => setCurrentRate(Math.max(0, Number(e.target.value) || 0))} />
               </div>
 
               <div className="border-t border-border pt-4">
-                <p className="text-sm font-medium mb-3">Новые условия</p>
+                <p className="text-sm font-medium mb-3">{t("calculator.refinancing.refinancingParams")}</p>
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <Label>Новая ставка (%)</Label>
+                    <Label>{t("calculator.refinancing.newRate")}</Label>
                     <Input type="number" step={0.1} min={0} value={newRate}
                       onChange={(e) => setNewRate(Math.max(0, Number(e.target.value) || 0))} />
                   </div>
                   <div className="space-y-1.5">
-                    <Label>Новый срок</Label>
+                    <Label>{t("calculator.refinancing.newTerm")}</Label>
                     <div className="flex gap-2 items-end">
                       <Input type="number" min={1} value={newTerm} className="flex-1"
                         onChange={(e) => setNewTerm(Math.max(1, Number(e.target.value) || 1))} />
                       <div className="flex gap-1">
-                        <Badge variant={newTermUnit === "years" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setNewTermUnit("years")}>лет</Badge>
-                        <Badge variant={newTermUnit === "months" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setNewTermUnit("months")}>мес</Badge>
+                        <Badge variant={newTermUnit === "years" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setNewTermUnit("years")}>{t("calculator.years")}</Badge>
+                        <Badge variant={newTermUnit === "months" ? "default" : "outline"} className="cursor-pointer px-2 py-1" onClick={() => setNewTermUnit("months")}>{t("calculator.months")}</Badge>
                       </div>
                     </div>
                   </div>
@@ -94,32 +94,34 @@ export default function RefinancingCalculatorPage() {
 
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardHeader className="pb-3"><CardTitle className="text-base">Сравнение</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.results")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="bg-muted/50 rounded-lg p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">Текущий кредит</p>
-                      <p className="text-sm">Платёж: <strong>{fmt(result.currentMonthlyPayment)} ₽/мес</strong></p>
-                      <p className="text-sm">Переплата: <strong className="text-destructive">{fmt(result.currentTotalInterest)} ₽</strong></p>
-                      <p className="text-sm">Всего: <strong>{fmt(result.currentTotalPayment)} ₽</strong></p>
+                      <p className="text-xs font-medium text-muted-foreground mb-2">{t("calculator.refinancing.monthlyPayment")}</p>
+                      <p className="text-sm">{t("calculator.monthlyPayment")}: <strong>{fmt(result.currentMonthlyPayment)} ₽</strong></p>
+                      <p className="text-sm">{t("calculator.totalInterest")}: <strong className="text-destructive">{fmt(result.currentTotalInterest)} ₽</strong></p>
+                      <p className="text-sm">{t("calculator.totalAmount")}: <strong>{fmt(result.currentTotalPayment)} ₽</strong></p>
                     </div>
                     <div className="bg-primary/5 rounded-lg p-4">
-                      <p className="text-xs font-medium text-muted-foreground mb-2">После рефинансирования</p>
-                      <p className="text-sm">Платёж: <strong>{fmt(result.refinancedMonthlyPayment)} ₽/мес</strong></p>
-                      <p className="text-sm">Переплата: <strong className="text-primary">{fmt(result.refinancedTotalInterest)} ₽</strong></p>
-                      <p className="text-sm">Всего: <strong>{fmt(result.refinancedTotalPayment)} ₽</strong></p>
+                      <p className="text-xs font-medium text-muted-foreground mb-2">{t("calculator.refinancing.afterRefinancing")}</p>
+                      <p className="text-sm">{t("calculator.monthlyPayment")}: <strong>{fmt(result.refinancedMonthlyPayment)} ₽</strong></p>
+                      <p className="text-sm">{t("calculator.totalInterest")}: <strong className="text-primary">{fmt(result.refinancedTotalInterest)} ₽</strong></p>
+                      <p className="text-sm">{t("calculator.totalAmount")}: <strong>{fmt(result.refinancedTotalPayment)} ₽</strong></p>
                     </div>
                   </div>
 
                   <div className={`rounded-lg p-4 ${result.totalInterestDelta < 0 ? "bg-green-500/10" : "bg-destructive/10"}`}>
                     <p className="text-sm font-medium">
                       {result.totalInterestDelta < 0
-                        ? `Экономия на переплате: ${fmt(Math.abs(result.totalInterestDelta))} ₽`
-                        : `Увеличение переплаты: ${fmt(result.totalInterestDelta)} ₽`}
+                        ? t("calculator.refinancing.interestSavings", { amount: fmt(Math.abs(result.totalInterestDelta)) })
+                        : t("calculator.refinancing.interestIncrease", { amount: fmt(result.totalInterestDelta) })}
                     </p>
                     <p className="text-sm mt-1">
-                      Платёж: {result.monthlyPaymentDelta < 0 ? "−" : "+"}{fmt(Math.abs(result.monthlyPaymentDelta))} ₽/мес
+                      {result.monthlyPaymentDelta < 0
+                        ? t("calculator.refinancing.monthlySavings", { amount: fmt(Math.abs(result.monthlyPaymentDelta)) })
+                        : t("calculator.refinancing.monthlyIncrease", { amount: fmt(result.monthlyPaymentDelta) })}
                     </p>
                   </div>
                 </div>

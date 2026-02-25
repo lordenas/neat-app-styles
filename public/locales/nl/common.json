@@ -1,0 +1,752 @@
+{
+  "language": {
+    "en": "English",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ar": "العربية",
+    "pes": "فارسی",
+    "pl": "Polski",
+    "uk": "Українська",
+    "es": "Español",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "sv": "Svenska"
+  },
+  "country": {
+    "global": "Wereldwijd",
+    "ru": "Rusland",
+    "us": "Verenigde Staten",
+    "uk": "Verenigd Koninkrijk",
+    "de": "Duitsland",
+    "fr": "Frankrijk",
+    "iran": "Iran",
+    "pl": "Polen",
+    "ua": "Oekraïne",
+    "es": "Spanje",
+    "kz": "Kazachstan",
+    "br": "Brazilië",
+    "in": "India",
+    "by": "Wit-Rusland",
+    "uz": "Oezbekistan",
+    "eg": "Egypte",
+    "ae": "VAE",
+    "sa": "Saoedi-Arabië",
+    "qa": "Qatar",
+    "nl": "Nederland",
+    "se": "Zweden"
+  },
+  "header": {
+    "searchPlaceholder": "Zoek rekenmachines..."
+  },
+  "accessibility": {
+    "toggleLabel": "Toegankelijkheidsmodus",
+    "toggleDescription": "Toegankelijkheidsprofiel voor je regio toepassen",
+    "currentProfile": "Profiel: {{profile}}",
+    "openMenu": "Toegankelijkheidsopties openen",
+    "profileLabel": "Toegankelijkheidsprofiel",
+    "useDefault": "Standaard voor regio",
+    "contrastHigh": "Hoog contrast",
+    "contrastDefault": "Standaard contrast",
+    "contrastBlackWhite": "Zwart/wit",
+    "motionReduce": "Minder beweging",
+    "motionDefault": "Standaard beweging",
+    "fontScaleLarge": "Grotere tekst",
+    "fontScaleDefault": "Standaard tekstgrootte",
+    "fontScaleXLarge": "Extra grote tekst",
+    "profile_EN301549_WCAG21_AA": "EU (EN 301 549 / WCAG 2.1 AA)",
+    "profile_UK_WCAG21_AA": "VK (WCAG 2.1 AA)",
+    "profile_SECTION508_WCAG21_AA": "VS (Section 508 / WCAG 2.1 AA)",
+    "profile_WCAG21_AA_AR": "Arabische regio (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_CIS": "GOS (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_FA": "Iran (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_DEFAULT": "Standaard (WCAG 2.1 AA)"
+  },
+  "nav": {
+    "calculators": "Rekenmachines",
+    "categories": "Categorieën",
+    "about": "Over ons"
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  },
+  "home": {
+    "hero": {
+      "title": "Online rekenmachines",
+      "subtitle": "Financiële en alledaagse berekeningen eenvoudig gemaakt",
+      "description": "Gratis, nauwkeurige en gebruiksvriendelijke tools voor iedereen"
+    },
+    "searchPlaceholder": "Zoek rekenmachines (bijv. hypotheek, belasting, salaris)...",
+    "quick": {
+      "mortgage": "Hypotheek",
+      "taxReturn": "Belasting",
+      "salary": "Salaris"
+    },
+    "categories": {
+      "title": "Rekenmachinecategorieën",
+      "subtitle": "Blader door categorie om te vinden wat je nodig hebt",
+      "viewAll": "Alles bekijken"
+    },
+    "popular": {
+      "title": "Populaire rekenmachines",
+      "subtitle": "Meest gebruikt door onze gebruikers",
+      "found": "{{count}} rekenmachines gevonden",
+      "uses": "{{count}} gebruik",
+      "open": "Openen",
+      "noResults": "Geen rekenmachines gevonden voor je zoekopdracht.",
+      "clearSearch": "Zoekopdracht wissen"
+    },
+    "about": {
+      "title": "Over onze rekenmachines",
+      "paragraph1": "Calcify biedt een collectie gratis online rekenmachines voor financiële en alledaagse berekeningen. Of je nu een huis koopt, belastingaangifte doet of belegt — onze tools helpen je snel en nauwkeurig te beslissen.",
+      "paragraph2": "Elke rekenmachine gebruikt actuele formules en regelgeving. Het platform ondersteunt meerdere valuta's en formaten. Alle berekeningen worden lokaal in je browser uitgevoerd.",
+      "paragraph3": "Van hypotheken en leningen tot belastingen en investeringen — we dekken een breed scala aan scenario's. Het intuïtieve interface maakt het eenvoudig parameters aan te passen en resultaten live te zien.",
+      "disclaimer": "Disclaimer: Deze rekenmachines zijn alleen voor informatieve en educatieve doeleinden en vormen geen financieel advies. Raadpleeg een professional voor financiële of juridische zaken."
+    }
+  },
+  "category": {
+    "finance": "Financiën",
+    "taxes": "Belastingen",
+    "salary": "Salaris",
+    "investments": "Investeringen",
+    "business": "Zakelijk",
+    "home": "Huis & leven",
+    "automotive": "Autocalculators",
+    "backToCategories": "Terug naar categorieën",
+    "title": "{{name}}-rekenmachines",
+    "open": "Openen",
+    "uses": "{{count}} gebruik",
+    "noCalculators": "Nog geen rekenmachines in deze categorie.",
+    "browseOtherCategories": "Andere categorieën bekijken"
+  },
+  "categoryDescription": {
+    "finance": "Lening-, hypotheek- en investeringsrekenmachines",
+    "taxes": "Belastingberekeningen en aftrekposten",
+    "salary": "Salaris- en inkomensberekeningen",
+    "investments": "Investerings- en portefeuilleanalyse",
+    "business": "Zakelijke en boekhoudtools",
+    "home": "Alledaagse huishoudberekeningen",
+    "automotive": "WA-verzekering en autokosten"
+  },
+  "calculator": {
+    "autoLoan": {
+      "inputTitle": "Autolening parameters",
+      "modeLabel": "Berekeningsmodus",
+      "modeByCost": "Op basis van autokosten",
+      "modeByLoan": "Op basis van leenbedrag",
+      "carCost": "Autokosten",
+      "downPayment": "Aanbetaling",
+      "loanAmount": "Leenbedrag",
+      "balloonPayment": "Slottermijn",
+      "loanTerm": "Looptijd",
+      "termUnit": "Looptijdeenheid",
+      "interestRate": "Rente",
+      "paymentType": "Betaaltype",
+      "calculatedLoanAmount": "Berekend leenbedrag",
+      "downPaymentAmount": "Bedrag aanbetaling",
+      "errors": {
+        "invalidTerm": "Voer een geldige looptijd in.",
+        "invalidBalloon": "De slottermijn moet lager zijn dan het leenbedrag.",
+        "invalidValues": "Controleer de ingevoerde waarden."
+      },
+      "resultCardTitle": "Berekeningsresultaat"
+    },
+    "fuelConsumption": {
+      "modeTrip": "Brandstof voor rit",
+      "modeAverage": "Gemiddelde per 100 km",
+      "unitsMetric": "Metrisch (L, km)",
+      "unitsImperial": "Imperiaal (gallon, mijl)",
+      "consumptionL100km": "L / 100 km",
+      "consumptionKmL": "km / L",
+      "consumptionMpg": "mpg",
+      "consumptionGal100mi": "gal / 100 mi",
+      "modeLabel": "Berekeningsmodus",
+      "unitsLabel": "Eenheden",
+      "consumptionLabel": "Gemiddeld verbruik",
+      "distanceLabel": "Afstand",
+      "fuelUsedLabel": "Brandstof verbruikt",
+      "priceLabel": "Prijs per liter (optioneel)",
+      "priceHint": "Invoeren voor berekening ritkosten",
+      "resultFuelUsed": "Brandstof verbruikt",
+      "resultConsumptionPer100": "Gemiddeld verbruik",
+      "or": "of",
+      "resultCost": "Brandstofkosten"
+    },
+    "backToCalculators": "Terug naar rekenmachines",
+    "inputTitle": "Invoer",
+    "fields": {
+      "propertyPrice": "Vastgoedprijs",
+      "downPayment": "Aanbetaling",
+      "interestRate": "Rentevoet (%)",
+      "loanTerm": "Looptijd",
+      "paymentType": "Betalingstype",
+      "principalAmount": "Hoofdsom",
+      "timePeriod": "Periode (jaren)"
+    },
+    "placeholders": {
+      "amount": "Voer bedrag in",
+      "rate": "Voer rente in",
+      "years": "Voer jaren in"
+    },
+    "years": "Jaren",
+    "months": "Maanden",
+    "paymentType": {
+      "annuity": "Annuïteit",
+      "annuityDesc": "Gelijke maandelijkse betalingen gedurende de looptijd",
+      "differentiated": "Differentieel",
+      "differentiatedDesc": "Hogere betalingen in het begin, dalend in de tijd"
+    },
+    "mortgage": {
+      "propertyPriceHint": "Volledige koopprijs van het onroerend goed volgens de overeenkomst.",
+      "downPaymentHint": "Aanbetaling. Rechts — het aandeel in de koopprijs.",
+      "interestRateHint": "Jaarlijks rentepercentage op de lening.",
+      "loanTermHint": "Looptijd in jaren of maanden."
+    },
+    "calculate": "Berekenen",
+    "tip": "💡 Pas de waarden aan om resultaten live te zien.",
+    "tipEarlyRepayment": "Plan vervroegde aflossingen: <1>Leningcalculator met vervroegde aflossing</1>.",
+    "results": "Resultaten",
+    "download": "Downloaden",
+    "print": "Afdrukken",
+    "downloadPdf": "PDF downloaden",
+    "generatingPdf": "PDF wordt gegenereerd…",
+    "monthlyPayment": "Maandelijkse betaling",
+    "totalInterest": "Totale rente",
+    "totalAmount": "Totaalbedrag",
+    "paymentBreakdown": "Betalingsoverzicht",
+    "table": {
+      "year": "Jaar",
+      "payment": "Betaling",
+      "interest": "Rente",
+      "balance": "Saldo"
+    },
+    "charts": {
+      "principalVsInterest": "Aflossing vs. rente",
+      "balanceOverTime": "Lening saldo in de tijd",
+      "annualBreakdown": "Jaaroverzicht betalingen",
+      "totalBreakdown": "Totaaloverzicht",
+      "cumulative": "Cumulatieve betalingen",
+      "labels": {
+        "principal": "Aflossing",
+        "interest": "Rente",
+        "totalPrincipal": "Totale aflossing",
+        "totalInterest": "Totale rente"
+      }
+    },
+    "stats": {
+      "monthlyPayment": "Maandelijkse betaling",
+      "monthlyPaymentRange": "{{first}} – {{last}}",
+      "accruedInterest": "Opgebouwde rente",
+      "debtPlusInterest": "Schuld + rente",
+      "overpayment": "Overbetaling"
+    },
+    "about": {
+      "title": "Over deze rekenmachine",
+      "description": "Deze rekenmachine gebruikt standaard financiële formules. Berekeningen worden lokaal in je browser uitgevoerd.",
+      "formula": "Formule",
+      "formulaNote": "Waarbij: A = Bedrag, P = Principal, r = Rente, t = Tijd"
+    },
+    "creditEarly": {
+      "fields": {
+        "loanAmount": "Leenbedrag",
+        "term": "Looptijd",
+        "termUnit": "Eenheid looptijd",
+        "issueDate": "Datum uitbetaling",
+        "rate": "Rente (%)",
+        "rateChanges": "Rentewijzigingen",
+        "addRate": "Rente toevoegen",
+        "remove": "Verwijderen",
+        "noRateChanges": "Nog geen rentewijzigingen.",
+        "paymentDay": "Dag van maandelijkse betaling",
+        "firstPaymentInterestOnly": "Eerste betaling alleen rente",
+        "skipFirstMonth": "Eerste maand overslaan",
+        "increaseToInterest": "Betaling verhogen tot rentebedrag",
+        "roundPayment": "Betaling afronden",
+        "shiftWeekend": "Betaling verplaatsen bij weekend",
+        "paymentDayChanged": "Betaaldag gewijzigd",
+        "paymentDayChangeInterest": "Als na wijziging van de datum de tussenperiode meer dan een maand is, tussentijdse rente betalen",
+        "earlyRepayments": "Vervroegde aflossingen",
+        "addEarlyRepayment": "Vervroegde aflossing toevoegen",
+        "oneTime": "Eenmalig",
+        "regular": "Regelmatig",
+        "date": "Datum",
+        "amount": "Bedrag",
+        "recalc": "Herberekening",
+        "principalOnly": "Hele bedrag naar aflossing",
+        "nextPaymentInterestOnly": "Volgende betaling alleen rente",
+        "period": "Frequentie",
+        "tieToPaymentDate": "Koppelen aan maandelijkse betaaldag",
+        "periodStart": "Startdatum",
+        "periodEnd": "Einddatum",
+        "add": "Toevoegen",
+        "noEarlyRepayments": "Nog geen vervroegde aflossingen.",
+        "overallPayment": "Totale maandelijkse betaling",
+        "overallPaymentHelp": "Vul het bedrag in dat u maandelijks wilt betalen. Een deel dekt de geplande betaling, de rest telt als vervroegde aflossing.",
+        "loanHoliday": "Aflossingsvrije periode",
+        "loanHolidayHelp": "Tijdens de aflossingsvrije periode lopen de rentelasten door.",
+        "holidayStart": "Start",
+        "holidayDuration": "Looptijd (maanden)",
+        "holidayPayment": "Betaling",
+        "holidayPaymentNone": "Geen",
+        "holidayPaymentInterest": "Alleen rente",
+        "principal": "Aflossing",
+        "extraPayment": "Vervroegde aflossing"
+      },
+      "microHints": {
+        "loanAmount": "Vervroegd aflossen mogelijk",
+        "term": "Beïnvloedt totale kosten",
+        "rate": "Bank kan de rente wijzigen"
+      },
+      "preview": {
+        "monthlyPayment": "Maandelijkse betaling",
+        "overpayment": "Totale rente"
+      },
+      "goToResults": "Naar resultaten",
+      "quickSummary": "Kerncijfers",
+      "analysisTitle": "Berekeningsdetails",
+      "eventsTimeline": "Leninggebeurtenissen",
+      "tabs": {
+        "table": "Tabel",
+        "charts": "Grafieken",
+        "analytics": "Analyse"
+      },
+      "mainParamsLabel": "Hoofdparameters",
+      "inputHint": "Het resultaat werkt automatisch bij bij wijziging van de gegevens.",
+      "issueDateHint": "Datum van uitbetaling van de lening. Gebruikt voor de eerste renteperiode.",
+      "paymentParamsTitle": "Type betaling en schema",
+      "paymentParamsHint": "Vul bedrag, rente, looptijd en uitbetaling in — de berekening werkt automatisch bij.",
+      "paymentDayHint": "Dag van de maand of gekoppeld aan uitbetaling.",
+      "rateChangeExplainer": "Als de rente tijdens de looptijd verandert (bijv. na introductietarief), voeg de wijziging hier toe.",
+      "rateChangeFrom": "Vanaf {{date}}",
+      "rateChangeRate": "Rente: {{rate}}%",
+      "paymentTypeBlock": "Type betaling",
+      "additionalBlock": "Extra opties",
+      "earlyBlockActive": "Actief",
+      "resultWithoutEarly": "Zonder vervroegd",
+      "resultWithEarly": "Met vervroegd",
+      "youSave": "U bespaart",
+      "termLessBy": "Looptijd korter met",
+      "monthsShort": "mnd",
+      "loanClosesSooner": "Lening eindigt {{count}} mnd eerder",
+      "disclaimerCalculation": "Deze berekening is alleen ter informatie en geen aanbod.",
+      "recalc": {
+        "payment": "Betaling",
+        "term": "Looptijd"
+      },
+      "paymentDay": {
+        "issue": "Op uitbetaling",
+        "last": "Laatste dag van de maand",
+        "dayOfMonth": "Dag {{day}} van elke maand"
+      },
+      "periods": {
+        "1W": "Wekelijks",
+        "1M": "Maandelijks",
+        "2M": "Elke 2 maanden",
+        "3M": "Per kwartaal",
+        "6M": "Elke 6 maanden",
+        "1Y": "Jaarlijks"
+      },
+      "kpi": {
+        "overpaymentWithoutEarly": "Rente zonder vervroegde aflossing",
+        "totalInterest": "Overrente",
+        "totalPayment": "Totale betaling",
+        "savings": "Besparing",
+        "termReductionMonths": "Korting looptijd",
+        "termMonths": "Looptijd (mnd)",
+        "effectiveRate": "Effectieve last",
+        "overpaymentPercent": "Overrente, %"
+      },
+      "summary": {
+        "totalEarlyRepayments": "Totaal vervroegde aflossingen",
+        "savingsText": "Vervroegde aflossingen hebben de totale kosten met {{savings}} verlaagd. De looptijd is met {{duration}} verkort.",
+        "savingsOnly": "Vervroegde aflossingen hebben de totale kosten met {{savings}} verlaagd.",
+        "yearsCount_one": "{{count}} jaar",
+        "yearsCount_other": "{{count}} jaar",
+        "monthsCount_one": "{{count}} maand",
+        "monthsCount_other": "{{count}} maanden",
+        "and": "en"
+      }
+    },
+    "refinancing": {
+      "remainingDebt": "Resterende schuld",
+      "remainingTerm": "Resterende looptijd",
+      "currentRate": "Huidige rentevoet",
+      "perYear": "% per jaar",
+      "refinancingParams": "Refinanceringsparameters",
+      "amountChanged": "Bedrag gewijzigd",
+      "newAmount": "Nieuw bedrag",
+      "termChanged": "Looptijd gewijzigd",
+      "newTerm": "Nieuwe looptijd",
+      "termUnit": "Termijneenheid",
+      "rateChanged": "Rente gewijzigd",
+      "newRate": "Nieuwe rente",
+      "monthlyPayment": "Maandelijkse betaling",
+      "totalInterest": "Totale rente",
+      "afterRefinancing": "Na refinancering",
+      "monthlyPaymentWithRef": "Maandbetaling na refinancering",
+      "totalInterestWithRef": "Rente na refinancering",
+      "savings": "Besparing",
+      "monthlySavings": "Maandbetaling daalt met {{amount}}",
+      "monthlyIncrease": "Maandbetaling stijgt met {{amount}}",
+      "interestSavings": "Totale rente daalt met {{amount}}",
+      "interestIncrease": "Totale rente stijgt met {{amount}}",
+      "repaymentChartTitle": "Aflossingsschema: hoofdsom en rente per jaar",
+      "byYear": "Per jaar",
+      "byMonth": "Per maand",
+      "month": "Maand",
+      "monthShort": "M{{n}}",
+      "total": "Totaal",
+      "exportExcel": "Excel downloaden",
+      "exportPdfTable": "Tabel PDF",
+      "printTable": "Tabel afdrukken",
+      "printFull": "Berekening afdrukken",
+      "downloadPdfFull": "PDF downloaden",
+      "inputParameters": "Invoerparameters"
+    },
+    "microloan": {
+      "amount": "Bedrag",
+      "loanTermDays": "Looptijd (dagen)",
+      "rate": "Rente",
+      "ratePerDay": "% per dag",
+      "ratePerMonth": "% per maand",
+      "hasOverdue": "Achterstallig",
+      "overduePeriod": "Achterstalligheidsperiode",
+      "overdueDays": "dagen",
+      "overdueMonths": "maanden",
+      "overdueRate": "Achterstalligheidsrente",
+      "penaltyAmount": "Boetebedrag",
+      "interestAccrued": "Opgebouwde rente",
+      "totalToRepay": "Totaal te betalen",
+      "overdueInterest": "Achterstalligheidsrente",
+      "overdueTotal": "Totaal achterstallig",
+      "grandTotal": "Totaal",
+      "day": "Dag",
+      "chartTitle": "Rente-opbouw schema"
+    },
+    "inflation": {
+      "startMonth": "Startmaand",
+      "endMonth": "Eindmaand",
+      "month": "Maand",
+      "year": "Jaar",
+      "calculatePriceChange": "Prijsverandering berekenen",
+      "calculateSavingsDepreciation": "Waardedaling spaargeld berekenen",
+      "amount": "Bedrag",
+      "inflationForPeriod": "Inflatie in de periode",
+      "priceChangeResult": "Resultaat prijsverandering",
+      "savingsDepreciationResult": "Waardedaling spaargeld",
+      "annualRatesTable": "Jaarlijkse inflatiecijfers",
+      "annualRate": "Rente (%)",
+      "chartRates": "Jaarlijkse inflatiecijfers",
+      "chartCumulative": "Cumulatieve prijsindex",
+      "chartProgressive": "Progressieve inflatie in de periode",
+      "cumulativeInflationPercent": "Cumulatieve inflatie (%)",
+      "indexLabel": "Index",
+      "noData": "Geen inflatiegegevens beschikbaar voor dit land.",
+      "loading": "Inflatiegegevens laden…",
+      "months": {
+        "1": "Januari",
+        "2": "Februari",
+        "3": "Maart",
+        "4": "April",
+        "5": "Mei",
+        "6": "Juni",
+        "7": "Juli",
+        "8": "Augustus",
+        "9": "September",
+        "10": "Oktober",
+        "11": "November",
+        "12": "December"
+      }
+    }
+  },
+  "calculatorNames": {
+    "auto-loan": "Autolening calculator",
+    "mortgage": "Hypotheekcalculator",
+    "tax-return": "Belastingteruggave calculator",
+    "salary": "Salariscalculator",
+    "investment": "Investeringscalculator",
+    "compound-interest": "Rente-op-rente calculator",
+    "loan": "Leningcalculator",
+    "credit-early-repayment": "Leningcalculator met vervroegde aflossing",
+    "breakeven": "Break-even calculator",
+    "utility": "Nutsvoorzieningen calculator",
+    "refinancing": "Refinanceringscalculator",
+    "microloan": "Microkrediet calculator",
+    "microloan_nl": "Microkrediet calculator",
+    "inflation": "Inflatiecalculator",
+    "vat": "BTW-calculator",
+    "osago": "OSAGO-calculator",
+    "fuel-consumption": "Brandstofverbruik calculator"
+  },
+  "calculatorDescriptions": {
+    "auto-loan": "Bereken maandbedrag, totale kosten en aflossingsschema met optionele slottermijn",
+    "mortgage": "Bereken maandelijkse betalingen en aflossingsschema",
+    "tax-return": "Schat je belastingteruggave en aangiftestatus",
+    "salary": "Bereken netto salaris en aftrekposten",
+    "investment": "Projecteer investeringsrendementen",
+    "compound-interest": "Bereken rente op spaargeld",
+    "loan": "Bereken leningbetalingen en totale rente",
+    "credit-early-repayment": "Bereken betalingen met vervroegde aflossingen en rentewijzigingen",
+    "breakeven": "Bepaal wanneer je bedrijf winstgevend is",
+    "utility": "Schat maandelijkse nutskosten",
+    "refinancing": "Vergelijk huidige lening met refinanceringsvoorwaarden en besparing",
+    "microloan": "Bereken rente, boetes en totaal te betalen",
+    "inflation": "Bereken inflatie en prijsverandering in de tijd",
+    "vat": "Bereken btw: optellen of eruit halen per land",
+    "osago": "Bereken OSAGO-prijs op basis van basistarief en coëfficiënten",
+    "fuel-consumption": "Brandstof voor rit of gemiddelde per 100 km; metrisch en imperiaal, optionele kosten."
+  },
+  "vat": {
+    "amount": "Bedrag",
+    "mode": "Modus",
+    "modeAdd": "Btw optellen",
+    "modeExclude": "Btw eruit halen",
+    "country": "Land",
+    "rate": "Tarief",
+    "enterAmount": "Voer een bedrag in.",
+    "result": {
+      "amountExcl": "Bedrag ex btw",
+      "vatAmount": "Btw",
+      "amountWithVat": "Bedrag inc btw"
+    },
+    "exportPdf": "PDF downloaden",
+    "exportExcel": "Excel exporteren",
+    "usSalesTaxNote": "VS: belasting per staat.",
+    "countryName": {
+      "it": "Italië",
+      "be": "België"
+    },
+    "taxName": {
+      "default": "Btw"
+    },
+    "about": {
+      "title": "Over de btw-calculator",
+      "paragraph": "Btw (belasting over de toegevoegde waarde) is een verbruiksbelasting op goederen en diensten. Deze calculator helpt je btw op een netto bedrag te berekenen of btw uit een bruto bedrag te halen volgens het standaardtarief van het gekozen land."
+    },
+    "formulas": {
+      "title": "Formules",
+      "addFormula": "Bedrag inc btw = Bedrag ex btw × (1 + Tarief / 100)",
+      "excludeFormula": "Bedrag ex btw = Bedrag inc btw ÷ (1 + Tarief / 100). Btw-bedrag = Bedrag inc btw − Bedrag ex btw."
+    },
+    "ratesTable": {
+      "title": "Btw-tarieven per land",
+      "country": "Land",
+      "taxName": "Naam belasting",
+      "standardRate": "Standaardtarief (%)",
+      "reducedRates": "Verlaagde tarieven"
+    },
+    "ru": {
+      "ratesTitle": "Btw-tarieven in Rusland",
+      "rates20": "20% — algemeen tarief (meeste goederen en diensten).",
+      "rates10": "10% — voedingsmiddelen, kinderartikelen, medische producten, drukwerk.",
+      "rates0": "0% — export, internationaal vervoer en bepaalde andere handelingen.",
+      "historyTitle": "Geschiedenis btw-tarief (Rusland)",
+      "usn": "Vereenvoudigd belastingstelsel (USN): ondernemingen onder USN zijn doorgaans geen btw-plichtigen (met uitzonderingen). Drempels en regels kunnen wijzigen; controleer de wetgeving 2025–2026."
+    },
+    "examples": {
+      "title": "Calculation examples",
+      "ex1": "Example 1: 1,000 net at 20% VAT → 1,000 × 1.20 = 1,200 gross; VAT amount = 200.",
+      "ex2": "Example 2: 2,400 gross at 20% VAT → 2,400 ÷ 1.20 = 2,000 net; VAT = 400.",
+      "ex3": "Example 3: 500 net at 10% (reduced rate) → 500 × 1.10 = 550 gross; VAT = 50."
+    },
+    "howToUse": {
+      "title": "How to use the calculator",
+      "step1": "Select country to use the standard VAT rate (or enter a custom rate).",
+      "step2": "Choose mode: add VAT to net amount or extract VAT from gross amount.",
+      "step3": "Enter the amount; the result updates automatically.",
+      "step4": "Use the table below for reference rates by country."
+    },
+    "keywords": "Popular searches: VAT calculator, add VAT, remove VAT, VAT rate by country, gross to net, net to gross."
+  },
+  "footer": {
+    "tagline": "Gratis online rekenmachines voor financiën, belastingen en alledaagse berekeningen.",
+    "categoriesTitle": "Categorieën",
+    "countriesTitle": "Landen",
+    "legalTitle": "Juridisch",
+    "connectTitle": "Contact",
+    "privacy": "Privacybeleid",
+    "terms": "Servicevoorwaarden",
+    "disclaimer": "Disclaimer",
+    "contact": "Contact",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "email": "E-mail",
+    "countryCanada": "Canada",
+    "copyright": "© 2024 Calcify. Alle rechten voorbehouden.",
+    "disclaimerLong": "Alleen voor informatieve doeleinden. Geen financieel advies."
+  },
+  "notFound": {
+    "title": "Pagina niet gevonden",
+    "description": "De pagina die je zoekt bestaat niet of is verplaatst. Terug naar de start.",
+    "backHome": "Naar start"
+  },
+  "seo": {
+    "autoLoan": {
+      "title": "Autolening calculator: maandbedrag en aflossingsschema",
+      "intro": "Bereken je maandelijkse autoleningbetaling, totale rente en overbetaling. Ondersteunt berekening op basis van autokosten of leenbedrag, aanbetaling, slottermijn en annuïteiten of gedifferentieerde betalingen.",
+      "formulaTitle": "Berekeningsformule",
+      "formula": "M = P × r × (1+r)^n / ((1+r)^n - 1)",
+      "formulaVars": "M is de maandbetaling, P de hoofdsom, r de maandrente (jaarrente / 12), n het aantal maanden. Bij gedifferentieerde betalingen wordt de hoofdsom in gelijke delen afgelost en daalt de rente per maand.",
+      "examplesTitle": "Rekenvoorbeelden",
+      "example1": "Voorbeeld 1: auto 30.000, aanbetaling 6.000, rente 8%, looptijd 60 maanden, annuïteit. Leenbedrag = 24.000.",
+      "example2": "Voorbeeld 2: lening 20.000, slottermijn 5.000, rente 10%, looptijd 48 maanden, gedifferentieerde betalingen.",
+      "howToTitle": "Zo gebruik je de calculator",
+      "step1": "Kies de modus: op basis van autokosten of leenbedrag.",
+      "step2": "Voer aanbetaling, slottermijn (indien nodig), rente, looptijd en betaaltype in.",
+      "step3": "Bekijk maandbetaling, totale kosten en schema per maand of jaar."
+    },
+    "home": {
+      "title": "Gratis online rekenmachines — Hypotheek, belasting, salaris",
+      "description": "Gebruik gratis rekenmachines voor hypotheek, belastingen, salaris, investeringen en meer.",
+      "keywords": [
+        "rekenmachine",
+        "hypotheekcalculator",
+        "belastingcalculator",
+        "salariscalculator",
+        "leningcalculator",
+        "investeringscalculator",
+        "gratis rekenmachine",
+        "financiële rekenmachine"
+      ],
+      "siteName": "Calcify - Gratis online rekenmachines",
+      "siteDescription": "Gratis online rekenmachines voor financiën, belastingen, salaris en investeringen"
+    },
+    "category": {
+      "title": "{{name}}-rekenmachines | Calcify",
+      "description": "Collectie gratis {{name}}-rekenmachines. {{description}}",
+      "keywords": [
+        "{{name}} rekenmachine",
+        "gratis {{name}}",
+        "rekenmachine",
+        "online rekenmachine"
+      ]
+    },
+    "calculator": {
+      "titleFallback": "Rekenmachine",
+      "descriptionFallback": "Bereken financiële indicatoren met onze gratis online rekenmachine.",
+      "keywordsFallback": "financiële rekenmachine"
+    },
+    "inflation": {
+      "titleInCountry": "Inflatiecalculator in {{country}}"
+    },
+    "vat": {
+      "titleInCountry": "BTW-calculator — {{country}}"
+    },
+    "refinancing": {
+      "title": "Refinancing calculator",
+      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
+      "howItWorksTitle": "How the comparison works",
+      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
+      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the remaining balance and current loan rate and term.",
+      "step2": "Set the new loan rate and term (and any fees if applicable).",
+      "step3": "Compare total interest and repayment schedule of both options.",
+      "step4": "Check the charts for principal vs interest and repayment over time.",
+      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+    },
+    "inflationBlock": {
+      "title": "Inflation calculator",
+      "description": "See how inflation erodes the purchasing power of money over time. Enter a starting amount and annual inflation rate to get the equivalent value in future years and the total inflation index.",
+      "formulaTitle": "Formula",
+      "formula": "Value after n years = Initial amount × (1 + rate/100)^n. The inflation index is (1 + rate/100)^n; the table shows year-by-year growth.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 10,000 at 5% for 10 years → 10,000 × 1.05^10 ≈ 16,289; purchasing power halves in about 14 years at 5%.",
+      "example2": "Example 2: 1,000 at 3% for 5 years → 1,000 × 1.03^5 ≈ 1,159; index ≈ 1.16.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the initial amount and the annual inflation rate (%).",
+      "step2": "Set the number of years to project.",
+      "step3": "Read the equivalent value and inflation index in the results and table.",
+      "keywords": "Popular searches: inflation calculator, purchasing power, inflation rate, money value over time, inflation index."
+    },
+    "microloan": {
+      "title": "Microloan calculator",
+      "description": "Calculate the cost of a short-term microloan: interest and late-payment penalties. Enter the principal, annual rate, term, and optional penalty rate to see the repayment schedule and total to repay.",
+      "howItWorksTitle": "How interest and penalties work",
+      "howItWorks": "Interest is applied to the principal over the loan term. If you add a penalty rate, it is applied per day on the overdue amount after the due date. Total to repay = principal + interest + penalties (if any).",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 5,000 at 1% per day for 14 days → interest depends on the method (e.g. simple); total repayment is shown in the schedule.",
+      "example2": "Example 2: Same loan with 0.5% daily penalty and 5 days late → penalty accrues on the outstanding amount for 5 days.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, annual interest rate, and term (days or months).",
+      "step2": "Optionally set a penalty rate for late payment.",
+      "step3": "View the schedule and total interest and total to repay.",
+      "keywords": "Popular searches: microloan calculator, short-term loan calculator, loan interest calculator, late payment penalty calculator."
+    },
+    "creditEarlyRepayment": {
+      "title": "Early repayment calculator",
+      "description": "See how making extra payments or a lump sum reduces your loan term and total interest. The calculator shows the impact of one-time or recurring early repayments on the schedule and total cost.",
+      "howItWorksTitle": "How early repayment works",
+      "howItWorks": "Extra payments reduce the principal, so less interest accrues. You can add a one-time lump sum and/or a recurring extra payment. The schedule is recalculated so that the loan is paid off sooner with less total interest.",
+      "exampleTitle": "Example",
+      "example": "Loan 1,000,000 at 12% for 60 months. Without early repayment: total interest ≈ 333,000. With a one-time 100,000 at month 12: term shortens and total interest drops; the chart and table show the new schedule.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, rate, and term (annuity or differentiated).",
+      "step2": "Optionally add a one-time early repayment and/or recurring extra payment.",
+      "step3": "View the updated schedule, total interest saved, and charts.",
+      "keywords": "Popular searches: early repayment calculator, lump sum calculator, extra payment loan, reduce loan term, pay off loan faster."
+    },
+    "mortgage": {
+      "title": "Hypotheekcalculator: maandlasten en aflossingsschema",
+      "description": "Met de hypotheekcalculator schat u uw maandlasten en totale kosten vóór uw aanvraag. Of u nu uw eerste woning koopt of herfinanciert: inzicht in uw maandbedrag en de rente over de looptijd helpt bij uw keuze. De tool gebruikt standaard aflossingsformules en ondersteunt annuïteiten (gelijke lasten) en lineaire aflossing (dalende lasten).",
+      "toolExplanation": "Een hypotheek is een langlopende lening met de woning als onderpand. In Nederland bieden banken vaste en variabele rentes; de calculator gaat uit van een vaste jaarrente. U voert de woningwaarde, eigen inbreng, rente en looptijd in en krijgt de maandlast en een volledig aflossingsschema. Nederlandse regels (NHG, renteaftrek, aflossingsvrij) beïnvloeden de nettokosten — check bij uw adviseur of geldverstrekker.",
+      "howToUseTitle": "Hoe gebruikt u de calculator",
+      "step1": "Voer de volledige woningwaarde in (koopprijs of taxatiewaarde).",
+      "step2": "Voer uw eigen inbreng in; de calculator toont het geleende bedrag en het percentage eigen inbreng.",
+      "step3": "Stel de jaarlijkse rente en de looptijd in (in jaren of maanden).",
+      "step4": "Kies annuïtair (gelijke maandlast) of lineair (dalende maandlast). Resultaten en schema werken automatisch bij.",
+      "methodologyTitle": "Berekeningsmethode",
+      "formula": "Annuïtair: M = P × [r(1+r)^n] / [(1+r)^n − 1]. Lineair: aflossing = P/n per maand; rente = restschuld × r.",
+      "formulaNote": "M = maandlast, P = hoofdsom, r = maandrente (jaarrente ÷ 12), n = aantal maanden.",
+      "countrySpecificsTitle": "Nederlandse bijzonderheden",
+      "countrySpecifics": "In Nederland zijn annuïteitenhypotheken en lineaire hypotheken gebruikelijk; aflossingsvrije delen hebben andere fiscale gevolgen. Nationale Hypotheek Garantie (NHG) kan de rente verlagen. Houd rekening met notariskosten, overdrachtsbelasting en eventueel advieskosten.",
+      "examplesTitle": "Rekenvoorbeelden",
+      "example1": "Voorbeeld 1 (EUR): woning 350 000 €, eigen inbreng 70 000 €, 4 % rente, 30 jaar → lening 280 000 €, maandlast (annuïtair) ≈ 1 337 €, totale rente ≈ 201 000 €.",
+      "example2": "Voorbeeld 2: dezelfde lening lineair → eerste last ≈ 1 689 €, laatste ≈ 778 €; totale rente lager dan annuïtair.",
+      "example3": "Voorbeeld 3: 280 000 € tegen 4 % over 20 jaar → maandlast ≈ 1 697 €; kortere looptijd, minder rente.",
+      "commonMistakesTitle": "Veelgemaakte fouten",
+      "commonMistakes": "Woningwaarde en leningbedrag verwarren. Overdrachtsbelasting, notaris en verzekeringen vergeten. Alleen maandlast vergelijken zonder totale rente. Geen rekening houden met vaste vs. variabele rente of boetes bij vervroegde aflossing.",
+      "faqTitle": "Veelgestelde vragen",
+      "faq1q": "Wat is het verschil tussen annuïtair en lineair?",
+      "faq1a": "Annuïtair: gelijke maandlast; in het begin meer rente, later meer aflossing. Lineair: vaste aflossing per maand plus rente over de restschuld; de lasten beginnen hoger en dalen; totale rente is meestal lager.",
+      "faq2q": "Zijn belastingen en verzekeringen inbegrepen?",
+      "faq2a": "Nee. Alleen hoofdsom en rente worden berekend. Voeg zelf OZB, opstalverzekering en eventueel overlijdensrisico toe voor de werkelijke maandlast.",
+      "faq3q": "Kan ik dit gebruiken voor herfinanciering?",
+      "faq3a": "Ja. Voer het nieuwe bedrag (bijv. restschuld), de nieuwe rente en looptijd in om de nieuwe maandlast en het schema te zien.",
+      "faq4q": "Hoe nauwkeurig is de uitkomst?",
+      "faq4a": "De berekening is exact voor de ingevoerde gegevens. Reële aanbiedingen kunnen afwijken door kosten, afronding of variabele rente. Gebruik de calculator om te vergelijken en te plannen; bevestig de bedragen bij uw geldverstrekker.",
+      "faq5q": "Welke rente moet ik invullen?",
+      "faq5a": "Vul de effectieve jaarrente of de nominale rente in die uw bank voor het aflossingsschema hanteert. Bij een starttarief: reken beide periodes (start en daarna) door.",
+      "conclusion": "Gebruik deze hypotheekcalculator om scenario's te vergelijken, het effect van eigen inbreng en looptijd op uw last en rente te zien en uw budget te plannen. Voor Nederlandse regels en producten: raadpleeg een adviseur of uw geldverstrekker.",
+      "keywords": "Populaire zoekopdrachten: hypotheekcalculator, maandlast berekenen, aflossingsschema, annuïtair vs lineair, hypotheekrente."
+    },
+    "fuelConsumption": {
+      "title": "Brandstofverbruik calculator: per 100 km en ritkosten",
+      "intro": "Bereken brandstof voor een rit op basis van gemiddeld verbruik en afstand, of gemiddeld verbruik per 100 km op basis van afstand en verbruikte brandstof. Metrische (L/100 km, km/L) en imperiale (mpg) eenheden. Voer prijs per liter in voor ritkosten.",
+      "howToTitle": "Hoe te gebruiken",
+      "step1": "Kies modus: «Brandstof voor rit» (u kent verbruik en afstand) of «Gemiddelde per 100 km» (u kent afstand en verbruikte brandstof).",
+      "step2": "Selecteer eenheden (metrisch of imperiaal), voer waarden in. Optioneel: prijs per liter voor ritkosten."
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacybeleid",
+      "description": "We respecteren je privacy. Deze pagina legt uit hoe gegevens worden verwerkt bij het gebruik van onze rekenmachines."
+    },
+    "terms": {
+      "title": "Servicevoorwaarden",
+      "description": "Deze voorwaarden beschrijven de regels voor het gebruik van de site en rekenmachines."
+    },
+    "disclaimer": {
+      "title": "Disclaimer",
+      "description": "Alle rekenmachines worden alleen voor informatieve doeleinden aangeboden en vormen geen financieel advies."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Vragen of feedback? Neem contact op en we reageren."
+    }
+  }
+}

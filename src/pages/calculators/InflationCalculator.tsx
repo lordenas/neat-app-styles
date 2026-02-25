@@ -22,7 +22,6 @@ import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-ut
 const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
-const MONTHS_RU = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 const MIN_YEAR = 2000;
 const MAX_YEAR = new Date().getFullYear();
 const YEARS = Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }, (_, i) => MIN_YEAR + i);
@@ -34,6 +33,11 @@ export default function InflationCalculatorPage() {
   const [endMonth, setEndMonth] = useState(new Date().getMonth() + 1);
   const [endYear, setEndYear] = useState(MAX_YEAR);
   const [amount, setAmount] = useState(100_000);
+
+  const months = Array.from({ length: 12 }, (_, i) => ({
+    value: i + 1,
+    label: t(`calculator.inflation.months.${i + 1}`),
+  }));
 
   const result = useMemo(() => {
     return computeInflation({
@@ -49,27 +53,27 @@ export default function InflationCalculatorPage() {
     <CalculatorLayout calculatorId="inflation" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.inflation.title")}</h1>
-          <p className="text-muted-foreground mt-1">{t("calc.inflation.description")}</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.inflation")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calculatorDescriptions.inflation")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-1 h-fit lg:sticky lg:top-24">
-            <CardHeader className="pb-3"><CardTitle className="text-base">Параметры</CardTitle></CardHeader>
+            <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.inputTitle")}</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
-                <Label>Сумма (₽)</Label>
+                <Label>{t("calculator.inflation.amount")}</Label>
                 <Input type="text" inputMode="numeric" value={formatNumberInput(amount)}
                   onChange={(e) => setAmount(Math.max(0, parseNumberInput(e.target.value)))} />
               </div>
 
               <div className="space-y-1.5">
-                <Label>Начало периода</Label>
+                <Label>{t("calculator.inflation.startMonth")}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <Select value={String(startMonth)} onValueChange={(v) => setStartMonth(Number(v))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {MONTHS_RU.map((m, i) => <SelectItem key={i} value={String(i + 1)}>{m}</SelectItem>)}
+                      {months.map((m) => <SelectItem key={m.value} value={String(m.value)}>{m.label}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <Select value={String(startYear)} onValueChange={(v) => setStartYear(Number(v))}>
@@ -82,12 +86,12 @@ export default function InflationCalculatorPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label>Конец периода</Label>
+                <Label>{t("calculator.inflation.endMonth")}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <Select value={String(endMonth)} onValueChange={(v) => setEndMonth(Number(v))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {MONTHS_RU.map((m, i) => <SelectItem key={i} value={String(i + 1)}>{m}</SelectItem>)}
+                      {months.map((m) => <SelectItem key={m.value} value={String(m.value)}>{m.label}</SelectItem>)}
                     </SelectContent>
                   </Select>
                   <Select value={String(endYear)} onValueChange={(v) => setEndYear(Number(v))}>
@@ -103,30 +107,28 @@ export default function InflationCalculatorPage() {
 
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardHeader className="pb-3"><CardTitle className="text-base">Результат</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.results")}</CardTitle></CardHeader>
               <CardContent>
                 {result ? (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="bg-destructive/10 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Инфляция за период</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.inflation.inflationForPeriod")}</p>
                         <p className="text-xl font-bold text-destructive">{fmt(result.inflationPercent)}%</p>
                       </div>
                       <div className="bg-primary/5 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Было бы нужно сейчас</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.inflation.priceChangeResult")}</p>
                         <p className="text-xl font-bold">{fmt(priceNow)} ₽</p>
-                        <p className="text-xs text-muted-foreground">чтобы купить то же</p>
                       </div>
                       <div className="bg-accent/10 rounded-lg p-4">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Реальная стоимость</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">{t("calculator.inflation.savingsDepreciationResult")}</p>
                         <p className="text-xl font-bold text-primary">{fmt(realValue)} ₽</p>
-                        <p className="text-xs text-muted-foreground">покупательная способность</p>
                       </div>
                     </div>
 
                     {Object.keys(result.annualRates).length > 1 && (
                       <div className="text-sm space-y-1 pt-2">
-                        <p className="font-medium text-foreground">Инфляция по годам:</p>
+                        <p className="font-medium text-foreground">{t("calculator.inflation.annualRatesTable")}:</p>
                         {Object.entries(result.annualRates)
                           .sort(([a], [b]) => Number(a) - Number(b))
                           .map(([year, rate]) => (
@@ -139,16 +141,15 @@ export default function InflationCalculatorPage() {
                     )}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">Выберите корректный период</p>
+                  <p className="text-sm text-muted-foreground">{t("calculator.inflation.noData")}</p>
                 )}
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-3"><CardTitle className="text-base">О расчёте</CardTitle></CardHeader>
+              <CardHeader className="pb-3"><CardTitle className="text-base">{t("calculator.about.title")}</CardTitle></CardHeader>
               <CardContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
-                <p>Расчёт инфляции по данным Росстата. За неполные годы применяется пропорциональное начисление по формуле сложных процентов.</p>
-                <p>«Было бы нужно сейчас» — сколько денег нужно сегодня, чтобы купить то, что раньше стоило указанную сумму. «Реальная стоимость» — сколько в нынешних ценах стоят деньги из прошлого.</p>
+                <p>{t("calculator.about.description")}</p>
               </CardContent>
             </Card>
           </div>

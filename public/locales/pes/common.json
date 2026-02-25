@@ -1,0 +1,752 @@
+{
+  "language": {
+    "en": "English",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch",
+    "ar": "العربية",
+    "pes": "فارسی",
+    "pl": "Polski",
+    "uk": "Українська",
+    "es": "Español",
+    "pt": "Português",
+    "nl": "Nederlands",
+    "sv": "Svenska"
+  },
+  "country": {
+    "global": "جهانی",
+    "ru": "روسیه",
+    "us": "ایالات متحده",
+    "uk": "بریتانیا",
+    "de": "آلمان",
+    "fr": "فرانسه",
+    "iran": "ایران",
+    "pl": "لهستان",
+    "ua": "اوکراین",
+    "es": "اسپانیا",
+    "kz": "قزاقستان",
+    "br": "برزیل",
+    "in": "هند",
+    "by": "بلاروس",
+    "uz": "ازبکستان",
+    "eg": "مصر",
+    "ae": "امارات",
+    "sa": "عربستان",
+    "qa": "قطر",
+    "nl": "هلند",
+    "se": "سوئد"
+  },
+  "header": {
+    "searchPlaceholder": "جستجوی ماشین‌حساب‌ها..."
+  },
+  "accessibility": {
+    "toggleLabel": "حالت دسترسی‌پذیری",
+    "toggleDescription": "اعمال پروفایل دسترسی‌پذیری برای منطقه شما (کنتراست، فوکوس، کاهش حرکت)",
+    "currentProfile": "پروفایل: {{profile}}",
+    "openMenu": "باز کردن گزینه‌های دسترسی‌پذیری",
+    "profileLabel": "پروفایل دسترسی‌پذیری",
+    "useDefault": "پیش‌فرض برای منطقه",
+    "contrastHigh": "کنتراست بالا",
+    "contrastDefault": "کنتراست پیش‌فرض",
+    "contrastBlackWhite": "سیاه/سفید",
+    "motionReduce": "کاهش حرکت",
+    "motionDefault": "حرکت پیش‌فرض",
+    "fontScaleLarge": "متن بزرگ‌تر",
+    "fontScaleDefault": "اندازه متن پیش‌فرض",
+    "fontScaleXLarge": "بزرگ‌ترین متن",
+    "profile_EN301549_WCAG21_AA": "اتحادیه اروپا (EN 301 549 / WCAG 2.1 AA)",
+    "profile_UK_WCAG21_AA": "بریتانیا (WCAG 2.1 AA)",
+    "profile_SECTION508_WCAG21_AA": "ایالات متحده (Section 508 / WCAG 2.1 AA)",
+    "profile_WCAG21_AA_AR": "منطقه عربی (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_CIS": "CIS (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_FA": "ایران (WCAG 2.1 AA)",
+    "profile_WCAG21_AA_DEFAULT": "پیش‌فرض (WCAG 2.1 AA)"
+  },
+  "nav": {
+    "calculators": "ماشین‌حساب‌ها",
+    "categories": "دسته‌بندی‌ها",
+    "about": "درباره"
+  },
+  "breadcrumbs": {
+    "home": "خانه"
+  },
+  "home": {
+    "hero": {
+      "title": "ماشین‌حساب‌های آنلاین",
+      "subtitle": "محاسبات مالی و روزمره، ساده و سریع",
+      "description": "ابزارهای رایگان، دقیق و آسان برای همه"
+    },
+    "searchPlaceholder": "جستجو (مثلاً وام مسکن، مالیات، حقوق)...",
+    "quick": {
+      "mortgage": "وام مسکن",
+      "taxReturn": "مالیات",
+      "salary": "حقوق"
+    },
+    "categories": {
+      "title": "دسته‌بندی ماشین‌حساب‌ها",
+      "subtitle": "برای یافتن سریع، بر اساس دسته‌بندی مرور کنید",
+      "viewAll": "مشاهده همه"
+    },
+    "popular": {
+      "title": "ماشین‌حساب‌های محبوب",
+      "subtitle": "پرکاربردترین ماشین‌حساب‌ها",
+      "found": "{{count}} مورد یافت شد",
+      "uses": "{{count}} بار استفاده",
+      "open": "باز کردن",
+      "noResults": "ماشین‌حسابی مطابق جستجو یافت نشد.",
+      "clearSearch": "پاک کردن جستجو"
+    },
+    "about": {
+      "title": "درباره ماشین‌حساب‌های ما",
+      "paragraph1": "Calcify مجموعه‌ای جامع از ماشین‌حساب‌های رایگان آنلاین را ارائه می‌دهد تا محاسبات مالی و روزمره را ساده کند. چه در حال برنامه‌ریزی خرید خانه باشید، چه مالیات یا سرمایه‌گذاری، ابزارهای ما کمک می‌کنند سریع و دقیق تصمیم بگیرید.",
+      "paragraph2": "هر ماشین‌حساب با فرمول‌های به‌روز ساخته شده است. پلتفرم از ارزها و قالب‌های مختلف پشتیبانی می‌کند و برای کاربران سراسر جهان کاربردی است. همه محاسبات محلی و در مرورگر انجام می‌شود تا حریم خصوصی حفظ شود.",
+      "paragraph3": "از محاسبات وام و رهن تا برآورد مالیات و پیش‌بینی سرمایه‌گذاری، طیف گسترده‌ای از سناریوها را پوشش می‌دهیم. رابط کاربری آسان نتایج را به‌صورت لحظه‌ای نمایش می‌دهد.",
+      "disclaimer": "سلب مسئولیت: این ماشین‌حساب‌ها صرفاً برای اهداف آموزشی و اطلاع‌رسانی هستند و جایگزین مشاوره مالی نیستند. لطفاً با متخصص واجد شرایط مشورت کنید."
+    }
+  },
+  "category": {
+    "finance": "مالی",
+    "taxes": "مالیات",
+    "salary": "حقوق",
+    "investments": "سرمایه‌گذاری",
+    "business": "کسب‌وکار",
+    "home": "خانه و زندگی",
+    "automotive": "ماشین‌حساب‌های خودرویی",
+    "backToCategories": "بازگشت به دسته‌بندی‌ها",
+    "title": "ماشین‌حساب‌های {{name}}",
+    "open": "باز کردن",
+    "uses": "{{count}} بار استفاده",
+    "noCalculators": "هنوز ماشین‌حسابی در این دسته وجود ندارد.",
+    "browseOtherCategories": "مشاهده دسته‌های دیگر"
+  },
+  "categoryDescription": {
+    "finance": "ماشین‌حساب‌های وام، رهن و سرمایه‌گذاری",
+    "taxes": "محاسبات مالیات و کسرها",
+    "salary": "محاسبات حقوق و درآمد",
+    "investments": "تحلیل سرمایه‌گذاری و پرتفوی",
+    "business": "ابزارهای کسب‌وکار و حسابداری",
+    "home": "محاسبات روزمره خانگی",
+    "automotive": "بیمه خودرو و هزینه‌های وسیله نقلیه"
+  },
+  "calculator": {
+    "autoLoan": {
+      "inputTitle": "پارامترهای وام خودرو",
+      "modeLabel": "حالت محاسبه",
+      "modeByCost": "بر اساس قیمت خودرو",
+      "modeByLoan": "بر اساس مبلغ وام",
+      "carCost": "قیمت خودرو",
+      "downPayment": "پیش‌پرداخت",
+      "loanAmount": "مبلغ وام",
+      "balloonPayment": "پرداخت نهایی",
+      "loanTerm": "مدت وام",
+      "termUnit": "واحد مدت",
+      "interestRate": "نرخ بهره",
+      "paymentType": "نوع پرداخت",
+      "calculatedLoanAmount": "مبلغ وام محاسبه‌شده",
+      "downPaymentAmount": "مبلغ پیش‌پرداخت",
+      "errors": {
+        "invalidTerm": "مدت وام معتبر وارد کنید.",
+        "invalidBalloon": "پرداخت نهایی باید کمتر از مبلغ وام باشد.",
+        "invalidValues": "مقادیر واردشده را بررسی کنید."
+      },
+      "resultCardTitle": "نتیجه محاسبه"
+    },
+    "fuelConsumption": {
+      "modeTrip": "سوخت سفر",
+      "modeAverage": "میانگین هر ۱۰۰ کیلومتر",
+      "unitsMetric": "متریک (لیتر، کیلومتر)",
+      "unitsImperial": "امپریال (گالن، مایل)",
+      "consumptionL100km": "ل / ۱۰۰ کیلومتر",
+      "consumptionKmL": "کیلومتر / ل",
+      "consumptionMpg": "مایل بر گالن",
+      "consumptionGal100mi": "گالن / ۱۰۰ مایل",
+      "modeLabel": "حالت محاسبه",
+      "unitsLabel": "واحدها",
+      "consumptionLabel": "میانگین مصرف",
+      "distanceLabel": "مسافت",
+      "fuelUsedLabel": "سوخت مصرف‌شده",
+      "priceLabel": "قیمت هر لیتر (اختیاری)",
+      "priceHint": "برای محاسبه هزینه سفر وارد کنید",
+      "resultFuelUsed": "سوخت مصرف‌شده",
+      "resultConsumptionPer100": "میانگین مصرف",
+      "or": "یا",
+      "resultCost": "هزینه سوخت"
+    },
+    "backToCalculators": "بازگشت به ماشین‌حساب‌ها",
+    "inputTitle": "ورودی‌ها",
+    "fields": {
+      "propertyPrice": "قیمت ملک",
+      "downPayment": "پیش‌پرداخت",
+      "interestRate": "نرخ بهره (%)",
+      "loanTerm": "مدت وام",
+      "paymentType": "نوع پرداخت",
+      "principalAmount": "مبلغ اصلی",
+      "timePeriod": "مدت (سال)"
+    },
+    "placeholders": {
+      "amount": "مبلغ را وارد کنید",
+      "rate": "نرخ را وارد کنید",
+      "years": "سال را وارد کنید"
+    },
+    "years": "سال",
+    "months": "ماه",
+    "paymentType": {
+      "annuity": "اقساط مساوی",
+      "annuityDesc": "پرداخت‌های ماهانه برابر در کل دوره وام",
+      "differentiated": "اقساط کاهشی",
+      "differentiatedDesc": "پرداخت‌های بیشتر در ابتدا و کاهش در طول زمان"
+    },
+    "mortgage": {
+      "propertyPriceHint": "قیمت کامل ملک طبق قرارداد.",
+      "downPaymentHint": "مبلغ پیش‌پرداخت. سمت راست — سهم از قیمت.",
+      "interestRateHint": "نرخ بهره سالانه وام.",
+      "loanTermHint": "مدت وام به سال یا ماه."
+    },
+    "calculate": "محاسبه",
+    "tip": "💡 نکته: مقادیر را تغییر دهید تا نتایج لحظه‌ای را ببینید.",
+    "tipEarlyRepayment": "بازپرداخت زودهنگام را برنامه‌ریزی کنید: <1>ماشین‌حساب اعتبار با بازپرداخت زودهنگام</1>.",
+    "results": "نتایج",
+    "download": "دانلود",
+    "print": "چاپ",
+    "downloadPdf": "دانلود PDF",
+    "generatingPdf": "در حال ایجاد PDF…",
+    "monthlyPayment": "پرداخت ماهانه",
+    "totalInterest": "کل بهره",
+    "totalAmount": "مبلغ کل",
+    "paymentBreakdown": "جزئیات پرداخت",
+    "table": {
+      "year": "سال",
+      "payment": "پرداخت",
+      "interest": "بهره",
+      "balance": "مانده"
+    },
+    "charts": {
+      "principalVsInterest": "اصل در برابر بهره",
+      "balanceOverTime": "مانده وام در طول زمان",
+      "annualBreakdown": "جزئیات پرداخت سالانه",
+      "totalBreakdown": "تفکیک کل",
+      "cumulative": "پرداخت‌های تجمیعی",
+      "labels": {
+        "principal": "اصل",
+        "interest": "بهره",
+        "totalPrincipal": "کل اصل",
+        "totalInterest": "کل بهره"
+      }
+    },
+    "stats": {
+      "monthlyPayment": "پرداخت ماهانه",
+      "monthlyPaymentRange": "{{first}} – {{last}}",
+      "accruedInterest": "بهره انباشته",
+      "debtPlusInterest": "بدهی + بهره",
+      "overpayment": "پرداخت اضافه"
+    },
+    "about": {
+      "title": "درباره این ماشین‌حساب",
+      "description": "این ماشین‌حساب از فرمول‌های استاندارد مالی برای نتایج دقیق استفاده می‌کند. محاسبات به‌صورت محلی در مرورگر انجام می‌شود.",
+      "formula": "فرمول",
+      "formulaNote": "که در آن: A = مبلغ، P = اصل، r = نرخ، t = زمان"
+    },
+    "refinancing": {
+      "remainingDebt": "مانده بدهی",
+      "remainingTerm": "مدت باقی‌مانده",
+      "currentRate": "نرخ بهره فعلی",
+      "perYear": "% در سال",
+      "refinancingParams": "پارامترهای باز refinance وام",
+      "amountChanged": "مبلغ تغییر کرده",
+      "newAmount": "مبلغ جدید",
+      "termChanged": "مدت تغییر کرده",
+      "newTerm": "مدت جدید",
+      "termUnit": "واحد مدت",
+      "rateChanged": "نرخ بهره تغییر کرده",
+      "newRate": "نرخ جدید",
+      "monthlyPayment": "پرداخت ماهانه",
+      "totalInterest": "مجموع بهره",
+      "afterRefinancing": "پس از باز refinance وام",
+      "monthlyPaymentWithRef": "پرداخت ماهانه پس از باز refinance وام",
+      "totalInterestWithRef": "مجموع بهره با باز refinance وام",
+      "savings": "صرفه‌جویی",
+      "monthlySavings": "پرداخت ماهانه {{amount}} کمتر می‌شود",
+      "monthlyIncrease": "پرداخت ماهانه {{amount}} بیشتر می‌شود",
+      "interestSavings": "مجموع بهره {{amount}} کمتر می‌شود",
+      "interestIncrease": "مجموع بهره {{amount}} بیشتر می‌شود",
+      "repaymentChartTitle": "نمودار بازپرداخت: اصل بدهی و بهره به تفکیک سال",
+      "byYear": "به تفکیک سال",
+      "byMonth": "به تفکیک ماه",
+      "month": "ماه",
+      "monthShort": "م{{n}}",
+      "total": "جمع",
+      "exportExcel": "دانلود Excel",
+      "exportPdfTable": "PDF جدول",
+      "printTable": "چاپ جدول",
+      "printFull": "چاپ محاسبه",
+      "downloadPdfFull": "دانلود PDF محاسبه",
+      "inputParameters": "پارامترهای ورودی"
+    },
+    "microloan": {
+      "amount": "مبلغ",
+      "loanTermDays": "مدت وام (روز)",
+      "rate": "نرخ",
+      "ratePerDay": "% در روز",
+      "ratePerMonth": "% در ماه",
+      "hasOverdue": "تأخیر در پرداخت",
+      "overduePeriod": "دوره تأخیر",
+      "overdueDays": "روز",
+      "overdueMonths": "ماه",
+      "overdueRate": "نرخ تأخیر",
+      "penaltyAmount": "مبلغ جریمه",
+      "interestAccrued": "سود تعلق‌گرفته",
+      "totalToRepay": "مجموع بازپرداخت",
+      "overdueInterest": "سود تأخیر",
+      "overdueTotal": "مجموع تأخیر",
+      "grandTotal": "مجموع کل",
+      "day": "روز",
+      "chartTitle": "جدول تعلق سود"
+    },
+    "inflation": {
+      "startMonth": "ماه شروع",
+      "endMonth": "ماه پایان",
+      "month": "ماه",
+      "year": "سال",
+      "calculatePriceChange": "محاسبه تغییر قیمت",
+      "calculateSavingsDepreciation": "محاسبه کاهش ارزش پس‌انداز",
+      "amount": "مبلغ",
+      "inflationForPeriod": "تورم در دوره",
+      "priceChangeResult": "نتیجه تغییر قیمت",
+      "savingsDepreciationResult": "کاهش ارزش پس‌انداز",
+      "annualRatesTable": "نرخ تورم سالانه",
+      "annualRate": "نرخ (%)",
+      "chartRates": "نرخ تورم سالانه",
+      "chartCumulative": "شاخص قیمت تجمعی",
+      "chartProgressive": "تورم تجمعی در دوره",
+      "cumulativeInflationPercent": "تورم تجمعی (%)",
+      "indexLabel": "شاخص",
+      "noData": "داده‌ای برای تورم این کشور موجود نیست.",
+      "loading": "در حال بارگذاری داده‌های تورم…",
+      "months": {
+        "1": "ژانویه",
+        "2": "فوریه",
+        "3": "مارس",
+        "4": "آوریل",
+        "5": "مه",
+        "6": "ژوئن",
+        "7": "ژوئیه",
+        "8": "اوت",
+        "9": "سپتامبر",
+        "10": "اکتبر",
+        "11": "نوامبر",
+        "12": "دسامبر"
+      }
+    },
+    "creditEarly": {
+      "fields": {
+        "loanAmount": "مبلغ وام",
+        "term": "مدت وام",
+        "termUnit": "واحد مدت",
+        "issueDate": "تاریخ اعطا",
+        "rate": "نرخ بهره (%)",
+        "rateChanges": "تغییر نرخ",
+        "addRate": "افزودن نرخ",
+        "remove": "حذف",
+        "noRateChanges": "هنوز تغییری در نرخ نیست.",
+        "paymentDay": "روز پرداخت ماهانه",
+        "firstPaymentInterestOnly": "قسط اول فقط بهره",
+        "skipFirstMonth": "ماه اول را رد کنید",
+        "increaseToInterest": "افزایش قسط به مبلغ بهره",
+        "roundPayment": "گرد کردن قسط",
+        "shiftWeekend": "جابه‌جایی پرداخت از آخر هفته",
+        "paymentDayChanged": "روز پرداخت عوض شد",
+        "paymentDayChangeInterest": "اگر بعد از تغییر تاریخ فاصله بیش از یک ماه شد، بهره میانی بپردازید",
+        "earlyRepayments": "پرداخت‌های زودهنگام",
+        "addEarlyRepayment": "افزودن پرداخت زودهنگام",
+        "oneTime": "یک‌باره",
+        "regular": "منظم",
+        "date": "تاریخ",
+        "amount": "مبلغ",
+        "recalc": "محاسبه مجدد",
+        "principalOnly": "کل مبلغ برای کاهش اصل",
+        "nextPaymentInterestOnly": "قسط بعد فقط بهره",
+        "period": "دوره",
+        "tieToPaymentDate": "وابسته به تاریخ قسط ماهانه",
+        "periodStart": "تاریخ شروع",
+        "periodEnd": "تاریخ پایان",
+        "add": "افزودن",
+        "noEarlyRepayments": "هنوز پرداخت زودهنگام نیست.",
+        "overallPayment": "کل پرداخت ماهانه",
+        "overallPaymentHelp": "مبلغی را که هر ماه می‌خواهید بپردازید وارد کنید. بخشی قسط برنامه‌ریزی‌شده را پوشش می‌دهد و بقیه به‌عنوان پرداخت زودهنگام در نظر گرفته می‌شود.",
+        "loanHoliday": "تعطیلات وام",
+        "loanHolidayHelp": "در تعطیلات وام بهره همچنان محاسبه می‌شود.",
+        "holidayStart": "شروع",
+        "holidayDuration": "مدت (ماه)",
+        "holidayPayment": "پرداخت",
+        "holidayPaymentNone": "هیچ",
+        "holidayPaymentInterest": "فقط بهره",
+        "principal": "اصل",
+        "extraPayment": "پرداخت زودهنگام"
+      },
+      "microHints": {
+        "loanAmount": "امکان پرداخت زودهنگام",
+        "term": "بر هزینه کل اثر می‌گذارد",
+        "rate": "بانک ممکن است نرخ را تغییر دهد"
+      },
+      "preview": {
+        "monthlyPayment": "پرداخت ماهانه",
+        "overpayment": "کل بهره"
+      },
+      "goToResults": "رفتن به نتایج",
+      "quickSummary": "خلاصه شاخص‌ها",
+      "analysisTitle": "جزئیات محاسبه",
+      "eventsTimeline": "رویدادهای وام",
+      "tabs": {
+        "table": "جدول",
+        "charts": "نمودارها",
+        "analytics": "تحلیل"
+      },
+      "mainParamsLabel": "پارامترهای اصلی",
+      "inputHint": "نتیجه با تغییر ورودی‌ها خودکار به‌روز می‌شود.",
+      "issueDateHint": "تاریخ اعطای وام. برای اولین دوره بهره استفاده می‌شود.",
+      "paymentParamsTitle": "نوع پرداخت و برنامه",
+      "paymentParamsHint": "مبلغ، نرخ، مدت و تاریخ اعطا را وارد کنید — محاسبه خودکار به‌روز می‌شود.",
+      "paymentDayHint": "روز ماه یا وابسته به تاریخ اعطا.",
+      "rateChangeExplainer": "اگر نرخ در طول مدت تغییر کند (مثلاً بعد از دوره تشویقی)، تغییر را اینجا اضافه کنید.",
+      "rateChangeFrom": "از {{date}}",
+      "rateChangeRate": "نرخ: {{rate}}%",
+      "paymentTypeBlock": "نوع پرداخت",
+      "additionalBlock": "گزینه‌های بیشتر",
+      "earlyBlockActive": "فعال",
+      "resultWithoutEarly": "بدون زودهنگام",
+      "resultWithEarly": "با زودهنگام",
+      "youSave": "صرفه‌جویی می‌کنید",
+      "termLessBy": "مدت کمتر به‌اندازه",
+      "monthsShort": "ماه",
+      "loanClosesSooner": "وام {{count}} ماه زودتر بسته می‌شود",
+      "disclaimerCalculation": "این محاسبه فقط جنبه اطلاع‌رسانی دارد و پیشنهاد نیست.",
+      "recalc": {
+        "payment": "پرداخت",
+        "term": "مدت"
+      },
+      "paymentDay": {
+        "issue": "در تاریخ اعطا",
+        "last": "آخرین روز ماه",
+        "dayOfMonth": "روز {{day}} هر ماه"
+      },
+      "periods": {
+        "1W": "هفتگی",
+        "1M": "ماهانه",
+        "2M": "هر ۲ ماه",
+        "3M": "فصلانه",
+        "6M": "هر ۶ ماه",
+        "1Y": "سالانه"
+      },
+      "kpi": {
+        "overpaymentWithoutEarly": "بهره بدون پرداخت زودهنگام",
+        "totalInterest": "بهره اضافی",
+        "totalPayment": "کل پرداخت",
+        "savings": "صرفه‌جویی",
+        "termReductionMonths": "کاهش مدت",
+        "termMonths": "مدت (ماه)",
+        "effectiveRate": "بار مؤثر",
+        "overpaymentPercent": "بهره اضافی، %"
+      },
+      "summary": {
+        "totalEarlyRepayments": "مجموع پرداخت‌های زودهنگام",
+        "savingsText": "پرداخت‌های زودهنگام هزینه وام را {{savings}} کاهش داد. مدت به {{duration}} کوتاه شد.",
+        "savingsOnly": "پرداخت‌های زودهنگام هزینه وام را {{savings}} کاهش داد.",
+        "yearsCount_one": "{{count}} سال",
+        "yearsCount_other": "{{count}} سال",
+        "monthsCount_one": "{{count}} ماه",
+        "monthsCount_other": "{{count}} ماه",
+        "and": "و"
+      }
+    }
+  },
+  "calculatorNames": {
+    "auto-loan": "ماشین‌حساب وام خودرو",
+    "mortgage": "ماشین‌حساب وام مسکن",
+    "tax-return": "ماشین‌حساب بازگشت مالیات",
+    "salary": "ماشین‌حساب حقوق",
+    "investment": "ماشین‌حساب سرمایه‌گذاری",
+    "compound-interest": "ماشین‌حساب سود مرکب",
+    "loan": "ماشین‌حساب وام",
+    "credit-early-repayment": "ماشین‌حساب اعتبار با بازپرداخت زودهنگام",
+    "breakeven": "ماشین‌حساب نقطه سر‌به‌سر",
+    "utility": "ماشین‌حساب هزینه‌های خدمات",
+    "refinancing": "ماشین‌حساب باز refinance وام",
+    "microloan": "ماشین‌حساب وام خرد",
+    "microloan_iran": "ماشین‌حساب وام خرد",
+    "inflation": "ماشین‌حساب تورم",
+    "vat": "ماشین‌حساب مالیات بر ارزش افزوده",
+    "osago": "ماشین‌حساب ОСАГО",
+    "fuel-consumption": "ماشین‌حساب مصرف سوخت"
+  },
+  "calculatorDescriptions": {
+    "auto-loan": "محاسبه قسط ماهانه، سود کل و جدول بازپرداخت وام خودرو با پرداخت نهایی اختیاری",
+    "mortgage": "محاسبه پرداخت‌های ماهانه و جدول بازپرداخت",
+    "tax-return": "برآورد بازگشت مالیات و وضعیت اظهارنامه",
+    "salary": "محاسبه حقوق خالص و کسورات",
+    "investment": "پیش‌بینی بازده سرمایه‌گذاری در طول زمان",
+    "compound-interest": "محاسبه سود به‌دست‌آمده از پس‌انداز",
+    "loan": "محاسبه اقساط و مجموع بهره",
+    "credit-early-repayment": "محاسبه پرداخت با بازپرداخت زودهنگام و تغییر نرخ",
+    "breakeven": "تعیین زمان رسیدن به سودآوری",
+    "utility": "برآورد هزینه ماهانه خدمات",
+    "refinancing": "مقایسه وام فعلی با شرایط باز refinance وام و صرفه‌جویی",
+    "microloan": "محاسبه بهره، جریمه تأخیر و مجموع بازپرداخت",
+    "inflation": "محاسبه تورم و تغییر قیمت در طول زمان",
+    "vat": "محاسبه مالیات بر ارزش افزوده: اضافه یا استخراج بر اساس کشور",
+    "osago": "محاسبه قیمت بیمه‌نامه ОСАГО بر اساس تعرفه پایه و ضرایب",
+    "fuel-consumption": "سوخت سفر یا میانگین هر ۱۰۰ کیلومتر؛ متریک و امپریال، هزینه اختیاری."
+  },
+  "vat": {
+    "amount": "مبلغ",
+    "mode": "نوع محاسبه",
+    "modeAdd": "اضافه کردن مالیات",
+    "modeExclude": "استخراج مالیات از مبلغ",
+    "country": "کشور",
+    "rate": "نرخ",
+    "enterAmount": "مبلغ را وارد کنید.",
+    "result": {
+      "amountExcl": "مبلغ بدون مالیات",
+      "vatAmount": "مالیات",
+      "amountWithVat": "مبلغ با مالیات"
+    },
+    "exportPdf": "دانلود PDF",
+    "exportExcel": "خروجی Excel",
+    "usSalesTaxNote": "ایالات متحده: مالیات فروش به‌صورت ایالتی.",
+    "countryName": {
+      "it": "ایتالیا",
+      "be": "بلژیک"
+    },
+    "taxName": {
+      "default": "مالیات بر ارزش افزوده"
+    },
+    "about": {
+      "title": "درباره ماشین‌حساب مالیات بر ارزش افزوده",
+      "paragraph": "مالیات بر ارزش افزوده یک مالیات مصرفی است که بر کالاها و خدمات اعمال می‌شود. این ماشین‌حساب به شما کمک می‌کند مالیات را به مبلغ خالص اضافه یا از مبلغ ناخالص استخراج کنید بر اساس نرخ استاندارد کشور انتخاب‌شده."
+    },
+    "formulas": {
+      "title": "فرمول‌ها",
+      "addFormula": "مبلغ با مالیات = مبلغ بدون مالیات × (۱ + نرخ / ۱۰۰)",
+      "excludeFormula": "مبلغ بدون مالیات = مبلغ با مالیات ÷ (۱ + نرخ / ۱۰۰). مبلغ مالیات = مبلغ با مالیات − مبلغ بدون مالیات."
+    },
+    "ratesTable": {
+      "title": "نرخ‌های مالیات بر ارزش افزوده بر اساس کشور",
+      "country": "کشور",
+      "taxName": "نام مالیات",
+      "standardRate": "نرخ استاندارد (%)",
+      "reducedRates": "نرخ‌های کاهش‌یافته"
+    },
+    "ru": {
+      "ratesTitle": "نرخ‌های مالیات بر ارزش افزوده در روسیه",
+      "rates20": "۲۰٪ — نرخ عمومی (اکثر کالاها و خدمات).",
+      "rates10": "۱۰٪ — مواد غذایی، کالای کودک، محصولات پزشکی، چاپ.",
+      "rates0": "۰٪ — صادرات، حمل بین‌المللی و برخی عملیات دیگر.",
+      "historyTitle": "تاریخچه نرخ مالیات بر ارزش افزوده (روسیه)",
+      "usn": "نظام مالیاتی ساده‌شده (USN): واحدهای تحت این نظام عموماً پرداخت‌کننده مالیات بر ارزش افزوده نیستند (با استثنا). آستانه و قواعد ممکن است تغییر کند؛ وضعیت 2025–2026 را در قوانین بررسی کنید."
+    },
+    "examples": {
+      "title": "Calculation examples",
+      "ex1": "Example 1: 1,000 net at 20% VAT → 1,000 × 1.20 = 1,200 gross; VAT amount = 200.",
+      "ex2": "Example 2: 2,400 gross at 20% VAT → 2,400 ÷ 1.20 = 2,000 net; VAT = 400.",
+      "ex3": "Example 3: 500 net at 10% (reduced rate) → 500 × 1.10 = 550 gross; VAT = 50."
+    },
+    "howToUse": {
+      "title": "How to use the calculator",
+      "step1": "Select country to use the standard VAT rate (or enter a custom rate).",
+      "step2": "Choose mode: add VAT to net amount or extract VAT from gross amount.",
+      "step3": "Enter the amount; the result updates automatically.",
+      "step4": "Use the table below for reference rates by country."
+    },
+    "keywords": "Popular searches: VAT calculator, add VAT, remove VAT, VAT rate by country, gross to net, net to gross."
+  },
+  "footer": {
+    "tagline": "ماشین‌حساب‌های رایگان آنلاین برای امور مالی، مالیات و محاسبات روزمره.",
+    "categoriesTitle": "دسته‌بندی‌ها",
+    "countriesTitle": "کشورها",
+    "legalTitle": "قوانین",
+    "connectTitle": "ارتباط",
+    "privacy": "حریم خصوصی",
+    "terms": "شرایط استفاده",
+    "disclaimer": "سلب مسئولیت",
+    "contact": "تماس",
+    "twitter": "توییتر",
+    "linkedin": "لینکدین",
+    "github": "GitHub",
+    "email": "ایمیل",
+    "countryCanada": "کانادا",
+    "copyright": "© 2024 Calcify. تمامی حقوق محفوظ است.",
+    "disclaimerLong": "صرفاً جهت اطلاع‌رسانی. این یک مشاوره مالی نیست."
+  },
+  "notFound": {
+    "title": "صفحه پیدا نشد",
+    "description": "صفحه مورد نظر وجود ندارد یا منتقل شده است.",
+    "backHome": "بازگشت به خانه"
+  },
+  "seo": {
+    "autoLoan": {
+      "title": "ماشین‌حساب وام خودرو: قسط ماهانه و برنامه بازپرداخت",
+      "intro": "با این ماشین‌حساب می‌توانید قسط ماهانه، مجموع سود و هزینه نهایی وام خودرو را محاسبه کنید. محاسبه بر اساس قیمت خودرو یا مبلغ وام، با پیش‌پرداخت، پرداخت نهایی و حالت‌های اقساط مساوی یا کاهشی انجام می‌شود.",
+      "formulaTitle": "فرمول محاسبه",
+      "formula": "M = P × r × (1+r)^n / ((1+r)^n - 1)",
+      "formulaVars": "M قسط ماهانه، P اصل وام، r نرخ ماهانه (نرخ سالانه ÷ 12) و n تعداد ماه‌ها است. در حالت اقساط کاهشی، اصل بدهی در بخش‌های برابر پرداخت می‌شود و سود ماهانه کاهش می‌یابد.",
+      "examplesTitle": "نمونه محاسبه",
+      "example1": "نمونه ۱: قیمت خودرو 3,000,000,000، پیش‌پرداخت 600,000,000، نرخ 18%، مدت 60 ماه، اقساط مساوی. مبلغ وام = 2,400,000,000.",
+      "example2": "نمونه ۲: مبلغ وام 2,000,000,000، پرداخت نهایی 500,000,000، نرخ 16%، مدت 48 ماه، اقساط کاهشی.",
+      "howToTitle": "نحوه استفاده",
+      "step1": "حالت محاسبه را انتخاب کنید: بر اساس قیمت خودرو یا مبلغ وام.",
+      "step2": "پیش‌پرداخت، پرداخت نهایی (در صورت نیاز)، نرخ، مدت و نوع اقساط را وارد کنید.",
+      "step3": "قسط ماهانه، مجموع سود و جدول بازپرداخت ماهانه یا سالانه را بررسی کنید."
+    },
+    "home": {
+      "title": "ماشین‌حساب‌های رایگان آنلاین — وام، مالیات، حقوق",
+      "description": "از ماشین‌حساب‌های رایگان برای وام، مالیات، حقوق، سرمایه‌گذاری و موارد دیگر استفاده کنید.",
+      "keywords": [
+        "ماشین‌حساب",
+        "ماشین‌حساب وام مسکن",
+        "ماشین‌حساب مالیات",
+        "ماشین‌حساب حقوق",
+        "ماشین‌حساب وام",
+        "ماشین‌حساب سرمایه‌گذاری",
+        "ماشین‌حساب رایگان",
+        "ماشین‌حساب مالی"
+      ],
+      "siteName": "Calcify - ماشین‌حساب‌های رایگان آنلاین",
+      "siteDescription": "ماشین‌حساب‌های رایگان آنلاین برای امور مالی، مالیات، حقوق، سرمایه‌گذاری و محاسبات روزمره"
+    },
+    "category": {
+      "title": "ماشین‌حساب‌های {{name}} | Calcify",
+      "description": "مجموعه‌ای از ماشین‌حساب‌های رایگان {{name}}. {{description}}",
+      "keywords": [
+        "ماشین‌حساب {{name}}",
+        "رایگان {{name}}",
+        "ماشین‌حساب",
+        "ماشین‌حساب آنلاین"
+      ]
+    },
+    "calculator": {
+      "titleFallback": "ماشین‌حساب",
+      "descriptionFallback": "شاخص‌های مالی را با ماشین‌حساب رایگان آنلاین محاسبه کنید.",
+      "keywordsFallback": "ماشین‌حساب مالی"
+    },
+    "inflation": {
+      "titleInCountry": "ماشین‌حساب تورم در {{country}}"
+    },
+    "vat": {
+      "titleInCountry": "ماشین‌حساب مالیات بر ارزش افزوده — {{country}}"
+    },
+    "refinancing": {
+      "title": "Refinancing calculator",
+      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
+      "howItWorksTitle": "How the comparison works",
+      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
+      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the remaining balance and current loan rate and term.",
+      "step2": "Set the new loan rate and term (and any fees if applicable).",
+      "step3": "Compare total interest and repayment schedule of both options.",
+      "step4": "Check the charts for principal vs interest and repayment over time.",
+      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+    },
+    "inflationBlock": {
+      "title": "Inflation calculator",
+      "description": "See how inflation erodes the purchasing power of money over time. Enter a starting amount and annual inflation rate to get the equivalent value in future years and the total inflation index.",
+      "formulaTitle": "Formula",
+      "formula": "Value after n years = Initial amount × (1 + rate/100)^n. The inflation index is (1 + rate/100)^n; the table shows year-by-year growth.",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 10,000 at 5% for 10 years → 10,000 × 1.05^10 ≈ 16,289; purchasing power halves in about 14 years at 5%.",
+      "example2": "Example 2: 1,000 at 3% for 5 years → 1,000 × 1.03^5 ≈ 1,159; index ≈ 1.16.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the initial amount and the annual inflation rate (%).",
+      "step2": "Set the number of years to project.",
+      "step3": "Read the equivalent value and inflation index in the results and table.",
+      "keywords": "Popular searches: inflation calculator, purchasing power, inflation rate, money value over time, inflation index."
+    },
+    "microloan": {
+      "title": "Microloan calculator",
+      "description": "Calculate the cost of a short-term microloan: interest and late-payment penalties. Enter the principal, annual rate, term, and optional penalty rate to see the repayment schedule and total to repay.",
+      "howItWorksTitle": "How interest and penalties work",
+      "howItWorks": "Interest is applied to the principal over the loan term. If you add a penalty rate, it is applied per day on the overdue amount after the due date. Total to repay = principal + interest + penalties (if any).",
+      "examplesTitle": "Calculation examples",
+      "example1": "Example 1: 5,000 at 1% per day for 14 days → interest depends on the method (e.g. simple); total repayment is shown in the schedule.",
+      "example2": "Example 2: Same loan with 0.5% daily penalty and 5 days late → penalty accrues on the outstanding amount for 5 days.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, annual interest rate, and term (days or months).",
+      "step2": "Optionally set a penalty rate for late payment.",
+      "step3": "View the schedule and total interest and total to repay.",
+      "keywords": "Popular searches: microloan calculator, short-term loan calculator, loan interest calculator, late payment penalty calculator."
+    },
+    "creditEarlyRepayment": {
+      "title": "Early repayment calculator",
+      "description": "See how making extra payments or a lump sum reduces your loan term and total interest. The calculator shows the impact of one-time or recurring early repayments on the schedule and total cost.",
+      "howItWorksTitle": "How early repayment works",
+      "howItWorks": "Extra payments reduce the principal, so less interest accrues. You can add a one-time lump sum and/or a recurring extra payment. The schedule is recalculated so that the loan is paid off sooner with less total interest.",
+      "exampleTitle": "Example",
+      "example": "Loan 1,000,000 at 12% for 60 months. Without early repayment: total interest ≈ 333,000. With a one-time 100,000 at month 12: term shortens and total interest drops; the chart and table show the new schedule.",
+      "howToUseTitle": "How to use the calculator",
+      "step1": "Enter the loan amount, rate, and term (annuity or differentiated).",
+      "step2": "Optionally add a one-time early repayment and/or recurring extra payment.",
+      "step3": "View the updated schedule, total interest saved, and charts.",
+      "keywords": "Popular searches: early repayment calculator, lump sum calculator, extra payment loan, reduce loan term, pay off loan faster."
+    },
+    "mortgage": {
+      "title": "ماشین‌حساب وام مسکن: قسط ماهانه و جدول بازپرداخت",
+      "description": "ماشین‌حساب وام مسکن به شما کمک می‌کند قبل از درخواست وام، قسط ماهانه و هزینه کل را تخمین بزنید. چه خرید اولین مسکن باشد چه refinance، دانستن قسط و بهره در طول مدت وام به تصمیم‌گیری کمک می‌کند. ابزار از فرمول‌های استاندارد بازپرداخت استفاده می‌کند و هر دو نوع قسط ثابت (آنوئیتی) و قسط کاهشی (خطی) را پشتیبانی می‌کند.",
+      "toolExplanation": "وام مسکن (رهن) وام بلندمدتی است که با ملک تضمین می‌شود. در ایران بانک‌ها وام با سود ثابت یا متغیر ارائه می‌دهند؛ ماشین‌حساب فرض می‌کند نرخ سالانه ثابت. شما مبلغ ملک، پیش‌پرداخت، نرخ بهره و مدت را وارد می‌کنید و قسط ماهانه و جدول کامل بازپرداخت را می‌گیرید. قوانین محلی و طرح‌های مسکن می‌توانند هزینه را تحت تأثیر قرار دهند — با بانک یا مشاور محلی تأیید کنید.",
+      "howToUseTitle": "نحوه استفاده از ماشین‌حساب",
+      "step1": "قیمت کل ملک (قیمت خرید یا ارزش‌گذاری بانک) را وارد کنید.",
+      "step2": "مبلغ پیش‌پرداخت را وارد کنید؛ ماشین‌حساب مبلغ وام و درصد پیش‌پرداخت را نشان می‌دهد.",
+      "step3": "نرخ بهره سالانه و مدت وام (سال یا ماه) را تنظیم کنید.",
+      "step4": "قسط ثابت (آنوئیتی) یا کاهشی را انتخاب کنید. نتایج و جدول به‌طور خودکار به‌روز می‌شوند.",
+      "methodologyTitle": "روش محاسبه",
+      "formula": "آنوئیتی: M = P × [r(1+r)^n] / [(1+r)^n − 1]. کاهشی: بخش اصل = P/n هر ماه؛ بهره = مانده × r.",
+      "formulaNote": "M = قسط ماهانه، P = اصل وام، r = نرخ ماهانه (سالانه ÷ ۱۲)، n = تعداد ماه.",
+      "countrySpecificsTitle": "ویژگی‌های خاص کشور",
+      "countrySpecifics": "نرخ‌ها و شرایط وام مسکن در ایران بسته به بانک و نوع طرح (مسکن ملی، نهضت و غیره) متفاوت است. سقف وام، سود مصوب و مدت بازپرداخت را از بانک یا مشاور استعلام بگیرید.",
+      "examplesTitle": "نمونه محاسبات",
+      "example1": "نمونه ۱: ملک ۳ میلیارد ریال، پیش‌پرداخت ۶۰۰ میلیون، نرخ ۱۸٪، ۲۰ سال → وام ۲٬۴ میلیارد، قسط ماهانه (آنوئیتی) ≈ ۴۲ میلیون، بهره کل ≈ ۵٬۶ میلیارد ریال.",
+      "example2": "نمونه ۲: همان وام به صورت کاهشی → اولین قسط ≈ ۵۶ میلیون، آخرین ≈ ۱۰ میلیون؛ بهره کل کمتر.",
+      "example3": "نمونه ۳: ۲٬۴ میلیارد با ۱۸٪ در ۱۵ سال → قسط ماهانه ≈ ۵۱ میلیون؛ مدت کوتاه‌تر، بهره کمتر.",
+      "commonMistakesTitle": "اشتباهات رایج",
+      "commonMistakes": "قیمت ملک و مبلغ وام را اشتباه گرفتن. فراموش کردن مالیات، بیمه و کارمزد. فقط قسط را مقایسه کردن بدون نگاه به بهره کل. در نظر نگرفتن نوع نرخ و جریمه بازپرداخت زودهنگام.",
+      "faqTitle": "سوالات متداول",
+      "faq1q": "تفاوت قسط ثابت (آنوئیتی) و کاهشی چیست؟",
+      "faq1a": "آنوئیتی: قسط ماهانه یکسان؛ ابتدا بیشتر بهره، بعد بیشتر اصل. کاهشی: بخش اصل ثابت هر ماه به‌اضافه بهره روی مانده؛ قسط‌ها بالا شروع می‌شوند و کم می‌شوند؛ بهره کل معمولاً کمتر است.",
+      "faq2q": "آیا مالیات و بیمه شامل است؟",
+      "faq2a": "خیر. فقط اصل و بهره محاسبه می‌شود. مالیات ملکی، بیمه ساختمان و در صورت وجود بیمه وام را جداگانه برای هزینه ماهانه واقعی اضافه کنید.",
+      "faq3q": "آیا برای refinance می‌توان استفاده کرد؟",
+      "faq3a": "بله. مبلغ وام جدید (مثلاً مانده)، نرخ و مدت جدید را وارد کنید تا قسط و جدول جدید را ببینید.",
+      "faq4q": "نتیجه چقدر دقیق است؟",
+      "faq4a": "محاسبه برای داده‌های واردشده دقیق است. پیشنهادهای واقعی بانک ممکن است به خاطر کارمزد، گرد کردن یا نرخ شناور متفاوت باشد. برای مقایسه و برنامه‌ریزی استفاده کنید؛ اعداد را با بانک تأیید کنید.",
+      "faq5q": "چه نرخی وارد کنم؟",
+      "faq5a": "نرخ سالانه مؤثر (APR) یا نرخ اسمی که بانک برای جدول بازپرداخت اعلام می‌کند را وارد کنید. در صورت نرخ تشویقی موقت هر دو دوره را محاسبه کنید.",
+      "conclusion": "از این ماشین‌حساب وام مسکن برای مقایسه سناریوها، دیدن تأثیر پیش‌پرداخت و مدت بر قسط و بهره کل و برنامه‌ریزی بودجه استفاده کنید. برای قوانین و طرح‌های محلی با مشاور یا بانک مشورت کنید.",
+      "keywords": "جستجوهای پرطرفدار: ماشین‌حساب وام مسکن، قسط ماهانه، جدول بازپرداخت، وام رهنی، آنوئیتی در برابر کاهشی."
+    },
+    "fuelConsumption": {
+      "title": "ماشین‌حساب مصرف سوخت: هر ۱۰۰ کیلومتر و هزینه سفر",
+      "intro": "سوخت سفر را از میانگین مصرف و مسافت محاسبه کنید، یا میانگین مصرف هر ۱۰۰ کیلومتر را از مسافت و سوخت مصرف‌شده. واحدهای متریک (ل/۱۰۰کم، کم/ل) و امپریال (مایل بر گالن). قیمت هر لیتر را برای هزینه سفر وارد کنید.",
+      "howToTitle": "نحوه استفاده",
+      "step1": "حالت را انتخاب کنید: «سوخت سفر» (مصرف و مسافت را می‌دانید) یا «میانگین هر ۱۰۰ کیلومتر» (مسافت و سوخت مصرف‌شده را می‌دانید).",
+      "step2": "واحدها (متریک یا امپریال) را انتخاب کنید، مقادیر را وارد کنید. اختیاری: قیمت هر لیتر برای هزینه سفر."
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "حریم خصوصی",
+      "description": "ما به حریم خصوصی شما احترام می‌گذاریم. این صفحه نحوه پردازش داده‌ها هنگام استفاده از ماشین‌حساب‌ها را توضیح می‌دهد."
+    },
+    "terms": {
+      "title": "شرایط استفاده",
+      "description": "این شرایط قوانین استفاده از وب‌سایت و ماشین‌حساب‌ها را توضیح می‌دهد."
+    },
+    "disclaimer": {
+      "title": "سلب مسئولیت",
+      "description": "تمامی ماشین‌حساب‌ها صرفاً برای اهداف اطلاع‌رسانی هستند و مشاوره مالی محسوب نمی‌شوند."
+    },
+    "contact": {
+      "title": "تماس",
+      "description": "سؤال یا بازخورد دارید؟ با ما تماس بگیرید تا پاسخ دهیم."
+    }
+  }
+}
