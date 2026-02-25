@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, BarChart3 } from "lucide-react";
+import { ArrowLeft, BarChart3, Printer, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import jsPDF from "jspdf";
+import { getCyrillicFont } from "@/lib/cyrillic-font";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +68,8 @@ export default function Compare() {
   const ids = searchParams.get("ids")?.split(",").filter(Boolean) || [];
   const [calculations, setCalculations] = useState<CalcData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (ids.length === 0) {
@@ -88,17 +92,110 @@ export default function Compare() {
   const allParamKeys = [...new Set(calculations.flatMap((c) => Object.keys(c.parameters)))];
   const allResultKeys = [...new Set(calculations.flatMap((c) => Object.keys(c.result)))];
 
+  const handlePrint = () => window.print();
+
+  const handlePdf = async () => {
+    setPdfLoading(true);
+    try {
+      const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+      const fontBase64 = await getCyrillicFont();
+      doc.addFileToVFS("Roboto-Regular.ttf", fontBase64);
+      doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+      doc.setFont("Roboto", "normal");
+
+      const margin = 14;
+      const pageW = doc.internal.pageSize.getWidth();
+      const contentW = pageW - margin * 2;
+      let y = margin;
+
+      doc.setFontSize(14);
+      doc.setTextColor(30, 30, 50);
+      doc.text("Сравнение расчётов", margin, y + 5);
+      y += 12;
+
+      const colCount = calculations.length + 1;
+      const colW = contentW / colCount;
+
+      // Header
+      doc.setFillColor(245, 245, 245);
+      doc.rect(margin, y, contentW, 8, "F");
+      doc.setFontSize(8);
+      doc.setTextColor(80, 80, 80);
+      doc.text("Параметр", margin + 2, y + 5);
+      calculations.forEach((c, i) => {
+        doc.text(c.title, margin + colW * (i + 1) + 2, y + 5);
+      });
+      y += 10;
+
+      const drawRow = (label: string, values: string[], bold = false) => {
+        if (y > 190) { doc.addPage(); y = margin; }
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text(label, margin + 2, y + 4);
+        doc.setTextColor(30, 30, 50);
+        if (bold) doc.setFont("Roboto", "normal");
+        values.forEach((v, i) => {
+          doc.text(v, margin + colW * (i + 1) + 2, y + 4);
+        });
+        y += 6;
+      };
+
+      // Section: Params
+      doc.setFillColor(235, 235, 235);
+      doc.rect(margin, y, contentW, 6, "F");
+      doc.setFontSize(7);
+      doc.setTextColor(100, 100, 100);
+      doc.text("ПАРАМЕТРЫ", margin + 2, y + 4);
+      y += 8;
+
+      allParamKeys.forEach((key) => {
+        drawRow(paramLabels[key] || key, calculations.map((c) => String(c.parameters[key] ?? "—")));
+      });
+
+      // Section: Results
+      doc.setFillColor(235, 235, 235);
+      doc.rect(margin, y, contentW, 6, "F");
+      doc.setFontSize(7);
+      doc.setTextColor(100, 100, 100);
+      doc.text("РЕЗУЛЬТАТЫ", margin + 2, y + 4);
+      y += 8;
+
+      allResultKeys.forEach((key) => {
+        drawRow(paramLabels[key] || key, calculations.map((c) => String(c.result[key] ?? "—")), true);
+      });
+
+      // Footer
+      doc.setFontSize(7);
+      doc.setTextColor(160, 160, 160);
+      doc.text(`CalcHub — ${new Date().toLocaleDateString("ru")}`, margin, doc.internal.pageSize.getHeight() - 8);
+
+      doc.save(`CalcHub_Compare_${new Date().toISOString().slice(0, 10)}.pdf`);
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
   return (
     <>
       <Helmet><title>Сравнение расчётов — CalcHub</title></Helmet>
       <SiteHeader />
       <main className="min-h-screen bg-background py-10">
         <div className="container max-w-4xl space-y-6">
-          <Link to="/dashboard">
-            <Button variant="ghost" size="sm" className="gap-1.5">
-              <ArrowLeft className="h-4 w-4" /> Назад
-            </Button>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link to="/dashboard">
+              <Button variant="ghost" size="sm" className="gap-1.5">
+                <ArrowLeft className="h-4 w-4" /> Назад
+              </Button>
+            </Link>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5">
+                <Printer className="h-4 w-4" /> Печать
+              </Button>
+              <Button variant="outline" size="sm" onClick={handlePdf} loading={pdfLoading} className="gap-1.5">
+                <Download className="h-4 w-4" /> PDF
+              </Button>
+            </div>
+          </div>
 
           <div className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-primary" />
