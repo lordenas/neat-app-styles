@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Langue",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Calculateurs",
     "categories": "Catégories",
-    "about": "À propos"
+    "about": "À propos",
+    "blog": "Blog",
+    "contacts": "Contacts",
+    "cabinet": "Tableau de bord",
+    "login": "Connexion"
   },
-  "breadcrumbs": {
-    "home": "Accueil"
-  },
+  "breadcrumbs": { "home": "Accueil" },
+  "layout": { "ad": "Publicité", "adBlock": "Bloc publicitaire", "relatedCalculators": "Calculateurs similaires", "otherCategories": "Autres catégories" },
   "home": {
     "hero": {
       "title": "Calculateurs en ligne",

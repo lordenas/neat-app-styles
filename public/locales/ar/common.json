@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "اللغة",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "الحاسبات",
     "categories": "الفئات",
-    "about": "حول"
+    "about": "حول",
+    "blog": "المدونة",
+    "contacts": "اتصل بنا",
+    "cabinet": "لوحة التحكم",
+    "login": "تسجيل الدخول"
   },
-  "breadcrumbs": {
-    "home": "الرئيسية"
-  },
+  "breadcrumbs": { "home": "الرئيسية" },
+  "layout": { "ad": "إعلان", "adBlock": "مساحة إعلانية", "relatedCalculators": "حاسبات مشابهة", "otherCategories": "فئات أخرى" },
   "home": {
     "hero": {
       "title": "حاسبات عبر الإنترنت",

@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Язык",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,10 +66,20 @@
   "nav": {
     "calculators": "Калькуляторы",
     "categories": "Категории",
-    "about": "О сервисе"
+    "about": "О сервисе",
+    "blog": "Блог",
+    "contacts": "Контакты",
+    "cabinet": "Кабинет",
+    "login": "Войти"
   },
   "breadcrumbs": {
     "home": "Главная"
+  },
+  "layout": {
+    "ad": "Реклама",
+    "adBlock": "Рекламный блок",
+    "relatedCalculators": "Похожие калькуляторы",
+    "otherCategories": "Другие категории"
   },
   "home": {
     "hero": {

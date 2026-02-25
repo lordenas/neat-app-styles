@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Språk",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Kalkylatorer",
     "categories": "Kategorier",
-    "about": "Om oss"
+    "about": "Om oss",
+    "blog": "Blogg",
+    "contacts": "Kontakt",
+    "cabinet": "Instrumentpanel",
+    "login": "Logga in"
   },
-  "breadcrumbs": {
-    "home": "Hem"
-  },
+  "breadcrumbs": { "home": "Hem" },
+  "layout": { "ad": "Annons", "adBlock": "Annonsblock", "relatedCalculators": "Liknande kalkylatorer", "otherCategories": "Andra kategorier" },
   "home": {
     "hero": {
       "title": "Online kalkylatorer",

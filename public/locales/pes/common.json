@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "زبان",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "ماشین‌حساب‌ها",
     "categories": "دسته‌بندی‌ها",
-    "about": "درباره"
+    "about": "درباره",
+    "blog": "وبلاگ",
+    "contacts": "تماس",
+    "cabinet": "پنل کاربری",
+    "login": "ورود"
   },
-  "breadcrumbs": {
-    "home": "خانه"
-  },
+  "breadcrumbs": { "home": "خانه" },
+  "layout": { "ad": "تبلیغ", "adBlock": "بلوک تبلیغاتی", "relatedCalculators": "ماشین‌حساب‌های مشابه", "otherCategories": "دسته‌بندی‌های دیگر" },
   "home": {
     "hero": {
       "title": "ماشین‌حساب‌های آنلاین",

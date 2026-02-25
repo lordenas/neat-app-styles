@@ -1,5 +1,6 @@
 {
   "language": {
+    "label": "Мова",
     "en": "English",
     "ru": "Русский",
     "fr": "Français",
@@ -65,11 +66,14 @@
   "nav": {
     "calculators": "Калькулятори",
     "categories": "Категорії",
-    "about": "Про нас"
+    "about": "Про нас",
+    "blog": "Блог",
+    "contacts": "Контакти",
+    "cabinet": "Кабінет",
+    "login": "Увійти"
   },
-  "breadcrumbs": {
-    "home": "Головна"
-  },
+  "breadcrumbs": { "home": "Головна" },
+  "layout": { "ad": "Реклама", "adBlock": "Рекламний блок", "relatedCalculators": "Схожі калькулятори", "otherCategories": "Інші категорії" },
   "home": {
     "hero": {
       "title": "Онлайн-калькулятори",
