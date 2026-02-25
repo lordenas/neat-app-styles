@@ -250,3 +250,9 @@
   from { width: 100%; }
   to { width: 0%; }
 }
+
+@media print {
+  header, footer, .site-header, .site-footer {
+    display: none !important;
+  }
+}
