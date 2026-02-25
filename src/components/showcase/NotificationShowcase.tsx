@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
+import { CheckCircle2, AlertTriangle, XCircle, Info, Bell } from "lucide-react";
 
 export function NotificationShowcase() {
   return (
@@ -10,7 +10,20 @@ export function NotificationShowcase() {
         <Button
           variant="outline"
           size="sm"
-          icon={<CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))]" />}
+          onClick={() =>
+            toast({
+              title: "Событие зарегистрировано",
+              description: "Данные сохранены в системе.",
+            })
+          }
+        >
+          <Bell className="h-4 w-4 mr-1.5" />
+          Default
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() =>
             toast({
               title: "Расчёт сохранён",
@@ -20,13 +33,13 @@ export function NotificationShowcase() {
             })
           }
         >
+          <CheckCircle2 className="h-4 w-4 mr-1.5 text-[hsl(var(--success))]" />
           Success
         </Button>
 
         <Button
           variant="outline"
           size="sm"
-          icon={<XCircle className="h-4 w-4 text-destructive" />}
           onClick={() =>
             toast({
               title: "Ошибка расчёта",
@@ -36,13 +49,13 @@ export function NotificationShowcase() {
             })
           }
         >
+          <XCircle className="h-4 w-4 mr-1.5 text-destructive" />
           Error
         </Button>
 
         <Button
           variant="outline"
           size="sm"
-          icon={<AlertTriangle className="h-4 w-4 text-[hsl(var(--warning))]" />}
           onClick={() =>
             toast({
               title: "Внимание",
@@ -52,22 +65,23 @@ export function NotificationShowcase() {
             })
           }
         >
+          <AlertTriangle className="h-4 w-4 mr-1.5 text-[hsl(var(--warning))]" />
           Warning
         </Button>
 
         <Button
           variant="outline"
           size="sm"
-          icon={<Info className="h-4 w-4 text-[hsl(var(--info))]" />}
           onClick={() =>
             toast({
               title: "Подсказка",
-              description: "Вы можете добавить досрочные погашения для уменьшения переплаты.",
+              description: "Добавьте досрочные погашения для уменьшения переплаты.",
               variant: "info",
               icon: <Info className="h-5 w-5 text-[hsl(var(--info))]" />,
             })
           }
         >
+          <Info className="h-4 w-4 mr-1.5 text-[hsl(var(--info))]" />
           Info
         </Button>
 
@@ -89,13 +103,13 @@ export function NotificationShowcase() {
       </div>
 
       <p className="helper-text">
-        Используется встроенный useToast. Варианты:{" "}
+        Стиль Sonner: чистые карточки с тенью, цветной рамкой и иконкой по типу. Варианты:{" "}
         <code className="text-xs bg-muted px-1 py-0.5 rounded">default</code>,{" "}
         <code className="text-xs bg-muted px-1 py-0.5 rounded">destructive</code>,{" "}
         <code className="text-xs bg-muted px-1 py-0.5 rounded">success</code>,{" "}
         <code className="text-xs bg-muted px-1 py-0.5 rounded">warning</code>,{" "}
         <code className="text-xs bg-muted px-1 py-0.5 rounded">info</code>.
-        До 3 уведомлений одновременно, автозакрытие через 5 сек.
+        До 3 одновременно, автозакрытие 5 сек с прогрессом.
       </p>
     </div>
   );
