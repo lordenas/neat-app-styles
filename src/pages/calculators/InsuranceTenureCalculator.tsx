@@ -2,10 +2,10 @@ import { useState } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Trash2, Plus, Briefcase } from "lucide-react";
+import { CopyButton } from "@/components/ui/copy-button";
 import { calcInsuranceTenure, type TenurePeriod } from "@/lib/calculators/insurance-tenure";
 
 export default function InsuranceTenureCalculator() {
@@ -25,55 +25,167 @@ export default function InsuranceTenureCalculator() {
   const validPeriods = periods.filter((p) => p.startDate && p.endDate);
   const result = calcInsuranceTenure(validPeriods);
 
+  const sickPayColor =
+    result.sickPayPercent === 100
+      ? "text-[hsl(var(--success))]"
+      : result.sickPayPercent === 80
+      ? "text-primary"
+      : "text-destructive";
+
+  const sickPayBg =
+    result.sickPayPercent === 100
+      ? "bg-[hsl(var(--success)/0.08)] border-[hsl(var(--success)/0.2)]"
+      : result.sickPayPercent === 80
+      ? "bg-primary/5 border-primary/10"
+      : "bg-destructive/8 border-destructive/15";
+
+  const title = (
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор страхового стажа</h1>
+      <p className="text-muted-foreground mt-1 text-sm">
+        Расчёт страхового стажа по периодам работы и процента оплаты больничного листа
+      </p>
+    </div>
+  );
+
   return (
-    <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/categories/salary">
-      <div className="grid lg:grid-cols-[1fr_340px] gap-6">
+    <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/categories/salary" title={title}>
+      <div className="space-y-6">
+        {/* Periods form */}
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle>Периоды работы</CardTitle>
-              <Button variant="outline" size="sm" onClick={addPeriod}><Plus className="h-4 w-4 mr-1" />Добавить</Button>
+              <div>
+                <CardTitle className="text-base">Периоды работы</CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">Укажите все периоды трудовой деятельности</p>
+              </div>
+              <Button variant="outline" size="sm" onClick={addPeriod}>
+                <Plus className="h-3.5 w-3.5 mr-1" />Добавить
+              </Button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {periods.map((p, i) => (
-              <div key={i} className="flex items-end gap-3">
-                <div className="space-y-1 flex-1">
-                  <Label className="text-xs">Начало</Label>
-                  <Input type="date" value={p.startDate} onChange={(e) => updatePeriod(i, "startDate", e.target.value)} />
+          <CardContent className="space-y-2">
+            <div className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-center px-0.5 mb-1">
+              <span className="text-xs text-muted-foreground w-6 text-center">#</span>
+              <span className="text-xs text-muted-foreground">Дата начала</span>
+              <span className="text-xs text-muted-foreground">Дата окончания</span>
+              <span className="w-8" />
+            </div>
+            {periods.map((p, i) => {
+              const days = p.startDate && p.endDate
+                ? Math.max(0, Math.floor((new Date(p.endDate).getTime() - new Date(p.startDate).getTime()) / 86400000) + 1)
+                : null;
+              const isValid = p.startDate && p.endDate && new Date(p.endDate) >= new Date(p.startDate);
+              return (
+                <div key={i} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-center">
+                  <span className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                    {i + 1}
+                  </span>
+                  <Input
+                    type="date"
+                    value={p.startDate}
+                    onChange={(e) => updatePeriod(i, "startDate", e.target.value)}
+                  />
+                  <div className="space-y-0">
+                    <Input
+                      type="date"
+                      value={p.endDate}
+                      onChange={(e) => updatePeriod(i, "endDate", e.target.value)}
+                    />
+                    {days !== null && isValid && (
+                      <p className="text-[10px] text-muted-foreground mt-0.5 pl-1">{days.toLocaleString("ru-RU")} дн.</p>
+                    )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removePeriod(i)}
+                    className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                    disabled={periods.length <= 1}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <div className="space-y-1 flex-1">
-                  <Label className="text-xs">Конец</Label>
-                  <Input type="date" value={p.endDate} onChange={(e) => updatePeriod(i, "endDate", e.target.value)} />
-                </div>
-                <Button variant="ghost" size="icon" onClick={() => removePeriod(i)} className="shrink-0" disabled={periods.length <= 1}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader><CardTitle>Страховой стаж</CardTitle></CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-primary">
-                {result.totalYears} л. {result.totalMonths} мес. {result.totalDays} дн.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader><CardTitle>Оплата больничного</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span>Процент</span>
-                <Badge variant={result.sickPayPercent === 100 ? "default" : "outline"}>{result.sickPayPercent}%</Badge>
+        {/* Results */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base">Результат</CardTitle>
+              <CopyButton
+                value={`Страховой стаж: ${result.totalYears} л. ${result.totalMonths} мес. ${result.totalDays} дн.\nОплата больничного: ${result.sickPayPercent}%\n${result.sickPayDescription}`}
+                label="Скопировать"
+              />
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {/* Hero */}
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+              <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
+                <Briefcase className="h-5 w-5 text-primary" />
               </div>
-              <p className="text-muted-foreground text-xs">{result.sickPayDescription}</p>
-            </CardContent>
-          </Card>
-        </div>
+              <div>
+                <p className="text-xs text-muted-foreground mb-0.5">Общий страховой стаж</p>
+                <p className="text-3xl font-bold tracking-tight tabular-nums">
+                  {result.totalYears} л.{" "}
+                  <span className="text-2xl">{result.totalMonths} мес.</span>{" "}
+                  <span className="text-xl text-muted-foreground">{result.totalDays} дн.</span>
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Всего дней: {result.rawDays.toLocaleString("ru-RU")}
+                </p>
+              </div>
+            </div>
+
+            {/* Sick pay card */}
+            <div className={`rounded-lg border p-4 ${sickPayBg}`}>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-medium">Оплата больничного листа</p>
+                <Badge
+                  variant="outline"
+                  className={`text-base font-bold px-3 py-1 border-current ${sickPayColor}`}
+                >
+                  {result.sickPayPercent}%
+                </Badge>
+              </div>
+              <p className={`text-sm font-medium ${sickPayColor}`}>{result.sickPayDescription}</p>
+            </div>
+
+            {/* Thresholds reference */}
+            <div className="space-y-1.5">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Шкала оплаты</p>
+              {[
+                { label: "менее 5 лет", pct: 60, active: result.sickPayPercent === 60 },
+                { label: "5 – 8 лет", pct: 80, active: result.sickPayPercent === 80 },
+                { label: "8 лет и более", pct: 100, active: result.sickPayPercent === 100 },
+              ].map(({ label, pct, active }) => (
+                <div
+                  key={pct}
+                  className={`flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors ${active ? "bg-primary/5 border border-primary/15 font-medium" : "text-muted-foreground"}`}
+                >
+                  <span>{label}</span>
+                  <span className={active ? "text-primary font-bold" : ""}>{pct}%</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Info */}
+        <Card>
+          <CardContent className="py-4 text-sm text-muted-foreground leading-relaxed space-y-2">
+            <p>
+              <strong className="text-foreground">Страховой стаж</strong> — суммарная продолжительность периодов работы и иной деятельности, в течение которых уплачивались взносы в ФСС.
+            </p>
+            <p>
+              Процент оплаты больничного определяется по <strong className="text-foreground">ст. 7 Федерального закона №255-ФЗ</strong>.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </CalculatorLayout>
   );
