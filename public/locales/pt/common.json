@@ -301,16 +301,16 @@
         "monthlyPayment": "Pagamento mensal",
         "overpayment": "Juros totais"
       },
-      "goToResults": "Go to results",
+      "goToResults": "Ver resultados",
       "mainParamsLabel": "Parâmetros principais",
       "inputHint": "O resultado atualiza automaticamente ao alterar os dados.",
-      "quickSummary": "Key metrics",
-      "analysisTitle": "Calculation details",
-      "eventsTimeline": "Loan events",
+      "quickSummary": "Indicadores principais",
+      "analysisTitle": "Detalhes do cálculo",
+      "eventsTimeline": "Eventos do empréstimo",
       "tabs": {
-        "table": "Table",
-        "charts": "Charts",
-        "analytics": "Analytics"
+        "table": "Tabela",
+        "charts": "Gráficos",
+        "analytics": "Análise"
       },
       "issueDateHint": "Data de liberação do empréstimo. Usada para o primeiro período de juros.",
       "paymentParamsTitle": "Tipo de pagamento e cronograma",
@@ -348,12 +348,12 @@
       },
       "kpi": {
         "overpaymentWithoutEarly": "Juros sem amortização antecipada",
-        "totalInterest": "Overpayment",
+        "totalInterest": "Sobrecusto total",
         "totalPayment": "Pagamento total",
         "savings": "Economia",
         "termReductionMonths": "Redução do prazo",
         "termMonths": "Prazo (meses)",
-        "effectiveRate": "Effective load",
+        "effectiveRate": "Carga efetiva",
         "overpaymentPercent": "Juros adicionais, %"
       },
       "summary": {

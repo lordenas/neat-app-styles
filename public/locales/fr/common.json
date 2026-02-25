@@ -392,16 +392,16 @@
         "monthlyPayment": "Paiement mensuel",
         "overpayment": "Intérêts totaux"
       },
-      "goToResults": "Go to results",
+      "goToResults": "Voir les résultats",
       "mainParamsLabel": "Paramètres principaux",
       "inputHint": "Le résultat se met à jour automatiquement lorsque vous modifiez les données.",
-      "quickSummary": "Key metrics",
-      "analysisTitle": "Calculation details",
-      "eventsTimeline": "Loan events",
+      "quickSummary": "Indicateurs clés",
+      "analysisTitle": "Détails du calcul",
+      "eventsTimeline": "Événements du prêt",
       "tabs": {
-        "table": "Table",
-        "charts": "Charts",
-        "analytics": "Analytics"
+        "table": "Tableau",
+        "charts": "Graphiques",
+        "analytics": "Analyse"
       },
       "issueDateHint": "Date de déblocage du prêt. Utilisée pour la première période d'intérêts.",
       "paymentParamsTitle": "Type de paiement et échéancier",
@@ -439,12 +439,12 @@
       },
       "kpi": {
         "overpaymentWithoutEarly": "Intérêts sans anticipé",
-        "totalInterest": "Overpayment",
+        "totalInterest": "Surcoût total",
         "totalPayment": "Total des paiements",
         "savings": "Économie",
         "termReductionMonths": "Réduction de durée",
         "termMonths": "Durée (mois)",
-        "effectiveRate": "Effective load",
+        "effectiveRate": "Charge effective",
         "overpaymentPercent": "Surcoût, %"
       },
       "summary": {
