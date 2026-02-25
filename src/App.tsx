@@ -22,6 +22,7 @@ const Partners = lazy(() => import("./pages/Partners"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Compare = lazy(() => import("./pages/Compare"));
+const Categories = lazy(() => import("./pages/Categories"));
 const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -85,6 +86,7 @@ const App = () => (
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/showcase" element={<Showcase />} />
                   <Route path="/compare" element={<Compare />} />
+                  <Route path="/categories" element={<Categories />} />
                   <Route path="/shared/:token" element={<SharedCalculation />} />
                   {/* Calculator pages */}
                   <Route path="/vat" element={<VatCalculator />} />
