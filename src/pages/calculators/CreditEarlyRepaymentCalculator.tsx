@@ -388,7 +388,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
     <CalculatorLayout
       calculatorId="credit-early-repayment"
       categoryName={t("category.finance")}
-      categoryPath="/#categories"
+      categoryPath="/categories/finance"
       title={
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">

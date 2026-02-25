@@ -22,7 +22,7 @@ export default function TransportTaxCalculator() {
   const result = calcTransportTax(input);
 
   return (
-    <CalculatorLayout calculatorId="transport-tax" categoryName="Автомобильные" categoryPath="/#automotive">
+    <CalculatorLayout calculatorId="transport-tax" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="grid lg:grid-cols-[1fr_340px] gap-6">
         <Card>
           <CardHeader><CardTitle>Параметры</CardTitle></CardHeader>

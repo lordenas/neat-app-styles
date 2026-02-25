@@ -47,7 +47,7 @@ export default function PenaltyContractCalculatorPage() {
   }, [sum, startDate, endDate, workdaysOnly, rateType, rateValue]);
 
   return (
-    <CalculatorLayout calculatorId="penalty-contract" categoryName="Налоги" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="penalty-contract" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Неустойка по договору</h1>

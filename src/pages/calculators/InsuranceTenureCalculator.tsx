@@ -26,7 +26,7 @@ export default function InsuranceTenureCalculator() {
   const result = calcInsuranceTenure(validPeriods);
 
   return (
-    <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/#salary">
+    <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/categories/salary">
       <div className="grid lg:grid-cols-[1fr_340px] gap-6">
         <Card>
           <CardHeader>

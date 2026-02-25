@@ -58,7 +58,7 @@ export default function VatCalculatorPage() {
   );
 
   return (
-    <CalculatorLayout calculatorId="vat" categoryName="Налоги" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="vat" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">

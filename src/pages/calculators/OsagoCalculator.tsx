@@ -39,7 +39,7 @@ export default function OsagoCalculator() {
   const result = calcOsago(input);
 
   return (
-    <CalculatorLayout calculatorId="osago" categoryName="Автомобильные" categoryPath="/#automotive">
+    <CalculatorLayout calculatorId="osago" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="grid lg:grid-cols-[1fr_340px] gap-6">
         <Card>
           <CardHeader><CardTitle>Параметры</CardTitle></CardHeader>

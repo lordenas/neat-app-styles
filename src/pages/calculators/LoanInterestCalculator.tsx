@@ -36,7 +36,7 @@ export default function LoanInterestCalculatorPage() {
   }, [principal, startDate, endDate, initialRate, payouts, debtIncreases]);
 
   return (
-    <CalculatorLayout calculatorId="loan-interest" categoryName="Финансы" categoryPath="/#categories">
+    <CalculatorLayout calculatorId="loan-interest" categoryName="Финансы" categoryPath="/categories/finance">
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Проценты по займу (ст. 809 ГК)</h1>
