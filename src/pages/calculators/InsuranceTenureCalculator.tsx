@@ -81,12 +81,15 @@ export default function InsuranceTenureCalculator() {
                   <span className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
                     {i + 1}
                   </span>
-                  <Input
-                    type="date"
-                    value={p.startDate}
-                    onChange={(e) => updatePeriod(i, "startDate", e.target.value)}
-                  />
-                  <div className="relative">
+                  <div>
+                    <Input
+                      type="date"
+                      value={p.startDate}
+                      onChange={(e) => updatePeriod(i, "startDate", e.target.value)}
+                    />
+                    <p className="h-3" />
+                  </div>
+                  <div>
                     <Input
                       type="date"
                       value={p.endDate}
