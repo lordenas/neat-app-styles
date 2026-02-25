@@ -243,7 +243,7 @@ const Index = () => {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredCalcs.map((calc) => (
                   <Link key={calc.id} to={calc.path ?? "/"} className="group">
-                    <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer">
+                    <Card className="h-full transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer border-border-subtle">
                       <CardHeader className="pb-2">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">

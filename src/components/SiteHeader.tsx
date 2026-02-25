@@ -38,7 +38,7 @@ export function SiteHeader() {
   const unavailableLangs: string[] = [];
 
   return (
-    <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-border-subtle bg-card/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container max-w-6xl py-2.5 flex items-center justify-between gap-2">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
