@@ -50,6 +50,7 @@ const UnusedVacationCalculator = lazy(() => import("./pages/calculators/UnusedVa
 const InsuranceTenureCalculator = lazy(() => import("./pages/calculators/InsuranceTenureCalculator"));
 const SubsistenceMinimumCalculator = lazy(() => import("./pages/calculators/SubsistenceMinimumCalculator"));
 const AlimonyIndexationCalculator = lazy(() => import("./pages/calculators/AlimonyIndexationCalculator"));
+const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculator"));
 
 function PageSkeleton() {
   return (
@@ -110,6 +111,7 @@ const App = () => (
                   <Route path="/insurance-tenure" element={<InsuranceTenureCalculator />} />
                   <Route path="/subsistence-minimum" element={<SubsistenceMinimumCalculator />} />
                   <Route path="/alimony-indexation" element={<AlimonyIndexationCalculator />} />
+                  <Route path="/deposit" element={<DepositCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
