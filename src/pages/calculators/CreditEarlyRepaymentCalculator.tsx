@@ -629,7 +629,7 @@ export default function CreditEarlyRepaymentCalculatorPage() {
                         <Input
                           type="text" inputSize="sm" placeholder="Сумма" className="w-28"
                           value={ep.amount ? ep.amount.toLocaleString("ru-RU") : ""}
-                          error={ep.amount > loanAmount ? `Макс. ${loanAmount.toLocaleString("ru-RU")} ₽` : undefined}
+                          error={ep.amount > loanAmount ? `Макс. ${loanAmount.toLocaleString("ru-RU")} ₽` : ""}
                           onChange={(e) => {
                             const digits = e.target.value.replace(/\D/g, "");
                             updateEarlyPayment(ep.id, { amount: digits ? parseInt(digits) : 0 });
