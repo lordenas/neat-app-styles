@@ -45,6 +45,9 @@ const TransportTaxCalculator = lazy(() => import("./pages/calculators/TransportT
 const RastamozhkaCalculator = lazy(() => import("./pages/calculators/RastamozhkaCalculator"));
 const AutoLoanCalculator = lazy(() => import("./pages/calculators/AutoLoanCalculator"));
 const FuelConsumptionCalculator = lazy(() => import("./pages/calculators/FuelConsumptionCalculator"));
+const OtpusknyeCalculator = lazy(() => import("./pages/calculators/OtpusknyeCalculator"));
+const UnusedVacationCalculator = lazy(() => import("./pages/calculators/UnusedVacationCalculator"));
+const InsuranceTenureCalculator = lazy(() => import("./pages/calculators/InsuranceTenureCalculator"));
 
 function PageSkeleton() {
   return (
@@ -100,6 +103,9 @@ const App = () => (
                   <Route path="/rastamozhka-auto" element={<RastamozhkaCalculator />} />
                   <Route path="/auto-loan" element={<AutoLoanCalculator />} />
                   <Route path="/fuel-consumption" element={<FuelConsumptionCalculator />} />
+                  <Route path="/otpusknye" element={<OtpusknyeCalculator />} />
+                  <Route path="/unused-vacation" element={<UnusedVacationCalculator />} />
+                  <Route path="/insurance-tenure" element={<InsuranceTenureCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

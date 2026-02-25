@@ -18,3 +18,6 @@ export { calcTransportTax, type TransportTaxInput, type TransportTaxResult } fro
 export { calcRastamozhka, type RastamozhkaInput, type RastamozhkaResult } from "./rastamozhka";
 export { calcAutoLoan, type AutoLoanInput, type AutoLoanResult, type AutoLoanRow } from "./auto-loan";
 export { calcFuelConsumption, calcFuelNeeded, type FuelInput, type FuelResult } from "./fuel-consumption";
+export { calcOtpusknye, type OtpusknyeInput, type OtpusknyeResult, type ExcludedPeriod } from "./otpusknye";
+export { calcUnusedVacation, type UnusedVacationInput, type UnusedVacationResult } from "./unused-vacation";
+export { calcInsuranceTenure, type TenurePeriod, type InsuranceTenureResult } from "./insurance-tenure";
