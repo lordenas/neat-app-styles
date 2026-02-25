@@ -204,10 +204,8 @@ const Index = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {calcCategories.map((cat, i) => {
                 const calcs = calculatorsByCategory[cat.id] ?? [];
-                const firstWithPath = calcs.find((c) => c.path);
-                const link = firstWithPath?.path ?? "/";
                 return (
-                <Link key={cat.id} to={link} className="group" style={{ animationDelay: `${i * 60}ms` }}>
+                <Link key={cat.id} to={`/categories/${cat.id}`} className="group" style={{ animationDelay: `${i * 60}ms` }}>
                   <Card className="h-full transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer border-border">
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-3">
