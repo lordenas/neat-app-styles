@@ -29,6 +29,11 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
 const NdflCalculator = lazy(() => import("./pages/calculators/NdflCalculator"));
 const PeniCalculator = lazy(() => import("./pages/calculators/PeniCalculator"));
+const Gk395Calculator = lazy(() => import("./pages/calculators/Gk395Calculator"));
+const PenaltyContractCalculator = lazy(() => import("./pages/calculators/PenaltyContractCalculator"));
+const PenaltyDduCalculator = lazy(() => import("./pages/calculators/PenaltyDduCalculator"));
+const PropertyDeductionCalculator = lazy(() => import("./pages/calculators/PropertyDeductionCalculator"));
+const PropertySaleTaxCalculator = lazy(() => import("./pages/calculators/PropertySaleTaxCalculator"));
 
 function PageSkeleton() {
   return (
@@ -68,6 +73,11 @@ const App = () => (
                   <Route path="/vat" element={<VatCalculator />} />
                   <Route path="/ndfl" element={<NdflCalculator />} />
                   <Route path="/peni" element={<PeniCalculator />} />
+                  <Route path="/gk395" element={<Gk395Calculator />} />
+                  <Route path="/penalty-contract" element={<PenaltyContractCalculator />} />
+                  <Route path="/penalty-ddu" element={<PenaltyDduCalculator />} />
+                  <Route path="/property-deduction" element={<PropertyDeductionCalculator />} />
+                  <Route path="/property-sale-tax" element={<PropertySaleTaxCalculator />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
