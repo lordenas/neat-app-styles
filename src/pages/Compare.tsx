@@ -37,6 +37,30 @@ interface CalcData {
   result: Record<string, unknown>;
 }
 
+const DEMO_DATA: CalcData[] = [
+  {
+    id: "demo-1",
+    title: "Ипотека Сбербанк 4%",
+    calculator_type: "credit",
+    parameters: { amount: "10 500 000 ₽", rate: "4%", term: "25 лет", type: "Аннуитетный" },
+    result: { monthlyPayment: "50 109 ₽", overpayment: "7 783 442 ₽", totalPayment: "18 283 442 ₽" },
+  },
+  {
+    id: "demo-2",
+    title: "Ипотека ВТБ 5.5%",
+    calculator_type: "credit",
+    parameters: { amount: "10 500 000 ₽", rate: "5.5%", term: "25 лет", type: "Аннуитетный" },
+    result: { monthlyPayment: "64 230 ₽", overpayment: "8 769 000 ₽", totalPayment: "19 269 000 ₽" },
+  },
+  {
+    id: "demo-3",
+    title: "Ипотека Альфа 6%",
+    calculator_type: "credit",
+    parameters: { amount: "10 500 000 ₽", rate: "6%", term: "20 лет", type: "Аннуитетный" },
+    result: { monthlyPayment: "75 220 ₽", overpayment: "7 552 800 ₽", totalPayment: "18 052 800 ₽" },
+  },
+];
+
 export default function Compare() {
   const [searchParams] = useSearchParams();
   const ids = searchParams.get("ids")?.split(",").filter(Boolean) || [];
@@ -44,18 +68,23 @@ export default function Compare() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (ids.length === 0) { setLoading(false); return; }
+    if (ids.length === 0) {
+      // No IDs — show demo data
+      setCalculations(DEMO_DATA);
+      setLoading(false);
+      return;
+    }
     supabase
       .from("saved_calculations")
       .select("id, title, calculator_type, parameters, result")
       .in("id", ids)
       .then(({ data }) => {
-        setCalculations((data as CalcData[]) || []);
+        const result = (data as CalcData[]) || [];
+        setCalculations(result.length > 0 ? result : DEMO_DATA);
         setLoading(false);
       });
   }, [searchParams]);
 
-  // Collect all unique keys from params and results
   const allParamKeys = [...new Set(calculations.flatMap((c) => Object.keys(c.parameters)))];
   const allResultKeys = [...new Set(calculations.flatMap((c) => Object.keys(c.result)))];
 
@@ -65,9 +94,11 @@ export default function Compare() {
       <SiteHeader />
       <main className="min-h-screen bg-background py-10">
         <div className="container max-w-4xl space-y-6">
-          <Button asChild variant="ghost" size="sm" className="gap-1.5">
-            <Link to="/dashboard"><ArrowLeft className="h-4 w-4" /> Назад</Link>
-          </Button>
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm" className="gap-1.5">
+              <ArrowLeft className="h-4 w-4" /> Назад
+            </Button>
+          </Link>
 
           <div className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5 text-primary" />
@@ -76,17 +107,11 @@ export default function Compare() {
 
           {loading ? (
             <p className="text-muted-foreground text-center py-10">Загрузка...</p>
-          ) : calculations.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground">Расчёты не найдены. Выберите расчёты в личном кабинете.</p>
-              </CardContent>
-            </Card>
           ) : (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">
-                  {calculations.length} расчёт{calculations.length > 1 ? "а" : ""}
+                  {calculations.length} расчёт{calculations.length === 1 ? "" : calculations.length < 5 ? "а" : "ов"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="overflow-x-auto">
