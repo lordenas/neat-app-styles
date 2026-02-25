@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,7 @@ const fmt = (v: number) =>
 type RepaymentMode = "reduce_term" | "reduce_payment";
 
 export default function CreditEarlyRepaymentCalculatorPage() {
+  const { t } = useTranslation();
   const [loanAmount, setLoanAmount] = useState(5_000_000);
   const [annualRate, setAnnualRate] = useState(18);
   const [termYears, setTermYears] = useState(15);
@@ -24,14 +26,11 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   const withEarlyResult = useMemo(() => {
     const newPrincipal = Math.max(0, loanAmount - earlyAmount);
     if (mode === "reduce_payment") {
-      // Same term, smaller principal
       return calculateMortgage(newPrincipal + earlyAmount, earlyAmount, annualRate, termYears);
     } else {
-      // Reduce term: find term where monthly payment stays the same
       const targetPayment = baseResult.monthlyPayment;
       const r = annualRate / 100 / 12;
       if (r <= 0 || newPrincipal <= 0) return calculateMortgage(newPrincipal + earlyAmount, earlyAmount, annualRate, termYears);
-      // n = -log(1 - P*r/M) / log(1+r)
       const val = 1 - (newPrincipal * r) / targetPayment;
       if (val <= 0) return calculateMortgage(newPrincipal + earlyAmount, earlyAmount, annualRate, termYears);
       const newTermMonths = Math.ceil(-Math.log(val) / Math.log(1 + r));
@@ -49,8 +48,8 @@ export default function CreditEarlyRepaymentCalculatorPage() {
     <CalculatorLayout calculatorId="credit-early-repayment" categoryName="Финансы" categoryPath="/#categories">
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Досрочное погашение кредита</h1>
-          <p className="text-muted-foreground mt-1">Расчёт экономии при досрочном частичном погашении кредита</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calc.creditEarlyRepayment.title")}</h1>
+          <p className="text-muted-foreground mt-1">{t("calc.creditEarlyRepayment.description")}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
