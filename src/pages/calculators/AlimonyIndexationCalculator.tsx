@@ -125,8 +125,8 @@ export default function AlimonyIndexationCalculator() {
                   isEqual
                     ? "bg-muted/50 border border-border"
                     : isGrowth
-                    ? "bg-[hsl(var(--success)/0.08)] border-[hsl(var(--success)/0.2)]"
-                    : "bg-destructive/8 border-destructive/15"
+                    ? "bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)]"
+                    : "bg-destructive/8 dark:bg-destructive/[0.05] border-destructive/15 dark:border-destructive/10"
                 }`}
               >
                 <p className="text-xs text-muted-foreground mb-1">Изменение</p>
