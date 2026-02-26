@@ -19,17 +19,37 @@ import { cn } from "@/lib/utils";
 
 const fmt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v));
 
-const CATEGORIES: { value: VehicleCategory; label: string; icon: string }[] = [
-  { value: "B",        label: "Легковой (B)",                    icon: "🚗" },
-  { value: "A",        label: "Мотоцикл (A)",                    icon: "🏍️" },
-  { value: "C",        label: "Грузовой до 16 т (C)",            icon: "🚛" },
-  { value: "C_heavy",  label: "Грузовой свыше 16 т (C)",         icon: "🚚" },
-  { value: "D",        label: "Автобус >16 мест (D)",            icon: "🚌" },
-  { value: "D_small",  label: "Автобус ≤16 мест (D)",            icon: "🚐" },
-  { value: "D_regular",label: "Автобус регулярные (D)",          icon: "🚍" },
-  { value: "taxi",     label: "Такси",                            icon: "🚕" },
-  { value: "tractor",  label: "Трактор / спецтехника",           icon: "🚜" },
-  { value: "trolleybus",label: "Троллейбус",                     icon: "🚎" },
+const CATEGORY_GROUPS: { label: string; items: { value: VehicleCategory; label: string; icon: string; short: string }[] }[] = [
+  {
+    label: "Легковые и мото",
+    items: [
+      { value: "B",   label: "Легковой",        short: "B",      icon: "🚗" },
+      { value: "A",   label: "Мотоцикл",        short: "A/M",    icon: "🏍️" },
+      { value: "taxi",label: "Такси",            short: "Такси",  icon: "🚕" },
+    ],
+  },
+  {
+    label: "Грузовые",
+    items: [
+      { value: "C",       label: "до 16 т",    short: "C",       icon: "🚛" },
+      { value: "C_heavy", label: "свыше 16 т", short: "C тяж.",  icon: "🚚" },
+    ],
+  },
+  {
+    label: "Автобусы",
+    items: [
+      { value: "D",        label: ">16 мест",         short: "D",      icon: "🚌" },
+      { value: "D_small",  label: "≤16 мест",         short: "D мал.", icon: "🚐" },
+      { value: "D_regular",label: "Регулярные",        short: "D рег.", icon: "🚍" },
+    ],
+  },
+  {
+    label: "Спецтехника",
+    items: [
+      { value: "tractor",    label: "Трактор / спецтехника", short: "Трактор",   icon: "🚜" },
+      { value: "trolleybus", label: "Троллейбус",             short: "Троллейб.", icon: "🚎" },
+    ],
+  },
 ];
 
 const HP_PRESETS = [70, 100, 120, 150, 200];
@@ -182,27 +202,47 @@ export default function OsagoCalculator() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="space-y-1.5">
+            <div className="space-y-3">
               <Label>Категория ТС</Label>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((c) => (
-                  <button key={c.value} onClick={() => handleCategoryChange(c.value)}
-                    className={cn(
-                      "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-all",
-                      category === c.value
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                    )}>
-                    <span>{c.icon}</span> {c.label}
-                  </button>
+              <div className="space-y-3">
+                {CATEGORY_GROUPS.map((group) => (
+                  <div key={group.label}>
+                    <p className="text-xs text-muted-foreground font-medium mb-1.5 uppercase tracking-wide">{group.label}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {group.items.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => handleCategoryChange(c.value)}
+                          className={cn(
+                            "flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-all",
+                            category === c.value
+                              ? "border-primary bg-primary/10 text-primary shadow-sm"
+                              : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:bg-muted/50"
+                          )}>
+                          <span className="text-base leading-none">{c.icon}</span>
+                          <span>{c.label}</span>
+                          {category === c.value && (
+                            <span className="text-xs bg-primary/20 text-primary rounded px-1 font-bold">{c.short}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2">
+            {/* Базовый тариф */}
+            <div className="rounded-xl border border-border bg-muted/20 p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <Label>Базовый тариф (в коридоре ЦБ)</Label>
-                <span className="text-sm font-semibold tabular-nums">{fmt(activeTariff)} ₽</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-bold tabular-nums text-primary">{fmt(activeTariff)} ₽</span>
+                  {customBaseTariff !== null && (
+                    <button onClick={() => setCustomBaseTariff(null)}
+                      className="text-xs text-muted-foreground hover:text-foreground underline">сброс</button>
+                  )}
+                </div>
               </div>
               <Slider
                 min={corridorMin} max={corridorMax} step={1}
@@ -210,23 +250,43 @@ export default function OsagoCalculator() {
                 onValueChange={([v]) => setCustomBaseTariff(v)}
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Мин: {fmt(corridorMin)} ₽</span>
-                <button onClick={() => setCustomBaseTariff(midTariff)} className="text-primary hover:underline text-xs">
-                  Сбросить к середине
+              {/* Corridor progress indicator */}
+              <div className="relative h-1.5 rounded-full bg-muted overflow-hidden -mt-1">
+                <div className="absolute inset-y-0 left-0 bg-primary/30 rounded-full"
+                  style={{ width: `${((activeTariff - corridorMin) / (corridorMax - corridorMin)) * 100}%` }} />
+              </div>
+              <div className="grid grid-cols-3 text-xs text-muted-foreground">
+                <button onClick={() => setCustomBaseTariff(corridorMin)}
+                  className="text-left hover:text-primary transition-colors">
+                  <span className="block font-medium">Мин</span>
+                  <span>{fmt(corridorMin)} ₽</span>
                 </button>
-                <span>Макс: {fmt(corridorMax)} ₽</span>
+                <button onClick={() => setCustomBaseTariff(midTariff)}
+                  className="text-center hover:text-primary transition-colors">
+                  <span className="block font-medium">Середина</span>
+                  <span>{fmt(midTariff)} ₽</span>
+                </button>
+                <button onClick={() => setCustomBaseTariff(corridorMax)}
+                  className="text-right hover:text-primary transition-colors">
+                  <span className="block font-medium">Макс</span>
+                  <span>{fmt(corridorMax)} ₽</span>
+                </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Регион и мощность */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Регион</Label>
                 <Select value={regionCode} onValueChange={setRegionCode}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {POPULAR_REGIONS.map((c) => (
-                      <SelectItem key={c} value={c}>{REGION_NAMES[c] ?? c} ({c})</SelectItem>
+                      <SelectItem key={c} value={c}>{REGION_NAMES[c] ?? c} (КТ {({
+                        "77":1.9,"78":1.72,"50":1.63,"16":1.95,"23":1.43,"52":1.55,"54":1.54,
+                        "61":1.43,"63":1.54,"66":1.72,"74":1.68,"24":1.43,"25":1.43,"34":1.32,
+                        "72":1.55,"55":1.43,"59":1.43
+                      } as Record<string,number>)[c] ?? "–"})</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -249,17 +309,33 @@ export default function OsagoCalculator() {
                   </div>
                 </div>
               )}
+            </div>
 
-              <div className="space-y-1.5">
+            {/* Период использования */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Период использования</Label>
-                <Select value={String(usagePeriod)} onValueChange={(v) => setUsagePeriod(+v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => (
-                      <SelectItem key={m} value={String(m)}>{m} мес.</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <span className="text-xs text-muted-foreground">КС = {ks}</span>
+              </div>
+              <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5">
+                {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
+                  const ksVal = m <= 3 ? 0.5 : m === 4 ? 0.6 : m === 5 ? 0.65 : m === 6 ? 0.7 :
+                    m === 7 ? 0.8 : m === 8 ? 0.9 : m === 9 ? 0.95 : 1.0;
+                  return (
+                    <button key={m} onClick={() => setUsagePeriod(m)}
+                      className={cn(
+                        "flex flex-col items-center rounded-lg border py-2 px-1 text-xs font-medium transition-all",
+                        usagePeriod === m
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                      )}>
+                      <span className="font-bold">{m}</span>
+                      <span className={cn("text-[10px]", ksVal < 1 ? "text-[hsl(var(--success))]" : "text-muted-foreground")}>
+                        {ksVal < 1 ? `×${ksVal}` : "×1"}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
