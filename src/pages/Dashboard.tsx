@@ -203,7 +203,6 @@ export default function Dashboard() {
               <div className="grid gap-3">
                 {calculations.map((calc) => {
                   const isSelected = selected.has(calc.id);
-                  const firstSelectedType = selectedCalcs[0]?.calculator_type;
                   const isTypeMismatch = isSelected && mixedTypes;
                   return (
                    <Card key={calc.id} className={`transition-shadow hover:shadow-md ${isSelected && !isTypeMismatch ? "ring-2 ring-primary/40" : ""} ${isTypeMismatch ? "ring-2 ring-[hsl(var(--warning)/0.5)]" : ""}`}>
