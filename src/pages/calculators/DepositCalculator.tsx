@@ -477,39 +477,39 @@ export default function DepositCalculator() {
               </div>
             </CardHeader>
             {showSchedule && (
-              <CardContent className="p-0">
+              <CardContent className="px-0 pb-2 pt-0">
                 <div className="max-h-[400px] overflow-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Дата</TableHead>
+                        <TableHead className="pl-4">Дата</TableHead>
                         <TableHead>Событие</TableHead>
                         <TableHead className="text-right">Сумма</TableHead>
                         <TableHead className="text-right">%</TableHead>
-                        <TableHead className="text-right">Баланс</TableHead>
+                        <TableHead className="text-right pr-4">Баланс</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {result.schedule.filter(r => r.eventType !== "end").map((r, i) => (
                         <TableRow key={i}>
-                          <TableCell className="text-xs tabular-nums">{fmtDate(r.date)}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{EVENT_LABELS[r.eventType] ?? r.label}</TableCell>
-                          <TableCell className={`text-right tabular-nums text-xs ${r.amountDelta > 0 ? "text-[hsl(var(--success))]" : r.amountDelta < 0 ? "text-destructive" : ""}`}>
+                          <TableCell className="text-xs tabular-nums pl-4 py-2">{fmtDate(r.date)}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground py-2">{EVENT_LABELS[r.eventType] ?? r.label}</TableCell>
+                          <TableCell className={`text-right tabular-nums text-xs py-2 ${r.amountDelta > 0 ? "text-[hsl(var(--success))]" : r.amountDelta < 0 ? "text-destructive" : ""}`}>
                             {r.amountDelta !== 0 ? `${r.amountDelta > 0 ? "+" : ""}${fmt(r.amountDelta)}` : "—"}
                           </TableCell>
-                          <TableCell className="text-right tabular-nums text-xs text-[hsl(var(--success))]">
+                          <TableCell className="text-right tabular-nums text-xs py-2 text-[hsl(var(--success))]">
                             {r.interestAccrued > 0 ? `+${fmt(r.interestAccrued)}` : "—"}
                           </TableCell>
-                          <TableCell className="text-right tabular-nums text-xs font-medium">{fmt(r.balance)}</TableCell>
+                          <TableCell className="text-right tabular-nums text-xs font-medium py-2 pr-4">{fmt(r.balance)}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                     <TableFooter>
                       <TableRow>
-                        <TableCell colSpan={2} className="font-semibold">Итого</TableCell>
+                        <TableCell colSpan={2} className="font-semibold pl-4">Итого</TableCell>
                         <TableCell className="text-right tabular-nums font-semibold text-[hsl(var(--success))]">+{fmt(result.totalInterest)}</TableCell>
                         <TableCell />
-                        <TableCell className="text-right tabular-nums font-semibold">{fmt(result.finalBalance)}</TableCell>
+                        <TableCell className="text-right tabular-nums font-semibold pr-4">{fmt(result.finalBalance)}</TableCell>
                       </TableRow>
                     </TableFooter>
                   </Table>
