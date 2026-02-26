@@ -238,7 +238,7 @@ export default function Gk395CalculatorPage() {
               <div className="space-y-5">
                 {/* Stat cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                  <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Сумма долга</p>
                     <p className="text-lg font-bold tabular-nums leading-tight">{fmt(finalBalance)} ₽</p>
                   </div>
