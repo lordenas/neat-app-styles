@@ -268,8 +268,8 @@ export default function DepositCalculator() {
         </Card>
 
         {/* Снятия */}
-        <Card className="border-destructive/40">
-          <CardHeader className="pb-3 border-b border-destructive/20">
+        <Card className="border-destructive/25 dark:border-destructive/15">
+          <CardHeader className="pb-3 border-b border-destructive/15 dark:border-destructive/10">
             <CardTitle className="text-base">Частичные снятия</CardTitle>
           </CardHeader>
           <CardContent className="pt-4 space-y-3">
