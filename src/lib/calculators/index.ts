@@ -23,4 +23,4 @@ export { calcUnusedVacation, type UnusedVacationInput, type UnusedVacationResult
 export { calcInsuranceTenure, type TenurePeriod, type InsuranceTenureResult } from "./insurance-tenure";
 export { calcSubsistenceMinimum, PM_REGIONS, PM_BY_REGION, type SubsistenceMinimumInput, type SubsistenceMinimumResult, type PmCategory } from "./subsistence-minimum";
 export { calcAlimonyIndexation, PM_CHILD_HISTORY, type AlimonyIndexationInput, type AlimonyIndexationResult } from "./alimony-indexation";
-export { calcDeposit, type DepositInput, type DepositResult, type DepositMonthRow, type CapitalizationType } from "./deposit";
+export { calcDeposit, calculateDeposit, type DepositInput, type DepositResult, type DepositScheduleRow, type DepositTaxRow, type CapitalizationType, type TermUnit, type CompoundFrequency, type PayoutFrequency, type OneTimeTopUp, type RegularTopUp, type OneTimeWithdrawal, type RegularWithdrawal } from "./deposit";
