@@ -194,7 +194,7 @@ export default function PropertySaleTaxCalculatorPage() {
             </div>
             <div className={cn(
               "rounded-xl border p-5 space-y-1 text-center",
-              result.noTax ? "border-[hsl(var(--success)/0.3)] bg-[hsl(var(--success)/0.08)]" : "border-destructive/30 bg-destructive/8"
+              result.noTax ? "border-[hsl(var(--success)/0.25)] dark:border-[hsl(var(--success)/0.15)] bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)]" : "border-destructive/25 dark:border-destructive/15 bg-destructive/8 dark:bg-destructive/[0.05]"
             )}>
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Налог (НДФЛ)</p>
               <p className={cn("text-2xl font-bold tabular-nums", result.noTax ? "text-[hsl(var(--success))]" : "text-destructive")}>
@@ -207,7 +207,7 @@ export default function PropertySaleTaxCalculatorPage() {
           {/* Status banner */}
           <div className={cn(
             "flex items-start gap-3 rounded-xl border px-4 py-3",
-            result.noTax ? "border-[hsl(var(--success)/0.2)] bg-[hsl(var(--success)/0.05)]" : "border-border bg-muted/20"
+            result.noTax ? "border-[hsl(var(--success)/0.18)] dark:border-[hsl(var(--success)/0.1)] bg-[hsl(var(--success)/0.05)] dark:bg-[hsl(var(--success)/0.03)]" : "border-border bg-muted/20"
           )}>
             {result.noTax
               ? <CheckCircle2 className="h-4 w-4 mt-0.5 text-[hsl(var(--success))] shrink-0" />

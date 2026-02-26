@@ -232,7 +232,7 @@ export default function PropertyDeductionCalculatorPage() {
                 <p className="text-2xl font-bold tabular-nums">{fmtInt(result.unusedDeduction)}</p>
                 <p className="text-xs text-muted-foreground">₽</p>
               </div>
-              <div className="rounded-xl border border-primary/30 bg-primary/8 p-5 space-y-1 text-center">
+              <div className="rounded-xl border border-primary/25 dark:border-primary/15 bg-primary/8 dark:bg-primary/[0.05] p-5 space-y-1 text-center">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Возврат НДФЛ (13%)</p>
                 <p className="text-2xl font-bold tabular-nums text-primary">+{fmt(result.taxToReturn)}</p>
                 <p className="text-xs text-muted-foreground">₽ максимум</p>

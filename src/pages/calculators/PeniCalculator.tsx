@@ -182,7 +182,7 @@ export default function PeniCalculatorPage() {
                 <p className="text-2xl font-bold tabular-nums">{fmtInt(debt)}</p>
                 <p className="text-xs text-muted-foreground">₽</p>
               </div>
-              <div className="rounded-xl border border-destructive/30 bg-destructive/8 p-5 space-y-1 text-center">
+              <div className="rounded-xl border border-destructive/25 dark:border-destructive/15 bg-destructive/8 dark:bg-destructive/[0.05] p-5 space-y-1 text-center">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   Пени за {result.totalDays} дн.
                 </p>

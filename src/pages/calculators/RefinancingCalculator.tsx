@@ -186,7 +186,9 @@ export default function RefinancingCalculatorPage() {
         {/* ── Hero result ── */}
         <div className={cn(
           "rounded-2xl border-2 p-6 flex flex-col sm:flex-row items-center gap-4 justify-between",
-          hasSavings ? "border-[hsl(var(--success)/0.4)] bg-[hsl(var(--success)/0.06)]" : "border-destructive/30 bg-destructive/4"
+          hasSavings
+            ? "border-[hsl(var(--success)/0.35)] dark:border-[hsl(var(--success)/0.2)] bg-[hsl(var(--success)/0.06)] dark:bg-[hsl(var(--success)/0.04)]"
+            : "border-destructive/25 dark:border-destructive/15 bg-destructive/4 dark:bg-destructive/[0.03]"
         )}>
           <div className="flex items-center gap-3">
             {hasSavings

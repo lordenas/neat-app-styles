@@ -243,16 +243,16 @@ export default function NdflCalculatorPage() {
                         <p className="text-xl font-bold tabular-nums">{fmt(result.gross)}</p>
                         <p className="text-xs text-muted-foreground">₽</p>
                       </div>
-                      <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-4 space-y-1">
+                      <div className="rounded-xl bg-destructive/10 dark:bg-destructive/[0.06] border border-destructive/20 dark:border-destructive/12 p-4 space-y-1">
                         <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
                           НДФЛ
                         </p>
                         <p className="text-xl font-bold tabular-nums text-destructive">−{fmt(result.tax)}</p>
-                        <Badge variant="outline" className="text-[10px] border-destructive/30 text-destructive">
+                        <Badge variant="outline" className="text-[10px] border-destructive/25 dark:border-destructive/15 text-destructive">
                           {result.effectiveRate}%
                         </Badge>
                       </div>
-                      <div className="rounded-xl bg-[hsl(var(--success)/0.1)] border border-[hsl(var(--success)/0.2)] p-4 space-y-1">
+                      <div className="rounded-xl bg-[hsl(var(--success)/0.1)] dark:bg-[hsl(var(--success)/0.06)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-4 space-y-1">
                         <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">На руки</p>
                         <p className="text-xl font-bold tabular-nums text-[hsl(var(--success))]">{fmt(result.net)}</p>
                         <p className="text-xs text-muted-foreground">₽</p>
