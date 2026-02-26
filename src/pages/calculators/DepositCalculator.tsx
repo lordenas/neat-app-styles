@@ -11,22 +11,38 @@ import {
   Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, PiggyBank } from "lucide-react";
+import { ChevronDown, PiggyBank, Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
-import { calcDeposit, type CapitalizationType } from "@/lib/calculators/deposit";
+import { calcDeposit, type CapitalizationType, type OneTimeTransaction } from "@/lib/calculators/deposit";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 
 const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
+// Current key rate from data
+const CURRENT_KEY_RATE = 21;
+
 export default function DepositCalculator() {
   const { t } = useTranslation();
+
+  // Base params
   const [initialAmount, setInitialAmount] = useState(1_000_000);
   const [annualRate, setAnnualRate] = useState(18);
   const [termMonths, setTermMonths] = useState(12);
   const [capitalization, setCapitalization] = useState<CapitalizationType>("monthly");
+
+  // Top-ups
   const [monthlyTopUp, setMonthlyTopUp] = useState(0);
+  const [oneTimeTopUps, setOneTimeTopUps] = useState<OneTimeTransaction[]>([]);
+
+  // Withdrawals
   const [monthlyWithdrawal, setMonthlyWithdrawal] = useState(0);
-  const [maxKeyRate, setMaxKeyRate] = useState(21);
+  const [oneTimeWithdrawals, setOneTimeWithdrawals] = useState<OneTimeTransaction[]>([]);
+
+  // Tax
+  const [maxKeyRate, setMaxKeyRate] = useState(CURRENT_KEY_RATE);
+  const [ndflRate, setNdflRate] = useState(13);
+
   const [showSchedule, setShowSchedule] = useState(false);
 
   const CAP_OPTIONS: { value: CapitalizationType; label: string }[] = [
@@ -37,9 +53,31 @@ export default function DepositCalculator() {
   ];
 
   const result = useMemo(
-    () => calcDeposit({ initialAmount, annualRate, termMonths, capitalization, monthlyTopUp, monthlyWithdrawal, maxKeyRate }),
-    [initialAmount, annualRate, termMonths, capitalization, monthlyTopUp, monthlyWithdrawal, maxKeyRate]
+    () => calcDeposit({
+      initialAmount, annualRate, termMonths, capitalization,
+      monthlyTopUp, monthlyWithdrawal, maxKeyRate, ndflRate,
+      oneTimeTopUps, oneTimeWithdrawals,
+    }),
+    [initialAmount, annualRate, termMonths, capitalization,
+     monthlyTopUp, monthlyWithdrawal, maxKeyRate, ndflRate,
+     oneTimeTopUps, oneTimeWithdrawals]
   );
+
+  // Helpers for one-time lists
+  const addOTTopUp = () => setOneTimeTopUps([...oneTimeTopUps, { month: 1, amount: 0 }]);
+  const removeOTTopUp = (i: number) => setOneTimeTopUps(oneTimeTopUps.filter((_, idx) => idx !== i));
+  const updateOTTopUp = (i: number, field: keyof OneTimeTransaction, val: number) => {
+    const copy = [...oneTimeTopUps]; copy[i] = { ...copy[i], [field]: val }; setOneTimeTopUps(copy);
+  };
+
+  const addOTWithdrawal = () => setOneTimeWithdrawals([...oneTimeWithdrawals, { month: 1, amount: 0 }]);
+  const removeOTWithdrawal = (i: number) => setOneTimeWithdrawals(oneTimeWithdrawals.filter((_, idx) => idx !== i));
+  const updateOTWithdrawal = (i: number, field: keyof OneTimeTransaction, val: number) => {
+    const copy = [...oneTimeWithdrawals]; copy[i] = { ...copy[i], [field]: val }; setOneTimeWithdrawals(copy);
+  };
+
+  const hasExtraTopUps = monthlyTopUp > 0 || oneTimeTopUps.length > 0;
+  const hasExtraWithdrawals = monthlyWithdrawal > 0 || oneTimeWithdrawals.length > 0;
 
   const title = (
     <div>
@@ -52,12 +90,12 @@ export default function DepositCalculator() {
     <CalculatorLayout calculatorId="deposit" categoryName="Финансовые" categoryPath="/categories/finance" title={title}>
       <div className="space-y-6">
 
-        {/* Params */}
+        {/* Base params */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">{t("calculator.inputTitle")}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-5">
+          <CardContent>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label htmlFor="amount">{t("calculator.deposit.initialAmount")}</Label>
@@ -86,7 +124,7 @@ export default function DepositCalculator() {
                   id="term"
                   type="number"
                   value={termMonths}
-                  onChange={(e) => setTermMonths(+e.target.value)}
+                  onChange={(e) => setTermMonths(Math.max(1, Math.min(360, +e.target.value)))}
                   min={1}
                   max={360}
                 />
@@ -103,50 +141,177 @@ export default function DepositCalculator() {
                 </Select>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Extra options */}
-            <div className="border-t border-border pt-4">
-              <Collapsible>
-                <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors [&[data-state=open]>svg]:rotate-180">
-                  <ChevronDown className="h-4 w-4 transition-transform duration-200" />
-                  {t("calculator.deposit.topUpWithdraw")}
-                </CollapsibleTrigger>
-                <CollapsibleContent className="pt-4">
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="topup">{t("calculator.deposit.monthlyTopUp")}</Label>
-                      <Input
-                        id="topup"
-                        type="text"
-                        inputMode="numeric"
-                        value={formatNumberInput(monthlyTopUp)}
-                        onChange={(e) => setMonthlyTopUp(Math.max(0, parseNumberInput(e.target.value)))}
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="withdraw">{t("calculator.deposit.monthlyWithdrawal")}</Label>
-                      <Input
-                        id="withdraw"
-                        type="text"
-                        inputMode="numeric"
-                        value={formatNumberInput(monthlyWithdrawal)}
-                        onChange={(e) => setMonthlyWithdrawal(Math.max(0, parseNumberInput(e.target.value)))}
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="keyrate">{t("calculator.deposit.maxKeyRate")}</Label>
-                      <Input
-                        id="keyrate"
-                        type="number"
-                        value={maxKeyRate}
-                        onChange={(e) => setMaxKeyRate(+e.target.value)}
-                        min={0}
-                        step={0.25}
-                      />
-                    </div>
+        {/* Top-ups */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-base">Пополнения</CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">Регулярные и разовые взносы</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Регулярное */}
+            <div className="space-y-1.5">
+              <Label htmlFor="topup">Регулярное пополнение (ежемесячно, ₽)</Label>
+              <Input
+                id="topup"
+                type="text"
+                inputMode="numeric"
+                value={formatNumberInput(monthlyTopUp)}
+                onChange={(e) => setMonthlyTopUp(Math.max(0, parseNumberInput(e.target.value)))}
+              />
+            </div>
+
+            {/* Разовые */}
+            <div className="border-t border-border pt-3 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Разовые пополнения</p>
+                <Button variant="outline" size="sm" onClick={addOTTopUp}>
+                  <Plus className="h-3.5 w-3.5 mr-1" />Добавить
+                </Button>
+              </div>
+              {oneTimeTopUps.length === 0 ? (
+                <p className="text-xs text-muted-foreground">Нет разовых пополнений</p>
+              ) : (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 px-0.5">
+                    <span className="text-xs text-muted-foreground">Месяц (1–{termMonths})</span>
+                    <span className="text-xs text-muted-foreground">Сумма, ₽</span>
+                    <span className="w-8" />
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
+                  {oneTimeTopUps.map((ot, i) => (
+                    <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                      <Input
+                        type="number"
+                        value={ot.month}
+                        min={1}
+                        max={termMonths}
+                        onChange={(e) => updateOTTopUp(i, "month", Math.min(termMonths, Math.max(1, +e.target.value)))}
+                      />
+                      <Input
+                        type="text"
+                        inputMode="numeric"
+                        value={formatNumberInput(ot.amount)}
+                        onChange={(e) => updateOTTopUp(i, "amount", Math.max(0, parseNumberInput(e.target.value)))}
+                      />
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => removeOTTopUp(i)}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Withdrawals */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div>
+              <CardTitle className="text-base">Частичные снятия</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">Регулярные и разовые снятия</p>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Регулярное */}
+            <div className="space-y-1.5">
+              <Label htmlFor="withdraw">Регулярное снятие (ежемесячно, ₽)</Label>
+              <Input
+                id="withdraw"
+                type="text"
+                inputMode="numeric"
+                value={formatNumberInput(monthlyWithdrawal)}
+                onChange={(e) => setMonthlyWithdrawal(Math.max(0, parseNumberInput(e.target.value)))}
+              />
+            </div>
+
+            {/* Разовые */}
+            <div className="border-t border-border pt-3 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">Разовые снятия</p>
+                <Button variant="outline" size="sm" onClick={addOTWithdrawal}>
+                  <Plus className="h-3.5 w-3.5 mr-1" />Добавить
+                </Button>
+              </div>
+              {oneTimeWithdrawals.length === 0 ? (
+                <p className="text-xs text-muted-foreground">Нет разовых снятий</p>
+              ) : (
+                <div className="space-y-2">
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 px-0.5">
+                    <span className="text-xs text-muted-foreground">Месяц (1–{termMonths})</span>
+                    <span className="text-xs text-muted-foreground">Сумма, ₽</span>
+                    <span className="w-8" />
+                  </div>
+                  {oneTimeWithdrawals.map((ot, i) => (
+                    <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
+                      <Input
+                        type="number"
+                        value={ot.month}
+                        min={1}
+                        max={termMonths}
+                        onChange={(e) => updateOTWithdrawal(i, "month", Math.min(termMonths, Math.max(1, +e.target.value)))}
+                      />
+                      <Input
+                        type="text"
+                        inputMode="numeric"
+                        value={formatNumberInput(ot.amount)}
+                        onChange={(e) => updateOTWithdrawal(i, "amount", Math.max(0, parseNumberInput(e.target.value)))}
+                      />
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => removeOTWithdrawal(i)}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tax */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div>
+              <CardTitle className="text-base">Налог</CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">НДФЛ с дохода по вкладам в РФ</p>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="keyrate">Ключевая ставка ЦБ, %</Label>
+                <Input
+                  id="keyrate"
+                  type="number"
+                  value={maxKeyRate}
+                  onChange={(e) => setMaxKeyRate(Math.max(0, +e.target.value))}
+                  min={0}
+                  step={0.25}
+                />
+                <p className="text-[11px] text-muted-foreground">Максимальная за год. Текущая: {CURRENT_KEY_RATE}%</p>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ndfl">Ставка НДФЛ, %</Label>
+                <Input
+                  id="ndfl"
+                  type="number"
+                  value={ndflRate}
+                  onChange={(e) => setNdflRate(Math.max(0, +e.target.value))}
+                  min={0}
+                  max={100}
+                  step={1}
+                />
+                <p className="text-[11px] text-muted-foreground">13% — резиденты, 30% — нерезиденты</p>
+              </div>
+            </div>
+            <div className="mt-4 rounded-lg bg-muted/30 border border-border px-3.5 py-3 text-xs text-muted-foreground">
+              Необлагаемый порог: 1 000 000 ₽ × {maxKeyRate}% = <span className="font-semibold text-foreground">{fmt(result.taxFreeThreshold)} ₽</span>
             </div>
           </CardContent>
         </Card>
@@ -157,7 +322,7 @@ export default function DepositCalculator() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">{t("calculator.deposit.totalToReceive")}</CardTitle>
               <CopyButton
-                value={`Итоговая сумма: ${fmt(result.finalAmount)} ₽\nПроценты: ${fmt(result.totalInterest)} ₽\nЧистый доход: ${fmt(result.netIncome)} ₽\nНДФЛ: ${fmt(result.tax)} ₽\nЭфф. ставка: ${result.effectiveRate}%`}
+                value={`Итоговая сумма: ${fmt(result.finalAmount)} ₽\nПроценты: ${fmt(result.totalInterest)} ₽\nЧистый доход: ${fmt(result.netIncome)} ₽\nНДФЛ ${ndflRate}%: ${fmt(result.tax)} ₽\nЭфф. ставка: ${result.effectiveRate}%`}
                 label="Скопировать"
               />
             </div>
@@ -188,7 +353,7 @@ export default function DepositCalculator() {
                 <p className="text-[10px] text-muted-foreground mt-0.5">эффективная ставка</p>
               </div>
               <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
-                <p className="text-xs text-muted-foreground mb-1">{t("calculator.deposit.ndfl13")}</p>
+                <p className="text-xs text-muted-foreground mb-1">НДФЛ {ndflRate}%</p>
                 <p className="text-base font-bold tabular-nums text-destructive">−{fmt(result.tax)} ₽</p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">налог с дохода</p>
               </div>
@@ -199,20 +364,45 @@ export default function DepositCalculator() {
               </div>
             </div>
 
-            {/* Tax threshold */}
+            {/* Tax detail */}
             <div className="rounded-lg bg-muted/30 border border-border p-3.5 space-y-2 text-sm">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Налог на доход по вкладу</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Детали налога</p>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">{t("calculator.deposit.taxFreeThreshold")}</span>
+                <span className="text-muted-foreground">Необлагаемый порог</span>
                 <span className="font-medium tabular-nums">{fmt(result.taxFreeThreshold)} ₽</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">{t("calculator.deposit.taxableIncome")}</span>
+                <span className="text-muted-foreground">Налогооблагаемый доход</span>
                 <span className={`font-medium tabular-nums ${result.taxableIncome > 0 ? "text-destructive" : ""}`}>
                   {fmt(result.taxableIncome)} ₽
                 </span>
               </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Налог ({ndflRate}%)</span>
+                <span className={`font-medium tabular-nums ${result.tax > 0 ? "text-destructive" : ""}`}>
+                  {fmt(result.tax)} ₽
+                </span>
+              </div>
             </div>
+
+            {/* Extra totals if applicable */}
+            {(hasExtraTopUps || hasExtraWithdrawals) && (
+              <div className="rounded-lg bg-muted/30 border border-border p-3.5 space-y-2 text-sm">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Движение средств</p>
+                {hasExtraTopUps && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Всего пополнений</span>
+                    <span className="font-medium tabular-nums text-[hsl(var(--success))]">+{fmt(result.totalTopUps)} ₽</span>
+                  </div>
+                )}
+                {hasExtraWithdrawals && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Всего снятий</span>
+                    <span className="font-medium tabular-nums text-destructive">−{fmt(result.totalWithdrawals)} ₽</span>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Formula */}
             <div className="rounded-md bg-muted/30 border border-border px-4 py-3 text-xs text-muted-foreground font-mono leading-relaxed">
@@ -240,33 +430,49 @@ export default function DepositCalculator() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t("calculator.deposit.month")}</TableHead>
-                      <TableHead className="text-right">{t("calculator.deposit.openBalance")}</TableHead>
-                      <TableHead className="text-right">{t("calculator.table.interest")}</TableHead>
-                      {monthlyTopUp > 0 && <TableHead className="text-right">{t("calculator.deposit.topUps")}</TableHead>}
-                      {monthlyWithdrawal > 0 && <TableHead className="text-right">{t("calculator.deposit.withdrawals")}</TableHead>}
-                      <TableHead className="text-right">{t("calculator.deposit.closeBalance")}</TableHead>
+                      <TableHead>Мес.</TableHead>
+                      <TableHead className="text-right">Начало</TableHead>
+                      <TableHead className="text-right">%</TableHead>
+                      {(monthlyTopUp > 0 || oneTimeTopUps.length > 0) && <TableHead className="text-right">Пополн.</TableHead>}
+                      {(monthlyWithdrawal > 0 || oneTimeWithdrawals.length > 0) && <TableHead className="text-right">Снятие</TableHead>}
+                      <TableHead className="text-right">Конец</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {result.schedule.map((r) => (
-                      <TableRow key={r.month}>
-                        <TableCell>{r.month}</TableCell>
-                        <TableCell className="text-right tabular-nums">{fmt(r.openBalance)}</TableCell>
-                        <TableCell className="text-right tabular-nums text-[hsl(var(--success))]">+{fmt(r.interest)}</TableCell>
-                        {monthlyTopUp > 0 && <TableCell className="text-right tabular-nums">{fmt(r.topUp)}</TableCell>}
-                        {monthlyWithdrawal > 0 && <TableCell className="text-right tabular-nums text-destructive">−{fmt(r.withdrawal)}</TableCell>}
-                        <TableCell className="text-right tabular-nums font-medium">{fmt(r.closeBalance)}</TableCell>
-                      </TableRow>
-                    ))}
+                    {result.schedule.map((r) => {
+                      const totalTopUp = r.topUp + r.oneTimeTopUp;
+                      const totalWithdrawal = r.withdrawal + r.oneTimeWithdrawal;
+                      return (
+                        <TableRow key={r.month}>
+                          <TableCell>{r.month}</TableCell>
+                          <TableCell className="text-right tabular-nums">{fmt(r.openBalance)}</TableCell>
+                          <TableCell className="text-right tabular-nums text-[hsl(var(--success))]">+{fmt(r.interest)}</TableCell>
+                          {(monthlyTopUp > 0 || oneTimeTopUps.length > 0) && (
+                            <TableCell className="text-right tabular-nums text-[hsl(var(--success))]">
+                              {totalTopUp > 0 ? `+${fmt(totalTopUp)}` : "—"}
+                            </TableCell>
+                          )}
+                          {(monthlyWithdrawal > 0 || oneTimeWithdrawals.length > 0) && (
+                            <TableCell className="text-right tabular-nums text-destructive">
+                              {totalWithdrawal > 0 ? `−${fmt(totalWithdrawal)}` : "—"}
+                            </TableCell>
+                          )}
+                          <TableCell className="text-right tabular-nums font-medium">{fmt(r.closeBalance)}</TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                   <TableFooter>
-                    <TableRow className="font-semibold bg-muted/30">
-                      <TableCell colSpan={2}>Итого</TableCell>
-                      <TableCell className="text-right tabular-nums text-[hsl(var(--success))]">+{fmt(result.totalInterest)}</TableCell>
-                      {monthlyTopUp > 0 && <TableCell className="text-right tabular-nums">{fmt(result.totalTopUps)}</TableCell>}
-                      {monthlyWithdrawal > 0 && <TableCell className="text-right tabular-nums text-destructive">−{fmt(result.totalWithdrawals)}</TableCell>}
-                      <TableCell className="text-right tabular-nums">{fmt(result.finalAmount)}</TableCell>
+                    <TableRow>
+                      <TableCell colSpan={2} className="font-semibold">Итого</TableCell>
+                      <TableCell className="text-right tabular-nums font-semibold text-[hsl(var(--success))]">+{fmt(result.totalInterest)}</TableCell>
+                      {(monthlyTopUp > 0 || oneTimeTopUps.length > 0) && (
+                        <TableCell className="text-right tabular-nums font-semibold">+{fmt(result.totalTopUps)}</TableCell>
+                      )}
+                      {(monthlyWithdrawal > 0 || oneTimeWithdrawals.length > 0) && (
+                        <TableCell className="text-right tabular-nums font-semibold text-destructive">−{fmt(result.totalWithdrawals)}</TableCell>
+                      )}
+                      <TableCell className="text-right tabular-nums font-semibold">{fmt(result.finalAmount)}</TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
@@ -279,10 +485,10 @@ export default function DepositCalculator() {
         <Card>
           <CardContent className="py-4 text-sm text-muted-foreground leading-relaxed space-y-2">
             <p>
-              <strong className="text-foreground">Необлагаемый порог</strong> — 1 000 000 ₽ × максимальная ключевая ставка ЦБ за год. Доход сверх этой суммы облагается НДФЛ 13%.
+              <strong className="text-foreground">Необлагаемый порог</strong> — 1 000 000 ₽ × максимальная ключевая ставка ЦБ за год. Доход сверх этой суммы облагается НДФЛ.
             </p>
             <p>
-              При <strong className="text-foreground">капитализации</strong> проценты добавляются к основному телу вклада, что увеличивает базу для следующих начислений.
+              При <strong className="text-foreground">капитализации</strong> проценты добавляются к основному телу вклада, увеличивая базу для следующих начислений.
             </p>
           </CardContent>
         </Card>
