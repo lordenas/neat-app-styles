@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { format, differenceInCalendarDays } from "date-fns";
 import { ru } from "date-fns/locale";
 import { CalendarIcon, Briefcase, Plus, Trash2 } from "lucide-react";
@@ -23,7 +23,7 @@ const fmtDate = (d: Date) => format(d, "dd.MM.yyyy", { locale: ru });
 function DatePicker({
   value,
   onChange,
-  placeholder = "Выберите дату",
+  placeholder = "ДД.ММ.ГГГГ",
   id,
 }: {
   value: Date | undefined;
@@ -32,29 +32,58 @@ function DatePicker({
   id?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [text, setText] = useState(value ? fmtDate(value) : "");
+
+  // sync text when value changes externally
+  const prevValue = value ? fmtDate(value) : "";
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let v = e.target.value.replace(/[^\d.]/g, "");
+    // auto-insert dots
+    if (v.length === 2 && text.length === 1) v = v + ".";
+    if (v.length === 5 && text.length === 4) v = v + ".";
+    if (v.length > 10) return;
+    setText(v);
+
+    if (v.length === 10) {
+      const [d, m, y] = v.split(".").map(Number);
+      const date = new Date(y, m - 1, d);
+      if (!isNaN(date.getTime()) && date.getFullYear() === y && date.getMonth() === m - 1 && date.getDate() === d) {
+        onChange(date);
+      }
+    }
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          id={id}
-          variant="outline"
-          className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? fmtDate(value) : placeholder}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={(d) => { onChange(d); setOpen(false); }}
-          locale={ru}
-          initialFocus
-          className="pointer-events-auto"
-        />
-      </PopoverContent>
-    </Popover>
+    <div className="flex gap-1">
+      <input
+        id={id}
+        type="text"
+        inputMode="numeric"
+        placeholder={placeholder}
+        value={text}
+        onChange={handleTextChange}
+        onBlur={() => { if (text !== prevValue) setText(prevValue); }}
+        className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      />
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="icon" className="shrink-0 h-9 w-9">
+            <CalendarIcon className="h-4 w-4" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="end">
+          <Calendar
+            mode="single"
+            selected={value}
+            onSelect={(d) => { onChange(d); if (d) setText(fmtDate(d)); setOpen(false); }}
+            locale={ru}
+            initialFocus
+            className="pointer-events-auto"
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }
 
