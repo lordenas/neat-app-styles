@@ -36,19 +36,11 @@ export default function PropertyDeductionCalculatorPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const result = useMemo(() => {
-    // Only include income years relevant to purchaseYear (max 3 years, up to CURRENT_YEAR - 1)
-    const relevantIncomeByYear: Record<number, number> = {};
-    if (purchaseYear < CURRENT_YEAR) {
-      const to = Math.min(purchaseYear + 2, CURRENT_YEAR - 1);
-      for (let y = purchaseYear; y <= to; y++) {
-        relevantIncomeByYear[y] = incomeByYear[y] ?? 0;
-      }
-    }
     return calcPropertyDeduction({
       propertyPrice, purchaseYear, usedPreviously,
       previousUsePeriod: usedPreviously ? previousUsePeriod : null,
       returnedAmount: usedPreviously && previousUsePeriod === "after_2014" ? returnedAmount : 0,
-      incomeByYear: relevantIncomeByYear,
+      incomeByYear,
     });
   }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, incomeByYear]);
 
@@ -120,33 +112,23 @@ export default function PropertyDeductionCalculatorPage() {
               </div>
             </div>
 
-            {/* Row 2: income by year (only when purchaseYear < CURRENT_YEAR) */}
-            {(() => {
-              const incomeYears: number[] = [];
-              if (purchaseYear < CURRENT_YEAR) {
-                const to = Math.min(purchaseYear + 2, CURRENT_YEAR - 1);
-                for (let y = purchaseYear; y <= to; y++) incomeYears.push(y);
-              }
-              if (incomeYears.length === 0) return null;
-              return (
-                <div className="space-y-1.5 border-t border-border pt-4">
-                  <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
-                  <div className="flex gap-3 flex-wrap">
-                    {incomeYears.map((y) => (
-                      <div key={y} className="space-y-1 w-36">
-                        <span className="text-xs text-muted-foreground">{y}</span>
-                        <Input
-                          type="text" inputMode="numeric"
-                          value={formatNumberInput(incomeByYear[y] ?? 0)}
-                          onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
-                          className="h-9 text-sm"
-                        />
-                      </div>
-                    ))}
+            {/* Row 2: income — always last 3 completed years */}
+            <div className="space-y-1.5 border-t border-border pt-4">
+              <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
+              <div className="flex gap-3 flex-wrap">
+                {[CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR - 0].map((y) => (
+                  <div key={y} className="space-y-1 w-36">
+                    <span className="text-xs text-muted-foreground">{y}</span>
+                    <Input
+                      type="text" inputMode="numeric"
+                      value={formatNumberInput(incomeByYear[y] ?? 0)}
+                      onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
+                      className="h-9 text-sm"
+                    />
                   </div>
-                </div>
-              );
-            })()}
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
