@@ -11,22 +11,22 @@ import {
   getKeyRateOnDate,
   daysBetween,
   calculateDailyPeni,
-  getPeniFraction,
-} from "@/lib/calculators/peni";
+  getPeniFraction } from
+"@/lib/calculators/peni";
 import keyRateData from "@/data/key-rate-ru.json";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { AlertTriangle, Building2, User, Receipt, Home, Briefcase } from "lucide-react";
 
-const CALC_TYPES: { id: PeniCalculationType; label: string; icon: React.ReactNode; desc: string }[] = [
-  { id: "tax", label: "Налоги и взносы", icon: <Receipt className="h-4 w-4" />, desc: "ст. 75 НК РФ" },
-  { id: "utilities", label: "ЖКХ", icon: <Home className="h-4 w-4" />, desc: "ЖК РФ" },
-  { id: "salary", label: "Задержка зарплаты", icon: <Briefcase className="h-4 w-4" />, desc: "ст. 236 ТК РФ" },
-];
+const CALC_TYPES: {id: PeniCalculationType;label: string;icon: React.ReactNode;desc: string;}[] = [
+{ id: "tax", label: "Налоги и взносы", icon: <Receipt className="h-4 w-4" />, desc: "ст. 75 НК РФ" },
+{ id: "utilities", label: "ЖКХ", icon: <Home className="h-4 w-4" />, desc: "ЖК РФ" },
+{ id: "salary", label: "Задержка зарплаты", icon: <Briefcase className="h-4 w-4" />, desc: "ст. 236 ТК РФ" }];
+
 
 const FRACTION_LABELS: Record<number, string> = {
   [1 / 300]: "1/300",
   [1 / 150]: "1/150",
-  [1 / 130]: "1/130",
+  [1 / 130]: "1/130"
 };
 
 export default function PeniCalculatorPage() {
@@ -34,7 +34,7 @@ export default function PeniCalculatorPage() {
   const [calcType, setCalcType] = useState<PeniCalculationType>("tax");
   const [payerType, setPayerType] = useState<TaxPayerType>("individual");
   const [dateFrom, setDateFrom] = useState(() => {
-    const d = new Date(); d.setMonth(d.getMonth() - 1); return d.toISOString().slice(0, 10);
+    const d = new Date();d.setMonth(d.getMonth() - 1);return d.toISOString().slice(0, 10);
   });
   const [dateTo, setDateTo] = useState(() => new Date().toISOString().slice(0, 10));
 
@@ -43,7 +43,7 @@ export default function PeniCalculatorPage() {
     const rates = keyRateData.rates;
     const totalDays = daysBetween(dateFrom, dateTo);
     let totalPeni = 0;
-    const breakdown: { dateFrom: string; dateTo: string; keyRate: number; fraction: number; dailyPeni: number; days: number }[] = [];
+    const breakdown: {dateFrom: string;dateTo: string;keyRate: number;fraction: number;dailyPeni: number;days: number;}[] = [];
 
     for (let i = 0; i < totalDays; i++) {
       const d = new Date(dateFrom);
@@ -66,7 +66,7 @@ export default function PeniCalculatorPage() {
     return {
       totalDays,
       totalPeni: Math.round(totalPeni * 100) / 100,
-      breakdown,
+      breakdown
     };
   }, [debt, calcType, payerType, dateFrom, dateTo]);
 
@@ -79,18 +79,18 @@ export default function PeniCalculatorPage() {
   const HOW_IT_WORKS: Record<PeniCalculationType, string> = {
     tax: "Физлица и ИП — 1/300 ключевой ставки за каждый день. Юрлица — первые 30 дней 1/300, далее 1/150.",
     utilities: "Первые 30 дней — без пеней. С 31 по 90 день — 1/300 ключевой ставки. С 91 дня — 1/130.",
-    salary: "1/150 ключевой ставки за каждый день задержки с первого дня просрочки.",
+    salary: "1/150 ключевой ставки за каждый день задержки с первого дня просрочки."
   };
 
   return (
     <CalculatorLayout calculatorId="peni" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор пеней</h1>
-          <p className="text-muted-foreground mt-1">
-            Расчёт пеней по налогам, ЖКХ и задержке зарплаты по ключевой ставке ЦБ РФ
-          </p>
-        </div>
+        
+
+
+
+
+
 
         {/* ── Parameters bar ── */}
         <Card>
@@ -105,8 +105,8 @@ export default function PeniCalculatorPage() {
                   inputMode="numeric"
                   value={formatNumberInput(debt)}
                   onChange={(e) => setDebt(Math.max(0, parseNumberInput(e.target.value)))}
-                  className="text-base font-semibold tabular-nums h-10"
-                />
+                  className="text-base font-semibold tabular-nums h-10" />
+
               </div>
 
               {/* Date from */}
@@ -126,21 +126,21 @@ export default function PeniCalculatorPage() {
 
         {/* ── Calc type ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {CALC_TYPES.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setCalcType(t.id)}
-              className={cn(
-                "flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
-                calcType === t.id
-                  ? "border-primary bg-primary/8 shadow-sm"
-                  : "border-border hover:border-primary/40 hover:bg-muted/30"
-              )}
-            >
+          {CALC_TYPES.map((t) =>
+          <button
+            key={t.id}
+            onClick={() => setCalcType(t.id)}
+            className={cn(
+              "flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
+              calcType === t.id ?
+              "border-primary bg-primary/8 shadow-sm" :
+              "border-border hover:border-primary/40 hover:bg-muted/30"
+            )}>
+
               <div className={cn(
-                "mt-0.5 rounded-md p-1.5",
-                calcType === t.id ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
-              )}>
+              "mt-0.5 rounded-md p-1.5",
+              calcType === t.id ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+            )}>
                 {t.icon}
               </div>
               <div>
@@ -148,33 +148,33 @@ export default function PeniCalculatorPage() {
                 <p className="text-xs text-muted-foreground">{t.desc}</p>
               </div>
             </button>
-          ))}
+          )}
         </div>
 
         {/* Payer type (tax only) */}
-        {calcType === "tax" && (
-          <div className="flex items-center gap-2 flex-wrap">
+        {calcType === "tax" &&
+        <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm text-muted-foreground">Плательщик:</span>
-            {([["individual", "Физлицо / ИП", <User className="h-3.5 w-3.5" />], ["legal", "Юрлицо", <Building2 className="h-3.5 w-3.5" />]] as const).map(([id, label, icon]) => (
-              <button
-                key={id}
-                onClick={() => setPayerType(id)}
-                className={cn(
-                  "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-all",
-                  payerType === id
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                )}
-              >
+            {([["individual", "Физлицо / ИП", <User className="h-3.5 w-3.5" />], ["legal", "Юрлицо", <Building2 className="h-3.5 w-3.5" />]] as const).map(([id, label, icon]) =>
+          <button
+            key={id}
+            onClick={() => setPayerType(id)}
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm font-medium transition-all",
+              payerType === id ?
+              "border-primary bg-primary/10 text-primary" :
+              "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+            )}>
+
                 {icon}{label}
               </button>
-            ))}
+          )}
           </div>
-        )}
+        }
 
         {/* ── Results ── */}
-        {result ? (
-          <div className="space-y-4">
+        {result ?
+        <div className="space-y-4">
             {/* Hero stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="rounded-xl border border-border bg-muted/30 p-5 space-y-1 text-center">
@@ -209,8 +209,8 @@ export default function PeniCalculatorPage() {
             </div>
 
             {/* Breakdown table */}
-            {result.breakdown.length > 0 && (
-              <Card>
+            {result.breakdown.length > 0 &&
+          <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base">Периоды расчёта</CardTitle>
                 </CardHeader>
@@ -227,8 +227,8 @@ export default function PeniCalculatorPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {result.breakdown.map((b, i) => (
-                        <tr key={i} className={cn("border-b border-border last:border-0", i % 2 === 1 && "bg-muted/10")}>
+                      {result.breakdown.map((b, i) =>
+                  <tr key={i} className={cn("border-b border-border last:border-0", i % 2 === 1 && "bg-muted/10")}>
                           <td className="px-4 py-2.5 tabular-nums text-muted-foreground text-xs whitespace-nowrap">
                             {b.dateFrom === b.dateTo ? b.dateFrom : `${b.dateFrom} — ${b.dateTo}`}
                           </td>
@@ -246,7 +246,7 @@ export default function PeniCalculatorPage() {
                             {b.fraction === 0 ? "—" : `${fmt(b.dailyPeni * b.days)} ₽`}
                           </td>
                         </tr>
-                      ))}
+                  )}
                     </tbody>
                     <tfoot>
                       <tr className="border-t border-border bg-muted/20">
@@ -257,16 +257,16 @@ export default function PeniCalculatorPage() {
                   </table>
                 </CardContent>
               </Card>
-            )}
-          </div>
-        ) : (
-          <Card>
+          }
+          </div> :
+
+        <Card>
             <CardContent className="py-10 flex flex-col items-center gap-2 text-center">
               <AlertTriangle className="h-8 w-8 text-muted-foreground/30" />
               <p className="text-sm text-muted-foreground">Введите параметры для расчёта</p>
             </CardContent>
           </Card>
-        )}
+        }
 
         {/* How it works */}
         <Card>
@@ -278,6 +278,6 @@ export default function PeniCalculatorPage() {
           </CardContent>
         </Card>
       </div>
-    </CalculatorLayout>
-  );
+    </CalculatorLayout>);
+
 }
