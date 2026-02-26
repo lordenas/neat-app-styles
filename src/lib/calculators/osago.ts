@@ -3,24 +3,16 @@
  * Базовые тарифы и коэффициенты актуальны на 2024-2025.
  */
 
-export type VehicleCategory = "B" | "A" | "C" | "D" | "taxi";
+export type VehicleCategory = "B" | "A" | "C" | "C_heavy" | "D" | "D_small" | "D_regular" | "taxi" | "tractor" | "trolleybus";
 
 export type OsagoInput = {
-  /** Категория ТС */
   category: VehicleCategory;
-  /** Мощность двигателя (л.с.) — для категории B */
   horsePower: number;
-  /** Код региона регистрации владельца */
   regionCode: string;
-  /** Возраст водителя (лет) */
   driverAge: number;
-  /** Стаж вождения (лет) */
   driverExperience: number;
-  /** Класс КБМ (бонус-малус), 0-13 */
   kbmClass: number;
-  /** Период использования ТС (месяцы, 3-12) */
   usagePeriod: number;
-  /** Неограниченный список водителей */
   unlimitedDrivers: boolean;
 };
 
@@ -40,8 +32,13 @@ const BASE_TARIFFS: Record<VehicleCategory, number> = {
   B: 4942,
   A: 1817,
   C: 6064,
+  C_heavy: 9577,
   D: 5765,
+  D_small: 3601,
+  D_regular: 7920,
   taxi: 6166,
+  tractor: 1124,
+  trolleybus: 3601,
 };
 
 // Региональные коэффициенты (КТ) — ключевые регионы

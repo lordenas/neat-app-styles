@@ -19,11 +19,16 @@ import { cn } from "@/lib/utils";
 const fmt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v));
 
 const CATEGORIES: { value: VehicleCategory; label: string; icon: string }[] = [
-  { value: "B", label: "Легковой (B)", icon: "🚗" },
-  { value: "A", label: "Мотоцикл (A)", icon: "🏍️" },
-  { value: "C", label: "Грузовой (C)", icon: "🚛" },
-  { value: "D", label: "Автобус (D)", icon: "🚌" },
-  { value: "taxi", label: "Такси", icon: "🚕" },
+  { value: "B",        label: "Легковой (B)",                    icon: "🚗" },
+  { value: "A",        label: "Мотоцикл (A)",                    icon: "🏍️" },
+  { value: "C",        label: "Грузовой до 16 т (C)",            icon: "🚛" },
+  { value: "C_heavy",  label: "Грузовой свыше 16 т (C)",         icon: "🚚" },
+  { value: "D",        label: "Автобус >16 мест (D)",            icon: "🚌" },
+  { value: "D_small",  label: "Автобус ≤16 мест (D)",            icon: "🚐" },
+  { value: "D_regular",label: "Автобус регулярные (D)",          icon: "🚍" },
+  { value: "taxi",     label: "Такси",                            icon: "🚕" },
+  { value: "tractor",  label: "Трактор / спецтехника",           icon: "🚜" },
+  { value: "trolleybus",label: "Троллейбус",                     icon: "🚎" },
 ];
 
 const HP_PRESETS = [70, 100, 120, 150, 200];
@@ -86,7 +91,7 @@ export default function OsagoCalculator() {
     { label: "КТ (регион)", value: kt },
     { label: "КВС (возраст/стаж)", value: kvs },
     { label: "КБМ (бонус-малус)", value: kbm },
-    ...(category === "B" ? [{ label: "КМ (мощность)", value: km }] : []),
+    ...(["B", "A"].includes(category) ? [{ label: "КМ (мощность)", value: km }] : []),
     { label: "КС (период)", value: ks },
     ...(unlimitedDrivers ? [{ label: "КО (без огр.)", value: ko }] : []),
   ] as { label: string; value: number | string; neutral?: boolean }[];
@@ -169,7 +174,7 @@ export default function OsagoCalculator() {
                 </Select>
               </div>
 
-              {category === "B" && (
+              {["B", "A"].includes(category) && (
                 <div className="space-y-1.5">
                   <Label className="flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" /> Мощность (л.с.)</Label>
                   <Input type="number" value={horsePower} onChange={(e) => setHorsePower(+e.target.value)} min={1} />
