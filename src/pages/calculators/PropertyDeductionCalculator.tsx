@@ -68,14 +68,20 @@ export default function PropertyDeductionCalculatorPage() {
   const isFullyBlocked = usedPreviously && previousUsePeriod === "before_2014";
 
   return (
-    <CalculatorLayout calculatorId="property-deduction" categoryName="Налоги" categoryPath="/categories/taxes">
-      <div className="space-y-6">
+    <CalculatorLayout
+      calculatorId="property-deduction"
+      categoryName="Налоги"
+      categoryPath="/categories/taxes"
+      title={
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Имущественный вычет</h1>
           <p className="text-muted-foreground mt-1">
             Расчёт налогового вычета при покупке квартиры — возврат НДФЛ до 260 000 ₽
           </p>
         </div>
+      }
+    >
+      <div className="space-y-6">
 
         {/* ── Parameters bar ── */}
         <Card>
