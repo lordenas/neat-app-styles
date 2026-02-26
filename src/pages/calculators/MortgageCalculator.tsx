@@ -92,7 +92,6 @@ export default function MortgageCalculatorPage() {
                 onValueChange={([v]) => setDownPayment(v)}
                 className="mt-1"
               />
-              <Progress value={downPercent} className="h-1.5" />
               <div className="flex justify-between text-[10px] text-muted-foreground">
                 <span>0% (без взноса)</span><span>100%</span>
               </div>
