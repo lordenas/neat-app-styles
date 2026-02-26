@@ -3,8 +3,7 @@ import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus, Briefcase } from "lucide-react";
+import { Trash2, Plus, ShieldCheck } from "lucide-react";
 import { CopyButton } from "@/components/ui/copy-button";
 import { calcInsuranceTenure, type TenurePeriod } from "@/lib/calculators/insurance-tenure";
 
@@ -25,19 +24,19 @@ export default function InsuranceTenureCalculator() {
   const validPeriods = periods.filter((p) => p.startDate && p.endDate);
   const result = calcInsuranceTenure(validPeriods);
 
-  const sickPayColor =
-    result.sickPayPercent === 100
-      ? "text-[hsl(var(--success))]"
-      : result.sickPayPercent === 80
-      ? "text-primary"
-      : "text-destructive";
-
-  const sickPayBg =
+  const sickBgClass =
     result.sickPayPercent === 100
       ? "bg-[hsl(var(--success)/0.08)] border-[hsl(var(--success)/0.2)]"
       : result.sickPayPercent === 80
       ? "bg-primary/5 border-primary/10"
       : "bg-destructive/8 border-destructive/15";
+
+  const sickTextClass =
+    result.sickPayPercent === 100
+      ? "text-[hsl(var(--success))]"
+      : result.sickPayPercent === 80
+      ? "text-primary"
+      : "text-destructive";
 
   const title = (
     <div>
@@ -51,7 +50,8 @@ export default function InsuranceTenureCalculator() {
   return (
     <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/categories/salary" title={title}>
       <div className="space-y-6">
-        {/* Periods form */}
+
+        {/* Periods */}
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
@@ -72,29 +72,26 @@ export default function InsuranceTenureCalculator() {
               <span className="w-8" />
             </div>
             {periods.map((p, i) => {
-              const days = p.startDate && p.endDate
-                ? Math.max(0, Math.floor((new Date(p.endDate).getTime() - new Date(p.startDate).getTime()) / 86400000) + 1)
-                : null;
+              const days =
+                p.startDate && p.endDate
+                  ? Math.max(0, Math.floor((new Date(p.endDate).getTime() - new Date(p.startDate).getTime()) / 86400000) + 1)
+                  : null;
               const isValid = p.startDate && p.endDate && new Date(p.endDate) >= new Date(p.startDate);
               return (
                 <div key={i} className="grid grid-cols-[auto_1fr_1fr_auto] gap-2 items-start">
-                  <span className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-1 ${isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                  <span
+                    className={`text-xs font-medium w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-1 ${
+                      isValid ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
                     {i + 1}
                   </span>
                   <div>
-                    <Input
-                      type="date"
-                      value={p.startDate}
-                      onChange={(e) => updatePeriod(i, "startDate", e.target.value)}
-                    />
+                    <Input type="date" value={p.startDate} onChange={(e) => updatePeriod(i, "startDate", e.target.value)} />
                     <p className="h-3" />
                   </div>
                   <div>
-                    <Input
-                      type="date"
-                      value={p.endDate}
-                      onChange={(e) => updatePeriod(i, "endDate", e.target.value)}
-                    />
+                    <Input type="date" value={p.endDate} onChange={(e) => updatePeriod(i, "endDate", e.target.value)} />
                     <p className="text-[10px] text-muted-foreground mt-0.5 pl-1 h-3">
                       {days !== null && isValid ? `${days.toLocaleString("ru-RU")} дн.` : ""}
                     </p>
@@ -126,10 +123,11 @@ export default function InsuranceTenureCalculator() {
             </div>
           </CardHeader>
           <CardContent className="space-y-5">
+
             {/* Hero */}
             <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
               <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
-                <Briefcase className="h-5 w-5 text-primary" />
+                <ShieldCheck className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground mb-0.5">Общий страховой стаж</p>
@@ -138,42 +136,56 @@ export default function InsuranceTenureCalculator() {
                   <span className="text-2xl">{result.totalMonths} мес.</span>{" "}
                   <span className="text-xl text-muted-foreground">{result.totalDays} дн.</span>
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Всего дней: {result.rawDays.toLocaleString("ru-RU")}
-                </p>
               </div>
             </div>
 
-            {/* Sick pay card */}
-            <div className={`rounded-lg border p-4 ${sickPayBg}`}>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium">Оплата больничного листа</p>
-                <Badge
-                  variant="outline"
-                  className={`text-base font-bold px-3 py-1 border-current ${sickPayColor}`}
-                >
-                  {result.sickPayPercent}%
-                </Badge>
+            {/* Stat grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="rounded-lg bg-muted/50 border border-border p-3.5">
+                <p className="text-xs text-muted-foreground mb-1">Всего дней</p>
+                <p className="text-base font-bold tabular-nums">{result.rawDays.toLocaleString("ru-RU")}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">суммарно за все периоды</p>
               </div>
-              <p className={`text-sm font-medium ${sickPayColor}`}>{result.sickPayDescription}</p>
+              <div className="rounded-lg bg-muted/50 border border-border p-3.5">
+                <p className="text-xs text-muted-foreground mb-1">Периодов</p>
+                <p className="text-base font-bold tabular-nums">{validPeriods.length}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">учтено в расчёте</p>
+              </div>
+              <div className={`rounded-lg p-3.5 col-span-2 sm:col-span-1 ${sickBgClass}`}>
+                <p className="text-xs text-muted-foreground mb-1">Оплата больничного</p>
+                <p className={`text-base font-bold tabular-nums ${sickTextClass}`}>{result.sickPayPercent}%</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">от среднего заработка</p>
+              </div>
             </div>
 
-            {/* Thresholds reference */}
+            {/* Sick pay full card */}
+            <div className={`rounded-lg border p-4 ${sickBgClass}`}>
+              <p className={`text-sm font-semibold ${sickTextClass}`}>{result.sickPayDescription}</p>
+            </div>
+
+            {/* Scale */}
             <div className="space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Шкала оплаты</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Шкала оплаты (ст. 7 № 255-ФЗ)</p>
               {[
                 { label: "менее 5 лет", pct: 60, active: result.sickPayPercent === 60 },
-                { label: "5 – 8 лет", pct: 80, active: result.sickPayPercent === 80 },
+                { label: "5 – 8 лет",   pct: 80, active: result.sickPayPercent === 80 },
                 { label: "8 лет и более", pct: 100, active: result.sickPayPercent === 100 },
               ].map(({ label, pct, active }) => (
                 <div
                   key={pct}
-                  className={`flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors ${active ? "bg-primary/5 border border-primary/15 font-medium" : "text-muted-foreground"}`}
+                  className={`flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors ${
+                    active ? "bg-primary/5 border border-primary/15 font-medium" : "text-muted-foreground"
+                  }`}
                 >
                   <span>{label}</span>
                   <span className={active ? "text-primary font-bold" : ""}>{pct}%</span>
                 </div>
               ))}
+            </div>
+
+            {/* Formula */}
+            <div className="rounded-md bg-muted/30 border border-border px-4 py-3 text-xs text-muted-foreground font-mono leading-relaxed">
+              Стаж = {result.rawDays.toLocaleString("ru-RU")} дн. = {result.totalYears} × 365 + {result.totalMonths} × 30 + {result.totalDays} дн.
             </div>
           </CardContent>
         </Card>
@@ -189,6 +201,7 @@ export default function InsuranceTenureCalculator() {
             </p>
           </CardContent>
         </Card>
+
       </div>
     </CalculatorLayout>
   );
