@@ -260,7 +260,7 @@ export default function DepositCalculator() {
                       </TableRow>
                     ))}
                   </TableBody>
-                  <TableFoot>
+                  <TableFooter>
                     <TableRow className="font-semibold bg-muted/30">
                       <TableCell colSpan={2}>Итого</TableCell>
                       <TableCell className="text-right tabular-nums text-[hsl(var(--success))]">+{fmt(result.totalInterest)}</TableCell>
@@ -268,7 +268,7 @@ export default function DepositCalculator() {
                       {monthlyWithdrawal > 0 && <TableCell className="text-right tabular-nums text-destructive">−{fmt(result.totalWithdrawals)}</TableCell>}
                       <TableCell className="text-right tabular-nums">{fmt(result.finalAmount)}</TableCell>
                     </TableRow>
-                  </TableFoot>
+                  </TableFooter>
                 </Table>
               </div>
             </CardContent>
