@@ -388,7 +388,7 @@ export default function DepositCalculator() {
                   <p className="text-base font-bold tabular-nums text-destructive">−{fmt(result.totalTax)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">налог</p>
                 </div>
-                <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">Чистый доход</p>
                   <p className="text-base font-bold tabular-nums text-primary">{fmt(result.netIncome)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">после налога</p>

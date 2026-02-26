@@ -246,7 +246,7 @@ export default function Gk395CalculatorPage() {
                     <p className="text-xs text-muted-foreground mb-1">Проценты (ст. 395)</p>
                     <p className="text-lg font-bold tabular-nums leading-tight text-destructive">{fmt(result.totalInterest)} ₽</p>
                   </div>
-                  <div className="rounded-lg bg-[hsl(var(--success)/0.08)] border border-[hsl(var(--success)/0.2)] p-3.5">
+                  <div className="rounded-lg bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Итого с процентами</p>
                     <p className="text-lg font-bold tabular-nums leading-tight text-[hsl(var(--success))]">{fmt(result.totalDebtWithInterest)} ₽</p>
                   </div>
