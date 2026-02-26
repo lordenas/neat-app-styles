@@ -22,6 +22,15 @@ const fmtInt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v
 const PURCHASE_YEARS = Array.from({ length: 17 }, (_, i) => 2010 + i).reverse();
 const CURRENT_YEAR = new Date().getFullYear();
 
+function getIncomeYears(purchaseYear: number): number[] {
+  const diff = CURRENT_YEAR - purchaseYear;
+  if (diff <= 0) return [];
+  if (diff === 1) return [CURRENT_YEAR - 1];
+  if (diff === 2) return [CURRENT_YEAR - 2, CURRENT_YEAR - 1];
+  if (diff === 3) return [CURRENT_YEAR - 3, CURRENT_YEAR - 2, CURRENT_YEAR - 1];
+  return [CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR];
+}
+
 export default function PropertyDeductionCalculatorPage() {
   const [propertyPrice, setPropertyPrice] = useState(10_000_000);
   const [purchaseYear, setPurchaseYear] = useState(CURRENT_YEAR);
@@ -36,11 +45,15 @@ export default function PropertyDeductionCalculatorPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const result = useMemo(() => {
+    const relevantIncome: Record<number, number> = {};
+    for (const y of getIncomeYears(purchaseYear)) {
+      relevantIncome[y] = incomeByYear[y] ?? 0;
+    }
     return calcPropertyDeduction({
       propertyPrice, purchaseYear, usedPreviously,
       previousUsePeriod: usedPreviously ? previousUsePeriod : null,
       returnedAmount: usedPreviously && previousUsePeriod === "after_2014" ? returnedAmount : 0,
-      incomeByYear,
+      incomeByYear: relevantIncome,
     });
   }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, incomeByYear]);
 
@@ -112,23 +125,25 @@ export default function PropertyDeductionCalculatorPage() {
               </div>
             </div>
 
-            {/* Row 2: income — always last 3 completed years */}
-            <div className="space-y-1.5 border-t border-border pt-4">
-              <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
-              <div className="flex gap-3 flex-wrap">
-                {[CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR - 0].map((y) => (
-                  <div key={y} className="space-y-1 w-36">
-                    <span className="text-xs text-muted-foreground">{y}</span>
-                    <Input
-                      type="text" inputMode="numeric"
-                      value={formatNumberInput(incomeByYear[y] ?? 0)}
-                      onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
-                      className="h-9 text-sm"
-                    />
-                  </div>
-                ))}
+            {/* Row 2: income years based on purchase year */}
+            {getIncomeYears(purchaseYear).length > 0 && (
+              <div className="space-y-1.5 border-t border-border pt-4">
+                <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
+                <div className="flex gap-3 flex-wrap">
+                  {getIncomeYears(purchaseYear).map((y) => (
+                    <div key={y} className="space-y-1 w-36">
+                      <span className="text-xs text-muted-foreground">{y}</span>
+                      <Input
+                        type="text" inputMode="numeric"
+                        value={formatNumberInput(incomeByYear[y] ?? 0)}
+                        onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
