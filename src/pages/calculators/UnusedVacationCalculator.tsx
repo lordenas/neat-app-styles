@@ -1,23 +1,91 @@
 import { useState } from "react";
+import { format, differenceInCalendarDays } from "date-fns";
+import { ru } from "date-fns/locale";
+import { CalendarIcon, Briefcase, Plus, Trash2 } from "lucide-react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Briefcase } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CopyButton } from "@/components/ui/copy-button";
-import { calcUnusedVacation } from "@/lib/calculators/unused-vacation";
+import { cn } from "@/lib/utils";
+import { calcUnusedVacation, ExcludedPeriod } from "@/lib/calculators/unused-vacation";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
+import { ChevronDown } from "lucide-react";
 
 const fmt = (n: number) => n.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDays = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+const fmtDate = (d: Date) => format(d, "dd.MM.yyyy", { locale: ru });
+
+function DatePicker({
+  value,
+  onChange,
+  placeholder = "Выберите дату",
+  id,
+}: {
+  value: Date | undefined;
+  onChange: (d: Date | undefined) => void;
+  placeholder?: string;
+  id?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          id={id}
+          variant="outline"
+          className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {value ? fmtDate(value) : placeholder}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={(d) => { onChange(d); setOpen(false); }}
+          locale={ru}
+          initialFocus
+          className="pointer-events-auto"
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export default function UnusedVacationCalculator() {
   const [avgDailyPay, setAvgDailyPay] = useState(2048);
-  const [workedMonths, setWorkedMonths] = useState(8);
+  const [startDate, setStartDate] = useState<Date>(new Date(new Date().getFullYear() - 1, 0, 1));
+  const [endDate, setEndDate] = useState<Date>(new Date());
   const [annualVacationDays, setAnnualVacationDays] = useState(28);
   const [usedVacationDays, setUsedVacationDays] = useState(0);
+  const [excludedPeriods, setExcludedPeriods] = useState<ExcludedPeriod[]>([]);
+  const [excludedOpen, setExcludedOpen] = useState(false);
 
-  const result = calcUnusedVacation({ avgDailyPay, workedMonths, annualVacationDays, usedVacationDays });
+  const result = calcUnusedVacation({
+    avgDailyPay,
+    startDate,
+    endDate,
+    annualVacationDays,
+    usedVacationDays,
+    excludedPeriods,
+  });
+
+  const addPeriod = () =>
+    setExcludedPeriods((p) => [...p, { from: new Date(), to: new Date(), label: "" }]);
+
+  const updatePeriod = (i: number, patch: Partial<ExcludedPeriod>) =>
+    setExcludedPeriods((p) => p.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
+
+  const removePeriod = (i: number) =>
+    setExcludedPeriods((p) => p.filter((_, idx) => idx !== i));
+
+  const totalDays = differenceInCalendarDays(endDate, startDate) + 1;
 
   return (
     <CalculatorLayout calculatorId="unused-vacation" categoryName="Зарплатные" categoryPath="/categories/salary">
@@ -29,9 +97,22 @@ export default function UnusedVacationCalculator() {
             <CardTitle className="text-base">Параметры расчёта</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
+            {/* Даты */}
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label htmlFor="sdz">Средний дневной заработок (₽)</Label>
+                <Label htmlFor="start-date">Дата начала работы</Label>
+                <DatePicker id="start-date" value={startDate} onChange={(d) => d && setStartDate(d)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="end-date">Дата увольнения (или сегодня)</Label>
+                <DatePicker id="end-date" value={endDate} onChange={(d) => d && setEndDate(d)} />
+              </div>
+            </div>
+
+            {/* Остальные поля */}
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="sdz">Средний дневной заработок</Label>
                 <Input
                   id="sdz"
                   type="text"
@@ -39,18 +120,6 @@ export default function UnusedVacationCalculator() {
                   value={formatNumberInput(avgDailyPay)}
                   onChange={(e) => setAvgDailyPay(Math.max(0, parseNumberInput(e.target.value)))}
                   inputEnd={<span className="text-xs text-muted-foreground">₽</span>}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="wm">Отработано месяцев</Label>
-                <Input
-                  id="wm"
-                  type="number"
-                  value={workedMonths}
-                  onChange={(e) => setWorkedMonths(Math.max(0, +e.target.value))}
-                  min={0}
-                  max={600}
-                  inputEnd={<span className="text-xs text-muted-foreground">мес.</span>}
                 />
               </div>
               <div className="space-y-1.5">
@@ -76,6 +145,63 @@ export default function UnusedVacationCalculator() {
                 />
               </div>
             </div>
+
+            {/* Исключаемые периоды */}
+            <Collapsible open={excludedOpen} onOpenChange={setExcludedOpen}>
+              <CollapsibleTrigger asChild>
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between rounded-md border border-dashed border-border px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted/40 transition-colors"
+                >
+                  <span className="font-medium text-foreground">
+                    Исключаемые периоды
+                    {excludedPeriods.length > 0 && (
+                      <span className="ml-2 text-xs text-muted-foreground">({excludedPeriods.length} шт., −{result.excludedDays} дн.)</span>
+                    )}
+                  </span>
+                  <ChevronDown className={cn("h-4 w-4 transition-transform", excludedOpen && "rotate-180")} />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-3 space-y-3">
+                <p className="text-xs text-muted-foreground">
+                  Больничные, отпуск без сохранения зарплаты свыше 14 дней, прогулы и другие периоды, не включаемые в стаж для отпуска (ст. 121 ТК РФ).
+                </p>
+
+                {excludedPeriods.map((p, i) => (
+                  <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2 items-end">
+                    <div className="space-y-1">
+                      {i === 0 && <Label className="text-xs">С</Label>}
+                      <DatePicker
+                        value={p.from}
+                        onChange={(d) => d && updatePeriod(i, { from: d })}
+                        placeholder="Начало"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      {i === 0 && <Label className="text-xs">По</Label>}
+                      <DatePicker
+                        value={p.to}
+                        onChange={(d) => d && updatePeriod(i, { to: d })}
+                        placeholder="Конец"
+                      />
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn("text-muted-foreground hover:text-destructive", i === 0 && "mt-5")}
+                      onClick={() => removePeriod(i)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={addPeriod}>
+                  <Plus className="h-3.5 w-3.5" />
+                  Добавить период
+                </Button>
+              </CollapsibleContent>
+            </Collapsible>
           </CardContent>
         </Card>
 
@@ -85,7 +211,7 @@ export default function UnusedVacationCalculator() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">Результат</CardTitle>
               <CopyButton
-                value={`Компенсация (до НДФЛ): ${fmt(result.compensation)} ₽\nНДФЛ 13%: ${fmt(result.ndfl)} ₽\nНа руки: ${fmt(result.netPay)} ₽\nПоложено дней: ${fmtDays(result.earnedDays)}\nНеиспользовано: ${fmtDays(result.unusedDays)}`}
+                value={`Компенсация (до НДФЛ): ${fmt(result.compensation)} ₽\nНДФЛ 13%: ${fmt(result.ndfl)} ₽\nНа руки: ${fmt(result.netPay)} ₽\nОтработано месяцев: ${result.workedMonths}\nПоложено дней: ${fmtDays(result.earnedDays)}\nНеиспользовано: ${fmtDays(result.unusedDays)}`}
                 label="Скопировать"
               />
             </div>
@@ -105,14 +231,14 @@ export default function UnusedVacationCalculator() {
             {/* Stats grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <div className="rounded-lg bg-muted/50 border border-border p-3.5">
-                <p className="text-xs text-muted-foreground mb-1">Положено дней</p>
-                <p className="text-base font-bold tabular-nums">{fmtDays(result.earnedDays)}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">за период работы</p>
+                <p className="text-xs text-muted-foreground mb-1">Отработано</p>
+                <p className="text-base font-bold tabular-nums">{result.workedMonths} мес.</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{totalDays} кал. дней</p>
               </div>
               <div className="rounded-lg bg-muted/50 border border-border p-3.5">
                 <p className="text-xs text-muted-foreground mb-1">Неиспользовано</p>
-                <p className="text-base font-bold tabular-nums">{fmtDays(result.unusedDays)}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">дней к компенсации</p>
+                <p className="text-base font-bold tabular-nums">{fmtDays(result.unusedDays)} дн.</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">из {fmtDays(result.earnedDays)} положенных</p>
               </div>
               <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
                 <p className="text-xs text-muted-foreground mb-1">НДФЛ 13%</p>
@@ -128,7 +254,9 @@ export default function UnusedVacationCalculator() {
 
             {/* Formula */}
             <div className="rounded-md bg-muted/30 border border-border px-4 py-3 text-xs text-muted-foreground font-mono leading-relaxed">
-              Положено = {workedMonths} мес. × {annualVacationDays} дн. / 12 = {fmtDays(result.earnedDays)} дн.<br />
+              Период: {fmtDate(startDate)} — {fmtDate(endDate)} ({totalDays} дн.){result.excludedDays > 0 ? ` − ${result.excludedDays} исключ. = ${totalDays - result.excludedDays} дн.` : ""}<br />
+              Отработано месяцев: {result.workedMonths} мес.<br />
+              Положено = {result.workedMonths >= 11 ? 12 : result.workedMonths} мес. × {annualVacationDays} дн. / 12 = {fmtDays(result.earnedDays)} дн.<br />
               Неиспользовано = {fmtDays(result.earnedDays)} − {usedVacationDays} = {fmtDays(result.unusedDays)} дн.<br />
               Компенсация = {fmt(avgDailyPay)} ₽ × {fmtDays(result.unusedDays)} дн. = {fmt(result.compensation)} ₽
             </div>
@@ -143,6 +271,9 @@ export default function UnusedVacationCalculator() {
             </p>
             <p>
               Если отработано <strong className="text-foreground">11 и более месяцев</strong> в рабочем году — положен полный отпуск (28 дней).
+            </p>
+            <p>
+              <strong className="text-foreground">Исключаемые периоды</strong> (ст. 121 ТК РФ): отпуск за свой счёт свыше 14 дней, отстранение без оплаты, прогул — не входят в стаж для расчёта отпуска.
             </p>
           </CardContent>
         </Card>
