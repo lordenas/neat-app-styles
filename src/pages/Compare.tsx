@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, BarChart3, Printer, Download } from "lucide-react";
+import { ArrowLeft, BarChart3, Printer, Download, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
 import { getCyrillicFont } from "@/lib/cyrillic-font";
