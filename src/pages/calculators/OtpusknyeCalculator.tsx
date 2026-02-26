@@ -170,12 +170,9 @@ export default function OtpusknyeCalculator() {
                 <p className="text-base font-bold tabular-nums">{fmt(result.calcDays)}</p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">по формуле ПП 922</p>
               </div>
-              <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
-                <p className="text-xs text-muted-foreground mb-1">НДФЛ 13%</p>
-                <p className="text-base font-bold tabular-nums text-destructive">−{fmt(result.ndfl)} ₽</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">налог к удержанию</p>
-              </div>
-              <div className="rounded-lg bg-[hsl(var(--success)/0.08)] border border-[hsl(var(--success)/0.2)] p-3.5">
+              <div className="rounded-lg bg-destructive/8 dark:bg-destructive/[0.05] border border-destructive/15 dark:border-destructive/10 p-3.5">
+...
+              <div className="rounded-lg bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-3.5">
                 <p className="text-xs text-muted-foreground mb-1">На руки</p>
                 <p className="text-base font-bold tabular-nums text-[hsl(var(--success))]">{fmt(result.netPay)} ₽</p>
                 <p className="text-[10px] text-muted-foreground mt-0.5">после вычета НДФЛ</p>
