@@ -121,12 +121,12 @@ export default function AlimonyIndexationCalculator() {
                 <p className="text-[10px] text-muted-foreground mt-0.5">ПМ нов. / ПМ стар.</p>
               </div>
               <div
-                className={`rounded-lg p-3.5 col-span-2 sm:col-span-1 ${
+                className={`rounded-lg p-3.5 col-span-2 sm:col-span-1 border ${
                   isEqual
-                    ? "bg-muted/50 border border-border"
+                    ? "bg-muted/50 border-border"
                     : isGrowth
-                    ? "bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)]"
-                    : "bg-destructive/8 dark:bg-destructive/[0.05] border-destructive/15 dark:border-destructive/10"
+                    ? "bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.1)]"
+                    : "bg-destructive/8 dark:bg-destructive/[0.05] border-destructive/15 dark:border-destructive/[0.08]"
                 }`}
               >
                 <p className="text-xs text-muted-foreground mb-1">Изменение</p>
