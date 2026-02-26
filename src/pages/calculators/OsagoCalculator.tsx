@@ -250,11 +250,6 @@ export default function OsagoCalculator() {
                 onValueChange={([v]) => setCustomBaseTariff(v)}
                 className="w-full"
               />
-              {/* Corridor progress indicator */}
-              <div className="relative h-1.5 rounded-full bg-muted overflow-hidden -mt-1">
-                <div className="absolute inset-y-0 left-0 bg-primary/30 rounded-full"
-                  style={{ width: `${((activeTariff - corridorMin) / (corridorMax - corridorMin)) * 100}%` }} />
-              </div>
               <div className="grid grid-cols-3 text-xs text-muted-foreground">
                 <button onClick={() => setCustomBaseTariff(corridorMin)}
                   className="text-left hover:text-primary transition-colors">
