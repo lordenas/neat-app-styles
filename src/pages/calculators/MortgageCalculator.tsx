@@ -155,7 +155,12 @@ export default function MortgageCalculatorPage() {
                 <p className="text-lg font-bold">{fmtShort(result.principal)} ₽</p>
               </Card>
               <Card className="p-4 border-primary/25 dark:border-primary/15 bg-primary/5 dark:bg-primary/[0.04]">
-...
+                <div className="flex items-start justify-between mb-2">
+                  <p className="text-xs text-muted-foreground leading-tight">{t("calculator.monthlyPayment")}</p>
+                  <Calendar className="h-4 w-4 text-primary shrink-0" />
+                </div>
+                <p className="text-lg font-bold text-primary">{fmtShort(result.monthlyPayment)} ₽</p>
+              </Card>
               <Card className="p-4 border-destructive/25 dark:border-destructive/15 bg-destructive/5 dark:bg-destructive/[0.04]">
                 <div className="flex items-start justify-between mb-2">
                   <p className="text-xs text-muted-foreground leading-tight">{t("calculator.stats.overpayment")}</p>
