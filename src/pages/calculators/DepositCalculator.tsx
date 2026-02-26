@@ -424,38 +424,56 @@ export default function DepositCalculator() {
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Налог по годам</p>
-                    <details className="group relative">
-                      <summary className="list-none cursor-pointer text-muted-foreground hover:text-foreground transition-colors" title="Как рассчитывается налог?">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                      </summary>
-                      <div className="absolute left-0 top-6 z-50 w-[min(480px,90vw)] rounded-lg border border-border bg-popover p-4 shadow-lg text-xs text-popover-foreground space-y-3">
-                        <p className="font-semibold text-sm text-foreground">Как считается налог на доход по вкладам</p>
-                        <p>С 2023 года налог на процентный доход по вкладам физлиц считается по новым правилам (ст. 214.2 НК РФ в редакции 259-ФЗ). Ранее действовавшие правила (налог при превышении ставкой вклада ключевой + 5%) отменены.</p>
-
-                        <p className="font-medium text-foreground">Как считается сейчас</p>
-                        <ul className="space-y-1 list-disc pl-4 text-muted-foreground">
-                          <li>Ставка НДФЛ: <strong className="text-foreground">13%</strong> с дохода до 2 400 000 ₽ в год и <strong className="text-foreground">15%</strong> сверх этой суммы (п. 1 ст. 224 НК РФ).</li>
-                          <li>Доходы по всем вкладам и счетам суммируются. Необлагаемый лимит применяется к совокупному доходу за год.</li>
-                          <li>Необлагаемая сумма: <strong className="text-foreground">1 000 000 ₽ × КС</strong>, где КС — максимальная ключевая ставка ЦБ РФ на 1-е число каждого месяца года.</li>
-                          <li>Налог считает ФНС; уплата — до 1 декабря года, следующего за расчётным.</li>
-                        </ul>
-
-                        <p className="font-medium text-foreground">Пример расчёта</p>
-                        <p className="text-muted-foreground">Марина в 2025 г.: вклад 800 000 ₽ под 14% и 500 000 ₽ под 11%. КС = 18%. Необлагаемый доход: 180 000 ₽. Совокупный доход: 167 000 ₽ → <strong className="text-foreground">НДФЛ = 0 ₽</strong>.</p>
-
-                        <p className="font-medium text-foreground">Перенос вычета (259-ФЗ)</p>
-                        <p className="text-muted-foreground">Для вкладов от 15 мес. с выплатой в конце срока неиспользованный вычет переносится на год выплаты. При периодической капитализации — вычет каждый год отдельно.</p>
-
-                        <p className="font-medium text-foreground">Вопросы и ответы</p>
-                        <dl className="space-y-2 text-muted-foreground">
-                          <div><dt className="font-medium text-foreground">Нужно ли подавать декларацию?</dt><dd>Нет. Банки сами передают данные в ФНС.</dd></div>
-                          <div><dt className="font-medium text-foreground">Валютные вклады?</dt><dd>Да, доход пересчитывается в рубли по курсу ЦБ на дату получения.</dd></div>
-                          <div><dt className="font-medium text-foreground">Доход меньше лимита?</dt><dd>Налог не возникает. При выплате в конце срока вычет можно перенести.</dd></div>
-                          <div><dt className="font-medium text-foreground">Откуда берётся ставка ЦБ?</dt><dd>Используются типовые значения по годам. Для точного расчёта сверяйтесь с данными ЦБ РФ.</dd></div>
-                        </dl>
-                      </div>
-                    </details>
+                    <button
+                      type="button"
+                      onClick={() => setTaxInfoOpen(true)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title="Как рассчитывается налог?"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </button>
                   </div>
+
+                  <Dialog open={taxInfoOpen} onOpenChange={setTaxInfoOpen}>
+                    <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Как считается налог на доход по вкладам</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 text-sm">
+                        <p className="text-muted-foreground">С 2023 года налог на процентный доход по вкладам физлиц считается по новым правилам (ст. 214.2 НК РФ в редакции 259-ФЗ). Ранее действовавшие правила (налог при превышении ставкой вклада ключевой + 5%) отменены.</p>
+
+                        <div>
+                          <p className="font-medium mb-2">Как считается сейчас</p>
+                          <ul className="space-y-1.5 list-disc pl-4 text-muted-foreground">
+                            <li>Ставка НДФЛ: <strong className="text-foreground">13%</strong> с дохода до 2 400 000 ₽ в год и <strong className="text-foreground">15%</strong> сверх этой суммы (п. 1 ст. 224 НК РФ).</li>
+                            <li>Доходы по всем вкладам и счетам суммируются. Необлагаемый лимит применяется к совокупному доходу за год.</li>
+                            <li>Необлагаемая сумма: <strong className="text-foreground">1 000 000 ₽ × КС</strong>, где КС — максимальная ключевая ставка ЦБ РФ на 1-е число каждого месяца года.</li>
+                            <li>Налог считает ФНС; уплата — до 1 декабря года, следующего за расчётным.</li>
+                          </ul>
+                        </div>
+
+                        <div>
+                          <p className="font-medium mb-1">Пример расчёта</p>
+                          <p className="text-muted-foreground">Марина в 2025 г.: вклад 800 000 ₽ под 14% и 500 000 ₽ под 11%. КС = 18%. Необлагаемый доход: 180 000 ₽. Совокупный доход: 167 000 ₽ → <strong className="text-foreground">НДФЛ = 0 ₽</strong>.</p>
+                        </div>
+
+                        <div>
+                          <p className="font-medium mb-1">Перенос вычета (259-ФЗ)</p>
+                          <p className="text-muted-foreground">Для вкладов от 15 мес. с выплатой в конце срока неиспользованный вычет переносится на год выплаты. При периодической капитализации — вычет каждый год отдельно.</p>
+                        </div>
+
+                        <div>
+                          <p className="font-medium mb-2">Вопросы и ответы</p>
+                          <dl className="space-y-3 text-muted-foreground">
+                            <div><dt className="font-medium text-foreground">Нужно ли подавать декларацию?</dt><dd className="mt-0.5">Нет. Банки сами передают данные в ФНС.</dd></div>
+                            <div><dt className="font-medium text-foreground">Валютные вклады?</dt><dd className="mt-0.5">Да, доход пересчитывается в рубли по курсу ЦБ на дату получения.</dd></div>
+                            <div><dt className="font-medium text-foreground">Доход меньше лимита?</dt><dd className="mt-0.5">Налог не возникает. При выплате в конце срока вычет можно перенести.</dd></div>
+                            <div><dt className="font-medium text-foreground">Откуда берётся ставка ЦБ?</dt><dd className="mt-0.5">Используются типовые значения по годам. Для точного расчёта сверяйтесь с данными ЦБ РФ.</dd></div>
+                          </dl>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <div className="rounded-lg border border-border overflow-hidden">
                     <Table>
                       <TableHeader>
