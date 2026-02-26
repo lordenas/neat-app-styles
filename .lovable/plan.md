@@ -41,30 +41,33 @@
 ### Files to Edit
 - `src/pages/calculators/Gk395Calculator.tsx` — full refactor
 
-### What the new layout looks like
-```
-[CalculatorLayout title prop] ← Full-width heading
-┌──────────────────────────────────────────────────────┬─────────────┐
-│  [Card: Параметры]                                   │  [Sidebar]  │
-│    Сумма долга                                       │  (existing) │
-│    Период (с / по)                                   │             │
-│    ▶ Частичные оплаты (collapsible)                  │             │
-│    ▶ Увеличение долга (collapsible)                  │             │
-│    ▶ Исключённые периоды (collapsible)               │             │
-│                                                      │             │
-│  [Card: Результат]                                   │             │
-│    [Stat1: Сумма долга] [Stat2: Проценты] [Stat3: Итого] [Stat4: Дней] │
-│    [Table: breakdown rows — all types]               │             │
-│                                                      │             │
-│  [Card: О расчёте (collapsible)]                     │             │
-└──────────────────────────────────────────────────────┴─────────────┘
-```
+---
 
-### Key UX Improvements Summary
-- Title full-width via `title` prop
-- Optional form sections collapsed by default → cleaner first impression
-- Full breakdown table with proper columns (formula visible)
-- Excluded periods UI added (was missing)
-- Payment and debt-increase events shown inline in table with colored badges
-- Better stat cards layout with 4 metrics
-- Collapsible info section at bottom
+## Global UI Rules
+
+### Calculator heading rule
+**Always** use the `title` prop of `CalculatorLayout` for the page heading and description.
+Never place the `<h1>` and description `<p>` inside `children` — they must go into the `title` prop so they render full-width above the sidebar grid.
+
+```tsx
+// ✅ Correct
+<CalculatorLayout
+  calculatorId="my-calc"
+  title={
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Заголовок</h1>
+      <p className="text-muted-foreground mt-1">Описание</p>
+    </div>
+  }
+>
+  {/* no h1 here */}
+</CalculatorLayout>
+
+// ❌ Wrong — h1 inside children gets stuck in the narrow left column
+<CalculatorLayout calculatorId="my-calc">
+  <div>
+    <h1>Заголовок</h1>
+    ...
+  </div>
+</CalculatorLayout>
+```
