@@ -143,38 +143,38 @@ export default function NdflCalculatorPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* ── Inputs panel ── */}
-          <Card className="lg:col-span-1 h-fit lg:sticky lg:top-24">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Wallet className="h-4 w-4 text-primary" /> Параметры
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-5">
+        {/* ── Inputs panel (full width) ── */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Wallet className="h-4 w-4 text-primary" /> Параметры
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
 
               {/* Direction toggle */}
-              <div className="grid grid-cols-2 gap-2">
-                {(["fromGross", "fromNet"] as const).map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDirection(d)}
-                    className={cn(
-                      "flex flex-col items-center gap-1 rounded-lg border p-3 text-center text-xs font-medium transition-all",
-                      direction === d
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                    )}
-                  >
-                    {d === "fromGross"
-                      ? <ArrowDownToLine className="h-4 w-4" />
-                      : <ArrowUpFromLine className="h-4 w-4" />}
-                    {d === "fromGross" ? "Из «грязной»" : "Из «чистой»"}
-                    <span className="text-[10px] font-normal text-muted-foreground">
-                      {d === "fromGross" ? "до вычета налога" : "после вычета налога"}
-                    </span>
-                  </button>
-                ))}
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Направление</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["fromGross", "fromNet"] as const).map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDirection(d)}
+                      className={cn(
+                        "flex flex-col items-center gap-1 rounded-lg border p-3 text-center text-xs font-medium transition-all",
+                        direction === d
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                      )}
+                    >
+                      {d === "fromGross"
+                        ? <ArrowDownToLine className="h-4 w-4" />
+                        : <ArrowUpFromLine className="h-4 w-4" />}
+                      {d === "fromGross" ? "Из «грязной»" : "Из «чистой»"}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Amount */}
@@ -208,37 +208,33 @@ export default function NdflCalculatorPage() {
                 </Select>
               </div>
 
-              {/* Non-resident toggle */}
-              <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2.5">
-                <div>
-                  <p className="text-sm font-medium">Нерезидент РФ</p>
-                  <p className="text-xs text-muted-foreground">Ставка 30% / 15%</p>
+              {/* Non-resident + manual rate */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2.5">
+                  <div>
+                    <p className="text-sm font-medium">Нерезидент РФ</p>
+                    <p className="text-xs text-muted-foreground">Ставка 30% / 15%</p>
+                  </div>
+                  <Switch id="non-res" checked={isNonResident} onCheckedChange={setIsNonResident} />
                 </div>
-                <Switch
-                  id="non-res"
-                  checked={isNonResident}
-                  onCheckedChange={setIsNonResident}
-                />
+                {(incomeType === "manual" || isNonResident) && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Ставка (%)</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={manualRate ?? getDefaultRateForIncomeType(incomeType, isNonResident)}
+                      onChange={(e) => setManualRate(Number(e.target.value))}
+                    />
+                  </div>
+                )}
               </div>
+            </div>
+          </CardContent>
+        </Card>
 
-              {/* Manual rate */}
-              {(incomeType === "manual" || isNonResident) && (
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Ставка (%)</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    value={manualRate ?? getDefaultRateForIncomeType(incomeType, isNonResident)}
-                    onChange={(e) => setManualRate(Number(e.target.value))}
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* ── Results ── */}
-          <div className="lg:col-span-2 space-y-5">
+        <div className="space-y-5">
 
             {/* Hero result */}
             <Card>
@@ -380,7 +376,6 @@ export default function NdflCalculatorPage() {
                 </table>
               </CardContent>
             </Card>
-          </div>
         </div>
       </div>
     </CalculatorLayout>
