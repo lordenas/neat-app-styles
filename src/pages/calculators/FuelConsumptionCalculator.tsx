@@ -83,23 +83,6 @@ export default function FuelConsumptionCalculator() {
 
           {/* Tab 1 — средний расход */}
           <TabsContent value="calc" className="space-y-6 mt-0">
-            {/* Hero */}
-            <Card className="bg-primary text-primary-foreground border-0">
-              <CardContent className="px-6 py-8">
-                <div className="flex items-center gap-4">
-                  <div className="rounded-2xl bg-primary-foreground/15 p-4">
-                    <Gauge className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultConsumptionPer100")}</p>
-                    <p className="text-5xl font-bold tracking-tight tabular-nums">
-                      {result1.per100km} <span className="text-2xl font-normal opacity-80">{t("calculator.fuelConsumption.consumptionL100km")}</span>
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Параметры */}
             <Card>
               <CardHeader className="px-6 pt-6 pb-4">
@@ -151,27 +134,27 @@ export default function FuelConsumptionCalculator() {
                 value={`${result1.costPerKm.toLocaleString("ru-RU")} ₽`}
               />
             </div>
-          </TabsContent>
 
-          {/* Tab 2 — планирование поездки */}
-          <TabsContent value="plan" className="space-y-6 mt-0">
             {/* Hero */}
             <Card className="bg-primary text-primary-foreground border-0">
               <CardContent className="px-6 py-8">
                 <div className="flex items-center gap-4">
                   <div className="rounded-2xl bg-primary-foreground/15 p-4">
-                    <Fuel className="h-8 w-8" />
+                    <Gauge className="h-8 w-8" />
                   </div>
                   <div>
-                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultFuelUsed")}</p>
+                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultConsumptionPer100")}</p>
                     <p className="text-5xl font-bold tracking-tight tabular-nums">
-                      {result2.liters} <span className="text-2xl font-normal opacity-80">л</span>
+                      {result1.per100km} <span className="text-2xl font-normal opacity-80">{t("calculator.fuelConsumption.consumptionL100km")}</span>
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
 
+          {/* Tab 2 — планирование поездки */}
+          <TabsContent value="plan" className="space-y-6 mt-0">
             {/* Параметры */}
             <Card>
               <CardHeader className="px-6 pt-6 pb-4">
@@ -223,6 +206,23 @@ export default function FuelConsumptionCalculator() {
                 value={`${result2.liters} л`}
               />
             </div>
+
+            {/* Hero */}
+            <Card className="bg-primary text-primary-foreground border-0">
+              <CardContent className="px-6 py-8">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-2xl bg-primary-foreground/15 p-4">
+                    <Fuel className="h-8 w-8" />
+                  </div>
+                  <div>
+                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultFuelUsed")}</p>
+                    <p className="text-5xl font-bold tracking-tight tabular-nums">
+                      {result2.liters} <span className="text-2xl font-normal opacity-80">л</span>
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
