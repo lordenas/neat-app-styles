@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Trash2, Plus, TrendingUp, CalendarDays, Percent, Banknote, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -35,6 +37,8 @@ export default function LoanInterestCalculatorPage() {
   const [debtIncreases, setDebtIncreases] = useState<DebtIncrease[]>([]);
   const [rateChanges, setRateChanges] = useState<RateChange[]>([]);
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const advancedCount = rateChanges.length + payouts.length + debtIncreases.length;
 
   const result = useMemo(() => {
     const input: LoanInterestInput = {
@@ -124,98 +128,133 @@ export default function LoanInterestCalculatorPage() {
           </CardContent>
         </Card>
 
-        {/* Optional sections row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Rate changes */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Изменение ставки</CardTitle>
-                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                  onClick={() => setRateChanges([...rateChanges, { date: endDate, ratePercent: initialRate }])}>
-                  <Plus className="h-3.5 w-3.5" /> Добавить
-                </Button>
-              </div>
-            </CardHeader>
-            {rateChanges.length > 0 && (
-              <CardContent className="space-y-2">
-                {rateChanges.map((rc, i) => (
-                  <div key={i} className="flex gap-1.5 items-center">
-                    <Input type="date" value={rc.date} className="flex-1 h-8 text-xs"
-                      onChange={(e) => { const arr = [...rateChanges]; arr[i] = { ...arr[i], date: e.target.value }; setRateChanges(arr); }} />
-                    <div className="relative w-20 shrink-0">
-                      <Input type="number" step={0.1} min={0} value={rc.ratePercent} className="h-8 text-xs pr-5"
-                        onChange={(e) => { const arr = [...rateChanges]; arr[i] = { ...arr[i], ratePercent: Number(e.target.value) || 0 }; setRateChanges(arr); }} />
-                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">%</span>
+        {/* Advanced params collapsible */}
+        <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+          <CollapsibleTrigger asChild>
+            <button className="flex w-full items-center justify-between rounded-xl border border-dashed border-border px-4 py-3 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all">
+              <span className="flex items-center gap-2">
+                Дополнительные параметры
+                {advancedCount > 0 && (
+                  <Badge variant="secondary" className="text-xs px-1.5 py-0">{advancedCount}</Badge>
+                )}
+              </span>
+              <ChevronDown className={cn("h-4 w-4 transition-transform", advancedOpen && "rotate-180")} />
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+              {/* Rate changes */}
+              <Card>
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">Изменение ставки</CardTitle>
+                    <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
+                      onClick={() => setRateChanges([...rateChanges, { date: endDate, ratePercent: initialRate }])}>
+                      <Plus className="h-3 w-3" /> Добавить
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 space-y-2">
+                  {rateChanges.length === 0 && (
+                    <p className="text-xs text-muted-foreground">Изменений не добавлено</p>
+                  )}
+                  {rateChanges.map((rc, i) => (
+                    <div key={i} className="flex items-end gap-2">
+                      <div className="space-y-1 flex-1">
+                        <Label className="text-xs text-muted-foreground">Дата</Label>
+                        <Input type="date" value={rc.date} className="h-8 text-sm"
+                          onChange={(e) => { const arr = [...rateChanges]; arr[i] = { ...arr[i], date: e.target.value }; setRateChanges(arr); }} />
+                      </div>
+                      <div className="space-y-1 w-24 shrink-0">
+                        <Label className="text-xs text-muted-foreground">Ставка, %</Label>
+                        <Input type="number" step={0.1} min={0} value={rc.ratePercent} className="h-8 text-sm"
+                          onChange={(e) => { const arr = [...rateChanges]; arr[i] = { ...arr[i], ratePercent: Number(e.target.value) || 0 }; setRateChanges(arr); }} />
+                      </div>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={() => setRateChanges(rateChanges.filter((_, j) => j !== i))}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0"
-                      onClick={() => setRateChanges(rateChanges.filter((_, j) => j !== i))}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-            )}
-          </Card>
+                  ))}
+                </CardContent>
+              </Card>
 
-          {/* Partial payouts */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Частичные выплаты</CardTitle>
-                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                  onClick={() => setPayouts([...payouts, { date: new Date().toISOString().slice(0, 10), amount: 0 }])}>
-                  <Plus className="h-3.5 w-3.5" /> Добавить
-                </Button>
-              </div>
-            </CardHeader>
-            {payouts.length > 0 && (
-              <CardContent className="space-y-2">
-                {payouts.map((p, i) => (
-                  <div key={i} className="flex gap-1.5 items-center">
-                    <Input type="date" value={p.date} className="flex-1 h-8 text-xs"
-                      onChange={(e) => { const arr = [...payouts]; arr[i] = { ...arr[i], date: e.target.value }; setPayouts(arr); }} />
-                    <Input type="text" inputMode="numeric" value={formatNumberInput(p.amount)} className="flex-1 h-8 text-xs"
-                      onChange={(e) => { const arr = [...payouts]; arr[i] = { ...arr[i], amount: parseNumberInput(e.target.value) }; setPayouts(arr); }} />
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0"
-                      onClick={() => setPayouts(payouts.filter((_, j) => j !== i))}>
-                      <Trash2 className="h-3.5 w-3.5" />
+              {/* Partial payouts */}
+              <Card>
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">Частичные выплаты</CardTitle>
+                    <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
+                      onClick={() => setPayouts([...payouts, { date: new Date().toISOString().slice(0, 10), amount: 0 }])}>
+                      <Plus className="h-3 w-3" /> Добавить
                     </Button>
                   </div>
-                ))}
-              </CardContent>
-            )}
-          </Card>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 space-y-2">
+                  {payouts.length === 0 && (
+                    <p className="text-xs text-muted-foreground">Выплат не добавлено</p>
+                  )}
+                  {payouts.map((p, i) => (
+                    <div key={i} className="flex items-end gap-2">
+                      <div className="space-y-1 w-36 shrink-0">
+                        <Label className="text-xs text-muted-foreground">Дата</Label>
+                        <Input type="date" value={p.date} className="h-8 text-sm"
+                          onChange={(e) => { const arr = [...payouts]; arr[i] = { ...arr[i], date: e.target.value }; setPayouts(arr); }} />
+                      </div>
+                      <div className="space-y-1 flex-1">
+                        <Label className="text-xs text-muted-foreground">Сумма, ₽</Label>
+                        <Input type="text" inputMode="numeric" value={formatNumberInput(p.amount)} className="h-8 text-sm tabular-nums"
+                          onChange={(e) => { const arr = [...payouts]; arr[i] = { ...arr[i], amount: parseNumberInput(e.target.value) }; setPayouts(arr); }} />
+                      </div>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={() => setPayouts(payouts.filter((_, j) => j !== i))}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
 
-          {/* Debt increases */}
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm">Увеличение долга</CardTitle>
-                <Button variant="ghost" size="sm" className="h-7 text-xs gap-1"
-                  onClick={() => setDebtIncreases([...debtIncreases, { date: new Date().toISOString().slice(0, 10), amount: 0 }])}>
-                  <Plus className="h-3.5 w-3.5" /> Добавить
-                </Button>
-              </div>
-            </CardHeader>
-            {debtIncreases.length > 0 && (
-              <CardContent className="space-y-2">
-                {debtIncreases.map((d, i) => (
-                  <div key={i} className="flex gap-1.5 items-center">
-                    <Input type="date" value={d.date} className="flex-1 h-8 text-xs"
-                      onChange={(e) => { const arr = [...debtIncreases]; arr[i] = { ...arr[i], date: e.target.value }; setDebtIncreases(arr); }} />
-                    <Input type="text" inputMode="numeric" value={formatNumberInput(d.amount)} className="flex-1 h-8 text-xs"
-                      onChange={(e) => { const arr = [...debtIncreases]; arr[i] = { ...arr[i], amount: parseNumberInput(e.target.value) }; setDebtIncreases(arr); }} />
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0"
-                      onClick={() => setDebtIncreases(debtIncreases.filter((_, j) => j !== i))}>
-                      <Trash2 className="h-3.5 w-3.5" />
+              {/* Debt increases */}
+              <Card>
+                <CardHeader className="pb-2 pt-4 px-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-sm font-medium">Увеличение долга</CardTitle>
+                    <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
+                      onClick={() => setDebtIncreases([...debtIncreases, { date: new Date().toISOString().slice(0, 10), amount: 0 }])}>
+                      <Plus className="h-3 w-3" /> Добавить
                     </Button>
                   </div>
-                ))}
-              </CardContent>
-            )}
-          </Card>
-        </div>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 space-y-2">
+                  {debtIncreases.length === 0 && (
+                    <p className="text-xs text-muted-foreground">Увеличений не добавлено</p>
+                  )}
+                  {debtIncreases.map((d, i) => (
+                    <div key={i} className="flex items-end gap-2">
+                      <div className="space-y-1 w-36 shrink-0">
+                        <Label className="text-xs text-muted-foreground">Дата</Label>
+                        <Input type="date" value={d.date} className="h-8 text-sm"
+                          onChange={(e) => { const arr = [...debtIncreases]; arr[i] = { ...arr[i], date: e.target.value }; setDebtIncreases(arr); }} />
+                      </div>
+                      <div className="space-y-1 flex-1">
+                        <Label className="text-xs text-muted-foreground">Сумма, ₽</Label>
+                        <Input type="text" inputMode="numeric" value={formatNumberInput(d.amount)} className="h-8 text-sm tabular-nums"
+                          onChange={(e) => { const arr = [...debtIncreases]; arr[i] = { ...arr[i], amount: parseNumberInput(e.target.value) }; setDebtIncreases(arr); }} />
+                      </div>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                        onClick={() => setDebtIncreases(debtIncreases.filter((_, j) => j !== i))}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
 
         {/* Results — full width */}
         <div className="space-y-5">
