@@ -93,6 +93,7 @@ export default function DepositCalculator() {
   const [taxRate, setTaxRate] = useState(13);
 
   const [showSchedule, setShowSchedule] = useState(false);
+  const [taxInfoOpen, setTaxInfoOpen] = useState(false);
 
   const result = useMemo(() => {
     if (principal <= 0 || !startDate || term <= 0) return null;
