@@ -46,7 +46,15 @@ function formatRub(n: number) {
   return n.toLocaleString("ru-RU") + " ₽";
 }
 
+const OWNER_TYPES = [
+  { value: "individual", label: "Физическое лицо" },
+  { value: "legal",      label: "Юридическое лицо" },
+] as const;
+
+type OwnerType = typeof OWNER_TYPES[number]["value"];
+
 export default function TransportTaxCalculator() {
+  const [ownerType, setOwnerType] = useState<OwnerType>("individual");
   const [category, setCategory] = useState<VehicleCategory>("passenger_car");
   const [horsePower, setHorsePower] = useState(150);
   const [regionCode, setRegionCode] = useState("77");
@@ -79,6 +87,36 @@ export default function TransportTaxCalculator() {
   return (
     <CalculatorLayout calculatorId="transport-tax" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="space-y-5">
+
+        {/* Owner type */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Владелец транспортного средства</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              {OWNER_TYPES.map((ot) => (
+                <button
+                  key={ot.value}
+                  onClick={() => setOwnerType(ot.value)}
+                  className={cn(
+                    "rounded-lg border-2 py-3 px-4 text-sm font-medium transition-all",
+                    ownerType === ot.value
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                  )}
+                >
+                  {ot.label}
+                </button>
+              ))}
+            </div>
+            {ownerType === "legal" && (
+              <p className="mt-3 text-xs text-muted-foreground bg-muted/40 rounded-lg px-3 py-2">
+                Юридические лица самостоятельно рассчитывают и уплачивают налог (авансовые платежи ежеквартально).
+              </p>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Vehicle category */}
         <Card>
