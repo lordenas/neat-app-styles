@@ -109,6 +109,10 @@ export default function Dashboard() {
     navigate(`/compare?ids=${[...selected].join(",")}`);
   };
 
+  const selectedCalcs = calculations.filter((c) => selected.has(c.id));
+  const selectedTypes = new Set(selectedCalcs.map((c) => c.calculator_type));
+  const mixedTypes = selectedTypes.size > 1;
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
