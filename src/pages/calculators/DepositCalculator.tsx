@@ -383,7 +383,7 @@ export default function DepositCalculator() {
                   <p className="text-base font-bold tabular-nums">{result.effectiveRatePercent}%</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">годовых</p>
                 </div>
-                <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
+                <div className="rounded-lg bg-destructive/8 dark:bg-destructive/[0.05] border border-destructive/15 dark:border-destructive/10 p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">НДФЛ {taxRate}%</p>
                   <p className="text-base font-bold tabular-nums text-destructive">−{fmt(result.totalTax)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">налог</p>
