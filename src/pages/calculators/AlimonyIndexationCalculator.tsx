@@ -98,7 +98,7 @@ export default function AlimonyIndexationCalculator() {
           <CardContent className="space-y-5">
 
             {/* Hero */}
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08]">
               <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
                 <Scale className="h-5 w-5 text-primary" />
               </div>
