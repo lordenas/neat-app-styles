@@ -66,11 +66,6 @@ export default function FuelConsumptionCalculator() {
   return (
     <CalculatorLayout calculatorId="fuel-consumption" categoryName="Automotive" categoryPath="/categories/automotive">
       <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.fuel-consumption")}</h1>
-          <p className="text-muted-foreground mt-2">{t("calculatorDescriptions.fuel-consumption")}</p>
-        </div>
-
         <Tabs defaultValue="calc" className="space-y-8">
           <TabsList className="h-11">
             <TabsTrigger value="calc" className="px-6 text-sm">

@@ -42,16 +42,6 @@ export default function AutoLoanCalculator() {
   return (
     <CalculatorLayout calculatorId="auto-loan" categoryName="Automotive" categoryPath="/categories/automotive">
       <div className="space-y-8">
-        {/* Title */}
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            {t("calculatorNames.auto-loan")}
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            {t("calculatorDescriptions.auto-loan")}
-          </p>
-        </div>
-
         {/* Parameters */}
         <Card>
           <CardHeader className="px-6 pt-6 pb-4">
