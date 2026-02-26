@@ -126,8 +126,8 @@ export default function LoanInterestCalculatorPage() {
           </CardContent>
         </Card>
 
-        {/* Additional params — full width, 3 columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Additional params — full width, stacked */}
+        <div className="flex flex-col gap-4">
 
               {/* Rate changes */}
               <Card>
