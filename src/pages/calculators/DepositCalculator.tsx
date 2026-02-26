@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
