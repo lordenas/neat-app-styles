@@ -238,15 +238,15 @@ export default function Gk395CalculatorPage() {
               <div className="space-y-5">
                 {/* Stat cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                  <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Сумма долга</p>
                     <p className="text-lg font-bold tabular-nums leading-tight">{fmt(finalBalance)} ₽</p>
                   </div>
-                  <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
+                  <div className="rounded-lg bg-destructive/8 dark:bg-destructive/[0.05] border border-destructive/15 dark:border-destructive/10 p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Проценты (ст. 395)</p>
                     <p className="text-lg font-bold tabular-nums leading-tight text-destructive">{fmt(result.totalInterest)} ₽</p>
                   </div>
-                  <div className="rounded-lg bg-[hsl(var(--success)/0.08)] border border-[hsl(var(--success)/0.2)] p-3.5">
+                  <div className="rounded-lg bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Итого с процентами</p>
                     <p className="text-lg font-bold tabular-nums leading-tight text-[hsl(var(--success))]">{fmt(result.totalDebtWithInterest)} ₽</p>
                   </div>

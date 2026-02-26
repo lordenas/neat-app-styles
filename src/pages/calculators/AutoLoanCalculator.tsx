@@ -234,7 +234,7 @@ export default function AutoLoanCalculator() {
               <Card>
                 <CardContent className="px-5 py-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="rounded-lg bg-destructive/10 p-2">
+                    <div className="rounded-lg bg-destructive/10 dark:bg-destructive/[0.06] p-2">
                       <TrendingUp className="h-4 w-4 text-destructive" />
                     </div>
                     <span className="text-sm text-muted-foreground">Переплата</span>

@@ -98,7 +98,7 @@ export default function AlimonyIndexationCalculator() {
           <CardContent className="space-y-5">
 
             {/* Hero */}
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08]">
               <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
                 <Scale className="h-5 w-5 text-primary" />
               </div>
@@ -125,8 +125,8 @@ export default function AlimonyIndexationCalculator() {
                   isEqual
                     ? "bg-muted/50 border border-border"
                     : isGrowth
-                    ? "bg-[hsl(var(--success)/0.08)] border-[hsl(var(--success)/0.2)]"
-                    : "bg-destructive/8 border-destructive/15"
+                    ? "bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)]"
+                    : "bg-destructive/8 dark:bg-destructive/[0.05] border-destructive/15 dark:border-destructive/10"
                 }`}
               >
                 <p className="text-xs text-muted-foreground mb-1">Изменение</p>
@@ -149,7 +149,7 @@ export default function AlimonyIndexationCalculator() {
                   <p className="text-xs text-muted-foreground mb-1">На момент установления</p>
                   <p className="text-base font-bold tabular-nums">{fmt(originalPm)} ₽</p>
                 </div>
-                <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                   <div className="flex items-center gap-1 mb-1">
                     <TrendingUp className="h-3 w-3 text-primary" />
                     <p className="text-xs text-primary font-medium">Текущий</p>

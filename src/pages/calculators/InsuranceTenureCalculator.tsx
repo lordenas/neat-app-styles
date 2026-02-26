@@ -26,10 +26,10 @@ export default function InsuranceTenureCalculator() {
 
   const sickBgClass =
     result.sickPayPercent === 100
-      ? "bg-[hsl(var(--success)/0.08)] border-[hsl(var(--success)/0.2)]"
+      ? "bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)]"
       : result.sickPayPercent === 80
-      ? "bg-primary/5 border-primary/10"
-      : "bg-destructive/8 border-destructive/15";
+      ? "bg-primary/5 dark:bg-primary/[0.04] border-primary/10 dark:border-primary/[0.08]"
+      : "bg-destructive/8 dark:bg-destructive/[0.05] border-destructive/15 dark:border-destructive/10";
 
   const sickTextClass =
     result.sickPayPercent === 100
@@ -125,7 +125,7 @@ export default function InsuranceTenureCalculator() {
           <CardContent className="space-y-5">
 
             {/* Hero */}
-            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08]">
               <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
                 <ShieldCheck className="h-5 w-5 text-primary" />
               </div>

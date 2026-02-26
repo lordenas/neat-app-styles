@@ -361,7 +361,7 @@ export default function DepositCalculator() {
             <CardContent className="space-y-5">
 
               {/* Hero */}
-              <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
+              <div className="flex items-start gap-4 p-4 rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08]">
                 <div className="rounded-full bg-primary/10 p-2.5 shrink-0">
                   <PiggyBank className="h-5 w-5 text-primary" />
                 </div>
@@ -373,7 +373,7 @@ export default function DepositCalculator() {
 
               {/* Stat grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-lg bg-[hsl(var(--success)/0.08)] border border-[hsl(var(--success)/0.2)] p-3.5">
+                <div className="rounded-lg bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">Проценты</p>
                   <p className="text-base font-bold tabular-nums text-[hsl(var(--success))]">+{fmt(result.totalInterest)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">начисленные</p>
@@ -383,12 +383,12 @@ export default function DepositCalculator() {
                   <p className="text-base font-bold tabular-nums">{result.effectiveRatePercent}%</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">годовых</p>
                 </div>
-                <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
+                <div className="rounded-lg bg-destructive/8 dark:bg-destructive/[0.05] border border-destructive/15 dark:border-destructive/10 p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">НДФЛ {taxRate}%</p>
                   <p className="text-base font-bold tabular-nums text-destructive">−{fmt(result.totalTax)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">налог</p>
                 </div>
-                <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">Чистый доход</p>
                   <p className="text-base font-bold tabular-nums text-primary">{fmt(result.netIncome)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">после налога</p>

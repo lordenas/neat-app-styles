@@ -148,7 +148,7 @@ export default function InflationCalculatorPage() {
             {result ? (
               <>
                 {/* Hero banner */}
-                <div className="rounded-xl bg-destructive/10 border border-destructive/20 p-5">
+                <div className="rounded-xl bg-destructive/10 dark:bg-destructive/[0.06] border border-destructive/20 dark:border-destructive/[0.12] p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <TrendingUp className="h-5 w-5 text-destructive" />
                     <span className="text-sm font-medium text-destructive">{t("calculator.inflation.inflationForPeriod")}</span>

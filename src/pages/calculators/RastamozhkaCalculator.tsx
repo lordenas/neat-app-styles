@@ -241,7 +241,7 @@ export default function RastamozhkaCalculator() {
         {/* Результаты — внизу */}
         <div className="space-y-4">
           {/* Hero */}
-          <Card className="border-primary/30 bg-primary/5">
+          <Card className="border-primary/25 dark:border-primary/15 bg-primary/5 dark:bg-primary/[0.03]">
             <CardContent className="pt-6 space-y-1">
               <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Итого таможенные расходы</p>
               <p className="text-4xl font-bold text-primary">{fmt(result.total)}</p>
