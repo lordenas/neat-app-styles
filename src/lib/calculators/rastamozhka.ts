@@ -1,12 +1,12 @@
 /**
  * Калькулятор растаможки автомобиля при ввозе в РФ.
- * Включает: таможенный сбор, пошлину, утильсбор, акциз, НДС.
+ * Ставки актуальны на 2026 год.
  */
 
 export type EngineType = "petrol" | "diesel" | "electric" | "hybrid";
 
 export type RastamozhkaInput = {
-  /** Стоимость авто (евро) */
+  /** Стоимость авто в евро */
   priceEur: number;
   /** Объём двигателя (куб. см) */
   engineVolume: number;
@@ -14,7 +14,7 @@ export type RastamozhkaInput = {
   horsePower: number;
   /** Тип двигателя */
   engineType: EngineType;
-  /** Возраст авто: "new" | "1-3" | "3-5" | "5-7" | "7+" */
+  /** Возраст авто */
   ageGroup: "new" | "1-3" | "3-5" | "5-7" | "7+";
   /**
    * Тип ввозящего:
@@ -37,155 +37,222 @@ export type RastamozhkaResult = {
   totalRub: number;
 };
 
-// Таможенный сбор (руб) по стоимости
+// ─── Таможенный сбор (актуально с 01.01.2026) ────────────────────────────────
 function getCustomsFee(priceRub: number): number {
-  if (priceRub <= 200_000) return 775;
-  if (priceRub <= 450_000) return 1550;
-  if (priceRub <= 1_200_000) return 3100;
-  if (priceRub <= 2_700_000) return 8530;
-  if (priceRub <= 4_200_000) return 12000;
-  if (priceRub <= 5_500_000) return 15500;
-  if (priceRub <= 7_000_000) return 20000;
-  return 30000;
+  if (priceRub <= 200_000)    return 1_231;
+  if (priceRub <= 450_000)    return 2_462;
+  if (priceRub <= 1_200_000)  return 4_924;
+  if (priceRub <= 2_700_000)  return 13_541;
+  if (priceRub <= 4_200_000)  return 18_465;
+  if (priceRub <= 5_500_000)  return 21_344;
+  if (priceRub <= 10_000_000) return 49_240;
+  return 73_860;
 }
 
-// Единая ставка пошлины для физлиц (евро за куб.см) — для личного пользования
-function getIndividualDutyRate(ageGroup: string, priceEur: number, engineVol: number): number {
-  if (ageGroup === "new") {
-    const pctDuty = priceEur * 0.48;
-    const perCcRates: [number, number][] = [
-      [800, 3.5], [1000, 3.5], [1500, 5.5], [1800, 7.5], [2300, 15], [3000, 20], [Infinity, 20],
-    ];
-    let perCcRate = 20;
-    for (const [limit, rate] of perCcRates) {
-      if (engineVol <= limit) { perCcRate = rate; break; }
-    }
-    return Math.max(pctDuty, perCcRate * engineVol) / engineVol;
-  }
-  if (ageGroup === "1-3") {
-    if (engineVol <= 1000) return 1.5;
-    if (engineVol <= 1500) return 1.7;
-    if (engineVol <= 1800) return 2.5;
-    if (engineVol <= 2300) return 2.7;
-    if (engineVol <= 3000) return 3.0;
-    return 3.6;
-  }
-  // 3-5, 5-7, 7+
-  if (engineVol <= 1000) return 3.0;
-  if (engineVol <= 1500) return 3.2;
-  if (engineVol <= 1800) return 3.5;
-  if (engineVol <= 2300) return 4.8;
-  if (engineVol <= 3000) return 5.0;
-  return 5.7;
+// ─── Пошлина для физлиц (личное пользование) ─────────────────────────────────
+// Для авто до 3 лет: max(процент от стоимости, EUR/см³)
+// Пороги стоимости в EUR: до 8500, до 16700, до 42300, до 84500, до 169000, свыше 169000
+function getIndividualDutyEur_new(priceEur: number, vol: number): number {
+  let pctRate: number;
+  let perCcRate: number;
+
+  if (priceEur <= 8_500)        { pctRate = 0.54; perCcRate = 2.5; }
+  else if (priceEur <= 16_700)  { pctRate = 0.48; perCcRate = 3.5; }
+  else if (priceEur <= 42_300)  { pctRate = 0.48; perCcRate = 5.5; }
+  else if (priceEur <= 84_500)  { pctRate = 0.48; perCcRate = 7.5; }
+  else if (priceEur <= 169_000) { pctRate = 0.48; perCcRate = 15; }
+  else                           { pctRate = 0.48; perCcRate = 20; }
+
+  return Math.max(priceEur * pctRate, perCcRate * vol);
 }
 
-/**
- * Пошлина для юрлиц / физлиц "для перепродажи".
- * Комбинированная ставка: max(% от стоимости, EUR/куб.см).
- */
-function getLegalDutyEur(ageGroup: string, priceEur: number, engineVol: number, engineType: EngineType): number {
+// Для авто 3–5 лет (физлицо)
+function getIndividualDutyEur_3_5(vol: number): number {
+  if (vol <= 1000) return 1.5 * vol;
+  if (vol <= 1500) return 1.7 * vol;
+  if (vol <= 1800) return 2.5 * vol;
+  if (vol <= 2300) return 2.7 * vol;
+  if (vol <= 3000) return 3.0 * vol;
+  return 3.6 * vol;
+}
+
+// Для авто 5+ лет (физлицо): одна шкала для 5-7 и 7+
+function getIndividualDutyEur_5plus(vol: number): number {
+  if (vol <= 1000) return 3.0 * vol;
+  if (vol <= 1500) return 3.2 * vol;
+  if (vol <= 1800) return 3.5 * vol;
+  if (vol <= 2300) return 4.8 * vol;
+  if (vol <= 3000) return 5.0 * vol;
+  return 5.7 * vol;
+}
+
+// ─── Пошлина для юрлиц / физлицо для перепродажи ─────────────────────────────
+function getLegalDutyEur(
+  ageGroup: string,
+  priceEur: number,
+  vol: number,
+  engineType: EngineType
+): number {
+  // Электромобили: 15% от стоимости для всех
   if (engineType === "electric") {
-    // Электромобили: 15% от стоимости (льготная ставка 0% до 2025, берём стандартную)
     return priceEur * 0.15;
   }
 
-  if (ageGroup === "new") {
-    // Адвалорная часть + специфическая (EUR/куб.см), берётся максимум
-    const adValorem = priceEur * 0.15;
+  const isDiesel = engineType === "diesel";
+
+  if (ageGroup === "new" || ageGroup === "1-3") {
+    // до 3 лет: только адвалорная ставка
+    if (isDiesel) {
+      return priceEur * 0.15;
+    }
+    // бензин/гибрид: 15% (12.5% для >2800), берём 15% как упрощение
+    if (vol > 2800) return priceEur * 0.125;
+    return priceEur * 0.15;
+  }
+
+  if (ageGroup === "3-5" || ageGroup === "5-7") {
+    // комбинированная: max(20%, специфическая EUR/см³)
+    const adValorem = priceEur * 0.20;
     let perCc: number;
-    if (engineVol <= 1000) perCc = 0;
-    else if (engineVol <= 1500) perCc = engineVol * 0.5;
-    else if (engineVol <= 1800) perCc = engineVol * 0.7;
-    else if (engineVol <= 2300) perCc = engineVol * 0.8;
-    else if (engineVol <= 3000) perCc = engineVol * 1.0;
-    else perCc = engineVol * 1.25;
+    if (isDiesel) {
+      if (vol <= 1500)      perCc = 0.32 * vol;
+      else if (vol <= 2500) perCc = 0.40 * vol;
+      else                   perCc = 0.80 * vol;
+    } else {
+      // бензин/гибрид
+      if (vol <= 1000)      perCc = 0.36 * vol;
+      else if (vol <= 1500) perCc = 0.40 * vol;
+      else if (vol <= 1800) perCc = 0.36 * vol;
+      else if (vol <= 2300) perCc = 0.44 * vol;
+      else if (vol <= 2800) perCc = 0.44 * vol;
+      else if (vol <= 3000) perCc = 0.44 * vol;
+      else                   perCc = 0.80 * vol;
+    }
     return Math.max(adValorem, perCc);
   }
 
-  // Б/у для юрлиц / перепродажа: 20% адвалорная + специфическая EUR/куб.см
-  const adValorem = priceEur * 0.20;
-  let perCc: number;
-  if (engineVol <= 1000) perCc = engineVol * 1.0;
-  else if (engineVol <= 1500) perCc = engineVol * 1.5;
-  else if (engineVol <= 1800) perCc = engineVol * 1.7;
-  else if (engineVol <= 2300) perCc = engineVol * 2.0;
-  else if (engineVol <= 3000) perCc = engineVol * 2.5;
-  else perCc = engineVol * 2.7;
-  return Math.max(adValorem, perCc);
+  // 7+ лет: специфическая ставка EUR/см³
+  if (isDiesel) {
+    if (vol <= 1500)      return 1.5 * vol;
+    if (vol <= 2500)      return 2.2 * vol;
+    return 3.2 * vol;
+  } else {
+    // бензин/гибрид
+    if (vol <= 1000)      return 1.4 * vol;
+    if (vol <= 1500)      return 1.5 * vol;
+    if (vol <= 1800)      return 1.6 * vol;
+    if (vol <= 2300)      return 2.2 * vol;
+    if (vol <= 2800)      return 2.2 * vol;
+    if (vol <= 3000)      return 2.2 * vol;
+    return 3.2 * vol;
+  }
 }
 
-// Акциз (руб./л.с.)
+// ─── Акциз (актуально с 01.01.2026) ──────────────────────────────────────────
 function getExciseRate(hp: number): number {
-  if (hp <= 90) return 0;
-  if (hp <= 150) return 61;
-  if (hp <= 200) return 583;
-  if (hp <= 300) return 955;
-  if (hp <= 400) return 1628;
-  if (hp <= 500) return 1685;
-  return 1740;
+  if (hp <= 90)  return 0;
+  if (hp <= 150) return 64;
+  if (hp <= 200) return 613;
+  if (hp <= 300) return 1004;
+  if (hp <= 400) return 1711;
+  if (hp <= 500) return 1771;
+  return 1829;
 }
 
-// Утильсбор (базовая ставка × коэффициент)
-function getRecyclingFee(ageGroup: string, engineVol: number, importerType: string, engineType: EngineType): number {
-  const isIndividual = importerType === "individual";
-  const base = isIndividual ? 3400 : 20000;
+// ─── Утилизационный сбор ─────────────────────────────────────────────────────
+function getRecyclingFee(
+  ageGroup: string,
+  vol: number,
+  importerType: string,
+  engineType: EngineType,
+  horsePower: number
+): number {
+  const isIndividualPersonal = importerType === "individual";
 
-  if (isIndividual) {
-    const coeff = (ageGroup === "new" || ageGroup === "1-3") ? 0.17 : 0.26;
-    return Math.round(base * coeff);
+  if (isIndividualPersonal) {
+    // Льготный утильсбор: база 20 000 руб., коэф. 0.17 / 0.26
+    // Только если: объём ≤ 3000 см³, мощность ≤ 160 л.с. (или электро ≤ 80 л.с.)
+    const isElectric = engineType === "electric";
+    const qualifies = isElectric
+      ? horsePower <= 80
+      : (vol <= 3000 && horsePower <= 160);
+
+    if (qualifies) {
+      const base = 20_000;
+      const coeff = (ageGroup === "new" || ageGroup === "1-3") ? 0.17 : 0.26;
+      return Math.round(base * coeff);
+    }
+    // Если не соответствует льготным условиям — как юрлицо
   }
 
-  // Юрлицо / перепродажа — по объёму двигателя
-  // Для электромобилей используем коэффициент по мощности (условно engineVol = 0)
-  const effVol = engineType === "electric" ? 0 : engineVol;
+  // Юрлицо / физлицо для перепродажи / физлицо без льготы
+  // База для легковых некоммерческих: 20 000, коммерческих: 150 000
+  // Для юрлиц/перепродажи используем коэффициенты по объёму двигателя
+  const base = 20_000;
+  const effVol = engineType === "electric" ? 0 : vol;
   let coeff: number;
-  if (effVol <= 1000) coeff = ageGroup === "new" ? 1.65 : 6.15;
-  else if (effVol <= 2000) coeff = ageGroup === "new" ? 4.2 : 15.69;
-  else if (effVol <= 3000) coeff = ageGroup === "new" ? 6.3 : 24.01;
-  else if (effVol <= 3500) coeff = ageGroup === "new" ? 5.73 : 29.15;
-  else coeff = ageGroup === "new" ? 9.08 : 74.25;
+
+  if (effVol === 0) {
+    // Электромобили — условно как <= 1000 см³
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 1.65 : 6.15;
+  } else if (effVol <= 1000) {
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 1.65 : 6.15;
+  } else if (effVol <= 2000) {
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 4.2 : 15.69;
+  } else if (effVol <= 3000) {
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 6.3 : 24.01;
+  } else if (effVol <= 3500) {
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 5.73 : 29.15;
+  } else {
+    coeff = (ageGroup === "new" || ageGroup === "1-3") ? 9.08 : 74.25;
+  }
 
   return Math.round(base * coeff);
 }
 
+// ─── Основная функция ─────────────────────────────────────────────────────────
 export function calcRastamozhka(input: RastamozhkaInput): RastamozhkaResult {
-  const priceRub = input.priceEur * input.eurRate;
+  const { priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate } = input;
+  const priceRub = priceEur * eurRate;
 
+  // 1. Таможенный сбор
   const customsFee = getCustomsFee(priceRub);
 
+  // 2. Таможенная пошлина
   let dutyEur: number;
-  if (input.importerType === "individual") {
-    if (input.engineType === "electric") {
-      // Электромобили для физлиц: 48% стоимости (нет специфической ставки по объёму)
-      dutyEur = input.priceEur * 0.48;
+  if (importerType === "individual") {
+    if (engineType === "electric") {
+      // Электромобиль для физлица: 15% от стоимости
+      dutyEur = priceEur * 0.15;
+    } else if (ageGroup === "new" || ageGroup === "1-3") {
+      dutyEur = getIndividualDutyEur_new(priceEur, engineVolume);
+    } else if (ageGroup === "3-5") {
+      dutyEur = getIndividualDutyEur_3_5(engineVolume);
     } else {
-      const rate = getIndividualDutyRate(input.ageGroup, input.priceEur, input.engineVolume);
-      dutyEur = rate * input.engineVolume;
+      // 5-7 и 7+ — одна шкала
+      dutyEur = getIndividualDutyEur_5plus(engineVolume);
     }
   } else {
-    // individual_resale или legal — одинаковые ставки
-    dutyEur = getLegalDutyEur(input.ageGroup, input.priceEur, input.engineVolume, input.engineType);
+    dutyEur = getLegalDutyEur(ageGroup, priceEur, engineVolume, engineType);
   }
-  const duty = Math.round(dutyEur * input.eurRate);
+  const duty = Math.round(dutyEur * eurRate);
 
-  const recyclingFee = getRecyclingFee(input.ageGroup, input.engineVolume, input.importerType, input.engineType);
+  // 3. Утилизационный сбор
+  const recyclingFee = getRecyclingFee(ageGroup, engineVolume, importerType, engineType, horsePower);
 
+  // 4. Акциз и НДС — только для юрлиц и физлиц при перепродаже
+  //    Для электромобилей — начисляются всем
   let excise = 0;
   let vat = 0;
-  if (input.importerType !== "individual") {
-    excise = Math.round(getExciseRate(input.horsePower) * input.horsePower);
+  const isElectric = engineType === "electric";
+  const needsExciseVat = importerType !== "individual" || isElectric;
+
+  if (needsExciseVat) {
+    excise = Math.round(getExciseRate(horsePower) * horsePower);
     vat = Math.round((priceRub + duty + excise) * 0.20);
   }
 
   const total = customsFee + duty + recyclingFee + excise + vat;
 
-  return {
-    customsFee,
-    duty,
-    recyclingFee,
-    excise,
-    vat,
-    total,
-    totalRub: total,
-  };
+  return { customsFee, duty, recyclingFee, excise, vat, total, totalRub: total };
 }
