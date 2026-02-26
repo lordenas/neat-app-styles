@@ -373,7 +373,7 @@ export default function DepositCalculator() {
 
               {/* Stat grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-lg bg-[hsl(var(--success)/0.08)] border border-[hsl(var(--success)/0.2)] p-3.5">
+                <div className="rounded-lg bg-[hsl(var(--success)/0.08)] dark:bg-[hsl(var(--success)/0.05)] border border-[hsl(var(--success)/0.2)] dark:border-[hsl(var(--success)/0.12)] p-3.5">
                   <p className="text-xs text-muted-foreground mb-1">Проценты</p>
                   <p className="text-base font-bold tabular-nums text-[hsl(var(--success))]">+{fmt(result.totalInterest)} ₽</p>
                   <p className="text-[10px] text-muted-foreground mt-0.5">начисленные</p>
