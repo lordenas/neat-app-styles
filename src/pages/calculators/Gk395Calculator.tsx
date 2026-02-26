@@ -242,7 +242,7 @@ export default function Gk395CalculatorPage() {
                     <p className="text-xs text-muted-foreground mb-1">Сумма долга</p>
                     <p className="text-lg font-bold tabular-nums leading-tight">{fmt(finalBalance)} ₽</p>
                   </div>
-                  <div className="rounded-lg bg-destructive/8 border border-destructive/15 p-3.5">
+                  <div className="rounded-lg bg-destructive/8 dark:bg-destructive/[0.05] border border-destructive/15 dark:border-destructive/10 p-3.5">
                     <p className="text-xs text-muted-foreground mb-1">Проценты (ст. 395)</p>
                     <p className="text-lg font-bold tabular-nums leading-tight text-destructive">{fmt(result.totalInterest)} ₽</p>
                   </div>
