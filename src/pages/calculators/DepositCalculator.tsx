@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
@@ -436,11 +436,11 @@ export default function DepositCalculator() {
                   </div>
 
                   <Dialog open={taxInfoOpen} onOpenChange={setTaxInfoOpen}>
-                    <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
+                    <DialogContent className="max-w-lg flex flex-col max-h-[85vh] p-0 gap-0">
+                      <DialogHeader className="px-6 pt-6 pb-4 border-b flex-shrink-0">
                         <DialogTitle>Как считается налог на доход по вкладам</DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 text-sm">
+                      <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4 text-sm">
                         <p className="text-muted-foreground">С 2023 года налог на процентный доход по вкладам физлиц считается по новым правилам (ст. 214.2 НК РФ в редакции 259-ФЗ). Ранее действовавшие правила (налог при превышении ставкой вклада ключевой + 5%) отменены.</p>
 
                         <div>
@@ -473,6 +473,9 @@ export default function DepositCalculator() {
                           </dl>
                         </div>
                       </div>
+                      <DialogFooter className="px-6 py-4 border-t flex-shrink-0">
+                        <Button variant="outline" onClick={() => setTaxInfoOpen(false)}>Закрыть</Button>
+                      </DialogFooter>
                     </DialogContent>
                   </Dialog>
                   <div className="rounded-lg border border-border overflow-hidden">
