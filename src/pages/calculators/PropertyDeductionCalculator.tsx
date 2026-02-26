@@ -25,24 +25,24 @@ const CURRENT_YEAR = new Date().getFullYear();
 export default function PropertyDeductionCalculatorPage() {
   const [propertyPrice, setPropertyPrice] = useState(10_000_000);
   const [purchaseYear, setPurchaseYear] = useState(CURRENT_YEAR);
-  const [annualIncome, setAnnualIncome] = useState(1_200_000);
+  const [incomeByYear, setIncomeByYear] = useState<Record<number, number>>({
+    [CURRENT_YEAR]: 1_200_000,
+    [CURRENT_YEAR - 1]: 1_200_000,
+    [CURRENT_YEAR - 2]: 1_200_000,
+  });
   const [usedPreviously, setUsedPreviously] = useState(false);
   const [previousUsePeriod, setPreviousUsePeriod] = useState<PreviousUsePeriod>("after_2014");
   const [returnedAmount, setReturnedAmount] = useState(0);
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
   const result = useMemo(() => {
-    const incomeByYear: Record<number, number> = {};
-    for (let y = purchaseYear; y <= Math.min(purchaseYear + 2, CURRENT_YEAR); y++) {
-      incomeByYear[y] = annualIncome;
-    }
     return calcPropertyDeduction({
       propertyPrice, purchaseYear, usedPreviously,
       previousUsePeriod: usedPreviously ? previousUsePeriod : null,
       returnedAmount: usedPreviously && previousUsePeriod === "after_2014" ? returnedAmount : 0,
       incomeByYear,
     });
-  }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, annualIncome]);
+  }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, incomeByYear]);
 
   const deductionUsed = Math.min(propertyPrice, MAX_PROPERTY_DEDUCTION);
   const deductionShare = MAX_PROPERTY_DEDUCTION > 0
@@ -77,14 +77,21 @@ export default function PropertyDeductionCalculatorPage() {
                   className="text-base font-semibold tabular-nums h-10"
                 />
               </div>
-              <div className="space-y-1.5 flex-1 min-w-[140px]">
-                <Label className="text-xs text-muted-foreground">Годовой доход, ₽</Label>
-                <Input
-                  type="text" inputMode="numeric"
-                  value={formatNumberInput(annualIncome)}
-                  onChange={(e) => setAnnualIncome(Math.max(0, parseNumberInput(e.target.value)))}
-                  className="h-10"
-                />
+              <div className="space-y-1.5 shrink-0 w-full sm:w-auto">
+                <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR].map((y) => (
+                    <div key={y} className="space-y-1">
+                      <span className="text-xs text-muted-foreground">{y}</span>
+                      <Input
+                        type="text" inputMode="numeric"
+                        value={formatNumberInput(incomeByYear[y] ?? 0)}
+                        onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
+                        className="h-9 text-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="space-y-1.5 shrink-0">
                 <Label className="text-xs text-muted-foreground">Год покупки</Label>
