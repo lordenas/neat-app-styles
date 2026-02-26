@@ -693,19 +693,19 @@
       "titleInCountry": "Calculadora de IVA — {{country}}"
     },
     "refinancing": {
-      "title": "Refinancing calculator",
-      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
-      "howItWorksTitle": "How the comparison works",
-      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
-      "examplesTitle": "Calculation examples",
-      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
-      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
-      "howToUseTitle": "How to use the calculator",
-      "step1": "Enter the remaining balance and current loan rate and term.",
-      "step2": "Set the new loan rate and term (and any fees if applicable).",
-      "step3": "Compare total interest and repayment schedule of both options.",
-      "step4": "Check the charts for principal vs interest and repayment over time.",
-      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+      "title": "Calculadora de refinanciación",
+      "description": "Compara tu préstamo actual con una nueva oferta: descubre cuánto ahorras en intereses y tiempo. La calculadora usa la misma lógica de amortización que la calculadora de préstamos principal y muestra los planes de pago uno junto al otro.",
+      "howItWorksTitle": "Cómo funciona la comparación",
+      "howItWorks": "Introduces el capital pendiente, el tipo actual y el plazo del préstamo existente, más el tipo y plazo del nuevo préstamo. Se calculan los intereses y el total a pagar para ambos; la diferencia es tu ahorro potencial.",
+      "examplesTitle": "Ejemplos de cálculo",
+      "example1": "Ejemplo 1: 100.000 € restantes al 15% a 24 meses. Intereses totales ≈ 16.100 €. Refinanciación al 10% a 24 meses → intereses ≈ 10.600 €. Ahorro ≈ 5.500 €.",
+      "example2": "Ejemplo 2: 500.000 € restantes al 12% a 36 meses. Refinanciar al 9% a 36 meses reduce los intereses en unos 24.000 €.",
+      "howToUseTitle": "Cómo usar la calculadora",
+      "step1": "Introduce el saldo pendiente, el tipo de interés actual y el plazo del préstamo.",
+      "step2": "Indica el nuevo tipo de interés y plazo (y comisiones si las hay).",
+      "step3": "Compara los intereses totales y el calendario de amortización de ambas opciones.",
+      "step4": "Revisa los gráficos de capital frente a intereses y la evolución del reembolso.",
+      "keywords": "Búsquedas populares: calculadora refinanciación, comparar tipos de préstamo, ahorro refinanciación, cambio hipoteca, comparación tipo de interés más bajo."
     },
     "inflationBlock": {
       "title": "Inflation calculator",

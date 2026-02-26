@@ -693,19 +693,19 @@
       "titleInCountry": "حاسبة ضريبة القيمة المضافة — {{country}}"
     },
     "refinancing": {
-      "title": "Refinancing calculator",
-      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
-      "howItWorksTitle": "How the comparison works",
-      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
-      "examplesTitle": "Calculation examples",
-      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
-      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
-      "howToUseTitle": "How to use the calculator",
-      "step1": "Enter the remaining balance and current loan rate and term.",
-      "step2": "Set the new loan rate and term (and any fees if applicable).",
-      "step3": "Compare total interest and repayment schedule of both options.",
-      "step4": "Check the charts for principal vs interest and repayment over time.",
-      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+      "title": "حاسبة إعادة التمويل",
+      "description": "قارن قرضك الحالي بعرض جديد: اكتشف كم ستوفر في الفوائد والوقت. تستخدم الحاسبة نفس منطق السداد كحاسبة القروض الرئيسية وتعرض جداول الدفع جنبًا إلى جنب.",
+      "howItWorksTitle": "كيف تعمل المقارنة",
+      "howItWorks": "تُدخل رأس المال المتبقي والمعدل الحالي ومدة القرض الحالي، بالإضافة إلى معدل ومدة القرض الجديد. تُحسب الفوائد وإجمالي السداد لكليهما؛ الفرق هو توفيرك المحتمل.",
+      "examplesTitle": "أمثلة على الحساب",
+      "example1": "مثال 1: 100,000 متبقية بمعدل 15% لمدة 24 شهرًا. إجمالي الفوائد ≈ 16,100. إعادة التمويل بمعدل 10% لمدة 24 شهرًا → الفوائد ≈ 10,600. التوفير ≈ 5,500.",
+      "example2": "مثال 2: 500,000 متبقية بمعدل 12% لمدة 36 شهرًا. إعادة التمويل بمعدل 9% لمدة 36 شهرًا يقلل الفوائد بحوالي 24,000.",
+      "howToUseTitle": "كيفية استخدام الحاسبة",
+      "step1": "أدخل الرصيد المتبقي ومعدل الفائدة الحالي ومدة القرض.",
+      "step2": "حدد معدل الفائدة الجديد والمدة (والرسوم إن وجدت).",
+      "step3": "قارن إجمالي الفوائد وجدول السداد لكلا الخيارين.",
+      "step4": "راجع الرسوم البيانية لرأس المال مقابل الفوائد والسداد عبر الزمن.",
+      "keywords": "عمليات البحث الشائعة: حاسبة إعادة التمويل، مقارنة معدلات القروض، توفير إعادة التمويل، تغيير الرهن العقاري، مقارنة معدل فائدة أقل."
     },
     "inflationBlock": {
       "title": "Inflation calculator",
