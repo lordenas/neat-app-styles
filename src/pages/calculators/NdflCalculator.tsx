@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,6 @@ import {
 } from "@/lib/calculators/ndfl";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import {
-  Wallet,
   ArrowDownToLine,
   ArrowUpFromLine,
   TrendingDown,
@@ -145,57 +145,51 @@ export default function NdflCalculatorPage() {
 
         {/* ── Inputs panel (full width) ── */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Wallet className="h-4 w-4 text-primary" /> Параметры
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+          <CardContent className="pt-5 pb-5">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-end flex-wrap">
 
-              {/* Direction toggle */}
-              <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Направление</Label>
-                <div className="grid grid-cols-2 gap-2">
+              {/* Direction pill toggle */}
+              <div className="space-y-1.5 shrink-0">
+                <Label className="text-xs text-muted-foreground">Считать</Label>
+                <div className="flex items-center rounded-lg border border-border bg-muted/40 p-1 gap-1">
                   {(["fromGross", "fromNet"] as const).map((d) => (
                     <button
                       key={d}
                       onClick={() => setDirection(d)}
                       className={cn(
-                        "flex flex-col items-center gap-1 rounded-lg border p-3 text-center text-xs font-medium transition-all",
+                        "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all whitespace-nowrap",
                         direction === d
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
+                          ? "bg-background shadow-sm text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {d === "fromGross"
-                        ? <ArrowDownToLine className="h-4 w-4" />
-                        : <ArrowUpFromLine className="h-4 w-4" />}
-                      {d === "fromGross" ? "Из «грязной»" : "Из «чистой»"}
+                        ? <><ArrowDownToLine className="h-3.5 w-3.5" /> Из грязной</>
+                        : <><ArrowUpFromLine className="h-3.5 w-3.5" /> Из чистой</>}
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Amount */}
-              <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  {direction === "fromGross" ? "Доход до НДФЛ (₽)" : "Доход на руки (₽)"}
+              <div className="space-y-1.5 flex-1 min-w-[160px]">
+                <Label className="text-xs text-muted-foreground">
+                  {direction === "fromGross" ? "Доход до НДФЛ, ₽" : "Доход на руки, ₽"}
                 </Label>
                 <Input
                   type="text"
                   inputMode="numeric"
                   value={formatNumberInput(income)}
                   onChange={(e) => setIncome(Math.max(0, parseNumberInput(e.target.value)))}
-                  className="text-lg font-semibold tabular-nums"
+                  className="text-base font-semibold tabular-nums h-10"
                 />
               </div>
 
               {/* Income type */}
-              <div className="space-y-1.5">
-                <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Вид дохода</Label>
+              <div className="space-y-1.5 flex-1 min-w-[180px]">
+                <Label className="text-xs text-muted-foreground">Вид дохода</Label>
                 <Select value={incomeType} onValueChange={(v) => { setIncomeType(v as IncomeType); setManualRate(null); }}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-10">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -208,28 +202,29 @@ export default function NdflCalculatorPage() {
                 </Select>
               </div>
 
-              {/* Non-resident + manual rate */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between rounded-lg border border-border bg-muted/30 px-3 py-2.5">
-                  <div>
-                    <p className="text-sm font-medium">Нерезидент РФ</p>
-                    <p className="text-xs text-muted-foreground">Ставка 30% / 15%</p>
-                  </div>
-                  <Switch id="non-res" checked={isNonResident} onCheckedChange={setIsNonResident} />
+              {/* Manual rate */}
+              {(incomeType === "manual" || isNonResident) && (
+                <div className="space-y-1.5 w-28 shrink-0">
+                  <Label className="text-xs text-muted-foreground">Ставка, %</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={manualRate ?? getDefaultRateForIncomeType(incomeType, isNonResident)}
+                    onChange={(e) => setManualRate(Number(e.target.value))}
+                    className="h-10"
+                  />
                 </div>
-                {(incomeType === "manual" || isNonResident) && (
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Ставка (%)</Label>
-                    <Input
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={manualRate ?? getDefaultRateForIncomeType(incomeType, isNonResident)}
-                      onChange={(e) => setManualRate(Number(e.target.value))}
-                    />
-                  </div>
-                )}
+              )}
+
+              {/* Non-resident toggle */}
+              <div className="flex items-center gap-2 shrink-0 pb-0.5">
+                <Switch id="non-res" checked={isNonResident} onCheckedChange={setIsNonResident} />
+                <Label htmlFor="non-res" className="text-sm cursor-pointer whitespace-nowrap">
+                  Нерезидент РФ
+                </Label>
               </div>
+
             </div>
           </CardContent>
         </Card>
