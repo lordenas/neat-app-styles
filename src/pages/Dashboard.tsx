@@ -12,7 +12,8 @@ import {
   BarChart3,
   CheckCircle2,
   XCircle,
-  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,13 +36,20 @@ interface SavedCalculation {
   share_token?: string | null;
 }
 
-const typeLabels: Record<string, string> = {
-  credit: "Кредит",
-  mortgage: "Ипотека",
-  deposit: "Вклад",
-  tax: "Налог",
-  business: "Бизнес",
+const TYPE_META: Record<string, { label: string; icon: string; color: string }> = {
+  credit:    { label: "Кредит",       icon: "💳", color: "bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-800" },
+  mortgage:  { label: "Ипотека",      icon: "🏠", color: "bg-purple-500/10 text-purple-600 border-purple-200 dark:border-purple-800" },
+  deposit:   { label: "Вклад",        icon: "🏦", color: "bg-green-500/10 text-green-600 border-green-200 dark:border-green-800" },
+  tax:       { label: "Налог",        icon: "📋", color: "bg-orange-500/10 text-orange-600 border-orange-200 dark:border-orange-800" },
+  salary:    { label: "Зарплата",     icon: "💼", color: "bg-yellow-500/10 text-yellow-600 border-yellow-200 dark:border-yellow-800" },
+  auto:      { label: "Авто",         icon: "🚗", color: "bg-red-500/10 text-red-600 border-red-200 dark:border-red-800" },
+  legal:     { label: "Юридический",  icon: "⚖️", color: "bg-slate-500/10 text-slate-600 border-slate-200 dark:border-slate-800" },
+  business:  { label: "Бизнес",       icon: "📊", color: "bg-teal-500/10 text-teal-600 border-teal-200 dark:border-teal-800" },
 };
+
+function getTypeMeta(type: string) {
+  return TYPE_META[type] ?? { label: type, icon: "🧮", color: "bg-muted text-muted-foreground border-border" };
+}
 
 export default function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -49,6 +57,7 @@ export default function Dashboard() {
   const [calculations, setCalculations] = useState<SavedCalculation[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -97,11 +106,30 @@ export default function Dashboard() {
     toast({ title: "Ссылка скопирована", description: "Поделитесь ею с кем угодно.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
   };
 
-  const toggleSelect = (id: string) => {
+  // Derive the locked type from the first selected item
+  const selectedCalcs = calculations.filter((c) => selected.has(c.id));
+  const lockedType = selectedCalcs.length > 0 ? selectedCalcs[0].calculator_type : null;
+
+  const toggleSelect = (calc: SavedCalculation) => {
     setSelected((prev) => {
       const n = new Set(prev);
-      if (n.has(id)) n.delete(id);
-      else if (n.size < 3) n.add(id);
+      if (n.has(calc.id)) {
+        n.delete(calc.id);
+      } else if (n.size < 3) {
+        // Only allow selection if same type as already selected
+        if (lockedType === null || calc.calculator_type === lockedType) {
+          n.add(calc.id);
+        }
+      }
+      return n;
+    });
+  };
+
+  const toggleGroupCollapse = (type: string) => {
+    setCollapsedGroups((prev) => {
+      const n = new Set(prev);
+      if (n.has(type)) n.delete(type);
+      else n.add(type);
       return n;
     });
   };
@@ -109,10 +137,6 @@ export default function Dashboard() {
   const handleCompare = () => {
     navigate(`/compare?ids=${[...selected].join(",")}`);
   };
-
-  const selectedCalcs = calculations.filter((c) => selected.has(c.id));
-  const selectedTypes = new Set(selectedCalcs.map((c) => c.calculator_type));
-  const mixedTypes = selectedTypes.size > 1;
 
   const handleSignOut = async () => {
     await signOut();
@@ -122,6 +146,14 @@ export default function Dashboard() {
   if (authLoading || !user) return null;
 
   const displayName = user.user_metadata?.display_name || user.email;
+
+  // Group calculations by type, preserve recency order
+  const groups = calculations.reduce<Record<string, SavedCalculation[]>>((acc, calc) => {
+    if (!acc[calc.calculator_type]) acc[calc.calculator_type] = [];
+    acc[calc.calculator_type].push(calc);
+    return acc;
+  }, {});
+  const groupKeys = Object.keys(groups);
 
   return (
     <>
@@ -156,9 +188,7 @@ export default function Dashboard() {
                 <div className="text-xs text-muted-foreground">Сохранённых расчётов</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">
-                  {new Set(calculations.map((c) => c.calculator_type)).size}
-                </div>
+                <div className="text-2xl font-bold">{groupKeys.length}</div>
                 <div className="text-xs text-muted-foreground">Типов калькуляторов</div>
               </div>
               <div className="text-center hidden sm:block">
@@ -175,12 +205,10 @@ export default function Dashboard() {
 
         {/* Calculations */}
         <section className="py-10 sm:py-14">
-          <div className="container max-w-4xl space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
-                <FileText className="h-5 w-5" /> Сохранённые расчёты
-              </h2>
-            </div>
+          <div className="container max-w-4xl space-y-8">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <FileText className="h-5 w-5" /> Сохранённые расчёты
+            </h2>
 
             {loading ? (
               <div className="text-center py-10 text-muted-foreground">Загрузка...</div>
@@ -200,72 +228,112 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="grid gap-3">
-                {calculations.map((calc) => {
-                  const isSelected = selected.has(calc.id);
-                  const isTypeMismatch = isSelected && mixedTypes;
+              <div className="space-y-8">
+                {groupKeys.map((type) => {
+                  const meta = getTypeMeta(type);
+                  const groupCalcs = groups[type];
+                  const isCollapsed = collapsedGroups.has(type);
+                  const groupSelected = groupCalcs.filter((c) => selected.has(c.id)).length;
+                  const isLocked = lockedType !== null && lockedType !== type;
+
                   return (
-                   <Card key={calc.id} className={`transition-shadow hover:shadow-md ${isSelected && !isTypeMismatch ? "ring-2 ring-primary/40" : ""} ${isTypeMismatch ? "ring-2 ring-[hsl(var(--warning)/0.5)]" : ""}`}>
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-3">
-                          <Checkbox
-                            checked={selected.has(calc.id)}
-                            onCheckedChange={() => toggleSelect(calc.id)}
-                            disabled={!selected.has(calc.id) && selected.size >= 3}
-                            className="mt-1"
-                          />
-                          <div className="space-y-1">
-                            <CardTitle className="text-base">{calc.title}</CardTitle>
-                            <CardDescription className="flex items-center gap-2 text-xs">
-                              <Clock className="h-3 w-3" />
-                              {new Date(calc.created_at).toLocaleDateString("ru", {
-                                day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
-                              })}
-                            </CardDescription>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Badge variant="secondary" className="text-xs">
-                            {typeLabels[calc.calculator_type] || calc.calculator_type}
-                          </Badge>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => shareCalculation(calc)}
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
-                            title="Поделиться"
-                          >
-                            <Share2 className="h-4 w-4" />
-                          </Button>
-                          {calc.share_token && (
-                            <CopyButton
-                              value={`${window.location.origin}/shared/${calc.share_token}`}
-                              variant="ghost"
-                              size="icon-sm"
-                            />
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteCalculation(calc.id)}
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                        {Object.entries(calc.parameters).slice(0, 4).map(([key, val]) => (
-                          <span key={key} className="bg-muted px-2 py-0.5 rounded">
-                            {key}: {String(val)}
+                    <div key={type} className={`space-y-3 transition-opacity ${isLocked ? "opacity-50" : ""}`}>
+                      {/* Group header */}
+                      <button
+                        onClick={() => toggleGroupCollapse(type)}
+                        className="w-full flex items-center justify-between gap-3 group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full border ${meta.color}`}>
+                            <span>{meta.icon}</span>
+                            {meta.label}
                           </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                          <span className="text-xs text-muted-foreground">{groupCalcs.length} расчёт{groupCalcs.length === 1 ? "" : groupCalcs.length < 5 ? "а" : "ов"}</span>
+                          {groupSelected > 0 && (
+                            <Badge variant="default" size="sm">{groupSelected} выбрано</Badge>
+                          )}
+                          {isLocked && (
+                            <span className="text-xs text-muted-foreground italic">недоступно для сравнения</span>
+                          )}
+                        </div>
+                        <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                          {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+                        </span>
+                      </button>
+
+                      {/* Group cards */}
+                      {!isCollapsed && (
+                        <div className="grid gap-3 pl-0">
+                          {groupCalcs.map((calc) => {
+                            const isSelected = selected.has(calc.id);
+                            const isDisabled = !isSelected && (selected.size >= 3 || (lockedType !== null && calc.calculator_type !== lockedType));
+                            return (
+                              <Card
+                                key={calc.id}
+                                className={`transition-all ${isSelected ? "ring-2 ring-primary/50 shadow-sm" : ""} ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                              >
+                                <CardHeader className="pb-2">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="flex items-start gap-3">
+                                      <Checkbox
+                                        checked={isSelected}
+                                        onCheckedChange={() => !isDisabled && toggleSelect(calc)}
+                                        disabled={isDisabled}
+                                        className="mt-1"
+                                      />
+                                      <div className="space-y-1">
+                                        <CardTitle className="text-base">{calc.title}</CardTitle>
+                                        <CardDescription className="flex items-center gap-2 text-xs">
+                                          <Clock className="h-3 w-3" />
+                                          {new Date(calc.created_at).toLocaleDateString("ru", {
+                                            day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
+                                          })}
+                                        </CardDescription>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => shareCalculation(calc)}
+                                        className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+                                        title="Поделиться"
+                                      >
+                                        <Share2 className="h-4 w-4" />
+                                      </Button>
+                                      {calc.share_token && (
+                                        <CopyButton
+                                          value={`${window.location.origin}/shared/${calc.share_token}`}
+                                          variant="ghost"
+                                          size="icon-sm"
+                                        />
+                                      )}
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => deleteCalculation(calc.id)}
+                                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </CardHeader>
+                                <CardContent>
+                                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                                    {Object.entries(calc.parameters).slice(0, 4).map(([key, val]) => (
+                                      <span key={key} className="bg-muted px-2 py-0.5 rounded">
+                                        {key}: {String(val)}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -275,14 +343,8 @@ export default function Dashboard() {
 
         {/* Floating compare button */}
         {selected.size >= 2 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2">
-            {mixedTypes && (
-              <div className="flex items-center gap-1.5 bg-warning/10 border border-warning/30 text-warning-foreground text-xs px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm">
-                <AlertTriangle className="h-3.5 w-3.5 text-[hsl(var(--warning))]" />
-                <span className="text-[hsl(var(--warning-foreground))]">Разные типы калькуляторов — сравнение может быть неточным</span>
-              </div>
-            )}
-            <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2" variant={mixedTypes ? "outline" : "default"}>
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+            <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2">
               <BarChart3 className="h-4 w-4" />
               Сравнить ({selected.size})
             </Button>
