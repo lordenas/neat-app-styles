@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -312,9 +311,6 @@ export default function OsagoCalculator() {
               <div className="flex items-center justify-between">
                 <Label className="flex items-center gap-1.5">
                   <Clock className="h-3.5 w-3.5" /> Период использования
-                  <SimpleTooltip content="Срок, на который оформляется полис. При оформлении менее чем на год применяется понижающий коэффициент сезонности (КС): 3 мес. — 0,5; 4 мес. — 0,6; 5 мес. — 0,65; 6 мес. — 0,7; 7 мес. — 0,8; 8 мес. — 0,9; 9 мес. — 0,95; 10–12 мес. — 1. Регулируется постановлениями Правительства РФ.">
-                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </SimpleTooltip>
                 </Label>
                 <span className="text-xs text-muted-foreground">КС = {ks}</span>
               </div>
@@ -338,15 +334,22 @@ export default function OsagoCalculator() {
                   );
                 })}
               </div>
+              <details className="group">
+                <summary className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors list-none select-none">
+                  <Info className="h-3.5 w-3.5 shrink-0" />
+                  Как работает коэффициент сезонности?
+                  <span className="ml-auto text-[10px] group-open:hidden">▼</span>
+                  <span className="ml-auto text-[10px] hidden group-open:inline">▲</span>
+                </summary>
+                <div className="mt-2 rounded-lg bg-muted/40 border border-border/60 p-3 text-xs text-muted-foreground space-y-1.5 leading-relaxed">
+                  <p>Срок, на который оформляется полис. При оформлении менее чем на год применяется понижающий коэффициент сезонности (КС).</p>
+                  <p className="text-[10px] opacity-70">Регулируется постановлениями Правительства РФ.</p>
+                </div>
+              </details>
             </div>
 
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5">
-                Класс КБМ (бонус-малус)
-                <SimpleTooltip content="Коэффициент бонус-малус зависит от класса водителя и количества ДТП по вине в предыдущем периоде. При неограниченном числе водителей применяется КБМ собственника ТС. Новым водителям присваивается класс 3 (КБМ = 1,17). Уточнить класс можно в базе РСА.">
-                  <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                </SimpleTooltip>
-              </Label>
+              <Label>Класс КБМ (бонус-малус)</Label>
               <div className="flex flex-wrap gap-1.5">
                 {KBM_CLASSES.map((k) => (
                   <button key={k} onClick={() => setKbmClass(k)}
