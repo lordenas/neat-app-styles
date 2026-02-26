@@ -693,19 +693,19 @@
       "titleInCountry": "Calculadora de IVA — {{country}}"
     },
     "refinancing": {
-      "title": "Refinancing calculator",
-      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
-      "howItWorksTitle": "How the comparison works",
-      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
-      "examplesTitle": "Calculation examples",
-      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
-      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
-      "howToUseTitle": "How to use the calculator",
-      "step1": "Enter the remaining balance and current loan rate and term.",
-      "step2": "Set the new loan rate and term (and any fees if applicable).",
-      "step3": "Compare total interest and repayment schedule of both options.",
-      "step4": "Check the charts for principal vs interest and repayment over time.",
-      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+      "title": "Calculadora de refinanciamento",
+      "description": "Compare o seu empréstimo atual com uma nova oferta: veja quanto poupa em juros e prazo. A calculadora usa a mesma lógica de amortização que a calculadora de empréstimos principal e mostra os planos de pagamento lado a lado.",
+      "howItWorksTitle": "Como funciona a comparação",
+      "howItWorks": "Introduz o capital restante, a taxa atual e o prazo do empréstimo existente, mais a taxa e o prazo do novo empréstimo. Os juros e o total a pagar são calculados para ambos; a diferença é a sua poupança potencial.",
+      "examplesTitle": "Exemplos de cálculo",
+      "example1": "Exemplo 1: €100.000 em dívida a 15% por 24 meses. Juros totais ≈ €16.100. Refinanciar a 10% por 24 meses → juros ≈ €10.600. Poupança ≈ €5.500.",
+      "example2": "Exemplo 2: €500.000 em dívida a 12% por 36 meses. Refinanciar a 9% por 36 meses reduz os juros em cerca de €24.000.",
+      "howToUseTitle": "Como usar a calculadora",
+      "step1": "Introduza o saldo restante, a taxa de juros atual e o prazo do empréstimo.",
+      "step2": "Defina a nova taxa de juros e prazo (e eventuais comissões).",
+      "step3": "Compare os juros totais e o plano de amortização de ambas as opções.",
+      "step4": "Verifique os gráficos de capital vs. juros e o reembolso ao longo do tempo.",
+      "keywords": "Pesquisas populares: calculadora refinanciamento, comparar taxas empréstimo, poupança refinanciamento, mudar hipoteca, comparação taxa juro mais baixa."
     },
     "inflationBlock": {
       "title": "Inflation calculator",

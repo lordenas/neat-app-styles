@@ -693,19 +693,19 @@
       "titleInCountry": "BTW-calculator — {{country}}"
     },
     "refinancing": {
-      "title": "Refinancing calculator",
-      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
-      "howItWorksTitle": "How the comparison works",
-      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
-      "examplesTitle": "Calculation examples",
-      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
-      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
-      "howToUseTitle": "How to use the calculator",
-      "step1": "Enter the remaining balance and current loan rate and term.",
-      "step2": "Set the new loan rate and term (and any fees if applicable).",
-      "step3": "Compare total interest and repayment schedule of both options.",
-      "step4": "Check the charts for principal vs interest and repayment over time.",
-      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+      "title": "Herfinancieringsrekenmachine",
+      "description": "Vergelijk uw huidige lening met een nieuw aanbod: zie hoeveel u bespaart op rente en looptijd. De rekenmachine gebruikt dezelfde aflossingslogica als de hoofdleningrekenmachine en toont de betalingsschema's naast elkaar.",
+      "howItWorksTitle": "Hoe de vergelijking werkt",
+      "howItWorks": "U voert het resterende hoofdbedrag, de huidige rente en looptijd van de bestaande lening in, plus de rente en looptijd van de nieuwe lening. Rente en totale terugbetaling worden voor beide berekend; het verschil is uw potentiële besparing.",
+      "examplesTitle": "Rekenvoorbeelden",
+      "example1": "Voorbeeld 1: €100.000 resterend tegen 15% voor 24 maanden. Totale rente ≈ €16.100. Herfinancieren tegen 10% voor 24 maanden → rente ≈ €10.600. Besparing ≈ €5.500.",
+      "example2": "Voorbeeld 2: €500.000 resterend tegen 12% voor 36 maanden. Herfinancieren tegen 9% voor 36 maanden vermindert de rente met ongeveer €24.000.",
+      "howToUseTitle": "Hoe de rekenmachine te gebruiken",
+      "step1": "Voer het resterende saldo, de huidige leningrente en looptijd in.",
+      "step2": "Stel de nieuwe leningrente en looptijd in (en eventuele kosten).",
+      "step3": "Vergelijk de totale rente en het aflossingsschema van beide opties.",
+      "step4": "Bekijk de grafieken voor hoofdsom versus rente en terugbetaling in de tijd.",
+      "keywords": "Populaire zoekopdrachten: herfinancieringsrekenmachine, leningrentesvergelijking, besparing herfinanciering, hypotheekwissel, lagere rentesvergelijking."
     },
     "inflationBlock": {
       "title": "Inflation calculator",

@@ -693,19 +693,19 @@
       "titleInCountry": "Momskalkylator — {{country}}"
     },
     "refinancing": {
-      "title": "Refinancing calculator",
-      "description": "Compare your current loan with a new offer: see how much you save in interest and time by refinancing. The calculator uses the same repayment logic as the main loan calculator and shows side-by-side schedules.",
-      "howItWorksTitle": "How the comparison works",
-      "howItWorks": "You enter the remaining principal, current rate, and term of the existing loan, plus the new loan rate and term. Interest and total repayment are computed for both; the difference is your potential savings.",
-      "examplesTitle": "Calculation examples",
-      "example1": "Example 1: 100,000 left at 15% for 24 months. Total interest ≈ 16,100. Refinance to 10% for 24 months → interest ≈ 10,600. Savings ≈ 5,500.",
-      "example2": "Example 2: 500,000 left at 12% for 36 months. Refinance to 9% for 36 months reduces total interest by roughly 24,000.",
-      "howToUseTitle": "How to use the calculator",
-      "step1": "Enter the remaining balance and current loan rate and term.",
-      "step2": "Set the new loan rate and term (and any fees if applicable).",
-      "step3": "Compare total interest and repayment schedule of both options.",
-      "step4": "Check the charts for principal vs interest and repayment over time.",
-      "keywords": "Popular searches: refinancing calculator, compare loan rates, refinance savings, switch mortgage calculator, lower interest rate comparison."
+      "title": "Refinansieringskalkylator",
+      "description": "Jämför ditt nuvarande lån med ett nytt erbjudande: se hur mycket du sparar i ränta och tid. Kalkylatorn använder samma amorteringslogik som huvudlånekalkylatorn och visar betalningsplaner sida vid sida.",
+      "howItWorksTitle": "Hur jämförelsen fungerar",
+      "howItWorks": "Du anger återstående kapital, aktuell ränta och löptid för det befintliga lånet, plus det nya lånets ränta och löptid. Ränta och total återbetalning beräknas för båda; skillnaden är din potentiella besparing.",
+      "examplesTitle": "Beräkningsexempel",
+      "example1": "Exempel 1: 100 000 kr kvar vid 15% i 24 månader. Total ränta ≈ 16 100 kr. Refinansiera till 10% i 24 månader → ränta ≈ 10 600 kr. Besparing ≈ 5 500 kr.",
+      "example2": "Exempel 2: 500 000 kr kvar vid 12% i 36 månader. Refinansiera till 9% i 36 månader minskar räntan med ca 24 000 kr.",
+      "howToUseTitle": "Hur du använder kalkylatorn",
+      "step1": "Ange återstående saldo, aktuell låneränta och löptid.",
+      "step2": "Ange den nya räntan och löptiden (och eventuella avgifter).",
+      "step3": "Jämför total ränta och amorteringsplan för båda alternativen.",
+      "step4": "Kontrollera diagrammen för kapital mot ränta och återbetalning över tid.",
+      "keywords": "Populära sökningar: refinansieringskalkylator, jämföra låneräntor, besparing refinansiering, byta bolån, jämförelse lägre ränta."
     },
     "inflationBlock": {
       "title": "Inflation calculator",
