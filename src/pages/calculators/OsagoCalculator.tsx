@@ -9,9 +9,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Car, MapPin, Shield, Clock, Zap, Plus, Trash2, User, Users } from "lucide-react";
 import {
-  calcOsago, POPULAR_REGIONS, REGION_NAMES,
+  calcOsago, POPULAR_REGIONS, REGION_NAMES, BASE_TARIFF_CORRIDORS,
   type OsagoInput, type VehicleCategory,
 } from "@/lib/calculators/osago";
 import { cn } from "@/lib/utils";
@@ -64,6 +65,18 @@ export default function OsagoCalculator() {
   const [usagePeriod, setUsagePeriod] = useState(12);
   const [unlimitedDrivers, setUnlimitedDrivers] = useState(false);
   const [drivers, setDrivers] = useState<Driver[]>([{ age: 35, experience: 10 }]);
+  const [customBaseTariff, setCustomBaseTariff] = useState<number | null>(null);
+
+  const corridor = BASE_TARIFF_CORRIDORS[category];
+  const [corridorMin, corridorMax] = corridor;
+  const midTariff = Math.round((corridorMin + corridorMax) / 2);
+  const activeTariff = customBaseTariff ?? midTariff;
+
+  // Reset custom tariff when category changes
+  const handleCategoryChange = (v: VehicleCategory) => {
+    setCategory(v);
+    setCustomBaseTariff(null);
+  };
 
   const worstKvs = unlimitedDrivers ? 1.94
     : drivers.length === 0 ? 1.0
@@ -75,10 +88,12 @@ export default function OsagoCalculator() {
     driverExperience: drivers[0]?.experience ?? 10,
     kbmClass, usagePeriod, unlimitedDrivers,
   };
-  const baseResult = calcOsago(input);
-  const { baseTariff, kt, kbm, km, ks, ko } = baseResult;
+  const baseResult = calcOsago({ ...input, customBaseTariff: activeTariff });
+  const { kt, kbm, km, ks, ko } = baseResult;
   const kvs = worstKvs;
-  const total = Math.round(baseTariff * kt * kvs * kbm * km * ks * ko);
+  const total = Math.round(activeTariff * kt * kvs * kbm * km * ks * ko);
+  const totalMin = Math.round(corridorMin * kt * kvs * kbm * km * ks * ko);
+  const totalMax = Math.round(corridorMax * kt * kvs * kbm * km * ks * ko);
 
   const addDriver = () => setDrivers([...drivers, { age: 25, experience: 3 }]);
   const removeDriver = (i: number) => setDrivers(drivers.filter((_, j) => j !== i));
@@ -87,7 +102,7 @@ export default function OsagoCalculator() {
   };
 
   const coefficients = [
-    { label: "Базовый тариф", value: `${fmt(baseTariff)} ₽`, neutral: true },
+    { label: "Базовый тариф", value: `${fmt(activeTariff)} ₽`, neutral: true },
     { label: "КТ (регион)", value: kt },
     { label: "КВС (возраст/стаж)", value: kvs },
     { label: "КБМ (бонус-малус)", value: kbm },
@@ -116,7 +131,7 @@ export default function OsagoCalculator() {
             </div>
             <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Базовый тариф: {fmt(baseTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
+              Базовый тариф: {fmt(activeTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -136,6 +151,29 @@ export default function OsagoCalculator() {
           </div>
         </div>
 
+        {/* Price range banner */}
+        <div className="rounded-xl border border-border bg-muted/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium">Диапазон стоимости</p>
+            <p className="text-2xl font-bold mt-0.5 tabular-nums">
+              {fmt(totalMin)} ₽ — {fmt(totalMax)} ₽
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Страховые компании могут устанавливать свою стоимость полиса в пределах этого диапазона.
+            </p>
+          </div>
+          <div className="text-xs text-muted-foreground shrink-0 space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="w-16 text-right font-medium">Мин:</span>
+              <span>{fmt(corridorMin)} ₽ × коэф.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-16 text-right font-medium">Макс:</span>
+              <span>{fmt(corridorMax)} ₽ × коэф.</span>
+            </div>
+          </div>
+        </div>
+
         {/* Parameters */}
         <Card>
           <CardHeader className="pb-3">
@@ -148,7 +186,7 @@ export default function OsagoCalculator() {
               <Label>Категория ТС</Label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((c) => (
-                  <button key={c.value} onClick={() => setCategory(c.value)}
+                  <button key={c.value} onClick={() => handleCategoryChange(c.value)}
                     className={cn(
                       "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-all",
                       category === c.value
@@ -158,6 +196,26 @@ export default function OsagoCalculator() {
                     <span>{c.icon}</span> {c.label}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Базовый тариф (в коридоре ЦБ)</Label>
+                <span className="text-sm font-semibold tabular-nums">{fmt(activeTariff)} ₽</span>
+              </div>
+              <Slider
+                min={corridorMin} max={corridorMax} step={1}
+                value={[activeTariff]}
+                onValueChange={([v]) => setCustomBaseTariff(v)}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Мин: {fmt(corridorMin)} ₽</span>
+                <button onClick={() => setCustomBaseTariff(midTariff)} className="text-primary hover:underline text-xs">
+                  Сбросить к середине
+                </button>
+                <span>Макс: {fmt(corridorMax)} ₽</span>
               </div>
             </div>
 

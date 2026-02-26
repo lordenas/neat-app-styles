@@ -41,6 +41,20 @@ const BASE_TARIFFS: Record<VehicleCategory, number> = {
   trolleybus: 3601,
 };
 
+// Коридор базовых тарифов ЦБ РФ (2024–2025)
+export const BASE_TARIFF_CORRIDORS: Record<VehicleCategory, [number, number]> = {
+  B:          [1646,  7535],
+  A:          [625,   3148],
+  C:          [2246,  9903],
+  C_heavy:    [3547,  13502],
+  D:          [2134,  9602],
+  D_small:    [1131,  4822],
+  D_regular:  [3308,  14007],
+  taxi:       [1874,  12508],
+  tractor:    [399,   1907],
+  trolleybus: [1348,  4872],
+};
+
 // Региональные коэффициенты (КТ) — ключевые регионы
 const REGION_KT: Record<string, number> = {
   "77": 1.9, "99": 1.9, "97": 1.9, "177": 1.9, "197": 1.9, "199": 1.9, "777": 1.9,
@@ -125,12 +139,12 @@ function getKs(months: number): number {
   return 1.0;
 }
 
-export function calcOsago(input: OsagoInput): OsagoResult {
-  const baseTariff = BASE_TARIFFS[input.category];
+export function calcOsago(input: OsagoInput & { customBaseTariff?: number }): OsagoResult {
+  const baseTariff = input.customBaseTariff ?? BASE_TARIFFS[input.category];
   const kt = REGION_KT[input.regionCode] ?? 1.0;
   const kvs = input.unlimitedDrivers ? 1.94 : getKvs(input.driverAge, input.driverExperience);
   const kbm = KBM_TABLE[Math.min(Math.max(input.kbmClass, 0), 13)];
-  const km = input.category === "B" ? getKm(input.horsePower) : 1.0;
+  const km = ["B", "A"].includes(input.category) ? getKm(input.horsePower) : 1.0;
   const ks = getKs(input.usagePeriod);
   const ko = input.unlimitedDrivers ? 1.94 : 1.0;
 
