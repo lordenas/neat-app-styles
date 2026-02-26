@@ -207,7 +207,7 @@ export default function PropertySaleTaxCalculatorPage() {
           {/* Status banner */}
           <div className={cn(
             "flex items-start gap-3 rounded-xl border px-4 py-3",
-            result.noTax ? "border-[hsl(var(--success)/0.2)] bg-[hsl(var(--success)/0.05)]" : "border-border bg-muted/20"
+            result.noTax ? "border-[hsl(var(--success)/0.18)] dark:border-[hsl(var(--success)/0.1)] bg-[hsl(var(--success)/0.05)] dark:bg-[hsl(var(--success)/0.03)]" : "border-border bg-muted/20"
           )}>
             {result.noTax
               ? <CheckCircle2 className="h-4 w-4 mt-0.5 text-[hsl(var(--success))] shrink-0" />
