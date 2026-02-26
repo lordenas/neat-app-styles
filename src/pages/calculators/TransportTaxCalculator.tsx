@@ -8,17 +8,35 @@ import { Slider } from "@/components/ui/slider";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { calcTransportTax, type TransportTaxInput } from "@/lib/calculators/transport-tax";
+import {
+  calcTransportTax,
+  type TransportTaxInput,
+  type VehicleCategory,
+} from "@/lib/calculators/transport-tax";
 import { POPULAR_REGIONS, REGION_NAMES } from "@/lib/calculators/osago";
-import { Car, Truck, Bike, Bus, Tractor } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const VEHICLE_TYPES = [
-  { label: "Легковой", icon: Car, maxHp: 400 },
-  { label: "Грузовой", icon: Truck, maxHp: 600 },
-  { label: "Мотоцикл", icon: Bike, maxHp: 150 },
-  { label: "Автобус", icon: Bus, maxHp: 400 },
-  { label: "Спецтехника", icon: Tractor, maxHp: 300 },
+// Full vehicle category list per НК РФ ст. 361
+const VEHICLE_CATEGORIES: {
+  value: VehicleCategory;
+  label: string;
+  powerLabel: string;
+  maxPower: number;
+  showPrice?: boolean;
+}[] = [
+  { value: "passenger_car",       label: "Автомобили легковые",                            powerLabel: "л.с.",       maxPower: 500, showPrice: true  },
+  { value: "motorcycle",          label: "Мотоциклы и мотороллеры",                        powerLabel: "л.с.",       maxPower: 200, showPrice: false },
+  { value: "bus",                 label: "Автобусы",                                       powerLabel: "л.с.",       maxPower: 600, showPrice: false },
+  { value: "truck",               label: "Грузовые автомобили",                            powerLabel: "л.с.",       maxPower: 600, showPrice: false },
+  { value: "snowmobile",          label: "Снегоходы, мотосани",                            powerLabel: "л.с.",       maxPower: 200, showPrice: false },
+  { value: "boat",                label: "Катера, моторные лодки и другие водные ТС",      powerLabel: "л.с.",       maxPower: 400, showPrice: false },
+  { value: "yacht",               label: "Яхты и другие парусно-моторные суда",            powerLabel: "л.с.",       maxPower: 1000,showPrice: false },
+  { value: "jetski",              label: "Гидроциклы",                                     powerLabel: "л.с.",       maxPower: 300, showPrice: false },
+  { value: "towed_vessel",        label: "Несамоходные (буксируемые) суда",                powerLabel: "тонн валовой вместимости", maxPower: 1000, showPrice: false },
+  { value: "aircraft_engine",     label: "Самолёты, вертолёты и иные воздушные суда с двигателями", powerLabel: "л.с.", maxPower: 10000, showPrice: false },
+  { value: "jet_aircraft",        label: "Самолёты с реактивными двигателями",             powerLabel: "кгс тяги",   maxPower: 50000,showPrice: false },
+  { value: "other_no_engine",     label: "Другие водные и воздушные ТС без двигателей",    powerLabel: "единиц",     maxPower: 1, showPrice: false },
+  { value: "other_self_propelled",label: "Другие самоходные транспортные средства",        powerLabel: "л.с.",       maxPower: 500, showPrice: false },
 ];
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -29,7 +47,7 @@ function formatRub(n: number) {
 }
 
 export default function TransportTaxCalculator() {
-  const [vehicleTypeIdx, setVehicleTypeIdx] = useState(0);
+  const [category, setCategory] = useState<VehicleCategory>("passenger_car");
   const [horsePower, setHorsePower] = useState(150);
   const [regionCode, setRegionCode] = useState("77");
   const [ownershipMonths, setOwnershipMonths] = useState(12);
@@ -37,87 +55,97 @@ export default function TransportTaxCalculator() {
   const [carYear, setCarYear] = useState(2020);
   const [taxYear] = useState(TAX_YEAR);
 
-  const maxHp = VEHICLE_TYPES[vehicleTypeIdx].maxHp;
-  const safeHp = Math.min(horsePower, maxHp);
+  const cat = VEHICLE_CATEGORIES.find((c) => c.value === category)!;
+  const safePower = cat.value === "other_no_engine" ? 1 : Math.min(horsePower, cat.maxPower);
+
+  const handleCategoryChange = (v: VehicleCategory) => {
+    setCategory(v);
+    const next = VEHICLE_CATEGORIES.find((c) => c.value === v)!;
+    if (horsePower > next.maxPower) setHorsePower(next.maxPower);
+  };
 
   const input: TransportTaxInput = {
-    horsePower: safeHp,
+    horsePower: safePower,
+    vehicleCategory: category,
     regionCode,
     ownershipMonths,
-    carPrice,
+    carPrice: cat.showPrice ? carPrice : 0,
     carYear,
     taxYear,
   };
   const result = calcTransportTax(input);
-
-  // For ownership bar visualization
   const ownershipPct = (ownershipMonths / 12) * 100;
 
   return (
     <CalculatorLayout calculatorId="transport-tax" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="space-y-5">
 
-        {/* Vehicle type */}
+        {/* Vehicle category */}
         <Card>
-          <CardHeader className="pb-3"><CardTitle className="text-base">Тип транспортного средства</CardTitle></CardHeader>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Тип транспортного средства</CardTitle>
+          </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-              {VEHICLE_TYPES.map((vt, i) => {
-                const Icon = vt.icon;
-                const active = vehicleTypeIdx === i;
-                return (
-                  <button
-                    key={vt.label}
-                    onClick={() => { setVehicleTypeIdx(i); if (horsePower > vt.maxHp) setHorsePower(vt.maxHp); }}
-                    className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 text-xs font-medium transition-all",
-                      active
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {vt.label}
-                  </button>
-                );
-              })}
-            </div>
+            <Select value={category} onValueChange={(v) => handleCategoryChange(v as VehicleCategory)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {VEHICLE_CATEGORIES.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </CardContent>
         </Card>
 
         {/* Main params */}
         <Card>
-          <CardHeader className="pb-3"><CardTitle className="text-base">Параметры автомобиля</CardTitle></CardHeader>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Параметры транспортного средства</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-6">
 
-            {/* Horse Power slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label>Мощность двигателя</Label>
-                <div className="flex items-center gap-1.5">
-                  <Input
-                    type="number"
-                    value={horsePower}
-                    onChange={(e) => setHorsePower(Math.min(+e.target.value, maxHp))}
-                    className="w-20 h-8 text-right text-sm"
-                    min={1}
-                    max={maxHp}
-                  />
-                  <span className="text-sm text-muted-foreground">л.с.</span>
+            {/* Power slider (hidden for other_no_engine) */}
+            {cat.value !== "other_no_engine" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label>
+                    {cat.powerLabel === "л.с." && "Мощность двигателя"}
+                    {cat.powerLabel === "кгс тяги" && "Тяга двигателя"}
+                    {cat.powerLabel === "тонн валовой вместимости" && "Валовая вместимость"}
+                  </Label>
+                  <div className="flex items-center gap-1.5">
+                    <Input
+                      type="number"
+                      value={horsePower}
+                      onChange={(e) => setHorsePower(Math.min(+e.target.value, cat.maxPower))}
+                      className="w-24 h-8 text-right text-sm"
+                      min={1}
+                      max={cat.maxPower}
+                    />
+                    <span className="text-sm text-muted-foreground shrink-0">{cat.powerLabel}</span>
+                  </div>
+                </div>
+                <Slider
+                  value={[horsePower]}
+                  min={1}
+                  max={cat.maxPower}
+                  step={cat.maxPower > 1000 ? 100 : cat.maxPower > 300 ? 10 : 5}
+                  onValueChange={([v]) => setHorsePower(v)}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>1 {cat.powerLabel}</span>
+                  <span>{cat.maxPower.toLocaleString("ru-RU")} {cat.powerLabel}</span>
                 </div>
               </div>
-              <Slider
-                value={[horsePower]}
-                min={1}
-                max={maxHp}
-                step={5}
-                onValueChange={([v]) => setHorsePower(v)}
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>1 л.с.</span>
-                <span>{maxHp} л.с.</span>
-              </div>
-            </div>
+            )}
+
+            {cat.value === "other_no_engine" && (
+              <p className="text-sm text-muted-foreground bg-muted/40 rounded-lg px-4 py-3">
+                Для данного типа ТС налог рассчитывается в фиксированном размере за единицу транспортного средства.
+              </p>
+            )}
 
             <div className="grid sm:grid-cols-2 gap-4">
               {/* Region */}
@@ -146,24 +174,26 @@ export default function TransportTaxCalculator() {
                 />
               </div>
 
-              {/* Car price */}
-              <div className="space-y-1.5">
-                <Label htmlFor="price">Стоимость авто</Label>
-                <div className="flex items-center gap-1.5">
-                  <Input
-                    id="price"
-                    type="number"
-                    value={carPrice}
-                    onChange={(e) => setCarPrice(+e.target.value)}
-                    min={0}
-                    step={100000}
-                  />
-                  <span className="text-sm text-muted-foreground shrink-0">₽</span>
+              {/* Car price — only for passenger cars */}
+              {cat.showPrice && (
+                <div className="space-y-1.5">
+                  <Label htmlFor="price">Стоимость авто</Label>
+                  <div className="flex items-center gap-1.5">
+                    <Input
+                      id="price"
+                      type="number"
+                      value={carPrice}
+                      onChange={(e) => setCarPrice(+e.target.value)}
+                      min={0}
+                      step={100000}
+                    />
+                    <span className="text-sm text-muted-foreground shrink-0">₽</span>
+                  </div>
+                  {carPrice >= 10_000_000 && (
+                    <p className="text-xs text-destructive">Применяется повышающий коэффициент роскоши</p>
+                  )}
                 </div>
-                {carPrice >= 10_000_000 && (
-                  <p className="text-xs text-destructive">Применяется повышающий коэффициент роскоши</p>
-                )}
-              </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -179,7 +209,6 @@ export default function TransportTaxCalculator() {
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
-            {/* Month pills */}
             <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5">
               {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
                 <button
@@ -196,7 +225,6 @@ export default function TransportTaxCalculator() {
                 </button>
               ))}
             </div>
-            {/* Ownership bar */}
             <div className="space-y-1">
               <div className="h-2 rounded-full bg-muted overflow-hidden">
                 <div
@@ -224,7 +252,7 @@ export default function TransportTaxCalculator() {
               </div>
               <div className="sm:text-right space-y-1 text-sm text-muted-foreground">
                 <p>{formatRub(Math.round(result.taxAmount / ownershipMonths))} / мес.</p>
-                <p>Ставка: {result.regionalRate} ₽/л.с.</p>
+                <p>Ставка: {result.regionalRate} ₽/{cat.powerLabel}</p>
               </div>
             </div>
           </CardContent>
@@ -235,16 +263,18 @@ export default function TransportTaxCalculator() {
           <CardHeader className="pb-3"><CardTitle className="text-base">Расчёт по коэффициентам</CardTitle></CardHeader>
           <CardContent className="space-y-2.5 text-sm">
             <div className="flex justify-between items-center py-1 border-b border-border/50">
-              <span className="text-muted-foreground">Мощность</span>
-              <span className="font-medium">{safeHp} л.с.</span>
+              <span className="text-muted-foreground">
+                {cat.value === "towed_vessel" ? "Вместимость" : cat.value === "jet_aircraft" ? "Тяга" : "Мощность"}
+              </span>
+              <span className="font-medium">{safePower.toLocaleString("ru-RU")} {cat.powerLabel}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Базовая ставка (НК РФ)</span>
-              <Badge variant="outline">{result.baseRate} ₽/л.с.</Badge>
+              <Badge variant="outline">{result.baseRate} ₽/{cat.powerLabel}</Badge>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Региональная ставка</span>
-              <Badge variant="outline">{result.regionalRate} ₽/л.с.</Badge>
+              <Badge variant="outline">{result.regionalRate} ₽/{cat.powerLabel}</Badge>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/50">
               <span className="text-muted-foreground">Коэффициент владения</span>
@@ -257,27 +287,29 @@ export default function TransportTaxCalculator() {
               </div>
             )}
             <div className="flex justify-between items-center py-2 mt-1 bg-muted/40 rounded-lg px-3 font-medium">
-              <span>{safeHp} × {result.regionalRate} × {result.ownershipCoeff.toFixed(2)}{result.luxuryMultiplier > 1 ? ` × ${result.luxuryMultiplier}` : ""}</span>
+              <span>{safePower} × {result.regionalRate} × {result.ownershipCoeff.toFixed(2)}{result.luxuryMultiplier > 1 ? ` × ${result.luxuryMultiplier}` : ""}</span>
               <span className="text-primary">{formatRub(result.taxAmount)}</span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Luxury info */}
-        <details className="group">
-          <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2 select-none">
-            <span className="transition-transform group-open:rotate-90">▶</span>
-            Повышающий коэффициент (автомобили стоимостью от 10 млн ₽)
-          </summary>
-          <div className="mt-3 rounded-lg border border-border bg-muted/30 p-4 text-sm space-y-2 text-muted-foreground">
-            <p>С 1 января 2022 года применяется повышающий коэффициент Кп согласно п. 2 ст. 362 НК РФ:</p>
-            <ul className="space-y-1 ml-4 list-disc">
-              <li>От 10 до 15 млн ₽, возраст до 10 лет — <strong className="text-foreground">×2</strong></li>
-              <li>От 15 млн ₽, возраст до 20 лет — <strong className="text-foreground">×3</strong></li>
-            </ul>
-            <p>Перечень дорогостоящих автомобилей ежегодно публикуется на сайте Минпромторга.</p>
-          </div>
-        </details>
+        {/* Luxury info — only for passenger cars */}
+        {cat.showPrice && (
+          <details className="group">
+            <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2 select-none">
+              <span className="transition-transform group-open:rotate-90">▶</span>
+              Повышающий коэффициент (автомобили стоимостью от 10 млн ₽)
+            </summary>
+            <div className="mt-3 rounded-lg border border-border bg-muted/30 p-4 text-sm space-y-2 text-muted-foreground">
+              <p>С 1 января 2022 года применяется повышающий коэффициент Кп согласно п. 2 ст. 362 НК РФ:</p>
+              <ul className="space-y-1 ml-4 list-disc">
+                <li>От 10 до 15 млн ₽, возраст до 10 лет — <strong className="text-foreground">×2</strong></li>
+                <li>От 15 млн ₽, возраст до 20 лет — <strong className="text-foreground">×3</strong></li>
+              </ul>
+              <p>Перечень дорогостоящих автомобилей ежегодно публикуется на сайте Минпромторга.</p>
+            </div>
+          </details>
+        )}
       </div>
     </CalculatorLayout>
   );
