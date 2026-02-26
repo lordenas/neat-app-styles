@@ -4,8 +4,10 @@
  */
 
 export type TransportTaxInput = {
-  /** Мощность двигателя (л.с.) */
+  /** Мощность двигателя (л.с.) / тяга (кгс) / вместимость (т) в зависимости от типа ТС */
   horsePower: number;
+  /** Категория ТС */
+  vehicleCategory: VehicleCategory;
   /** Регион (код) */
   regionCode: string;
   /** Количество полных месяцев владения в году (1-12) */
@@ -26,13 +28,70 @@ export type TransportTaxResult = {
   taxAmount: number;
 };
 
-// Базовые ставки НК РФ (руб./л.с.)
-function getBaseRate(hp: number): number {
-  if (hp <= 100) return 2.5;
-  if (hp <= 150) return 3.5;
-  if (hp <= 200) return 5;
-  if (hp <= 250) return 7.5;
-  return 15;
+export type VehicleCategory =
+  | "passenger_car"
+  | "motorcycle"
+  | "bus"
+  | "truck"
+  | "snowmobile"
+  | "boat"
+  | "yacht"
+  | "jetski"
+  | "towed_vessel"
+  | "aircraft_engine"
+  | "jet_aircraft"
+  | "other_no_engine"
+  | "other_self_propelled";
+
+/**
+ * Базовые ставки НК РФ ст. 361 (руб./л.с. или за единицу тяги/ТС)
+ * Для ТС с реактивными двигателями: руб./кгс тяги
+ * Для буксируемых судов: руб./тонну вместимости
+ * Для ТС без двигателей: руб./единицу
+ */
+export function getBaseRate(hp: number, category: VehicleCategory = "passenger_car"): number {
+  switch (category) {
+    case "motorcycle":
+      if (hp <= 20) return 1;
+      if (hp <= 35) return 2;
+      return 5;
+    case "bus":
+      return hp <= 200 ? 5 : 10;
+    case "truck":
+      if (hp <= 100) return 2.5;
+      if (hp <= 150) return 4;
+      if (hp <= 200) return 5;
+      if (hp <= 250) return 6.5;
+      return 8.5;
+    case "snowmobile":
+      return hp <= 50 ? 2.5 : 5;
+    case "boat":
+      return hp <= 100 ? 10 : 20;
+    case "yacht":
+      return hp <= 100 ? 20 : 40;
+    case "jetski":
+      return hp <= 100 ? 25 : 50;
+    case "towed_vessel":
+      // hp field used as gross tonnage (tonnes)
+      return 20;
+    case "aircraft_engine":
+      return 25;
+    case "jet_aircraft":
+      // hp field used as kgf thrust
+      return 20;
+    case "other_no_engine":
+      // fixed per unit, hp field ignored
+      return 200;
+    case "other_self_propelled":
+      return 2.5;
+    case "passenger_car":
+    default:
+      if (hp <= 100) return 2.5;
+      if (hp <= 150) return 3.5;
+      if (hp <= 200) return 5;
+      if (hp <= 250) return 7.5;
+      return 15;
+  }
 }
 
 // Региональные множители (относительно базовой ставки)
@@ -51,7 +110,7 @@ function getLuxuryMultiplier(price: number, carAge: number): number {
 }
 
 export function calcTransportTax(input: TransportTaxInput): TransportTaxResult {
-  const baseRate = getBaseRate(input.horsePower);
+  const baseRate = getBaseRate(input.horsePower, input.vehicleCategory);
   const mult = REGIONAL_MULTIPLIERS[input.regionCode] ?? 3;
   const regionalRate = baseRate * mult;
   const carAge = input.taxYear - input.carYear;
