@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -320,6 +321,168 @@ export default function OsagoCalculator() {
                 <span className="text-primary">{fmt(total)} ₽</span>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Coefficients reference */}
+        <Card>
+          <CardHeader className="pb-3"><CardTitle className="text-sm">Справочник коэффициентов</CardTitle></CardHeader>
+          <CardContent className="pt-0">
+            <Accordion type="multiple" className="w-full">
+              <AccordionItem value="kt">
+                <AccordionTrigger className="text-sm font-medium py-3">КТ — Коэффициент территории</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                  Зависит от региона регистрации транспортного средства. Утверждается Банком России для каждого субъекта РФ; в некоторых регионах различается по городам (например, Краснодарский край).
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="km">
+                <AccordionTrigger className="text-sm font-medium py-3">КМ — Коэффициент мощности двигателя</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
+                  <p>Применяется для легковых автомобилей и мототранспорта. Зависит от мощности двигателя в л.с.: чем выше мощность, тем выше коэффициент. Для грузовиков, автобусов и т.п. не применяется (равен 1).</p>
+                  <div className="overflow-x-auto">
+                    <table className="text-xs w-full border-collapse mt-2">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-1.5 pr-4 font-medium">Мощность, л.с.</th>
+                          <th className="text-right py-1.5 font-medium">КМ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[["до 50", "0,6"], ["51–70", "1,0"], ["71–100", "1,1"], ["101–120", "1,2"], ["121–150", "1,4"], ["свыше 150", "1,6"]].map(([r, v]) => (
+                          <tr key={r} className="border-b border-border/40">
+                            <td className="py-1.5 pr-4 text-muted-foreground">{r}</td>
+                            <td className="py-1.5 text-right font-medium">{v}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="kvs">
+                <AccordionTrigger className="text-sm font-medium py-3">КВС — Коэффициент возраст/стаж</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed space-y-3">
+                  <p>Для неограниченного числа водителей не применяется — вместо него действует КО. При нескольких водителях применяется наихудший (наибольший) КВС среди всех.</p>
+                  <div className="overflow-x-auto">
+                    <table className="text-xs w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-1.5 pr-3 font-medium">Возраст</th>
+                          <th className="text-right py-1.5 pr-2 font-medium">Стаж ≤3</th>
+                          <th className="text-right py-1.5 pr-2 font-medium">Стаж 4–6</th>
+                          <th className="text-right py-1.5 font-medium">Стаж 7+</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          ["16–22", "1,93", "1,66", "1,66"],
+                          ["23–25", "1,79", "1,04", "1,04"],
+                          ["26–30", "1,63", "1,04", "1,04"],
+                          ["31–35", "1,63", "1,01", "1,01"],
+                          ["36–40", "1,63", "0,96", "0,96"],
+                          ["41–50", "1,63", "0,96", "0,96"],
+                          ["51–60", "1,63", "0,93", "0,93"],
+                          ["60+",   "1,63", "0,90", "0,90"],
+                        ].map(([age, s1, s2, s3]) => (
+                          <tr key={age} className="border-b border-border/40">
+                            <td className="py-1.5 pr-3 text-muted-foreground">{age}</td>
+                            <td className="py-1.5 pr-2 text-right text-destructive font-medium">{s1}</td>
+                            <td className="py-1.5 pr-2 text-right">{s2}</td>
+                            <td className="py-1.5 text-right">{s3}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="ko">
+                <AccordionTrigger className="text-sm font-medium py-3">КО — Коэффициент ограничения</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
+                  <p>1 — в полисе указаны конкретные водители; 1,94 — физлицо без ограничений; 1,97 — юрлицо без ограничений. Полис «без ограничений» существенно дороже.</p>
+                  <div className="overflow-x-auto">
+                    <table className="text-xs w-full border-collapse mt-1">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-1.5 pr-4 font-medium">Условие</th>
+                          <th className="text-right py-1.5 font-medium">КО</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[["Указаны конкретные водители", "1,00"], ["Без ограничений (физлицо)", "1,94"], ["Без ограничений (юрлицо)", "1,97"]].map(([r, v]) => (
+                          <tr key={r} className="border-b border-border/40">
+                            <td className="py-1.5 pr-4 text-muted-foreground">{r}</td>
+                            <td className="py-1.5 text-right font-medium">{v}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="ks">
+                <AccordionTrigger className="text-sm font-medium py-3">КС — Коэффициент сезонности</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
+                  <p>При оформлении полиса менее чем на год применяется понижающий коэффициент.</p>
+                  <div className="overflow-x-auto">
+                    <table className="text-xs w-full border-collapse mt-1">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-1.5 pr-4 font-medium">Период</th>
+                          <th className="text-right py-1.5 font-medium">КС</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[["3 мес.", "0,50"], ["4 мес.", "0,60"], ["5 мес.", "0,65"], ["6 мес.", "0,70"], ["7 мес.", "0,80"], ["8 мес.", "0,90"], ["9 мес.", "0,95"], ["10–12 мес.", "1,00"]].map(([r, v]) => (
+                          <tr key={r} className="border-b border-border/40">
+                            <td className="py-1.5 pr-4 text-muted-foreground">{r}</td>
+                            <td className="py-1.5 text-right font-medium">{v}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="kbm">
+                <AccordionTrigger className="text-sm font-medium py-3">КБМ — Коэффициент бонус-малус</AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
+                  <p>Зависит от класса водителя (от М до 13) и количества ДТП по вине. При неограниченном списке водителей применяется КБМ собственника. Класс можно проверить в базе РСА.</p>
+                  <div className="overflow-x-auto">
+                    <table className="text-xs w-full border-collapse mt-1">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-1.5 pr-4 font-medium">Класс</th>
+                          <th className="text-right py-1.5 pr-4 font-medium">КБМ</th>
+                          <th className="text-right py-1.5 font-medium">Скидка</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          ["М (0)", "2,45", "+145%"], ["1", "2,30", "+130%"], ["2", "1,55", "+55%"], ["3", "1,40", "+40%"],
+                          ["4", "1,00", "0%"], ["5", "0,95", "−5%"], ["6", "0,90", "−10%"], ["7", "0,85", "−15%"],
+                          ["8", "0,80", "−20%"], ["9", "0,75", "−25%"], ["10", "0,70", "−30%"], ["11", "0,65", "−35%"],
+                          ["12", "0,60", "−40%"], ["13", "0,50", "−50%"],
+                        ].map(([cls, kbm, disc]) => (
+                          <tr key={cls} className="border-b border-border/40">
+                            <td className="py-1 pr-4 text-muted-foreground">{cls}</td>
+                            <td className="py-1 pr-4 text-right font-medium">{kbm}</td>
+                            <td className={cn("py-1 text-right font-medium text-xs",
+                              disc.startsWith("−") ? "text-[hsl(var(--success))]" : disc === "0%" ? "" : "text-destructive"
+                            )}>{disc}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
         </Card>
       </div>
