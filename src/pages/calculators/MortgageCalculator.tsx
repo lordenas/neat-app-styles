@@ -23,11 +23,13 @@ export default function MortgageCalculatorPage() {
   const fmtShort = (v: number) =>
     new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(v);
 
+  const [schedulePeriod, setSchedulePeriod] = useState<"year" | "month">("year");
+
   const result = useMemo(() => calculateMortgage(propertyPrice, downPayment, annualRate, termYears), [propertyPrice, downPayment, annualRate, termYears]);
   const schedule = useMemo(() => {
     if (result.principal <= 0) return null;
-    return buildRefinancingSchedule(result.principal, annualRate, result.termMonths, "year");
-  }, [result.principal, annualRate, result.termMonths]);
+    return buildRefinancingSchedule(result.principal, annualRate, result.termMonths, schedulePeriod);
+  }, [result.principal, annualRate, result.termMonths, schedulePeriod]);
 
   const downPercent = propertyPrice > 0 ? Math.round((downPayment / propertyPrice) * 100) : 0;
   const overpayPercent = result.totalPayment > 0
@@ -266,7 +268,20 @@ export default function MortgageCalculatorPage() {
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-sm">{t("calculator.paymentBreakdown")}</CardTitle>
-                      <span className="text-xs text-muted-foreground">{schedule.rows.length} лет</span>
+                      <div className="flex rounded-md border border-border overflow-hidden text-xs">
+                        <button
+                          onClick={() => setSchedulePeriod("year")}
+                          className={`px-3 py-1.5 transition-colors ${schedulePeriod === "year" ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-muted"}`}
+                        >
+                          По годам
+                        </button>
+                        <button
+                          onClick={() => setSchedulePeriod("month")}
+                          className={`px-3 py-1.5 border-l border-border transition-colors ${schedulePeriod === "month" ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-muted"}`}
+                        >
+                          По месяцам
+                        </button>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="p-0">
@@ -274,7 +289,7 @@ export default function MortgageCalculatorPage() {
                       <table className="w-full text-xs">
                         <thead>
                           <tr className="bg-muted/50 border-y border-border">
-                            <th className="text-left py-2.5 px-4 font-medium text-muted-foreground w-12">Год</th>
+                            <th className="text-left py-2.5 px-4 font-medium text-muted-foreground w-16">{schedulePeriod === "year" ? "Год" : "Год / Мес."}</th>
                             <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Платёж</th>
                             <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Осн. долг</th>
                             <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Проценты</th>
@@ -287,7 +302,11 @@ export default function MortgageCalculatorPage() {
                             return (
                               <tr key={i} className={`border-b border-border/40 hover:bg-muted/40 transition-colors ${i % 2 === 0 ? "" : "bg-muted/20"}`}>
                                 <td className="py-2 px-4">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-muted text-[10px] font-semibold">{r.year}</span>
+                                  {schedulePeriod === "year" ? (
+                                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-muted text-[10px] font-semibold">{r.year}</span>
+                                  ) : (
+                                    <span className="tabular-nums text-[10px]">{r.year}/{String(r.month).padStart(2, "0")}</span>
+                                  )}
                                 </td>
                                 <td className="py-2 px-3 text-right tabular-nums">{fmt(r.payment)}</td>
                                 <td className="py-2 px-3 text-right">
