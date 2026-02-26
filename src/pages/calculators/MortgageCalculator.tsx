@@ -203,33 +203,53 @@ export default function MortgageCalculatorPage() {
 
               <Card>
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Соотношение долг / переплата</CardTitle></CardHeader>
-                <CardContent className="space-y-4 pt-2">
+                <CardContent className="space-y-5 pt-1">
+                  {/* Stacked bar */}
                   <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Основной долг</span>
-                      <span className="font-medium">{fmtShort(result.principal)} ₽ ({100 - overpayPercent}%)</span>
+                    <div className="flex h-5 rounded-full overflow-hidden">
+                      <div
+                        className="bg-primary transition-all duration-300 flex items-center justify-center"
+                        style={{ width: `${100 - overpayPercent}%` }}
+                      />
+                      <div
+                        className="bg-destructive/80 transition-all duration-300"
+                        style={{ width: `${overpayPercent}%` }}
+                      />
                     </div>
-                    <Progress value={100 - overpayPercent} className="h-2" />
+                    <div className="flex justify-between text-[10px] text-muted-foreground">
+                      <span className="flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full bg-primary" />Долг {100 - overpayPercent}%</span>
+                      <span className="flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-full bg-destructive/80" />Переплата {overpayPercent}%</span>
+                    </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Переплата (проценты)</span>
-                      <span className="font-medium text-destructive">{fmtShort(result.totalInterest)} ₽ ({overpayPercent}%)</span>
-                    </div>
-                    <Progress value={overpayPercent} className="h-2 [&>div]:bg-destructive" />
+
+                  {/* Rows */}
+                  <div className="space-y-2.5">
+                    {[
+                      { label: "Основной долг", value: `${fmtShort(result.principal)} ₽`, color: "text-primary", pct: 100 - overpayPercent },
+                      { label: "Переплата", value: `${fmtShort(result.totalInterest)} ₽`, color: "text-destructive", pct: overpayPercent },
+                      { label: "Итого выплат", value: `${fmtShort(result.totalPayment)} ₽`, color: "", pct: null },
+                    ].map(({ label, value, color, pct }) => (
+                      <div key={label} className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{label}</span>
+                        <span className={`font-semibold tabular-nums ${color}`}>
+                          {value}{pct !== null ? <span className="text-xs font-normal text-muted-foreground ml-1">({pct}%)</span> : null}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="pt-2 border-t border-border text-sm space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Ставка</span>
-                      <span className="font-medium">{annualRate}% годовых</span>
+
+                  <div className="border-t border-border pt-3 grid grid-cols-3 gap-3 text-center">
+                    <div>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">Ставка</p>
+                      <p className="text-sm font-bold">{annualRate}%</p>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Срок</span>
-                      <span className="font-medium">{termYears} лет ({result.termMonths} мес.)</span>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">Срок</p>
+                      <p className="text-sm font-bold">{termYears} лет</p>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Взнос</span>
-                      <span className="font-medium">{downPercent}% ({fmtShort(downPayment)} ₽)</span>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">Взнос</p>
+                      <p className="text-sm font-bold">{downPercent}%</p>
                     </div>
                   </div>
                 </CardContent>
@@ -237,37 +257,68 @@ export default function MortgageCalculatorPage() {
             </div>
 
             {/* Schedule table */}
-            {schedule && schedule.rows.length > 0 && (
-              <Card>
-                <CardHeader className="pb-2"><CardTitle className="text-sm">{t("calculator.paymentBreakdown")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-2 pr-3 font-medium text-muted-foreground">{t("calculator.table.year")}</th>
-                          <th className="text-right py-2 px-3 font-medium text-muted-foreground">{t("calculator.table.payment")}</th>
-                          <th className="text-right py-2 px-3 font-medium text-muted-foreground">{t("calculator.charts.labels.principal")}</th>
-                          <th className="text-right py-2 px-3 font-medium text-muted-foreground">{t("calculator.table.interest")}</th>
-                          <th className="text-right py-2 pl-3 font-medium text-muted-foreground">{t("calculator.table.balance")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {schedule.rows.map((r, i) => (
-                          <tr key={i} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                            <td className="py-1.5 pr-3 font-medium">{r.year}</td>
-                            <td className="py-1.5 px-3 text-right">{fmt(r.payment)}</td>
-                            <td className="py-1.5 px-3 text-right text-primary">{fmt(r.principal)}</td>
-                            <td className="py-1.5 px-3 text-right text-destructive">{fmt(r.interest)}</td>
-                            <td className="py-1.5 pl-3 text-right">{fmt(r.balance)}</td>
+            {schedule && schedule.rows.length > 0 && (() => {
+              const totalPaid = schedule.rows.reduce((s, r) => s + r.payment, 0);
+              const totalPrincipal = schedule.rows.reduce((s, r) => s + r.principal, 0);
+              const totalInterest = schedule.rows.reduce((s, r) => s + r.interest, 0);
+              return (
+                <Card>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm">{t("calculator.paymentBreakdown")}</CardTitle>
+                      <span className="text-xs text-muted-foreground">{schedule.rows.length} лет</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-xs">
+                        <thead>
+                          <tr className="bg-muted/50 border-y border-border">
+                            <th className="text-left py-2.5 px-4 font-medium text-muted-foreground w-12">Год</th>
+                            <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Платёж</th>
+                            <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Осн. долг</th>
+                            <th className="text-right py-2.5 px-3 font-medium text-muted-foreground">Проценты</th>
+                            <th className="text-right py-2.5 px-4 font-medium text-muted-foreground">Остаток</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                        </thead>
+                        <tbody>
+                          {schedule.rows.map((r, i) => {
+                            const principalShare = r.payment > 0 ? (r.principal / r.payment) * 100 : 0;
+                            return (
+                              <tr key={i} className={`border-b border-border/40 hover:bg-muted/40 transition-colors ${i % 2 === 0 ? "" : "bg-muted/20"}`}>
+                                <td className="py-2 px-4">
+                                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-muted text-[10px] font-semibold">{r.year}</span>
+                                </td>
+                                <td className="py-2 px-3 text-right tabular-nums">{fmt(r.payment)}</td>
+                                <td className="py-2 px-3 text-right">
+                                  <div className="flex flex-col items-end gap-0.5">
+                                    <span className="tabular-nums text-primary font-medium">{fmt(r.principal)}</span>
+                                    <div className="w-16 h-1 rounded-full bg-muted overflow-hidden">
+                                      <div className="h-full bg-primary rounded-full" style={{ width: `${principalShare}%` }} />
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="py-2 px-3 text-right tabular-nums text-destructive">{fmt(r.interest)}</td>
+                                <td className="py-2 px-4 text-right tabular-nums text-muted-foreground">{fmt(r.balance)}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                        <tfoot>
+                          <tr className="bg-muted/50 border-t-2 border-border font-semibold">
+                            <td className="py-2.5 px-4 text-xs">Итого</td>
+                            <td className="py-2.5 px-3 text-right tabular-nums text-xs">{fmt(totalPaid)}</td>
+                            <td className="py-2.5 px-3 text-right tabular-nums text-xs text-primary">{fmt(totalPrincipal)}</td>
+                            <td className="py-2.5 px-3 text-right tabular-nums text-xs text-destructive">{fmt(totalInterest)}</td>
+                            <td className="py-2.5 px-4 text-right tabular-nums text-xs">—</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
           </>
         ) : (
           <Card>
