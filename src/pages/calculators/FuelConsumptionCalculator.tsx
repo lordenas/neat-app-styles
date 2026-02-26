@@ -4,9 +4,51 @@ import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Fuel, Route, Banknote, Gauge, TrendingDown } from "lucide-react";
 import { calcFuelConsumption, calcFuelNeeded } from "@/lib/calculators/fuel-consumption";
+
+function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent?: boolean }) {
+  return (
+    <Card>
+      <CardContent className="px-5 py-5">
+        <div className="flex items-center gap-3 mb-3">
+          <div className={`rounded-lg p-2 ${accent ? "bg-primary/10" : "bg-muted"}`}>
+            {icon}
+          </div>
+          <span className="text-sm text-muted-foreground">{label}</span>
+        </div>
+        <p className={`text-2xl font-bold tabular-nums ${accent ? "text-primary" : ""}`}>{value}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Field({
+  id, label, hint, value, onChange, step = 1, inputEnd,
+}: {
+  id: string; label: string; hint?: string; value: number; onChange: (v: number) => void; step?: number; inputEnd?: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-3">
+      <div>
+        <Label htmlFor={id} className="text-base font-medium">{label}</Label>
+        {hint && <p className="text-sm text-muted-foreground mt-0.5">{hint}</p>}
+      </div>
+      <Input
+        id={id}
+        type="number"
+        inputMode="decimal"
+        value={value}
+        onChange={(e) => onChange(Math.max(0, +e.target.value))}
+        min={0}
+        step={step}
+        inputEnd={inputEnd}
+        className="h-11 text-base font-semibold tabular-nums text-right"
+      />
+    </div>
+  );
+}
 
 export default function FuelConsumptionCalculator() {
   const { t } = useTranslation();
@@ -23,91 +65,163 @@ export default function FuelConsumptionCalculator() {
 
   return (
     <CalculatorLayout calculatorId="fuel-consumption" categoryName="Automotive" categoryPath="/categories/automotive">
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("calculatorNames.fuel-consumption")}</h1>
-          <p className="text-muted-foreground mt-1">{t("calculatorDescriptions.fuel-consumption")}</p>
+          <p className="text-muted-foreground mt-2">{t("calculatorDescriptions.fuel-consumption")}</p>
         </div>
 
-        <Tabs defaultValue="calc" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="calc">{t("calculator.fuelConsumption.modeAverage")}</TabsTrigger>
-            <TabsTrigger value="plan">{t("calculator.fuelConsumption.modeTrip")}</TabsTrigger>
+        <Tabs defaultValue="calc" className="space-y-8">
+          <TabsList className="h-11">
+            <TabsTrigger value="calc" className="px-6 text-sm">
+              {t("calculator.fuelConsumption.modeAverage")}
+            </TabsTrigger>
+            <TabsTrigger value="plan" className="px-6 text-sm">
+              {t("calculator.fuelConsumption.modeTrip")}
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="calc">
-            <div className="grid lg:grid-cols-[1fr_340px] gap-6">
-              <Card>
-                <CardHeader><CardTitle>{t("calculator.inputTitle")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="dist">{t("calculator.fuelConsumption.distanceLabel")}</Label>
-                      <Input id="dist" type="number" value={distance} onChange={(e) => setDistance(+e.target.value)} min={0} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="fuel">{t("calculator.fuelConsumption.fuelUsedLabel")}</Label>
-                      <Input id="fuel" type="number" value={fuelUsed} onChange={(e) => setFuelUsed(+e.target.value)} min={0} step={0.1} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="fprice">{t("calculator.fuelConsumption.priceLabel")}</Label>
-                      <Input id="fprice" type="number" value={fuelPrice} onChange={(e) => setFuelPrice(+e.target.value)} min={0} step={0.1} />
-                    </div>
+          {/* Tab 1 — средний расход */}
+          <TabsContent value="calc" className="space-y-6 mt-0">
+            {/* Hero */}
+            <Card className="bg-primary text-primary-foreground border-0">
+              <CardContent className="px-6 py-8">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-2xl bg-primary-foreground/15 p-4">
+                    <Gauge className="h-8 w-8" />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultConsumptionPer100")}</p>
+                    <p className="text-5xl font-bold tracking-tight tabular-nums">
+                      {result1.per100km} <span className="text-2xl font-normal opacity-80">{t("calculator.fuelConsumption.consumptionL100km")}</span>
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-4">
-                <Card>
-                  <CardHeader><CardTitle>{t("calculator.fuelConsumption.resultConsumptionPer100")}</CardTitle></CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-primary">{result1.per100km} {t("calculator.fuelConsumption.consumptionL100km")}</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-6 space-y-2 text-sm">
-                    <div className="flex justify-between"><span>{t("calculator.fuelConsumption.resultCost")}</span><Badge variant="outline">{result1.tripCost} ₽</Badge></div>
-                  </CardContent>
-                </Card>
-              </div>
+            {/* Параметры */}
+            <Card>
+              <CardHeader className="px-6 pt-6 pb-4">
+                <CardTitle className="text-lg">{t("calculator.inputTitle")}</CardTitle>
+              </CardHeader>
+              <CardContent className="px-6 pb-8">
+                <div className="grid sm:grid-cols-3 gap-8">
+                  <Field
+                    id="dist"
+                    label={t("calculator.fuelConsumption.distanceLabel")}
+                    hint="Общий пробег"
+                    value={distance}
+                    onChange={setDistance}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">км</span>}
+                  />
+                  <Field
+                    id="fuel"
+                    label={t("calculator.fuelConsumption.fuelUsedLabel")}
+                    hint="Сколько залито топлива"
+                    value={fuelUsed}
+                    onChange={setFuelUsed}
+                    step={0.1}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">л</span>}
+                  />
+                  <Field
+                    id="fprice"
+                    label={t("calculator.fuelConsumption.priceLabel")}
+                    hint="Цена за литр"
+                    value={fuelPrice}
+                    onChange={setFuelPrice}
+                    step={0.1}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">₽/л</span>}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Итоги */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <StatCard
+                icon={<Banknote className="h-4 w-4 text-primary" />}
+                label={t("calculator.fuelConsumption.resultCost")}
+                value={`${result1.tripCost.toLocaleString("ru-RU")} ₽`}
+                accent
+              />
+              <StatCard
+                icon={<Route className="h-4 w-4 text-muted-foreground" />}
+                label="Стоимость 1 км"
+                value={`${result1.costPerKm.toLocaleString("ru-RU")} ₽`}
+              />
             </div>
           </TabsContent>
 
-          <TabsContent value="plan">
-            <div className="grid lg:grid-cols-[1fr_340px] gap-6">
-              <Card>
-                <CardHeader><CardTitle>{t("calculator.inputTitle")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="dist2">{t("calculator.fuelConsumption.distanceLabel")}</Label>
-                      <Input id="dist2" type="number" value={distance2} onChange={(e) => setDistance2(+e.target.value)} min={0} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="c100">{t("calculator.fuelConsumption.consumptionLabel")}</Label>
-                      <Input id="c100" type="number" value={consumption100} onChange={(e) => setConsumption100(+e.target.value)} min={0} step={0.1} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="fp2">{t("calculator.fuelConsumption.priceLabel")}</Label>
-                      <Input id="fp2" type="number" value={fuelPrice2} onChange={(e) => setFuelPrice2(+e.target.value)} min={0} step={0.1} />
-                    </div>
+          {/* Tab 2 — планирование поездки */}
+          <TabsContent value="plan" className="space-y-6 mt-0">
+            {/* Hero */}
+            <Card className="bg-primary text-primary-foreground border-0">
+              <CardContent className="px-6 py-8">
+                <div className="flex items-center gap-4">
+                  <div className="rounded-2xl bg-primary-foreground/15 p-4">
+                    <Fuel className="h-8 w-8" />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-sm opacity-75 mb-1">{t("calculator.fuelConsumption.resultFuelUsed")}</p>
+                    <p className="text-5xl font-bold tracking-tight tabular-nums">
+                      {result2.liters} <span className="text-2xl font-normal opacity-80">л</span>
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-4">
-                <Card>
-                  <CardHeader><CardTitle>{t("calculator.fuelConsumption.resultFuelUsed")}</CardTitle></CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-primary">{result2.liters} л</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="pt-6 text-sm">
-                    <div className="flex justify-between"><span>{t("calculator.fuelConsumption.resultCost")}</span><Badge variant="outline">{result2.cost} ₽</Badge></div>
-                  </CardContent>
-                </Card>
-              </div>
+            {/* Параметры */}
+            <Card>
+              <CardHeader className="px-6 pt-6 pb-4">
+                <CardTitle className="text-lg">{t("calculator.inputTitle")}</CardTitle>
+              </CardHeader>
+              <CardContent className="px-6 pb-8">
+                <div className="grid sm:grid-cols-3 gap-8">
+                  <Field
+                    id="dist2"
+                    label={t("calculator.fuelConsumption.distanceLabel")}
+                    hint="Дальность поездки"
+                    value={distance2}
+                    onChange={setDistance2}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">км</span>}
+                  />
+                  <Field
+                    id="c100"
+                    label={t("calculator.fuelConsumption.consumptionLabel")}
+                    hint="Расход вашего авто"
+                    value={consumption100}
+                    onChange={setConsumption100}
+                    step={0.1}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">л/100км</span>}
+                  />
+                  <Field
+                    id="fp2"
+                    label={t("calculator.fuelConsumption.priceLabel")}
+                    hint="Цена за литр"
+                    value={fuelPrice2}
+                    onChange={setFuelPrice2}
+                    step={0.1}
+                    inputEnd={<span className="text-sm text-muted-foreground font-medium">₽/л</span>}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Итоги */}
+            <div className="grid sm:grid-cols-2 gap-4">
+              <StatCard
+                icon={<Banknote className="h-4 w-4 text-primary" />}
+                label={t("calculator.fuelConsumption.resultCost")}
+                value={`${result2.cost.toLocaleString("ru-RU")} ₽`}
+                accent
+              />
+              <StatCard
+                icon={<TrendingDown className="h-4 w-4 text-muted-foreground" />}
+                label="Расход на поездку"
+                value={`${result2.liters} л`}
+              />
             </div>
           </TabsContent>
         </Tabs>
