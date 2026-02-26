@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, BarChart3, Printer, Download } from "lucide-react";
+import { ArrowLeft, BarChart3, Printer, Download, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
 import { getCyrillicFont } from "@/lib/cyrillic-font";
@@ -201,6 +201,23 @@ export default function Compare() {
             <BarChart3 className="h-5 w-5 text-primary" />
             <h1 className="text-xl font-semibold">Сравнение расчётов</h1>
           </div>
+
+          {(() => {
+            const types = new Set(calculations.map((c) => c.calculator_type));
+            if (types.size <= 1) return null;
+            return (
+              <div className="flex items-start gap-3 bg-[hsl(var(--warning)/0.1)] border border-[hsl(var(--warning)/0.3)] rounded-lg px-4 py-3 text-sm">
+                <AlertTriangle className="h-4 w-4 text-[hsl(var(--warning))] mt-0.5 shrink-0" />
+                <div>
+                  <span className="font-medium text-foreground">Сравниваются расчёты разных типов</span>
+                  <p className="text-muted-foreground mt-0.5">
+                    Для корректного сравнения рекомендуется выбирать расчёты одного калькулятора. Текущие типы:{" "}
+                    {[...types].map((t) => typeLabels[t] || t).join(", ")}.
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
 
           {loading ? (
             <p className="text-muted-foreground text-center py-10">Загрузка...</p>

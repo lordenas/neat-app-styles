@@ -12,6 +12,7 @@ import {
   BarChart3,
   CheckCircle2,
   XCircle,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -109,6 +110,10 @@ export default function Dashboard() {
     navigate(`/compare?ids=${[...selected].join(",")}`);
   };
 
+  const selectedCalcs = calculations.filter((c) => selected.has(c.id));
+  const selectedTypes = new Set(selectedCalcs.map((c) => c.calculator_type));
+  const mixedTypes = selectedTypes.size > 1;
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -196,8 +201,11 @@ export default function Dashboard() {
               </Card>
             ) : (
               <div className="grid gap-3">
-                {calculations.map((calc) => (
-                  <Card key={calc.id} className="transition-shadow hover:shadow-md">
+                {calculations.map((calc) => {
+                  const isSelected = selected.has(calc.id);
+                  const isTypeMismatch = isSelected && mixedTypes;
+                  return (
+                   <Card key={calc.id} className={`transition-shadow hover:shadow-md ${isSelected && !isTypeMismatch ? "ring-2 ring-primary/40" : ""} ${isTypeMismatch ? "ring-2 ring-[hsl(var(--warning)/0.5)]" : ""}`}>
                     <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3">
@@ -258,7 +266,8 @@ export default function Dashboard() {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -266,8 +275,14 @@ export default function Dashboard() {
 
         {/* Floating compare button */}
         {selected.size >= 2 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-            <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2">
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2">
+            {mixedTypes && (
+              <div className="flex items-center gap-1.5 bg-warning/10 border border-warning/30 text-warning-foreground text-xs px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm">
+                <AlertTriangle className="h-3.5 w-3.5 text-[hsl(var(--warning))]" />
+                <span className="text-[hsl(var(--warning-foreground))]">Разные типы калькуляторов — сравнение может быть неточным</span>
+              </div>
+            )}
+            <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2" variant={mixedTypes ? "outline" : "default"}>
               <BarChart3 className="h-4 w-4" />
               Сравнить ({selected.size})
             </Button>
