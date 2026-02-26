@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Car, MapPin, User, Shield, Clock, Zap } from "lucide-react";
+import { Car, MapPin, Shield, Clock, Zap, Plus, Trash2, User, Users } from "lucide-react";
 import {
   calcOsago, POPULAR_REGIONS, REGION_NAMES,
   type OsagoInput, type VehicleCategory,
@@ -28,35 +29,65 @@ const HP_PRESETS = [70, 100, 120, 150, 200];
 const KBM_CLASSES = Array.from({ length: 14 }, (_, i) => i);
 
 const KBM_DISCOUNT: Record<number, string> = {
-  0: "−0%", 1: "−0%", 2: "−0%", 3: "−0%", 4: "0%",
+  0: "надб.", 1: "надб.", 2: "надб.", 3: "надб.", 4: "0%",
   5: "−5%", 6: "−10%", 7: "−15%", 8: "−20%", 9: "−25%",
   10: "−30%", 11: "−35%", 12: "−40%", 13: "−50%",
 };
+
+function getKvs(age: number, exp: number): number {
+  if (age <= 22 && exp <= 3) return 1.93;
+  if (age <= 22) return 1.66;
+  if (age <= 25 && exp <= 3) return 1.79;
+  if (age <= 25) return 1.04;
+  if (exp <= 3) return 1.63;
+  if (age <= 30) return 1.04;
+  if (age <= 35) return 1.01;
+  if (age <= 40) return 0.96;
+  if (age <= 50) return 0.96;
+  if (age <= 60) return 0.93;
+  return 0.90;
+}
+
+type Driver = { age: number; experience: number };
 
 export default function OsagoCalculator() {
   const [category, setCategory] = useState<VehicleCategory>("B");
   const [horsePower, setHorsePower] = useState(120);
   const [regionCode, setRegionCode] = useState("77");
-  const [driverAge, setDriverAge] = useState(35);
-  const [driverExperience, setDriverExperience] = useState(10);
   const [kbmClass, setKbmClass] = useState(4);
   const [usagePeriod, setUsagePeriod] = useState(12);
   const [unlimitedDrivers, setUnlimitedDrivers] = useState(false);
+  const [drivers, setDrivers] = useState<Driver[]>([{ age: 35, experience: 10 }]);
+
+  const worstKvs = unlimitedDrivers ? 1.94
+    : drivers.length === 0 ? 1.0
+    : Math.max(...drivers.map((d) => getKvs(d.age, d.experience)));
 
   const input: OsagoInput = {
-    category, horsePower, regionCode, driverAge, driverExperience,
+    category, horsePower, regionCode,
+    driverAge: drivers[0]?.age ?? 35,
+    driverExperience: drivers[0]?.experience ?? 10,
     kbmClass, usagePeriod, unlimitedDrivers,
   };
-  const result = calcOsago(input);
+  const baseResult = calcOsago(input);
+  const { baseTariff, kt, kbm, km, ks, ko } = baseResult;
+  const kvs = worstKvs;
+  const total = Math.round(baseTariff * kt * kvs * kbm * km * ks * ko);
+
+  const addDriver = () => setDrivers([...drivers, { age: 25, experience: 3 }]);
+  const removeDriver = (i: number) => setDrivers(drivers.filter((_, j) => j !== i));
+  const updateDriver = (i: number, field: keyof Driver, val: number) => {
+    const arr = [...drivers]; arr[i] = { ...arr[i], [field]: val }; setDrivers(arr);
+  };
 
   const coefficients = [
-    { label: "Базовый тариф", value: `${fmt(result.baseTariff)} ₽`, neutral: true },
-    { label: "КТ (регион)", value: result.kt },
-    { label: "КВС (возраст/стаж)", value: result.kvs },
-    { label: "КБМ (бонус-малус)", value: result.kbm },
-    ...(category === "B" ? [{ label: "КМ (мощность)", value: result.km }] : []),
-    { label: "КС (период)", value: result.ks },
-    ...(unlimitedDrivers ? [{ label: "КО (без огр.)", value: result.ko }] : []),
+    { label: "Базовый тариф", value: `${fmt(baseTariff)} ₽`, neutral: true },
+    { label: "КТ (регион)", value: kt },
+    { label: "КВС (возраст/стаж)", value: kvs },
+    { label: "КБМ (бонус-малус)", value: kbm },
+    ...(category === "B" ? [{ label: "КМ (мощность)", value: km }] : []),
+    { label: "КС (период)", value: ks },
+    ...(unlimitedDrivers ? [{ label: "КО (без огр.)", value: ko }] : []),
   ] as { label: string; value: number | string; neutral?: boolean }[];
 
   const title = (
@@ -70,16 +101,16 @@ export default function OsagoCalculator() {
     <CalculatorLayout calculatorId="osago" categoryName="Автомобильные" categoryPath="/categories/automotive" title={title}>
       <div className="space-y-6">
 
-        {/* Hero result */}
+        {/* Hero */}
         <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Shield className="h-5 w-5 text-primary" />
               <span className="text-sm font-medium text-primary">Стоимость полиса ОСАГО</span>
             </div>
-            <p className="text-4xl font-bold tracking-tight">{fmt(result.total)} ₽</p>
+            <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Базовый тариф: {fmt(result.baseTariff)} ₽ · Регион: {REGION_NAMES[regionCode] ?? regionCode}
+              Базовый тариф: {fmt(baseTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -99,15 +130,14 @@ export default function OsagoCalculator() {
           </div>
         </div>
 
-        {/* Parameters grid */}
+        {/* Parameters */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Car className="h-4 w-4 text-muted-foreground" /> Параметры
+              <Car className="h-4 w-4 text-muted-foreground" /> Параметры ТС
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            {/* Category */}
             <div className="space-y-1.5">
               <Label>Категория ТС</Label>
               <div className="flex flex-wrap gap-2">
@@ -126,7 +156,6 @@ export default function OsagoCalculator() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Region */}
               <div className="space-y-1.5">
                 <Label className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Регион</Label>
                 <Select value={regionCode} onValueChange={setRegionCode}>
@@ -139,7 +168,6 @@ export default function OsagoCalculator() {
                 </Select>
               </div>
 
-              {/* Horsepower */}
               {category === "B" && (
                 <div className="space-y-1.5">
                   <Label className="flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" /> Мощность (л.с.)</Label>
@@ -158,19 +186,6 @@ export default function OsagoCalculator() {
                 </div>
               )}
 
-              {/* Age */}
-              <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> Возраст водителя</Label>
-                <Input type="number" value={driverAge} onChange={(e) => setDriverAge(+e.target.value)} min={18} max={99} disabled={unlimitedDrivers} />
-              </div>
-
-              {/* Experience */}
-              <div className="space-y-1.5">
-                <Label>Стаж вождения (лет)</Label>
-                <Input type="number" value={driverExperience} onChange={(e) => setDriverExperience(+e.target.value)} min={0} disabled={unlimitedDrivers} />
-              </div>
-
-              {/* Usage period */}
               <div className="space-y-1.5">
                 <Label className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Период использования</Label>
                 <Select value={String(usagePeriod)} onValueChange={(v) => setUsagePeriod(+v)}>
@@ -184,9 +199,8 @@ export default function OsagoCalculator() {
               </div>
             </div>
 
-            {/* KBM */}
             <div className="space-y-1.5">
-              <Label>Класс КБМ (бонус-малус) — скидка/надбавка</Label>
+              <Label>Класс КБМ (бонус-малус)</Label>
               <div className="flex flex-wrap gap-1.5">
                 {KBM_CLASSES.map((k) => (
                   <button key={k} onClick={() => setKbmClass(k)}
@@ -204,15 +218,83 @@ export default function OsagoCalculator() {
                 ))}
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Unlimited drivers */}
+        {/* Drivers */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Users className="h-4 w-4 text-muted-foreground" /> Водители
+                {!unlimitedDrivers && drivers.length > 0 && (
+                  <span className="text-xs font-normal text-muted-foreground ml-1">
+                    КВС = {kvs.toFixed(2)} (наихудший)
+                  </span>
+                )}
+              </CardTitle>
+              {!unlimitedDrivers && (
+                <Button size="sm" variant="outline" className="h-7 gap-1 text-xs" onClick={addDriver}>
+                  <Plus className="h-3 w-3" /> Добавить водителя
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
             <div className="flex items-center gap-3 p-3 rounded-lg border border-border bg-muted/30">
               <Switch checked={unlimitedDrivers} onCheckedChange={setUnlimitedDrivers} id="unlimited" />
               <div>
                 <Label htmlFor="unlimited" className="cursor-pointer font-medium">Без ограничения числа водителей</Label>
-                <p className="text-xs text-muted-foreground mt-0.5">КО = 1.94, КВС не применяется</p>
+                <p className="text-xs text-muted-foreground mt-0.5">КО = 1.94 · КВС не применяется</p>
               </div>
             </div>
+
+            {!unlimitedDrivers && (
+              <div className="space-y-2">
+                {drivers.map((d, i) => {
+                  const dKvs = getKvs(d.age, d.experience);
+                  const isWorst = drivers.length > 1 && dKvs === Math.max(...drivers.map((x) => getKvs(x.age, x.experience)));
+                  return (
+                    <div key={i} className={cn(
+                      "flex items-end gap-3 p-3 rounded-lg border bg-muted/20 transition-colors",
+                      isWorst ? "border-destructive/40" : "border-border"
+                    )}>
+                      <div className={cn(
+                        "flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 mb-0.5",
+                        isWorst ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"
+                      )}>
+                        {i + 1}
+                      </div>
+                      <div className="space-y-1 flex-1">
+                        <Label className="text-xs text-muted-foreground flex items-center gap-1">
+                          <User className="h-3 w-3" /> Возраст
+                        </Label>
+                        <Input type="number" value={d.age} min={18} max={99} className="h-8 text-sm"
+                          onChange={(e) => updateDriver(i, "age", +e.target.value)} />
+                      </div>
+                      <div className="space-y-1 flex-1">
+                        <Label className="text-xs text-muted-foreground">Стаж (лет)</Label>
+                        <Input type="number" value={d.experience} min={0} className="h-8 text-sm"
+                          onChange={(e) => updateDriver(i, "experience", +e.target.value)} />
+                      </div>
+                      <div className={cn(
+                        "px-2 py-1 rounded-md text-xs font-medium shrink-0 mb-0.5",
+                        dKvs > 1 ? "bg-destructive/10 text-destructive" :
+                        dKvs < 1 ? "bg-[hsl(var(--success)/0.1)] text-[hsl(var(--success))]" : "bg-muted text-muted-foreground"
+                      )}>
+                        КВС {dKvs.toFixed(2)}{isWorst ? " ⚠" : ""}
+                      </div>
+                      {drivers.length > 1 && (
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive shrink-0"
+                          onClick={() => removeDriver(i)}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -235,7 +317,7 @@ export default function OsagoCalculator() {
               ))}
               <div className="flex items-center justify-between pt-3 border-t border-border font-semibold text-base">
                 <span>Итого</span>
-                <span className="text-primary">{fmt(result.total)} ₽</span>
+                <span className="text-primary">{fmt(total)} ₽</span>
               </div>
             </div>
           </CardContent>
