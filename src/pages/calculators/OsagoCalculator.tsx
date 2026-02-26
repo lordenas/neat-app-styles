@@ -142,58 +142,6 @@ export default function OsagoCalculator() {
     <CalculatorLayout calculatorId="osago" categoryName="Автомобильные" categoryPath="/categories/automotive" title={title}>
       <div className="space-y-6">
 
-        {/* Hero */}
-        <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Shield className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-primary">Стоимость полиса ОСАГО</span>
-            </div>
-            <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Базовый тариф: {fmt(activeTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {coefficients.slice(1).map((c) => (
-              <div key={c.label} className={cn(
-                "rounded-lg px-3 py-2 text-center min-w-[72px]",
-                typeof c.value === "number" && c.value > 1 ? "bg-destructive/10" :
-                typeof c.value === "number" && c.value < 1 ? "bg-[hsl(var(--success)/0.1)]" : "bg-muted"
-              )}>
-                <p className="text-xs text-muted-foreground">{c.label.split(" ")[0]}</p>
-                <p className={cn("text-base font-bold",
-                  typeof c.value === "number" && c.value > 1 ? "text-destructive" :
-                  typeof c.value === "number" && c.value < 1 ? "text-[hsl(var(--success))]" : ""
-                )}>{c.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Price range banner */}
-        <div className="rounded-xl border border-border bg-muted/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <p className="text-sm font-medium">Диапазон стоимости</p>
-            <p className="text-2xl font-bold mt-0.5 tabular-nums">
-              {fmt(totalMin)} ₽ — {fmt(totalMax)} ₽
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Страховые компании могут устанавливать свою стоимость полиса в пределах этого диапазона.
-            </p>
-          </div>
-          <div className="text-xs text-muted-foreground shrink-0 space-y-0.5">
-            <div className="flex items-center gap-2">
-              <span className="w-16 text-right font-medium">Мин:</span>
-              <span>{fmt(corridorMin)} ₽ × коэф.</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-16 text-right font-medium">Макс:</span>
-              <span>{fmt(corridorMax)} ₽ × коэф.</span>
-            </div>
-          </div>
-        </div>
-
         {/* Parameters */}
         <Card>
           <CardHeader className="pb-3">
@@ -461,6 +409,58 @@ export default function OsagoCalculator() {
             )}
           </CardContent>
         </Card>
+
+        {/* Hero */}
+        <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Shield className="h-5 w-5 text-primary" />
+              <span className="text-sm font-medium text-primary">Стоимость полиса ОСАГО</span>
+            </div>
+            <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Базовый тариф: {fmt(activeTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {coefficients.slice(1).map((c) => (
+              <div key={c.label} className={cn(
+                "rounded-lg px-3 py-2 text-center min-w-[72px]",
+                typeof c.value === "number" && c.value > 1 ? "bg-destructive/10" :
+                typeof c.value === "number" && c.value < 1 ? "bg-[hsl(var(--success)/0.1)]" : "bg-muted"
+              )}>
+                <p className="text-xs text-muted-foreground">{c.label.split(" ")[0]}</p>
+                <p className={cn("text-base font-bold",
+                  typeof c.value === "number" && c.value > 1 ? "text-destructive" :
+                  typeof c.value === "number" && c.value < 1 ? "text-[hsl(var(--success))]" : ""
+                )}>{c.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Price range banner */}
+        <div className="rounded-xl border border-border bg-muted/30 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p className="text-sm font-medium">Диапазон стоимости</p>
+            <p className="text-2xl font-bold mt-0.5 tabular-nums">
+              {fmt(totalMin)} ₽ — {fmt(totalMax)} ₽
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Страховые компании могут устанавливать свою стоимость полиса в пределах этого диапазона.
+            </p>
+          </div>
+          <div className="text-xs text-muted-foreground shrink-0 space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className="w-16 text-right font-medium">Мин:</span>
+              <span>{fmt(corridorMin)} ₽ × коэф.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-16 text-right font-medium">Макс:</span>
+              <span>{fmt(corridorMax)} ₽ × коэф.</span>
+            </div>
+          </div>
+        </div>
 
         {/* Coefficients breakdown */}
         <Card>
