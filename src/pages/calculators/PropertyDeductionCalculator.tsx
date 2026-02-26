@@ -74,7 +74,8 @@ export default function PropertyDeductionCalculatorPage() {
 
         {/* ── Parameters bar ── */}
         <Card>
-          <CardContent className="pt-5 pb-5">
+          <CardContent className="pt-5 pb-5 space-y-4">
+            {/* Row 1: price + year */}
             <div className="flex flex-col sm:flex-row gap-4 sm:items-end flex-wrap">
               <div className="space-y-1.5 flex-1 min-w-[160px]">
                 <Label className="text-xs text-muted-foreground">Стоимость квартиры, ₽</Label>
@@ -85,33 +86,6 @@ export default function PropertyDeductionCalculatorPage() {
                   className="text-base font-semibold tabular-nums h-10"
                 />
               </div>
-              {(() => {
-                const incomeYears: number[] = [];
-                if (purchaseYear < CURRENT_YEAR) {
-                  const from = purchaseYear;
-                  const to = Math.min(purchaseYear + 2, CURRENT_YEAR - 1);
-                  for (let y = from; y <= to; y++) incomeYears.push(y);
-                }
-                if (incomeYears.length === 0) return null;
-                return (
-                  <div className="space-y-1.5 shrink-0 w-full sm:w-auto">
-                    <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
-                    <div className={cn("grid gap-2", incomeYears.length === 1 ? "grid-cols-1" : incomeYears.length === 2 ? "grid-cols-2" : "grid-cols-3")}>
-                      {incomeYears.map((y) => (
-                        <div key={y} className="space-y-1">
-                          <span className="text-xs text-muted-foreground">{y}</span>
-                          <Input
-                            type="text" inputMode="numeric"
-                            value={formatNumberInput(incomeByYear[y] ?? 0)}
-                            onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
-                            className="h-9 text-sm"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
               <div className="space-y-1.5 shrink-0">
                 <Label className="text-xs text-muted-foreground">Год покупки</Label>
                 <div className="flex flex-wrap gap-1.5">
@@ -145,6 +119,34 @@ export default function PropertyDeductionCalculatorPage() {
                 </div>
               </div>
             </div>
+
+            {/* Row 2: income by year (only when purchaseYear < CURRENT_YEAR) */}
+            {(() => {
+              const incomeYears: number[] = [];
+              if (purchaseYear < CURRENT_YEAR) {
+                const to = Math.min(purchaseYear + 2, CURRENT_YEAR - 1);
+                for (let y = purchaseYear; y <= to; y++) incomeYears.push(y);
+              }
+              if (incomeYears.length === 0) return null;
+              return (
+                <div className="space-y-1.5 border-t border-border pt-4">
+                  <Label className="text-xs text-muted-foreground">Официальный доход по годам, ₽</Label>
+                  <div className="flex gap-3 flex-wrap">
+                    {incomeYears.map((y) => (
+                      <div key={y} className="space-y-1 w-36">
+                        <span className="text-xs text-muted-foreground">{y}</span>
+                        <Input
+                          type="text" inputMode="numeric"
+                          value={formatNumberInput(incomeByYear[y] ?? 0)}
+                          onChange={(e) => setIncomeByYear(prev => ({ ...prev, [y]: Math.max(0, parseNumberInput(e.target.value)) }))}
+                          className="h-9 text-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
 
