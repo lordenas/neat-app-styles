@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Car, MapPin, Shield, Clock, Zap, Plus, Trash2, User, Users } from "lucide-react";
+import { Car, MapPin, Shield, Clock, Zap, Plus, Trash2, User, Users, Info } from "lucide-react";
 import {
   calcOsago, POPULAR_REGIONS, REGION_NAMES, BASE_TARIFF_CORRIDORS,
   type OsagoInput, type VehicleCategory,
@@ -309,7 +310,12 @@ export default function OsagoCalculator() {
             {/* Период использования */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Период использования</Label>
+                <Label className="flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5" /> Период использования
+                  <SimpleTooltip content="Срок, на который оформляется полис. При оформлении менее чем на год применяется понижающий коэффициент сезонности (КС): 3 мес. — 0,5; 4 мес. — 0,6; 5 мес. — 0,65; 6 мес. — 0,7; 7 мес. — 0,8; 8 мес. — 0,9; 9 мес. — 0,95; 10–12 мес. — 1. Регулируется постановлениями Правительства РФ.">
+                    <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                  </SimpleTooltip>
+                </Label>
                 <span className="text-xs text-muted-foreground">КС = {ks}</span>
               </div>
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5">
@@ -335,7 +341,12 @@ export default function OsagoCalculator() {
             </div>
 
             <div className="space-y-1.5">
-              <Label>Класс КБМ (бонус-малус)</Label>
+              <Label className="flex items-center gap-1.5">
+                Класс КБМ (бонус-малус)
+                <SimpleTooltip content="Коэффициент бонус-малус зависит от класса водителя и количества ДТП по вине в предыдущем периоде. При неограниченном числе водителей применяется КБМ собственника ТС. Новым водителям присваивается класс 3 (КБМ = 1,17). Уточнить класс можно в базе РСА.">
+                  <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                </SimpleTooltip>
+              </Label>
               <div className="flex flex-wrap gap-1.5">
                 {KBM_CLASSES.map((k) => (
                   <button key={k} onClick={() => setKbmClass(k)}
@@ -352,6 +363,21 @@ export default function OsagoCalculator() {
                   </button>
                 ))}
               </div>
+              {/* КБМ info block */}
+              <details className="group mt-1">
+                <summary className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors list-none select-none">
+                  <Info className="h-3.5 w-3.5 shrink-0" />
+                  Как определяется КБМ?
+                  <span className="ml-auto text-[10px] group-open:hidden">▼</span>
+                  <span className="ml-auto text-[10px] hidden group-open:inline">▲</span>
+                </summary>
+                <div className="mt-2 rounded-lg bg-muted/40 border border-border/60 p-3 text-xs text-muted-foreground space-y-1.5 leading-relaxed">
+                  <p>КБМ понижает или повышает стоимость полиса в зависимости от безаварийной езды. Страховые компании применяют сведения АИС РСА при заключении договора ОСАГО.</p>
+                  <p>При первом оформлении присваивается <strong className="text-foreground">класс 3 (КБМ = 1,17)</strong>. Всего 14 классов: от М (надбавка, КБМ = 3,92) до 13 (скидка −54%, КБМ = 0,46).</p>
+                  <p>Пересчёт производится <strong className="text-foreground">1 апреля каждого года</strong>. При нуле аварий класс ежегодно повышается на 1. При авариях по вине — снижается по таблице ЦБ РФ.</p>
+                  <p className="text-[10px] opacity-70">Регламентировано ст. 9 ФЗ № 40 «Об ОСАГО» и Указанием Банка России от 04.09.2018 № 4884-У.</p>
+                </div>
+              </details>
             </div>
           </CardContent>
         </Card>
