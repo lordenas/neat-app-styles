@@ -27,8 +27,8 @@ function getIncomeYears(purchaseYear: number): number[] {
   if (diff <= 0) return [];
   if (diff === 1) return [CURRENT_YEAR - 1];
   if (diff === 2) return [CURRENT_YEAR - 2, CURRENT_YEAR - 1];
-  if (diff === 3) return [CURRENT_YEAR - 3, CURRENT_YEAR - 2, CURRENT_YEAR - 1];
-  return [CURRENT_YEAR - 2, CURRENT_YEAR - 1, CURRENT_YEAR];
+  // diff >= 3: always show last 3 completed years
+  return [CURRENT_YEAR - 3, CURRENT_YEAR - 2, CURRENT_YEAR - 1];
 }
 
 export default function PropertyDeductionCalculatorPage() {
