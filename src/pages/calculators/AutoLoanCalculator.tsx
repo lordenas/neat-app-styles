@@ -1,9 +1,55 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// Форматирует число с пробелами как разделителями разрядов
+function formatNum(n: number) {
+  return n.toLocaleString("ru-RU", { maximumFractionDigits: 0 });
+}
+
+// Парсит строку с разрядами обратно в число
+function parseNum(s: string) {
+  return Math.max(0, Number(s.replace(/\s/g, "").replace(/,/g, ".")) || 0);
+}
+
+function NumInput({
+  value,
+  onChange,
+  suffix,
+  min = 0,
+  step = 1,
+  className = "",
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  suffix?: string;
+  min?: number;
+  step?: number;
+  className?: string;
+}) {
+  const [focused, setFocused] = useState(false);
+  const [raw, setRaw] = useState("");
+
+  const displayValue = focused ? raw : formatNum(value);
+
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <Input
+        type="text"
+        inputMode="numeric"
+        value={displayValue}
+        onFocus={() => { setRaw(String(value)); setFocused(true); }}
+        onBlur={() => { onChange(parseNum(raw)); setFocused(false); }}
+        onChange={(e) => setRaw(e.target.value)}
+        className="text-right h-11 text-base font-semibold tabular-nums"
+      />
+      {suffix && <span className="text-base text-muted-foreground font-medium shrink-0">{suffix}</span>}
+    </div>
+  );
+}
 import { Slider } from "@/components/ui/slider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -62,17 +108,7 @@ export default function AutoLoanCalculator() {
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4">
                 <Label htmlFor="price" className="text-base font-medium">Стоимость автомобиля</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="price"
-                    type="number"
-                    value={carPrice}
-                    onChange={(e) => setCarPrice(Math.max(0, +e.target.value))}
-                    className="w-40 text-right h-10 text-base font-semibold"
-                    min={0}
-                  />
-                  <span className="text-base text-muted-foreground font-medium shrink-0">₽</span>
-                </div>
+                <NumInput value={carPrice} onChange={setCarPrice} suffix="₽" className="w-52" />
               </div>
               <Slider
                 value={[carPrice]}
@@ -95,17 +131,7 @@ export default function AutoLoanCalculator() {
                   <Label htmlFor="dp" className="text-base font-medium">Первоначальный взнос</Label>
                   <p className="text-sm text-muted-foreground mt-0.5">{downPct}% от стоимости</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="dp"
-                    type="number"
-                    value={downPayment}
-                    onChange={(e) => setDownPayment(Math.max(0, +e.target.value))}
-                    className="w-40 text-right h-10 text-base font-semibold"
-                    min={0}
-                  />
-                  <span className="text-base text-muted-foreground font-medium shrink-0">₽</span>
-                </div>
+                <NumInput value={downPayment} onChange={setDownPayment} suffix="₽" className="w-52" />
               </div>
               <Slider
                 value={[downPayment]}
@@ -125,18 +151,7 @@ export default function AutoLoanCalculator() {
             <div className="space-y-4">
               <div className="flex items-end justify-between gap-4">
                 <Label htmlFor="rate" className="text-base font-medium">Процентная ставка</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    id="rate"
-                    type="number"
-                    value={annualRate}
-                    onChange={(e) => setAnnualRate(Math.max(0, +e.target.value))}
-                    className="w-28 text-right h-10 text-base font-semibold"
-                    min={0}
-                    step={0.1}
-                  />
-                  <span className="text-base text-muted-foreground font-medium shrink-0">% год.</span>
-                </div>
+                <NumInput value={annualRate} onChange={setAnnualRate} suffix="% год." className="w-44" step={0.1} />
               </div>
               <Slider
                 value={[annualRate]}
