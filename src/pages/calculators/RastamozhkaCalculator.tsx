@@ -62,13 +62,13 @@ function RatioBar({ items }: { items: { label: string; value: number; color: str
 }
 
 export default function RastamozhkaCalculator() {
-  const [priceEur, setPriceEur]         = useState(15000);
+  const [priceEur, setPriceEur]         = useState(16667); // ~1 500 000 ₽ при курсе 90
   const [engineVolume, setEngineVolume] = useState(2000);
   const [horsePower, setHorsePower]     = useState(150);
   const [engineType, setEngineType]     = useState<EngineType>("petrol");
-  const [ageGroup, setAgeGroup]         = useState<RastamozhkaInput["ageGroup"]>("3-5");
+  const [ageGroup, setAgeGroup]         = useState<RastamozhkaInput["ageGroup"]>("1-3");
   const [importerType, setImporterType] = useState<RastamozhkaInput["importerType"]>("individual");
-  const [eurRate, setEurRate]           = useState(100);
+  const [eurRate, setEurRate]           = useState(90);
   const [infoOpen, setInfoOpen]         = useState(false);
 
   const isElectric = engineType === "electric";
@@ -301,12 +301,14 @@ export default function RastamozhkaCalculator() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="px-4 pb-4 text-xs text-muted-foreground space-y-2">
-                  <p><strong className="text-foreground">Таможенный сбор</strong> — фиксированная ставка от стоимости авто (775–30 000 ₽).</p>
-                  <p><strong className="text-foreground">Пошлина (физлицо, личное)</strong> — единая ставка в €/куб.см по возрасту и объёму двигателя.</p>
-                  <p><strong className="text-foreground">Пошлина (юрлицо / перепродажа)</strong> — комбинированная: max(% от стоимости, €/куб.см).</p>
-                  <p><strong className="text-foreground">Утильсбор</strong> — базовая ставка × коэффициент (зависит от возраста и объёма).</p>
-                  <p><strong className="text-foreground">Акциз и НДС</strong> — начисляются только для юридических лиц и при ввозе для перепродажи.</p>
-                  <p><strong className="text-foreground">Электромобили</strong> — нет специфической ставки по объёму, применяется % от стоимости.</p>
+                  <p><strong className="text-foreground">Таможенный сбор</strong> — фиксированная ставка от стоимости (1 231–73 860 ₽). Актуально с 01.01.2026.</p>
+                  <p><strong className="text-foreground">Пошлина (физлицо, до 3 лет)</strong> — max(% от цены, €/см³). Ставка зависит от стоимости: до €8500 → 54%/2.5€, до €16700 → 48%/3.5€ и т.д.</p>
+                  <p><strong className="text-foreground">Пошлина (физлицо, 3–5 лет)</strong> — от 1.5 до 3.6 €/см³ по объёму двигателя.</p>
+                  <p><strong className="text-foreground">Пошлина (физлицо, 5+ лет)</strong> — от 3.0 до 5.7 €/см³ по объёму двигателя.</p>
+                  <p><strong className="text-foreground">Пошлина (юрлицо / перепродажа)</strong> — до 3 лет: 15% адвалорная; 3–7 лет: max(20%, €/см³); 7+ лет: специфическая €/см³.</p>
+                  <p><strong className="text-foreground">Утильсбор (физлицо, личное)</strong> — 20 000 × 0.17 (до 3 лет) или × 0.26 (старше). Льгота: объём ≤ 3000 см³ и мощность ≤ 160 л.с.</p>
+                  <p><strong className="text-foreground">Акциз и НДС</strong> — начисляются для юрлиц, физлиц при перепродаже и для электромобилей. Ставки акциза с 2026: 64, 613, 1004, 1711, 1771, 1829 ₽/л.с.</p>
+                  <p><strong className="text-foreground">Электромобили</strong> — пошлина 15% от стоимости для всех типов ввозящих.</p>
                 </div>
               </CollapsibleContent>
             </Card>
