@@ -31,7 +31,7 @@ function Field({
 }) {
   return (
     <div className="space-y-3">
-      <div>
+      <div className="min-h-[44px] flex flex-col justify-end">
         <Label htmlFor={id} className="text-base font-medium">{label}</Label>
         {hint && <p className="text-sm text-muted-foreground mt-0.5">{hint}</p>}
       </div>
