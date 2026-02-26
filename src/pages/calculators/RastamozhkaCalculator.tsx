@@ -25,11 +25,12 @@ const IMPORTER_TYPES = [
   { value: "legal",             label: "Юридическое лицо", sublabel: "", icon: Building2 },
 ] as const;
 
-const ENGINE_TYPES: { value: EngineType; label: string; icon: React.FC<{ className?: string }> }[] = [
-  { value: "petrol",   label: "Бензин",    icon: ({ className }) => <Fuel className={className} /> },
-  { value: "diesel",   label: "Дизель",    icon: ({ className }) => <Fuel className={className} /> },
-  { value: "electric", label: "Электро",   icon: ({ className }) => <Zap className={className} /> },
-  { value: "hybrid",   label: "Гибрид",    icon: ({ className }) => <Zap className={className} /> },
+const ENGINE_TYPES: { value: EngineType; label: string; sublabel: string; icon: React.FC<{ className?: string }> }[] = [
+  { value: "petrol",          label: "Бензин",              sublabel: "",                      icon: ({ className }) => <Fuel className={className} /> },
+  { value: "diesel",          label: "Дизель",              sublabel: "",                      icon: ({ className }) => <Fuel className={className} /> },
+  { value: "electric",        label: "Электро",             sublabel: "",                      icon: ({ className }) => <Zap className={className} /> },
+  { value: "hybrid_parallel", label: "Параллельный гибрид", sublabel: "пошлины как бензин",    icon: ({ className }) => <Zap className={className} /> },
+  { value: "hybrid_series",   label: "Последовательный гибрид", sublabel: "пошлины как электро", icon: ({ className }) => <Zap className={className} /> },
 ];
 
 function fmt(n: number) {
@@ -71,7 +72,7 @@ export default function RastamozhkaCalculator() {
   const [eurRate, setEurRate]           = useState(90);
   const [infoOpen, setInfoOpen]         = useState(false);
 
-  const isElectric = engineType === "electric";
+  const isElectric = engineType === "electric" || engineType === "hybrid_series";
 
   const input: RastamozhkaInput = { priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate };
   const result = calcRastamozhka(input);
@@ -155,14 +156,21 @@ export default function RastamozhkaCalculator() {
                       key={e.value}
                       onClick={() => setEngineType(e.value)}
                       className={cn(
-                        "rounded-full border px-4 py-1.5 text-sm font-medium transition-all flex items-center gap-1.5",
+                        "rounded-lg border px-3 py-1.5 text-sm font-medium transition-all flex flex-col items-start gap-0",
                         engineType === e.value
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
                       )}
                     >
-                      <e.icon className="h-3.5 w-3.5" />
-                      {e.label}
+                      <span className="flex items-center gap-1.5">
+                        <e.icon className="h-3.5 w-3.5" />
+                        {e.label}
+                      </span>
+                      {e.sublabel && (
+                        <span className={cn("text-[10px] leading-tight", engineType === e.value ? "text-primary-foreground/70" : "text-muted-foreground/60")}>
+                          {e.sublabel}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -251,12 +259,15 @@ export default function RastamozhkaCalculator() {
             </CardHeader>
             <CardContent className="space-y-3">
               {breakdownItems.map((item) => item.value > 0 && (
-                <div key={item.label} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
+                <div key={item.label} className="flex items-center justify-between text-sm gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <span className={cn("h-2 w-2 rounded-sm shrink-0", item.color)} />
-                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="text-muted-foreground truncate">{item.label}</span>
+                    {item.label === "Пошлина" && result.dutyNote && (
+                      <span className="text-[10px] text-muted-foreground/60 hidden sm:inline">({result.dutyNote})</span>
+                    )}
                   </div>
-                  <Badge variant="outline" className="font-mono text-xs">{fmt(item.value)}</Badge>
+                  <Badge variant="outline" className="font-mono text-xs shrink-0">{fmt(item.value)}</Badge>
                 </div>
               ))}
               <div className="border-t pt-2 flex items-center justify-between text-sm font-semibold">
