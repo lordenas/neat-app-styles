@@ -4,8 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Trash2, Plus, TrendingUp, CalendarDays, Percent, Banknote, ChevronDown, ChevronUp } from "lucide-react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -128,21 +126,8 @@ export default function LoanInterestCalculatorPage() {
           </CardContent>
         </Card>
 
-        {/* Advanced params collapsible */}
-        <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
-          <CollapsibleTrigger asChild>
-            <button className="flex w-full items-center justify-between rounded-xl border border-dashed border-border px-4 py-3 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all">
-              <span className="flex items-center gap-2">
-                Дополнительные параметры
-                {advancedCount > 0 && (
-                  <Badge variant="secondary" className="text-xs px-1.5 py-0">{advancedCount}</Badge>
-                )}
-              </span>
-              <ChevronDown className={cn("h-4 w-4 transition-transform", advancedOpen && "rotate-180")} />
-            </button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-3">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Additional params — full width, 3 columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
               {/* Rate changes */}
               <Card>
@@ -252,9 +237,7 @@ export default function LoanInterestCalculatorPage() {
                 </CardContent>
               </Card>
 
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
+        </div>
 
         {/* Results — full width */}
         <div className="space-y-5">
