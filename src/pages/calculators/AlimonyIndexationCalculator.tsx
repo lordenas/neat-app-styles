@@ -149,7 +149,7 @@ export default function AlimonyIndexationCalculator() {
                   <p className="text-xs text-muted-foreground mb-1">На момент установления</p>
                   <p className="text-base font-bold tabular-nums">{fmt(originalPm)} ₽</p>
                 </div>
-                <div className="rounded-lg bg-primary/5 border border-primary/10 p-3.5">
+                <div className="rounded-lg bg-primary/5 dark:bg-primary/[0.04] border border-primary/10 dark:border-primary/[0.08] p-3.5">
                   <div className="flex items-center gap-1 mb-1">
                     <TrendingUp className="h-3 w-3 text-primary" />
                     <p className="text-xs text-primary font-medium">Текущий</p>
