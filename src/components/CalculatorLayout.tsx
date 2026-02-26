@@ -99,7 +99,15 @@ export function CalculatorLayout({
 
       <main id="main-content" className="flex-grow">
         <div className="container max-w-6xl py-8">
-          {title && <div className="mb-6">{title}</div>}
+          {title
+            ? <div className="mb-6">{title}</div>
+            : (
+              <div className="mb-6">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{translatedName}</h1>
+                <p className="text-muted-foreground mt-2">{translatedDesc}</p>
+              </div>
+            )
+          }
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1 min-w-0">
               {children}
