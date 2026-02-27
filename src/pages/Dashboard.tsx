@@ -27,12 +27,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
-import { calculatorsByCategory } from "@/lib/calculators/calculator-data";
-
-const allCalcs = Object.values(calculatorsByCategory).flat();
-function calcName(id: string) {
-  return allCalcs.find((c) => c.id === id)?.name ?? id;
-}
 
 interface SavedCalculation {
   id: string;
