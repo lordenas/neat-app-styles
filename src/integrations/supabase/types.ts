@@ -19,25 +19,31 @@ export type Database = {
           config: Json
           created_at: string
           id: string
+          monthly_views: number
           name: string
           updated_at: string
           user_id: string
+          views_reset_at: string
         }
         Insert: {
           config?: Json
           created_at?: string
           id?: string
+          monthly_views?: number
           name?: string
           updated_at?: string
           user_id: string
+          views_reset_at?: string
         }
         Update: {
           config?: Json
           created_at?: string
           id?: string
+          monthly_views?: number
           name?: string
           updated_at?: string
           user_id?: string
+          views_reset_at?: string
         }
         Relationships: []
       }
