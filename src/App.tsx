@@ -28,6 +28,7 @@ const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
 const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
+const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
@@ -120,6 +121,7 @@ const App = () => (
                   <Route path="/deposit" element={<DepositCalculator />} />
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="/embed-widgets" element={<EmbedWidgets />} />
+                  <Route path="/api-keys" element={<ApiKeys />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

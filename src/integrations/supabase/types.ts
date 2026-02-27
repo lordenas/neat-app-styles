@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          key: string
+          last_used_at: string | null
+          name: string
+          plan: string
+          requests_count: number
+          requests_limit: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key?: string
+          last_used_at?: string | null
+          name?: string
+          plan?: string
+          requests_count?: number
+          requests_limit?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          key?: string
+          last_used_at?: string | null
+          name?: string
+          plan?: string
+          requests_count?: number
+          requests_limit?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       embed_widgets: {
         Row: {
           config: Json
