@@ -313,6 +313,126 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Embed Widget section */}
+        <section className="py-16 sm:py-20 bg-[hsl(var(--section-bg))]">
+          <div className="container max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left: text */}
+              <div className="space-y-6">
+                <Badge variant="secondary" className="gap-1.5 text-sm px-3 py-1">
+                  <Code2 className="h-3.5 w-3.5" />
+                  Для партнёров
+                </Badge>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">
+                  Встройте калькулятор{" "}
+                  <span className="text-primary">на свой сайт</span> за&nbsp;5 минут
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Настройте любой из 25+ калькуляторов под дизайн вашего сайта и получите готовый&nbsp;
+                  <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">&lt;iframe&gt;</code>{" "}
+                  или{" "}
+                  <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">&lt;script&gt;</code> код для вставки.
+                </p>
+
+                <ul className="space-y-3">
+                  {[
+                    { icon: Palette, text: "Настройка цветов, шрифтов и скругления под ваш брендбук" },
+                    { icon: MonitorSmartphone, text: "Адаптивный виджет — одинаково работает на десктопе и мобильном" },
+                    { icon: Zap, text: "Free: 100 встраиваний в месяц с логотипом CalcHub" },
+                    { icon: Crown, text: "Pro: White Label, без ограничений, кастомный логотип" },
+                  ].map(({ icon: Icon, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm">
+                      <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                        <Icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="text-muted-foreground leading-relaxed">{text}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link to="/embed-builder">
+                    <Button size="lg" className="gap-2 shadow-md">
+                      Открыть конструктор
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/partners">
+                    <Button size="lg" variant="outline" className="gap-2">
+                      Условия партнёрства
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right: code preview card */}
+              <div className="relative">
+                <div className="rounded-2xl border bg-card shadow-lg overflow-hidden">
+                  {/* Browser chrome */}
+                  <div className="flex items-center gap-1.5 px-4 py-3 bg-muted/60 border-b">
+                    <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <div className="flex-1 mx-3 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground font-mono">
+                      yoursite.com/mortgage
+                    </div>
+                  </div>
+
+                  {/* Mock calculator widget */}
+                  <div className="p-5 space-y-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <div className="h-4 w-32 rounded bg-primary/20" />
+                        <div className="h-3 w-24 rounded bg-muted" />
+                      </div>
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Calculator className="h-4 w-4 text-primary" />
+                      </div>
+                    </div>
+                    {/* Inputs */}
+                    {[80, 60, 72].map((w) => (
+                      <div key={w} className="space-y-1">
+                        <div className="h-2.5 rounded bg-muted" style={{ width: `${w}%` }} />
+                        <div className="h-10 rounded-lg border bg-muted/30" />
+                      </div>
+                    ))}
+                    {/* Result */}
+                    <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="h-2.5 w-20 rounded bg-primary/30" />
+                        <div className="h-5 w-28 rounded bg-primary/50" />
+                      </div>
+                      <div className="h-8 w-20 rounded-lg bg-primary" />
+                    </div>
+                    {/* CalcHub watermark */}
+                    <div className="flex justify-end">
+                      <div className="flex items-center gap-1 rounded-full bg-muted border px-2 py-0.5">
+                        <span className="text-[10px] font-semibold text-primary">CalcHub</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Code snippet floating */}
+                <div className="absolute -bottom-4 -left-4 hidden lg:block rounded-xl border bg-card shadow-md px-4 py-3 max-w-[240px]">
+                  <pre className="text-[10px] font-mono text-muted-foreground leading-relaxed overflow-hidden">
+{`<iframe
+  src="calchub.app/mortgage
+       ?embed=1&color=3b82f6"
+  width="100%" height="600"
+  style="border:none"
+/>`}
+                  </pre>
+                </div>
+
+                {/* Glow */}
+                <div className="absolute -top-8 -right-8 h-40 w-40 rounded-full bg-primary/10 blur-2xl pointer-events-none" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="py-16 sm:py-20">
           <div className="container max-w-3xl text-center space-y-8">
