@@ -61,7 +61,7 @@ export default function Dashboard() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
-  const { widgets, loading: widgetsLoading, deleteWidget } = useEmbedWidgets();
+  const { widgets } = useEmbedWidgets();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
