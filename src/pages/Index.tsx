@@ -313,6 +313,87 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Developer API section */}
+        <section className="py-16 sm:py-20">
+          <div className="container max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left: code preview */}
+              <div className="relative order-2 lg:order-1">
+                <div className="rounded-2xl border bg-card shadow-lg overflow-hidden">
+                  <div className="flex items-center gap-1.5 px-4 py-3 bg-muted/60 border-b">
+                    <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <div className="flex-1 mx-3 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground font-mono">
+                      POST /api/calculate/mortgage
+                    </div>
+                  </div>
+                  <div className="p-5 space-y-3 font-mono text-xs leading-relaxed">
+                    <div className="text-muted-foreground">// Запрос</div>
+                    <pre className="bg-muted/40 rounded-lg p-3 text-foreground overflow-x-auto">{`curl -X POST \\
+  https://api.calchub.io/calculate/mortgage \\
+  -H "X-Api-Key: chk_your_key" \\
+  -d '{"amount":5000000,"rate":16,"months":240}'`}</pre>
+                    <div className="text-muted-foreground mt-2">// Ответ</div>
+                    <pre className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-foreground overflow-x-auto">{`{
+  "monthlyPayment": 72450,
+  "totalPayment": 17388000,
+  "overpayment": 12388000,
+  "schedule": [...]
+}`}</pre>
+                  </div>
+                </div>
+                {/* Glow */}
+                <div className="absolute -bottom-4 -right-4 w-48 h-48 rounded-full bg-primary/[0.06] blur-3xl pointer-events-none" />
+              </div>
+
+              {/* Right: text */}
+              <div className="space-y-6 order-1 lg:order-2">
+                <Badge variant="secondary" className="gap-1.5 text-sm px-3 py-1">
+                  <Code2 className="h-3.5 w-3.5" />
+                  Для разработчиков
+                </Badge>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">
+                  REST API для{" "}
+                  <span className="text-primary">вашего приложения</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Подключите 25+ финансовых калькуляторов к своему сервису через единый REST API.
+                  Один запрос — готовый JSON с результатом и графиком платежей.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    { icon: Zap, text: "Один эндпоинт POST /api/calculate/:type для всех калькуляторов" },
+                    { icon: Shield, text: "Авторизация через API-ключи с ролевыми лимитами" },
+                    { icon: BarChart3, text: "Free: 1 000 запросов в месяц бесплатно" },
+                    { icon: Crown, text: "Pro: неограниченные запросы, SLA и приоритетная поддержка" },
+                  ].map(({ icon: Icon, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm">
+                      <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                        <Icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="text-muted-foreground leading-relaxed">{text}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link to="/api-keys">
+                    <Button size="lg" className="gap-2 shadow-md">
+                      Получить API-ключ
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/api-keys">
+                    <Button size="lg" variant="outline" className="gap-2">
+                      Документация API
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Embed Widget section */}
         <section className="py-16 sm:py-20 bg-[hsl(var(--section-bg))]">
           <div className="container max-w-6xl">
