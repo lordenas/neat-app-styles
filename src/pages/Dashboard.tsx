@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Calculator,
   LogOut,
@@ -14,6 +14,9 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  Code2,
+  Pencil,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +28,13 @@ import { toast } from "@/hooks/use-toast";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CopyButton } from "@/components/ui/copy-button";
+import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
+import { calculatorsByCategory } from "@/lib/calculators/calculator-data";
+
+const allCalcs = Object.values(calculatorsByCategory).flat();
+function calcName(id: string) {
+  return allCalcs.find((c) => c.id === id)?.name ?? id;
+}
 
 interface SavedCalculation {
   id: string;
@@ -58,6 +68,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  const { widgets, loading: widgetsLoading, deleteWidget } = useEmbedWidgets();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -106,7 +118,6 @@ export default function Dashboard() {
     toast({ title: "Ссылка скопирована", description: "Поделитесь ею с кем угодно.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
   };
 
-  // Derive the locked type from the first selected item
   const selectedCalcs = calculations.filter((c) => selected.has(c.id));
   const lockedType = selectedCalcs.length > 0 ? selectedCalcs[0].calculator_type : null;
 
@@ -116,10 +127,7 @@ export default function Dashboard() {
       if (n.has(calc.id)) {
         n.delete(calc.id);
       } else if (n.size < 3) {
-        // Only allow selection if same type as already selected
-        if (lockedType === null || calc.calculator_type === lockedType) {
-          n.add(calc.id);
-        }
+        if (lockedType === null || calc.calculator_type === lockedType) n.add(calc.id);
       }
       return n;
     });
@@ -128,26 +136,17 @@ export default function Dashboard() {
   const toggleGroupCollapse = (type: string) => {
     setCollapsedGroups((prev) => {
       const n = new Set(prev);
-      if (n.has(type)) n.delete(type);
-      else n.add(type);
+      if (n.has(type)) n.delete(type); else n.add(type);
       return n;
     });
   };
 
-  const handleCompare = () => {
-    navigate(`/compare?ids=${[...selected].join(",")}`);
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
+  const handleCompare = () => navigate(`/compare?ids=${[...selected].join(",")}`);
+  const handleSignOut = async () => { await signOut(); navigate("/"); };
 
   if (authLoading || !user) return null;
 
   const displayName = user.user_metadata?.display_name || user.email;
-
-  // Group calculations by type, preserve recency order
   const groups = calculations.reduce<Record<string, SavedCalculation[]>>((acc, calc) => {
     if (!acc[calc.calculator_type]) acc[calc.calculator_type] = [];
     acc[calc.calculator_type].push(calc);
@@ -182,7 +181,7 @@ export default function Dashboard() {
         {/* Stats */}
         <section className="py-6 border-b border-border bg-muted/30">
           <div className="container max-w-4xl">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">{calculations.length}</div>
                 <div className="text-xs text-muted-foreground">Сохранённых расчётов</div>
@@ -190,6 +189,10 @@ export default function Dashboard() {
               <div className="text-center">
                 <div className="text-2xl font-bold">{groupKeys.length}</div>
                 <div className="text-xs text-muted-foreground">Типов калькуляторов</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold">{widgets.length}</div>
+                <div className="text-xs text-muted-foreground">Embed-виджетов</div>
               </div>
               <div className="text-center hidden sm:block">
                 <div className="text-2xl font-bold">
@@ -200,6 +203,99 @@ export default function Dashboard() {
                 <div className="text-xs text-muted-foreground">Последний расчёт</div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Embed Widgets */}
+        <section className="py-10 sm:py-12 border-b border-border">
+          <div className="container max-w-4xl space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Code2 className="h-5 w-5" /> Embed-виджеты
+              </h2>
+              <Link to="/embed-builder">
+                <Button size="sm" variant="outline" className="gap-1.5">
+                  <Plus className="h-3.5 w-3.5" /> Новый виджет
+                </Button>
+              </Link>
+            </div>
+
+            {widgetsLoading ? (
+              <div className="text-sm text-muted-foreground">Загрузка...</div>
+            ) : widgets.length === 0 ? (
+              <Card>
+                <CardContent className="py-10 text-center space-y-3">
+                  <Code2 className="h-10 w-10 text-muted-foreground/30 mx-auto" />
+                  <div>
+                    <p className="font-medium text-sm">Нет сохранённых виджетов</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Настройте калькулятор и вставьте его на свой сайт
+                    </p>
+                  </div>
+                  <Link to="/embed-builder">
+                    <Button size="sm" variant="outline" className="gap-1.5">
+                      <Plus className="h-3.5 w-3.5" /> Создать виджет
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {widgets.map((widget) => (
+                  <Card key={widget.id} className="group transition-all hover:shadow-md">
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                            <Code2 className="h-4 w-4 text-primary" />
+                          </div>
+                          <div className="min-w-0">
+                            <CardTitle className="text-sm truncate">{widget.name}</CardTitle>
+                            <CardDescription className="text-xs flex items-center gap-1 mt-0.5">
+                              <Clock className="h-3 w-3" />
+                              {new Date(widget.updated_at).toLocaleDateString("ru", { day: "numeric", month: "short", year: "numeric" })}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <Link to={`/embed-builder?widgetId=${widget.id}`}>
+                            <Button variant="ghost" size="icon-sm" title="Редактировать">
+                              <Pencil className="h-3.5 w-3.5" />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => deleteWidget(widget.id)}
+                            className="text-muted-foreground hover:text-destructive"
+                            title="Удалить"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-wrap gap-1.5 text-xs">
+                        <span className="bg-muted px-2 py-0.5 rounded-full">
+                          {calcName(widget.config.calculatorId)}
+                        </span>
+                        <span className="bg-muted px-2 py-0.5 rounded-full">{widget.config.currency}</span>
+                        <span
+                          className="px-2 py-0.5 rounded-full border text-[10px]"
+                          style={{ backgroundColor: widget.config.primaryColor + "20", borderColor: widget.config.primaryColor + "40", color: widget.config.primaryColor }}
+                        >
+                          {widget.config.primaryColor}
+                        </span>
+                        <Badge variant={widget.config.plan === "pro" ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
+                          {widget.config.plan === "pro" ? "Pro" : "Free"}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
@@ -218,9 +314,7 @@ export default function Dashboard() {
                   <Calculator className="h-12 w-12 text-muted-foreground/30 mx-auto" />
                   <div>
                     <p className="font-medium">Нет сохранённых расчётов</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Сделайте расчёт в калькуляторе и сохраните результат
-                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">Сделайте расчёт в калькуляторе и сохраните результат</p>
                   </div>
                   <Button variant="outline" size="sm" onClick={() => navigate("/credit-calculator")} className="gap-1.5">
                     <Calculator className="h-4 w-4" /> Перейти к калькулятору
@@ -238,82 +332,47 @@ export default function Dashboard() {
 
                   return (
                     <div key={type} className={`space-y-3 transition-opacity ${isLocked ? "opacity-50" : ""}`}>
-                      {/* Group header */}
-                      <button
-                        onClick={() => toggleGroupCollapse(type)}
-                        className="w-full flex items-center justify-between gap-3 group"
-                      >
+                      <button onClick={() => toggleGroupCollapse(type)} className="w-full flex items-center justify-between gap-3 group">
                         <div className="flex items-center gap-2">
                           <span className={`inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full border ${meta.color}`}>
-                            <span>{meta.icon}</span>
-                            {meta.label}
+                            <span>{meta.icon}</span>{meta.label}
                           </span>
                           <span className="text-xs text-muted-foreground">{groupCalcs.length} расчёт{groupCalcs.length === 1 ? "" : groupCalcs.length < 5 ? "а" : "ов"}</span>
-                          {groupSelected > 0 && (
-                            <Badge variant="default" size="sm">{groupSelected} выбрано</Badge>
-                          )}
-                          {isLocked && (
-                            <span className="text-xs text-muted-foreground italic">недоступно для сравнения</span>
-                          )}
+                          {groupSelected > 0 && <Badge variant="default" size="sm">{groupSelected} выбрано</Badge>}
+                          {isLocked && <span className="text-xs text-muted-foreground italic">недоступно для сравнения</span>}
                         </div>
                         <span className="text-muted-foreground group-hover:text-foreground transition-colors">
                           {isCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
                         </span>
                       </button>
 
-                      {/* Group cards */}
                       {!isCollapsed && (
-                        <div className="grid gap-3 pl-0">
+                        <div className="grid gap-3">
                           {groupCalcs.map((calc) => {
                             const isSelected = selected.has(calc.id);
                             const isDisabled = !isSelected && (selected.size >= 3 || (lockedType !== null && calc.calculator_type !== lockedType));
                             return (
-                              <Card
-                                key={calc.id}
-                                className={`transition-all ${isSelected ? "ring-2 ring-primary/50 shadow-sm" : ""} ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}
-                              >
+                              <Card key={calc.id} className={`transition-all ${isSelected ? "ring-2 ring-primary/50 shadow-sm" : ""} ${isDisabled ? "opacity-40 cursor-not-allowed" : ""}`}>
                                 <CardHeader className="pb-2">
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="flex items-start gap-3">
-                                      <Checkbox
-                                        checked={isSelected}
-                                        onCheckedChange={() => !isDisabled && toggleSelect(calc)}
-                                        disabled={isDisabled}
-                                        className="mt-1"
-                                      />
+                                      <Checkbox checked={isSelected} onCheckedChange={() => !isDisabled && toggleSelect(calc)} disabled={isDisabled} className="mt-1" />
                                       <div className="space-y-1">
                                         <CardTitle className="text-base">{calc.title}</CardTitle>
                                         <CardDescription className="flex items-center gap-2 text-xs">
                                           <Clock className="h-3 w-3" />
-                                          {new Date(calc.created_at).toLocaleDateString("ru", {
-                                            day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
-                                          })}
+                                          {new Date(calc.created_at).toLocaleDateString("ru", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                                         </CardDescription>
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => shareCalculation(calc)}
-                                        className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
-                                        title="Поделиться"
-                                      >
+                                      <Button variant="ghost" size="sm" onClick={() => shareCalculation(calc)} className="h-8 w-8 p-0 text-muted-foreground hover:text-primary" title="Поделиться">
                                         <Share2 className="h-4 w-4" />
                                       </Button>
                                       {calc.share_token && (
-                                        <CopyButton
-                                          value={`${window.location.origin}/shared/${calc.share_token}`}
-                                          variant="ghost"
-                                          size="icon-sm"
-                                        />
+                                        <CopyButton value={`${window.location.origin}/shared/${calc.share_token}`} variant="ghost" size="icon-sm" />
                                       )}
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => deleteCalculation(calc.id)}
-                                        className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                                      >
+                                      <Button variant="ghost" size="sm" onClick={() => deleteCalculation(calc.id)} className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive">
                                         <Trash2 className="h-4 w-4" />
                                       </Button>
                                     </div>
@@ -322,9 +381,7 @@ export default function Dashboard() {
                                 <CardContent>
                                   <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                                     {Object.entries(calc.parameters).slice(0, 4).map(([key, val]) => (
-                                      <span key={key} className="bg-muted px-2 py-0.5 rounded">
-                                        {key}: {String(val)}
-                                      </span>
+                                      <span key={key} className="bg-muted px-2 py-0.5 rounded">{key}: {String(val)}</span>
                                     ))}
                                   </div>
                                 </CardContent>
@@ -341,12 +398,10 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Floating compare button */}
         {selected.size >= 2 && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
             <Button onClick={handleCompare} size="lg" className="shadow-lg gap-2">
-              <BarChart3 className="h-4 w-4" />
-              Сравнить ({selected.size})
+              <BarChart3 className="h-4 w-4" /> Сравнить ({selected.size})
             </Button>
           </div>
         )}
