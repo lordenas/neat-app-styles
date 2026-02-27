@@ -117,6 +117,7 @@ const App = () => (
                   <Route path="/subsistence-minimum" element={<SubsistenceMinimumCalculator />} />
                   <Route path="/alimony-indexation" element={<AlimonyIndexationCalculator />} />
                   <Route path="/deposit" element={<DepositCalculator />} />
+                  <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
