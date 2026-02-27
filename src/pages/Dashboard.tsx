@@ -15,8 +15,6 @@ import {
   ChevronDown,
   ChevronUp,
   Code2,
-  Pencil,
-  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,12 +27,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
-import { calculatorsByCategory } from "@/lib/calculators/calculator-data";
-
-const allCalcs = Object.values(calculatorsByCategory).flat();
-function calcName(id: string) {
-  return allCalcs.find((c) => c.id === id)?.name ?? id;
-}
 
 interface SavedCalculation {
   id: string;
@@ -69,7 +61,7 @@ export default function Dashboard() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
-  const { widgets, loading: widgetsLoading, deleteWidget } = useEmbedWidgets();
+  const { widgets } = useEmbedWidgets();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -206,96 +198,30 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Embed Widgets */}
-        <section className="py-10 sm:py-12 border-b border-border">
-          <div className="container max-w-4xl space-y-5">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold flex items-center gap-2">
-                <Code2 className="h-5 w-5" /> Embed-виджеты
-              </h2>
-              <Link to="/embed-builder">
-                <Button size="sm" variant="outline" className="gap-1.5">
-                  <Plus className="h-3.5 w-3.5" /> Новый виджет
+        {/* Embed Widgets — compact teaser */}
+        <section className="py-8 border-b border-border">
+          <div className="container max-w-4xl">
+            <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <Code2 className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Embed-виджеты</p>
+                  <p className="text-xs text-muted-foreground">
+                    {widgets.length > 0
+                      ? `${widgets.length} виджет${widgets.length === 1 ? "" : widgets.length < 5 ? "а" : "ов"} — встройте калькулятор на свой сайт`
+                      : "Встройте калькулятор на свой сайт"}
+                  </p>
+                </div>
+              </div>
+              <Link to="/embed-widgets" className="shrink-0">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Code2 className="h-3.5 w-3.5" />
+                  Мои виджеты
                 </Button>
               </Link>
             </div>
-
-            {widgetsLoading ? (
-              <div className="text-sm text-muted-foreground">Загрузка...</div>
-            ) : widgets.length === 0 ? (
-              <Card>
-                <CardContent className="py-10 text-center space-y-3">
-                  <Code2 className="h-10 w-10 text-muted-foreground/30 mx-auto" />
-                  <div>
-                    <p className="font-medium text-sm">Нет сохранённых виджетов</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Настройте калькулятор и вставьте его на свой сайт
-                    </p>
-                  </div>
-                  <Link to="/embed-builder">
-                    <Button size="sm" variant="outline" className="gap-1.5">
-                      <Plus className="h-3.5 w-3.5" /> Создать виджет
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {widgets.map((widget) => (
-                  <Card key={widget.id} className="group transition-all hover:shadow-md">
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                            <Code2 className="h-4 w-4 text-primary" />
-                          </div>
-                          <div className="min-w-0">
-                            <CardTitle className="text-sm truncate">{widget.name}</CardTitle>
-                            <CardDescription className="text-xs flex items-center gap-1 mt-0.5">
-                              <Clock className="h-3 w-3" />
-                              {new Date(widget.updated_at).toLocaleDateString("ru", { day: "numeric", month: "short", year: "numeric" })}
-                            </CardDescription>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1 shrink-0">
-                          <Link to={`/embed-builder?widgetId=${widget.id}`}>
-                            <Button variant="ghost" size="icon-sm" title="Редактировать">
-                              <Pencil className="h-3.5 w-3.5" />
-                            </Button>
-                          </Link>
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => deleteWidget(widget.id)}
-                            className="text-muted-foreground hover:text-destructive"
-                            title="Удалить"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-wrap gap-1.5 text-xs">
-                        <span className="bg-muted px-2 py-0.5 rounded-full">
-                          {calcName(widget.config.calculatorId)}
-                        </span>
-                        <span className="bg-muted px-2 py-0.5 rounded-full">{widget.config.currency}</span>
-                        <span
-                          className="px-2 py-0.5 rounded-full border text-[10px]"
-                          style={{ backgroundColor: widget.config.primaryColor + "20", borderColor: widget.config.primaryColor + "40", color: widget.config.primaryColor }}
-                        >
-                          {widget.config.primaryColor}
-                        </span>
-                        <Badge variant={widget.config.plan === "pro" ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
-                          {widget.config.plan === "pro" ? "Pro" : "Free"}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
           </div>
         </section>
 

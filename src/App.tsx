@@ -27,6 +27,7 @@ const CategoryDetail = lazy(() => import("./pages/CategoryDetail"));
 const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
+const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
@@ -118,6 +119,7 @@ const App = () => (
                   <Route path="/alimony-indexation" element={<AlimonyIndexationCalculator />} />
                   <Route path="/deposit" element={<DepositCalculator />} />
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
+                  <Route path="/embed-widgets" element={<EmbedWidgets />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
