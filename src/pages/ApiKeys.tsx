@@ -230,12 +230,12 @@ export default function ApiKeys() {
                       {k.plan === "free" && (
                         <div className="space-y-1">
                           <div className="flex items-center justify-between text-xs">
-                            <span className={cn("text-muted-foreground", isWarning && "text-amber-500", isDanger && "text-destructive")}>
+                            <span className={cn("text-muted-foreground", isWarning && "text-[hsl(38,92%,45%)]", isDanger && "text-destructive")}>
                               {k.requests_count.toLocaleString()} / {k.requests_limit.toLocaleString()} запросов
                             </span>
-                            <span className={cn("font-medium", isWarning && "text-amber-500", isDanger && "text-destructive")}>{pct}%</span>
+                            <span className={cn("font-medium", isWarning && "text-[hsl(38,92%,45%)]", isDanger && "text-destructive")}>{pct}%</span>
                           </div>
-                          <Progress value={pct} className={cn("h-1.5", isDanger && "[&>[role=progressbar]]:bg-destructive", isWarning && "[&>[role=progressbar]]:bg-[hsl(var(--warning,38_92%_50%))]")} />
+                          <Progress value={pct} className={cn("h-1.5", isDanger && "[&>[role=progressbar]]:bg-destructive", isWarning && "[&>[role=progressbar]]:bg-[hsl(38,92%,45%)]")} />
                         </div>
                       )}
                     </div>
