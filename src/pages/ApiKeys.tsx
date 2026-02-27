@@ -235,7 +235,7 @@ export default function ApiKeys() {
                             </span>
                             <span className={cn("font-medium", isWarning && "text-amber-500", isDanger && "text-destructive")}>{pct}%</span>
                           </div>
-                          <Progress value={pct} className={cn("h-1.5", isDanger && "[&>[role=progressbar]]:bg-destructive", isWarning && "[&>[role=progressbar]]:bg-amber-500")} />
+                          <Progress value={pct} className={cn("h-1.5", isDanger && "[&>[role=progressbar]]:bg-destructive", isWarning && "[&>[role=progressbar]]:bg-[hsl(var(--warning,38_92%_50%))]")} />
                         </div>
                       )}
                     </div>
