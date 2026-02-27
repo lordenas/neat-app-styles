@@ -13,6 +13,9 @@ export interface EmbedWidget {
   updated_at: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const db = () => supabase.from("embed_widgets" as any);
+
 export function useEmbedWidgets() {
   const { user } = useAuth();
   const [widgets, setWidgets] = useState<EmbedWidget[]>([]);
@@ -21,10 +24,7 @@ export function useEmbedWidgets() {
   const fetchWidgets = useCallback(async () => {
     if (!user) return;
     setLoading(true);
-    const { data, error } = await supabase
-      .from("embed_widgets")
-      .select("*")
-      .order("updated_at", { ascending: false });
+    const { data, error } = await db().select("*").order("updated_at", { ascending: false });
     if (!error && data) setWidgets(data as unknown as EmbedWidget[]);
     setLoading(false);
   }, [user]);
@@ -33,12 +33,12 @@ export function useEmbedWidgets() {
     fetchWidgets();
   }, [fetchWidgets]);
 
-  const saveWidget = async (name: string, config: EmbedConfig, existingId?: string) => {
+  const saveWidget = async (name: string, config: EmbedConfig, existingId?: string): Promise<EmbedWidget | null> => {
     if (!user) return null;
+
     if (existingId) {
-      const { data, error } = await supabase
-        .from("embed_widgets")
-        .update({ name, config: config as unknown as import("@/integrations/supabase/types").Json })
+      const { data, error } = await db()
+        .update({ name, config })
         .eq("id", existingId)
         .select()
         .single();
@@ -51,9 +51,8 @@ export function useEmbedWidgets() {
       toast({ title: "Сохранено", description: `Виджет «${name}» обновлён.`, variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
       return updated;
     } else {
-      const { data, error } = await supabase
-        .from("embed_widgets")
-        .insert({ user_id: user.id, name, config: config as unknown as Record<string, unknown> })
+      const { data, error } = await db()
+        .insert({ user_id: user.id, name, config })
         .select()
         .single();
       if (error) {
@@ -68,7 +67,7 @@ export function useEmbedWidgets() {
   };
 
   const deleteWidget = async (id: string) => {
-    const { error } = await supabase.from("embed_widgets").delete().eq("id", id);
+    const { error } = await db().delete().eq("id", id);
     if (error) {
       toast({ title: "Ошибка", description: "Не удалось удалить виджет.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
     } else {
