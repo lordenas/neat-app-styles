@@ -50,11 +50,11 @@ export function EmbedBuilderPreview({ config, iframeUrl }: Props) {
             background: config.backgroundColor,
           }}
         >
-          {/* Fake browser bar */}
+            {/* Fake browser bar */}
           <div className="flex items-center gap-1.5 px-3 py-2 bg-muted/60 border-b">
             <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
-            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-green-500/50" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--warning,48_96%_53%)/0.7)]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[hsl(var(--success,142_71%_45%)/0.5)]" />
             <div className="flex-1 mx-2 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground font-mono truncate">
               yoursite.com/calculators
             </div>

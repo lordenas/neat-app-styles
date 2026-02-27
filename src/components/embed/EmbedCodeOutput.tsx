@@ -88,7 +88,7 @@ export function EmbedCodeOutput({ config, iframeUrl }: Props) {
 
         {/* Free plan limits info */}
         {!isPro && (
-          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/40 dark:bg-amber-900/10 p-3">
+          <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3">
             <div className="flex items-start gap-3">
               <div className="flex-1">
                 <p className="text-xs font-medium text-amber-800 dark:text-amber-400">Free план</p>
