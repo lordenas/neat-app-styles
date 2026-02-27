@@ -27,6 +27,7 @@ const CategoryDetail = lazy(() => import("./pages/CategoryDetail"));
 const SharedCalculation = lazy(() => import("./pages/SharedCalculation"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
+const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
