@@ -91,8 +91,8 @@ export function EmbedCodeOutput({ config, iframeUrl }: Props) {
           <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3">
             <div className="flex items-start gap-3">
               <div className="flex-1">
-                <p className="text-xs font-medium text-amber-800 dark:text-amber-400">Free план</p>
-                <p className="text-xs text-amber-700 dark:text-amber-500 mt-0.5">
+                <p className="text-xs font-medium text-foreground">Free план</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
                   100 встраиваний в месяц · логотип CalcHub · стандартные цвета
                 </p>
               </div>
