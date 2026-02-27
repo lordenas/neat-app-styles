@@ -192,7 +192,7 @@ export default function ApiKeys() {
                           {k.is_active && (
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-amber-500">
+                                <Button size="icon" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-[hsl(var(--warning,38_92%_50%))]">
                                   <Ban className="h-3.5 w-3.5" />
                                 </Button>
                               </AlertDialogTrigger>
