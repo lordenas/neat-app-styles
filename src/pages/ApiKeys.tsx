@@ -317,7 +317,7 @@ export default function ApiKeys() {
             <div className="rounded-lg border overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-2 border-b bg-muted/50">
                 <span className="text-xs font-medium">Пример ответа</span>
-                <Badge variant="secondary" className="text-[10px] text-green-600">200 OK</Badge>
+                <Badge variant="secondary" className="text-[10px] text-[hsl(var(--success,142_76%_36%))]">200 OK</Badge>
               </div>
               <pre className="text-xs font-mono p-4 overflow-x-auto text-foreground leading-relaxed">
 {`{
