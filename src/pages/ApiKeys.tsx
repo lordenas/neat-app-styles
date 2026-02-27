@@ -203,7 +203,7 @@ export default function ApiKeys() {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Отмена</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => revokeKey(k.id)} className="bg-amber-500 hover:bg-amber-600">Отозвать</AlertDialogAction>
+                                  <AlertDialogAction onClick={() => revokeKey(k.id)} className="bg-[hsl(var(--warning,38_92%_50%))] hover:opacity-90">Отозвать</AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
                             </AlertDialog>
