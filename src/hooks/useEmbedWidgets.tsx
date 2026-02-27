@@ -38,7 +38,7 @@ export function useEmbedWidgets() {
     if (existingId) {
       const { data, error } = await supabase
         .from("embed_widgets")
-        .update({ name, config: config as unknown as Record<string, unknown> })
+        .update({ name, config: config as unknown as import("@/integrations/supabase/types").Json })
         .eq("id", existingId)
         .select()
         .single();
