@@ -11,6 +11,8 @@ export interface EmbedWidget {
   config: EmbedConfig;
   created_at: string;
   updated_at: string;
+  monthly_views: number;
+  views_reset_at: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

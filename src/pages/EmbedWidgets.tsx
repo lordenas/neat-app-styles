@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useNavigate, Link } from "react-router-dom";
-import { Code2, Plus, Pencil, Trash2, Clock, ExternalLink } from "lucide-react";
+import { Code2, Plus, Pencil, Trash2, Clock, ExternalLink, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useAuth } from "@/hooks/useAuth";
@@ -145,6 +146,42 @@ export default function EmbedWidgets() {
                           {widget.config.plan === "pro" ? "Pro" : "Free"}
                         </Badge>
                       </div>
+
+                      {/* Usage counter */}
+                      {widget.config.plan === "free" ? (
+                        <div className="space-y-1.5 pt-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="flex items-center gap-1 text-muted-foreground">
+                              <Zap className="h-3 w-3" />
+                              Встраиваний в этом месяце
+                            </span>
+                            <span className={`font-mono font-medium tabular-nums ${widget.monthly_views >= 90 ? "text-destructive" : widget.monthly_views >= 70 ? "text-[hsl(var(--warning,38_92%_50%))]" : "text-foreground"}`}>
+                              {widget.monthly_views} / 100
+                            </span>
+                          </div>
+                          <Progress
+                            value={widget.monthly_views}
+                            max={100}
+                            className="h-1.5"
+                          />
+                          {widget.monthly_views >= 90 && (
+                            <div className="flex items-center justify-between">
+                              <p className="text-[11px] text-destructive">Лимит почти исчерпан</p>
+                              <Link to="/embed-builder" className="text-[11px] text-primary flex items-center gap-1 hover:underline">
+                                <Crown className="h-3 w-3" />
+                                Перейти на Pro
+                              </Link>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground pt-1">
+                          <Crown className="h-3 w-3 text-primary" />
+                          <span>Pro · без ограничений</span>
+                          <span className="ml-auto font-mono">{widget.monthly_views} встр.</span>
+                        </div>
+                      )}
+
                       <Link
                         to={`/embed-builder?widgetId=${widget.id}`}
                         className="flex items-center gap-1.5 text-xs text-primary hover:underline"
