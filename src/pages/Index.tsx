@@ -328,14 +328,14 @@ const Index = () => {
                       POST /api/calculate/mortgage
                     </div>
                   </div>
-                  <div className="p-5 space-y-3 font-mono text-xs leading-relaxed">
+                  <div className="p-4 sm:p-5 space-y-3 font-mono text-[11px] sm:text-xs leading-relaxed">
                     <div className="text-muted-foreground">// Запрос</div>
-                    <pre className="bg-muted/40 rounded-lg p-3 text-foreground overflow-x-auto">{`curl -X POST \\
+                    <pre className="bg-muted/40 rounded-lg p-3 text-foreground overflow-x-auto whitespace-pre-wrap break-all sm:break-normal sm:whitespace-pre">{`curl -X POST \\
   https://api.calchub.io/calculate/mortgage \\
   -H "X-Api-Key: chk_your_key" \\
   -d '{"amount":5000000,"rate":16,"months":240}'`}</pre>
                     <div className="text-muted-foreground mt-2">// Ответ</div>
-                    <pre className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-foreground overflow-x-auto">{`{
+                    <pre className="bg-primary/5 border border-primary/20 rounded-lg p-3 text-foreground overflow-x-auto whitespace-pre">{`{
   "monthlyPayment": 72450,
   "totalPayment": 17388000,
   "overpayment": 12388000,
