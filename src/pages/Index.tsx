@@ -193,7 +193,15 @@ const Index = () => {
                 {/* Abstract calculator illustration — 3D tilted */}
                 <div
                   className="relative w-72 h-80 z-10"
-                  style={{ transform: "rotateY(-18deg) rotateX(6deg) rotateZ(1deg)", transformStyle: "preserve-3d" }}
+                  style={{
+                    transform: illustHovered
+                      ? "rotateY(0deg) rotateX(0deg) rotateZ(0deg)"
+                      : "rotateY(-18deg) rotateX(6deg) rotateZ(1deg)",
+                    transformStyle: "preserve-3d",
+                    transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  }}
+                  onMouseEnter={() => setIllustHovered(true)}
+                  onMouseLeave={() => setIllustHovered(false)}
                 >
                   {/* Outer shell */}
                   <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
