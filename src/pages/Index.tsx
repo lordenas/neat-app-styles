@@ -166,7 +166,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
 
   return (
     <div
-      className="col-span-2 row-span-3 rounded-2xl overflow-hidden border"
+      className="col-span-2 row-span-3 rounded-2xl overflow-hidden border flex flex-col"
       style={{
         background: "linear-gradient(160deg, hsl(var(--card)/0.95) 0%, hsl(var(--card)/0.8) 100%)",
         backdropFilter: "blur(20px)",
