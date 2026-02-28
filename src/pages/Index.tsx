@@ -147,7 +147,7 @@ const Index = () => {
 
       <main id="main-content">
         {/* Hero */}
-        <section className="relative py-16 sm:py-24 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
+        <section ref={heroRef} onMouseMove={handleHeroMouseMove} onMouseLeave={handleHeroMouseLeave} className="relative py-16 sm:py-24 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
           {/* Ambient blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
             <div className="absolute -top-24 right-0 w-[600px] h-[600px] rounded-full bg-primary/[0.06] blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
