@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -89,7 +89,22 @@ const faqKeys = ["faq1", "faq2", "faq3", "faq4", "faq5"] as const;
 const Index = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
-  const [illustHovered, setIllustHovered] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+  const handleHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 … 1
+    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 … 1
+    setParallax({ x: dx * 10, y: dy * -8 });
+  }, []);
+
+  const handleHeroMouseLeave = useCallback(() => {
+    setParallax({ x: 0, y: 0 });
+  }, []);
 
   const filteredCalcs = useMemo(() => {
     if (!search.trim()) return popularCalcs;
@@ -131,7 +146,7 @@ const Index = () => {
 
       <main id="main-content">
         {/* Hero */}
-        <section className="relative py-16 sm:py-24 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
+        <section ref={heroRef} onMouseMove={handleHeroMouseMove} onMouseLeave={handleHeroMouseLeave} className="relative py-16 sm:py-24 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
           {/* Ambient blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
             <div className="absolute -top-24 right-0 w-[600px] h-[600px] rounded-full bg-primary/[0.06] blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
@@ -190,18 +205,14 @@ const Index = () => {
               {/* RIGHT — abstract calculator illustration + floating cards */}
               <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
 
-                {/* Abstract calculator illustration — 3D tilted */}
+                {/* Abstract calculator illustration — 3D tilted with parallax */}
                 <div
                   className="relative w-72 h-80 z-10"
                   style={{
-                    transform: illustHovered
-                      ? "rotateY(0deg) rotateX(0deg) rotateZ(0deg)"
-                      : "rotateY(-18deg) rotateX(6deg) rotateZ(1deg)",
+                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg)`,
                     transformStyle: "preserve-3d",
-                    transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    transition: "transform 0.12s ease-out",
                   }}
-                  onMouseEnter={() => setIllustHovered(true)}
-                  onMouseLeave={() => setIllustHovered(false)}
                 >
                   {/* Outer shell */}
                   <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
