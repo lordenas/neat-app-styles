@@ -84,7 +84,45 @@ const trustStats = [
   { key: "uptime", icon: <Shield className="h-5 w-5" /> },
 ] as const;
 
-const faqKeys = ["faq1", "faq2", "faq3", "faq4", "faq5"] as const;
+// Данные для анимированных счётчиков
+const counterStats = [
+  { key: "users",        target: 150,   suffix: "K+",  decimals: 0 },
+  { key: "calculations", target: 2,     suffix: "M+",  decimals: 0 },
+  { key: "countries",    target: 20,    suffix: "+",   decimals: 0 },
+  { key: "uptime",       target: 99.9,  suffix: "%",   decimals: 1 },
+] as const;
+
+function useCountUp(target: number, decimals = 0, duration = 1800) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        if (prefersReduced) { setCount(target); return; }
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3); // ease-out-cubic
+          setCount(parseFloat((eased * target).toFixed(decimals)));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, decimals, duration]);
+
+  return { count, ref };
+}
+
+
 
 const Index = () => {
   const { t, i18n } = useTranslation();
