@@ -332,11 +332,13 @@ const HeroSparkline = memo(() => {
 
   return (
     <div
-      className="col-span-2 row-span-1 rounded-2xl p-3 border"
+      className="col-span-2 row-span-1 rounded-2xl p-3"
       style={{
-        background: "hsl(var(--card)/0.7)",
-        backdropFilter: "blur(16px)",
-        borderColor: "hsl(var(--border)/0.6)",
+        background: "linear-gradient(160deg, hsl(var(--card)/0.85) 0%, hsl(var(--primary)/0.04) 100%)",
+        backdropFilter: "blur(20px)",
+        boxShadow: "0 8px 28px hsl(var(--primary)/0.1), 0 1px 0 hsl(var(--background)/0.5) inset",
+        outline: "1px solid hsl(var(--primary)/0.12)",
+        outlineOffset: "-1px",
       }}
     >
       <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1">Рост</p>
