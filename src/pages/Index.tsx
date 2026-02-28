@@ -90,6 +90,22 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const [illustHovered, setIllustHovered] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+
+  const handleHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = heroRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 … 1
+    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 … 1
+    setParallax({ x: dx * 10, y: dy * -8 });
+  }, []);
+
+  const handleHeroMouseLeave = useCallback(() => {
+    setParallax({ x: 0, y: 0 });
+  }, []);
 
   const filteredCalcs = useMemo(() => {
     if (!search.trim()) return popularCalcs;
