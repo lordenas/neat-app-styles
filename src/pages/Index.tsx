@@ -387,27 +387,28 @@ const Index = () => {
                   const off = chipOffsets[i] ?? { x: 0, y: 0 };
                   return (
                     <div
-                    key={i}
-                    ref={(el) => { chipRefs.current[i] = el; }}
-                    className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
-                    style={{
-                      top: (fc as any).top,
-                      bottom: (fc as any).bottom,
-                      left: (fc as any).left,
-                      right: (fc as any).right,
-                      animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
-                      animationDelay: fc.delay,
-                      translate: `${off.x}px ${off.y}px`,
-                      transition: "translate 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                    }}
-                  >
-                    <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
-                    <div>
-                      <p className="text-[10px] text-muted-foreground leading-none mb-0.5">{fc.label}</p>
-                      <p className="text-xs font-semibold text-foreground">{fc.value}</p>
+                      key={i}
+                      ref={(el) => { chipRefs.current[i] = el; }}
+                      className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
+                      style={{
+                        top: (fc as any).top,
+                        bottom: (fc as any).bottom,
+                        left: (fc as any).left,
+                        right: (fc as any).right,
+                        animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
+                        animationDelay: fc.delay,
+                        translate: `${off.x}px ${off.y}px`,
+                        transition: "translate 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                      }}
+                    >
+                      <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
+                      <div>
+                        <p className="text-[10px] text-muted-foreground leading-none mb-0.5">{fc.label}</p>
+                        <p className="text-xs font-semibold text-foreground">{fc.value}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
             </div>
