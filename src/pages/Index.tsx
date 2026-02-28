@@ -186,77 +186,81 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* RIGHT — calculator mock + floating cards */}
-              <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" aria-hidden="true">
-                {/* Main calculator card */}
-                <div className="relative bg-card border border-border rounded-2xl shadow-xl w-80 p-6 space-y-5 z-10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="p-2 rounded-lg bg-primary/10">
-                        <Landmark className="h-4 w-4 text-primary" />
-                      </div>
-                      <span className="font-semibold text-sm text-foreground">Ипотека</span>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">Расчёт</Badge>
-                  </div>
+              {/* RIGHT — abstract calculator illustration + floating cards */}
+              <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 420 }} aria-hidden="true">
 
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Сумма кредита</p>
-                      <div className="h-9 rounded-md bg-muted/60 border border-border flex items-center px-3">
-                        <span className="text-sm font-medium text-foreground">5 000 000 ₽</span>
-                      </div>
+                {/* Abstract calculator illustration */}
+                <div className="relative w-72 h-80 z-10">
+                  {/* Outer shell */}
+                  <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
+                    {/* Top bar */}
+                    <div className="h-10 bg-primary/10 border-b border-border flex items-center px-4 gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-warning/60" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-success/60" />
+                      <div className="flex-1 mx-3 h-4 rounded-full bg-muted/80" />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Ставка</p>
-                        <div className="h-9 rounded-md bg-muted/60 border border-border flex items-center px-3">
-                          <span className="text-sm font-medium text-foreground">8.5%</span>
+
+                    {/* Display area — abstract bars */}
+                    <div className="px-5 pt-5 pb-3 space-y-2.5">
+                      {/* Fake input rows */}
+                      {[70, 45, 55].map((w, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <div className="w-16 h-2.5 rounded-full bg-muted" />
+                          <div className="h-7 rounded-md bg-muted/60 border border-border flex-1" style={{ maxWidth: `${w}%` }} />
                         </div>
+                      ))}
+                    </div>
+
+                    {/* Chart area — abstract bar chart */}
+                    <div className="px-5 pt-1 pb-3 flex items-end gap-1.5 h-24">
+                      {[40, 60, 45, 80, 55, 70, 35, 90, 65].map((h, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 rounded-t-sm"
+                          style={{
+                            height: `${h}%`,
+                            background: i === 7
+                              ? `hsl(var(--primary))`
+                              : i % 3 === 0
+                              ? `hsl(var(--primary)/0.5)`
+                              : `hsl(var(--primary)/0.25)`,
+                            animation: `heroFloat${i % 2 === 0 ? "A" : "B"} ${3 + i * 0.3}s ease-in-out infinite`,
+                            animationDelay: `${i * 0.15}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Result strip */}
+                    <div className="mx-5 rounded-xl bg-primary/10 border border-primary/20 p-3 flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="w-20 h-2 rounded-full bg-primary/30" />
+                        <div className="w-28 h-3.5 rounded-full bg-primary/60" />
                       </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Срок</p>
-                        <div className="h-9 rounded-md bg-muted/60 border border-border flex items-center px-3">
-                          <span className="text-sm font-medium text-foreground">20 лет</span>
-                        </div>
-                      </div>
+                      <div className="w-14 h-7 rounded-lg bg-primary/80" />
                     </div>
                   </div>
 
-                  {/* Result block */}
-                  <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-2">
-                    <p className="text-xs text-primary/70 font-medium">Ежемесячный платёж</p>
-                    <p className="text-2xl font-bold text-primary">43 391 ₽</p>
-                    <div className="flex gap-4 text-xs text-muted-foreground">
-                      <span>Переплата: <span className="text-foreground font-medium">5.41 млн</span></span>
-                      <span>Итого: <span className="text-foreground font-medium">10.41 млн</span></span>
-                    </div>
-                    {/* Mini progress bar */}
-                    <div className="h-1.5 rounded-full bg-border overflow-hidden mt-1">
-                      <div className="h-full w-[48%] rounded-full bg-primary" style={{ animation: "heroFloatA 3s ease-in-out infinite" }} />
-                    </div>
-                  </div>
-
-                  <div className="w-full h-8 rounded-lg bg-primary/80 flex items-center justify-center">
-                    <span className="text-xs font-medium text-primary-foreground">Рассчитать подробно →</span>
-                  </div>
+                  {/* Decorative glow */}
+                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-primary/20 blur-2xl rounded-full" />
                 </div>
 
-                {/* Floating cards around calculator */}
+                {/* Floating chips — tighter to illustration */}
                 {[
-                  { icon: <PiggyBank className="h-4 w-4 text-primary" />, label: "Депозит", value: "+12.4% / год", top: "4%", left: "-28%", animA: true, delay: "0s" },
-                  { icon: <Receipt className="h-4 w-4 text-success" />, label: "НДС 20%", value: "₽ 83 333", top: "18%", right: "-30%", animA: false, delay: "0.3s" },
-                  { icon: <TrendingUp className="h-4 w-4 text-success" />, label: "Инфляция", value: "4.2%", bottom: "28%", left: "-32%", animA: false, delay: "0.6s" },
-                  { icon: <Car className="h-4 w-4 text-warning" />, label: "Автокредит", value: "15.9% / год", bottom: "12%", right: "-28%", animA: true, delay: "0.9s" },
-                  { icon: <Scale className="h-4 w-4 text-destructive" />, label: "Пени", value: "₽ 1 240", bottom: "-6%", left: "10%", animA: true, delay: "1.2s" },
+                  { icon: <PiggyBank className="h-4 w-4 text-primary" />, label: "Депозит", value: "+12.4%", top: "2%", left: "-18%", animA: true, delay: "0s" },
+                  { icon: <Receipt className="h-4 w-4 text-success" />, label: "НДС", value: "20%", top: "14%", right: "-18%", animA: false, delay: "0.4s" },
+                  { icon: <TrendingUp className="h-4 w-4 text-success" />, label: "Доход", value: "↑ 8.3%", bottom: "30%", left: "-20%", animA: false, delay: "0.8s" },
+                  { icon: <Car className="h-4 w-4 text-warning" />, label: "Авто", value: "15.9%", bottom: "14%", right: "-16%", animA: true, delay: "1.1s" },
+                  { icon: <Scale className="h-4 w-4 text-destructive" />, label: "Пени", value: "× 1/300", bottom: "-4%", left: "18%", animA: true, delay: "1.5s" },
                 ].map((fc, i) => (
                   <div
                     key={i}
-                    className="absolute bg-card/90 backdrop-blur-sm border border-border rounded-xl px-3 py-2.5 shadow-lg flex items-center gap-2.5 z-20"
+                    className="absolute bg-card/90 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
                     style={{
-                      top: fc.top,
+                      top: (fc as any).top,
                       bottom: (fc as any).bottom,
-                      left: fc.left,
+                      left: (fc as any).left,
                       right: (fc as any).right,
                       animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
                       animationDelay: fc.delay,
