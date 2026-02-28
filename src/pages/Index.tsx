@@ -281,133 +281,82 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* RIGHT — physical calculator + charts */}
-              <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
+              {/* RIGHT — Glassmorphism Dashboard Illustration */}
+              <div
+                className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600"
+                style={{ minHeight: 500, perspective: "1100px" }}
+                aria-hidden="true"
+              >
+                {/* Ambient glow blobs behind the illustration */}
+                <div className="absolute w-72 h-72 rounded-full bg-primary/10 blur-3xl -top-10 right-0 pointer-events-none" />
+                <div className="absolute w-48 h-48 rounded-full bg-success/8 blur-2xl bottom-0 left-0 pointer-events-none" />
 
-                {/* Physical calculator illustration + mini chart */}
+                {/* ── Main 3D tilt wrapper ── */}
                 <div
-                  className="relative z-10 flex gap-4 items-end"
+                  className="relative z-10"
                   style={{
-                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg)`,
+                    transform: `rotateY(${-12 + parallax.x * 0.55}deg) rotateX(${4 + parallax.y * 0.45}deg)`,
                     transformStyle: "preserve-3d",
-                    transition: "transform 0.12s ease-out",
+                    transition: "transform 0.14s ease-out",
                   }}
                 >
-                  {/* ── Physical Calculator Body ── */}
-                  <div className="w-52 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden" style={{ boxShadow: "0 24px 48px -8px hsl(var(--primary)/0.18), 0 8px 24px -4px hsl(var(--foreground)/0.12)" }}>
-                    {/* Display */}
-                    <div className="mx-3 mt-3 rounded-2xl bg-gradient-to-br from-[hsl(var(--muted))] to-[hsl(var(--muted)/0.6)] border border-border p-3" style={{ fontFamily: "monospace" }}>
-                      <p className="text-[9px] text-muted-foreground mb-0.5 uppercase tracking-widest">НДС 20%</p>
-                      <p className="text-right text-2xl font-bold tracking-tight text-foreground">240 000</p>
-                      <div className="flex justify-between mt-1">
-                        <span className="text-[9px] text-muted-foreground">База: 1 200 000 ₽</span>
-                        <span className="text-[9px] text-success font-medium">+20%</span>
-                      </div>
-                    </div>
+                  {/* ── Background blur layer (glass depth) ── */}
+                  <div
+                    className="absolute inset-0 rounded-3xl"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--primary)/0.08) 0%, hsl(var(--background)/0.4) 100%)",
+                      backdropFilter: "blur(24px)",
+                      border: "1px solid hsl(var(--border)/0.6)",
+                      boxShadow: "0 32px 80px -16px hsl(var(--primary)/0.22), 0 8px 32px -8px hsl(var(--foreground)/0.1)",
+                      transform: "translateZ(-8px) scale(1.04)",
+                      borderRadius: "28px",
+                    }}
+                  />
 
-                    {/* Buttons grid */}
-                    <div className="p-3 grid grid-cols-4 gap-1.5">
-                      {/* Row 1 — ops */}
-                      {["C", "±", "%", "÷"].map((k, i) => (
-                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--muted))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))" }}>
-                          {k}
-                        </div>
-                      ))}
-                      {/* Row 2 */}
-                      {["7", "8", "9", "×"].map((k, i) => (
-                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
-                          {k}
-                        </div>
-                      ))}
-                      {/* Row 3 */}
-                      {["4", "5", "6", "−"].map((k, i) => (
-                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
-                          {k}
-                        </div>
-                      ))}
-                      {/* Row 4 */}
-                      {["1", "2", "3", "+"].map((k, i) => (
-                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
-                          {k}
-                        </div>
-                      ))}
-                      {/* Row 5 — 0 wide + . + = */}
-                      <div className="col-span-2 h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                        style={{ background: "hsl(var(--secondary))", color: "hsl(var(--secondary-foreground))" }}>0</div>
-                      <div className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
-                        style={{ background: "hsl(var(--secondary))", color: "hsl(var(--secondary-foreground))" }}>.</div>
-                      <div className="h-9 rounded-xl flex items-center justify-center text-xs font-bold cursor-default select-none"
-                        style={{ background: "hsl(var(--success))", color: "hsl(var(--primary-foreground))" }}>=</div>
-                    </div>
-                  </div>
+                  {/* ── Grid of panels ── */}
+                  <div className="relative grid grid-cols-5 grid-rows-3 gap-2.5 p-3 w-[420px]">
 
-                  {/* ── Mini Bar Chart panel ── */}
-                  <div className="w-28 rounded-2xl bg-card border border-border shadow-lg p-3 mb-4">
-                    <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-2">Динамика</p>
-                    <div className="flex items-end gap-1 h-20">
-                      {[35, 52, 41, 68, 55, 80, 62, 90].map((h, i) => (
-                        <div key={i} className="flex-1 rounded-t-sm transition-all"
-                          style={{
-                            height: `${h}%`,
-                            background: i === 7 ? "hsl(var(--primary))" : i % 2 === 0 ? "hsl(var(--primary)/0.5)" : "hsl(var(--primary)/0.25)",
-                            animation: `heroFloat${i % 2 === 0 ? "A" : "B"} ${3.5 + i * 0.25}s ease-in-out infinite`,
-                            animationDelay: `${i * 0.2}s`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                    {/* Mini donut */}
-                    <div className="mt-2 pt-2 border-t border-border">
-                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1.5">Структура</p>
-                      <div className="flex items-center gap-2">
-                        <svg width="32" height="32" viewBox="0 0 32 32" className="shrink-0">
-                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--primary)/0.2)" strokeWidth="6" />
-                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--primary))" strokeWidth="6"
-                            strokeDasharray="45 75" strokeDashoffset="0" strokeLinecap="round" transform="rotate(-90 16 16)" />
-                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--success))" strokeWidth="6"
-                            strokeDasharray="20 75" strokeDashoffset="-45" strokeLinecap="round" transform="rotate(-90 16 16)" />
-                        </svg>
-                        <div className="space-y-0.5">
-                          <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" /><span className="text-[8px] text-muted-foreground">Долг</span></div>
-                          <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-success shrink-0" /><span className="text-[8px] text-muted-foreground">%</span></div>
-                        </div>
-                      </div>
-                    </div>
+                    {/* ── CALCULATOR — spans col 1-2 rows 1-3 ── */}
+                    <HeroCalculator parallax={parallax} />
+
+                    {/* ── TOP RIGHT: Typewriter result card ── */}
+                    <HeroResultCard />
+
+                    {/* ── MID RIGHT: Mini bar chart ── */}
+                    <HeroBarChart />
+
+                    {/* ── BOTTOM RIGHT col 3-5: Sparkline + donut ── */}
+                    <HeroSparkline />
+                    <HeroDonut />
                   </div>
                 </div>
 
-                {/* 3D right-side edge */}
-                <div
-                  className="absolute top-3 bottom-3 -right-2.5 rounded-r-2xl bg-border/60 z-10"
-                  style={{ width: 10, transform: "rotateY(90deg) translateZ(-5px)", transformOrigin: "right center" }}
-                />
+                {/* Bottom glow */}
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 h-14 bg-primary/15 blur-3xl rounded-full pointer-events-none" />
 
-                {/* Glow */}
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-12 bg-primary/20 blur-2xl rounded-full z-0" />
-
-                {/* Floating chips — glued to illustration */}
+                {/* Floating chips */}
                 {[
-                  { icon: <PiggyBank className="h-4 w-4 text-primary" />,    label: "Депозит", value: "+12.4%",  top: "6%",    left: "4%",  animA: true,  delay: "0s"   },
-                  { icon: <Receipt className="h-4 w-4 text-success" />,      label: "НДС",     value: "20%",     top: "12%",   right: "6%", animA: false, delay: "0.4s" },
-                  { icon: <TrendingUp className="h-4 w-4 text-success" />,   label: "Доход",   value: "↑ 8.3%", bottom: "28%", left: "4%",  animA: false, delay: "0.8s" },
-                  { icon: <Car className="h-4 w-4 text-warning" />,          label: "Авто",    value: "15.9%",  bottom: "14%", right: "4%", animA: true,  delay: "1.1s" },
-                  { icon: <Scale className="h-4 w-4 text-destructive" />,    label: "Пени",    value: "×1/300", bottom: "0%",  left: "28%", animA: true,  delay: "1.5s" },
+                  { icon: <PiggyBank className="h-4 w-4 text-primary" />,   label: "Депозит", value: "+12.4%",  top: "2%",    left: "-6%",  animA: true,  delay: "0s"   },
+                  { icon: <Receipt className="h-4 w-4 text-success" />,     label: "НДС",     value: "20%",     top: "8%",    right: "-8%", animA: false, delay: "0.4s" },
+                  { icon: <TrendingUp className="h-4 w-4 text-success" />,  label: "Доход",   value: "↑ 8.3%", bottom: "26%", left: "-8%", animA: false, delay: "0.8s" },
+                  { icon: <Car className="h-4 w-4 text-warning" />,         label: "Авто",    value: "15.9%",  bottom: "10%", right: "-6%",animA: true,  delay: "1.1s" },
+                  { icon: <Scale className="h-4 w-4 text-destructive" />,   label: "Пени",    value: "×1/300", bottom: "-2%", left: "30%", animA: true,  delay: "1.5s" },
                 ].map((fc, i) => {
                   const off = chipOffsets[i] ?? { x: 0, y: 0 };
                   return (
                     <div
                       key={i}
                       ref={(el) => { chipRefs.current[i] = el; }}
-                      className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
+                      className="absolute z-20 flex items-center gap-2 px-3 py-2 rounded-xl border shadow-lg"
                       style={{
                         top: (fc as any).top,
                         bottom: (fc as any).bottom,
                         left: (fc as any).left,
                         right: (fc as any).right,
+                        background: "hsl(var(--card)/0.85)",
+                        backdropFilter: "blur(12px)",
+                        borderColor: "hsl(var(--border)/0.7)",
+                        boxShadow: "0 4px 16px hsl(var(--primary)/0.1)",
                         animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
                         animationDelay: fc.delay,
                         translate: `${off.x}px ${off.y}px`,
