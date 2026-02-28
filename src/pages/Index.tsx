@@ -566,9 +566,10 @@ const Index = () => {
                 style={{ minHeight: 500, perspective: "1100px" }}
                 aria-hidden="true"
               >
-                {/* Ambient glow blobs behind the illustration */}
-                <div className="absolute w-72 h-72 rounded-full bg-primary/10 blur-3xl -top-10 right-0 pointer-events-none" />
-                <div className="absolute w-48 h-48 rounded-full bg-success/8 blur-2xl bottom-0 left-0 pointer-events-none" />
+                {/* Ambient glow blobs — layered colors for depth */}
+                <div className="absolute w-80 h-80 rounded-full bg-primary/12 blur-3xl -top-10 right-0 pointer-events-none" />
+                <div className="absolute w-56 h-56 rounded-full bg-success/10 blur-3xl bottom-0 left-0 pointer-events-none" />
+                <div className="absolute w-40 h-40 rounded-full bg-info/8 blur-2xl top-1/2 left-1/4 pointer-events-none" />
 
                 {/* ── Main 3D tilt wrapper ── */}
                 <div
@@ -579,18 +580,38 @@ const Index = () => {
                     transition: "transform 0.14s ease-out",
                   }}
                 >
-                  {/* ── Background blur layer (glass depth) ── */}
+                  {/* ── Background glass layer with dot-grid ── */}
                   <div
-                    className="absolute inset-0 rounded-3xl"
+                    className="absolute inset-0 rounded-3xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(135deg, hsl(var(--primary)/0.08) 0%, hsl(var(--background)/0.4) 100%)",
-                      backdropFilter: "blur(24px)",
-                      border: "1px solid hsl(var(--border)/0.6)",
-                      boxShadow: "0 32px 80px -16px hsl(var(--primary)/0.22), 0 8px 32px -8px hsl(var(--foreground)/0.1)",
-                      transform: "translateZ(-8px) scale(1.04)",
+                      background: "linear-gradient(145deg, hsl(var(--primary)/0.07) 0%, hsl(var(--background)/0.55) 60%, hsl(var(--success)/0.04) 100%)",
+                      backdropFilter: "blur(28px)",
                       borderRadius: "28px",
+                      transform: "translateZ(-10px) scale(1.05)",
                     }}
-                  />
+                  >
+                    {/* Dot grid pattern */}
+                    <svg className="absolute inset-0 w-full h-full opacity-[0.18]" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <pattern id="dotgrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                          <circle cx="1.5" cy="1.5" r="1.5" fill="hsl(var(--primary))" />
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#dotgrid)" />
+                    </svg>
+                    {/* Gradient border via pseudo-layer */}
+                    <div className="absolute inset-0 rounded-3xl" style={{
+                      border: "1px solid transparent",
+                      background: "linear-gradient(hsl(var(--background)/0), hsl(var(--background)/0)) padding-box, linear-gradient(145deg, hsl(var(--primary)/0.5), hsl(var(--border)/0.2), hsl(var(--success)/0.3)) border-box",
+                    }} />
+                  </div>
+
+                  {/* Outer deep shadow for 3D lift */}
+                  <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{
+                    boxShadow: "0 40px 100px -20px hsl(var(--primary)/0.28), 0 16px 40px -8px hsl(var(--foreground)/0.12), 0 2px 0 0 hsl(var(--primary)/0.15) inset",
+                    transform: "translateZ(-10px) scale(1.05)",
+                    borderRadius: "28px",
+                  }} />
 
                   {/* ── Grid of panels ── */}
                   <div className="relative grid grid-cols-5 grid-rows-3 gap-2.5 p-3 w-[420px]">
@@ -611,7 +632,7 @@ const Index = () => {
                 </div>
 
                 {/* Bottom glow */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 h-14 bg-primary/15 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-96 h-16 bg-primary/18 blur-3xl rounded-full pointer-events-none" />
 
                 {/* Floating chips */}
                 {[
