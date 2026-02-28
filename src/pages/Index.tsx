@@ -150,20 +150,40 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const heroRef = useRef<HTMLElement>(null);
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const [mouse, setMouse] = useState({ x: 0, y: 0 }); // viewport coords
+  const [parallax, setParallax] = useState({ x: 0, y: 0 }); // for illustration
+  const chipRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [chipOffsets, setChipOffsets] = useState<{ x: number; y: number }[]>([]);
 
   const handleHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = heroRef.current?.getBoundingClientRect();
     if (!rect) return;
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 … 1
-    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 … 1
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
     setParallax({ x: dx * 10, y: dy * -8 });
+
+    // Individual chip offsets — each chip repels from mouse
+    const mx = e.clientX;
+    const my = e.clientY;
+    const offsets = chipRefs.current.map((el) => {
+      if (!el) return { x: 0, y: 0 };
+      const r = el.getBoundingClientRect();
+      const chipCx = r.left + r.width / 2;
+      const chipCy = r.top + r.height / 2;
+      const vx = chipCx - mx;
+      const vy = chipCy - my;
+      const dist = Math.sqrt(vx * vx + vy * vy) || 1;
+      const strength = Math.max(0, 1 - dist / 280) * 18;
+      return { x: (vx / dist) * strength, y: (vy / dist) * strength };
+    });
+    setChipOffsets(offsets);
   }, []);
 
   const handleHeroMouseLeave = useCallback(() => {
     setParallax({ x: 0, y: 0 });
+    setChipOffsets([]);
   }, []);
 
   const filteredCalcs = useMemo(() => {
