@@ -223,26 +223,21 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
         const buttons: React.ReactNode[] = [
           <div key="C"  className={cls} style={btnStyle("fn")}>C</div>,
           <div key="pm" className={cls} style={btnStyle("fn")}>±</div>,
-          <div key="pc" className={cls} style={btnStyle("fn")}>%</div>,
-          <div key="dv" className={cls} style={btnStyle("op")}>÷</div>,
+          <div key="pc" className={cls} style={btnStyle("op")}>%</div>,
           <div key="7"  className={cls} style={btnStyle("num")}>7</div>,
           <div key="8"  className={cls} style={btnStyle("num")}>8</div>,
           <div key="9"  className={cls} style={btnStyle("num")}>9</div>,
-          <div key="x"  className={cls} style={btnStyle("op")}>×</div>,
           <div key="4"  className={cls} style={btnStyle("num")}>4</div>,
           <div key="5"  className={cls} style={btnStyle("num")}>5</div>,
           <div key="6"  className={cls} style={btnStyle("num")}>6</div>,
-          <div key="mn" className={cls} style={btnStyle("op")}>−</div>,
           <div key="1"  className={cls} style={btnStyle("num")}>1</div>,
           <div key="2"  className={cls} style={btnStyle("num")}>2</div>,
           <div key="3"  className={cls} style={btnStyle("num")}>3</div>,
-          <div key="pl" className={cls} style={btnStyle("op")}>+</div>,
           <div key="0"  className={`col-span-2 ${cls}`} style={btnStyle("num")}>0</div>,
-          <div key="dt" className={cls} style={btnStyle("num")}>.</div>,
           <div key="eq" className={`${cls} font-bold`} style={btnStyle("op")}>=</div>,
         ];
         return (
-          <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5" style={{ gridAutoRows: "1fr" }}>
+          <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-3 gap-1.5" style={{ gridAutoRows: "1fr" }}>
             {buttons}
           </div>
         );
