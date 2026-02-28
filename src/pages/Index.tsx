@@ -150,7 +150,6 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const heroRef = useRef<HTMLElement>(null);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 }); // viewport coords
   const [parallax, setParallax] = useState({ x: 0, y: 0 }); // for illustration
   const chipRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [chipOffsets, setChipOffsets] = useState<{ x: number; y: number }[]>([]);
