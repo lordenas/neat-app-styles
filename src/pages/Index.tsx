@@ -281,99 +281,113 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* RIGHT — abstract calculator illustration + floating cards */}
+              {/* RIGHT — physical calculator + charts */}
               <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
 
-                {/* Stack shadow cards — behind illustration */}
+                {/* Physical calculator illustration + mini chart */}
                 <div
-                  className="absolute w-72 h-80 rounded-3xl border border-border bg-card/40"
-                  style={{
-                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg) translate(18px, 14px)`,
-                    transformStyle: "preserve-3d",
-                    transition: "transform 0.12s ease-out",
-                    zIndex: 7,
-                    opacity: 0.55,
-                  }}
-                />
-                <div
-                  className="absolute w-72 h-80 rounded-3xl border border-border bg-card/25"
-                  style={{
-                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg) translate(34px, 26px)`,
-                    transformStyle: "preserve-3d",
-                    transition: "transform 0.12s ease-out",
-                    zIndex: 6,
-                    opacity: 0.35,
-                  }}
-                />
-
-                {/* Abstract calculator illustration — 3D tilted with parallax */}
-                <div
-                  className="relative w-72 h-80 z-10"
+                  className="relative z-10 flex gap-4 items-end"
                   style={{
                     transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg)`,
                     transformStyle: "preserve-3d",
                     transition: "transform 0.12s ease-out",
                   }}
                 >
-                  {/* Outer shell */}
-                  <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
-                    {/* Top bar */}
-                    <div className="h-10 bg-primary/10 border-b border-border flex items-center px-4 gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-warning/60" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-success/60" />
-                      <div className="flex-1 mx-3 h-4 rounded-full bg-muted/80" />
+                  {/* ── Physical Calculator Body ── */}
+                  <div className="w-52 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden" style={{ boxShadow: "0 24px 48px -8px hsl(var(--primary)/0.18), 0 8px 24px -4px hsl(var(--foreground)/0.12)" }}>
+                    {/* Display */}
+                    <div className="mx-3 mt-3 rounded-2xl bg-gradient-to-br from-[hsl(var(--muted))] to-[hsl(var(--muted)/0.6)] border border-border p-3" style={{ fontFamily: "monospace" }}>
+                      <p className="text-[9px] text-muted-foreground mb-0.5 uppercase tracking-widest">НДС 20%</p>
+                      <p className="text-right text-2xl font-bold tracking-tight text-foreground">240 000</p>
+                      <div className="flex justify-between mt-1">
+                        <span className="text-[9px] text-muted-foreground">База: 1 200 000 ₽</span>
+                        <span className="text-[9px] text-success font-medium">+20%</span>
+                      </div>
                     </div>
 
-                    {/* Fake input rows */}
-                    <div className="px-5 pt-5 pb-3 space-y-2.5">
-                      {[70, 45, 55].map((w, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="w-16 h-2.5 rounded-full bg-muted" />
-                          <div className="h-7 rounded-md bg-muted/60 border border-border flex-1" style={{ maxWidth: `${w}%` }} />
+                    {/* Buttons grid */}
+                    <div className="p-3 grid grid-cols-4 gap-1.5">
+                      {/* Row 1 — ops */}
+                      {["C", "±", "%", "÷"].map((k, i) => (
+                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--muted))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--muted-foreground))" }}>
+                          {k}
                         </div>
                       ))}
+                      {/* Row 2 */}
+                      {["7", "8", "9", "×"].map((k, i) => (
+                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
+                          {k}
+                        </div>
+                      ))}
+                      {/* Row 3 */}
+                      {["4", "5", "6", "−"].map((k, i) => (
+                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
+                          {k}
+                        </div>
+                      ))}
+                      {/* Row 4 */}
+                      {["1", "2", "3", "+"].map((k, i) => (
+                        <div key={k} className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                          style={{ background: i === 3 ? "hsl(var(--primary))" : "hsl(var(--secondary))", color: i === 3 ? "hsl(var(--primary-foreground))" : "hsl(var(--secondary-foreground))" }}>
+                          {k}
+                        </div>
+                      ))}
+                      {/* Row 5 — 0 wide + . + = */}
+                      <div className="col-span-2 h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                        style={{ background: "hsl(var(--secondary))", color: "hsl(var(--secondary-foreground))" }}>0</div>
+                      <div className="h-9 rounded-xl flex items-center justify-center text-xs font-semibold cursor-default select-none"
+                        style={{ background: "hsl(var(--secondary))", color: "hsl(var(--secondary-foreground))" }}>.</div>
+                      <div className="h-9 rounded-xl flex items-center justify-center text-xs font-bold cursor-default select-none"
+                        style={{ background: "hsl(var(--success))", color: "hsl(var(--primary-foreground))" }}>=</div>
                     </div>
+                  </div>
 
-                    {/* Abstract bar chart */}
-                    <div className="px-5 pt-1 pb-3 flex items-end gap-1.5 h-24">
-                      {[40, 60, 45, 80, 55, 70, 35, 90, 65].map((h, i) => (
-                        <div
-                          key={i}
-                          className="flex-1 rounded-t-sm"
+                  {/* ── Mini Bar Chart panel ── */}
+                  <div className="w-28 rounded-2xl bg-card border border-border shadow-lg p-3 mb-4">
+                    <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-2">Динамика</p>
+                    <div className="flex items-end gap-1 h-20">
+                      {[35, 52, 41, 68, 55, 80, 62, 90].map((h, i) => (
+                        <div key={i} className="flex-1 rounded-t-sm transition-all"
                           style={{
                             height: `${h}%`,
-                            background: i === 7
-                              ? `hsl(var(--primary))`
-                              : i % 3 === 0
-                              ? `hsl(var(--primary)/0.5)`
-                              : `hsl(var(--primary)/0.25)`,
-                            animation: `heroFloat${i % 2 === 0 ? "A" : "B"} ${3 + i * 0.3}s ease-in-out infinite`,
-                            animationDelay: `${i * 0.15}s`,
+                            background: i === 7 ? "hsl(var(--primary))" : i % 2 === 0 ? "hsl(var(--primary)/0.5)" : "hsl(var(--primary)/0.25)",
+                            animation: `heroFloat${i % 2 === 0 ? "A" : "B"} ${3.5 + i * 0.25}s ease-in-out infinite`,
+                            animationDelay: `${i * 0.2}s`,
                           }}
                         />
                       ))}
                     </div>
-
-                    {/* Result strip */}
-                    <div className="mx-5 rounded-xl bg-primary/10 border border-primary/20 p-3 flex items-center justify-between">
-                      <div className="space-y-1">
-                        <div className="w-20 h-2 rounded-full bg-primary/30" />
-                        <div className="w-28 h-3.5 rounded-full bg-primary/60" />
+                    {/* Mini donut */}
+                    <div className="mt-2 pt-2 border-t border-border">
+                      <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-1.5">Структура</p>
+                      <div className="flex items-center gap-2">
+                        <svg width="32" height="32" viewBox="0 0 32 32" className="shrink-0">
+                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--primary)/0.2)" strokeWidth="6" />
+                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--primary))" strokeWidth="6"
+                            strokeDasharray="45 75" strokeDashoffset="0" strokeLinecap="round" transform="rotate(-90 16 16)" />
+                          <circle cx="16" cy="16" r="12" fill="none" stroke="hsl(var(--success))" strokeWidth="6"
+                            strokeDasharray="20 75" strokeDashoffset="-45" strokeLinecap="round" transform="rotate(-90 16 16)" />
+                        </svg>
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" /><span className="text-[8px] text-muted-foreground">Долг</span></div>
+                          <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 rounded-full bg-success shrink-0" /><span className="text-[8px] text-muted-foreground">%</span></div>
+                        </div>
                       </div>
-                      <div className="w-14 h-7 rounded-lg bg-primary/80" />
                     </div>
                   </div>
-
-                  {/* 3D right-side edge */}
-                  <div
-                    className="absolute top-3 bottom-3 -right-2.5 rounded-r-2xl bg-border/60"
-                    style={{ width: 10, transform: "rotateY(90deg) translateZ(-5px)", transformOrigin: "right center" }}
-                  />
-
-                  {/* Glow */}
-                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-12 bg-primary/20 blur-2xl rounded-full" />
                 </div>
+
+                {/* 3D right-side edge */}
+                <div
+                  className="absolute top-3 bottom-3 -right-2.5 rounded-r-2xl bg-border/60 z-10"
+                  style={{ width: 10, transform: "rotateY(90deg) translateZ(-5px)", transformOrigin: "right center" }}
+                />
+
+                {/* Glow */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-12 bg-primary/20 blur-2xl rounded-full z-0" />
 
                 {/* Floating chips — glued to illustration */}
                 {[
