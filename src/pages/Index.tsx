@@ -150,20 +150,39 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState("");
   const heroRef = useRef<HTMLElement>(null);
-  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const [parallax, setParallax] = useState({ x: 0, y: 0 }); // for illustration
+  const chipRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [chipOffsets, setChipOffsets] = useState<{ x: number; y: number }[]>([]);
 
   const handleHeroMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = heroRef.current?.getBoundingClientRect();
     if (!rect) return;
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    const dx = (e.clientX - cx) / (rect.width / 2);   // -1 … 1
-    const dy = (e.clientY - cy) / (rect.height / 2);  // -1 … 1
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
     setParallax({ x: dx * 10, y: dy * -8 });
+
+    // Individual chip offsets — each chip repels from mouse
+    const mx = e.clientX;
+    const my = e.clientY;
+    const offsets = chipRefs.current.map((el) => {
+      if (!el) return { x: 0, y: 0 };
+      const r = el.getBoundingClientRect();
+      const chipCx = r.left + r.width / 2;
+      const chipCy = r.top + r.height / 2;
+      const vx = chipCx - mx;
+      const vy = chipCy - my;
+      const dist = Math.sqrt(vx * vx + vy * vy) || 1;
+      const strength = Math.max(0, 1 - dist / 280) * 18;
+      return { x: (vx / dist) * strength, y: (vy / dist) * strength };
+    });
+    setChipOffsets(offsets);
   }, []);
 
   const handleHeroMouseLeave = useCallback(() => {
     setParallax({ x: 0, y: 0 });
+    setChipOffsets([]);
   }, []);
 
   const filteredCalcs = useMemo(() => {
@@ -363,28 +382,32 @@ const Index = () => {
                   { icon: <TrendingUp className="h-4 w-4 text-success" />,   label: "Доход",   value: "↑ 8.3%", bottom: "28%", left: "4%",  animA: false, delay: "0.8s" },
                   { icon: <Car className="h-4 w-4 text-warning" />,          label: "Авто",    value: "15.9%",  bottom: "14%", right: "4%", animA: true,  delay: "1.1s" },
                   { icon: <Scale className="h-4 w-4 text-destructive" />,    label: "Пени",    value: "×1/300", bottom: "0%",  left: "28%", animA: true,  delay: "1.5s" },
-                ].map((fc, i) => (
-                  <div
-                    key={i}
-                    className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
-                    style={{
-                      top: (fc as any).top,
-                      bottom: (fc as any).bottom,
-                      left: (fc as any).left,
-                      right: (fc as any).right,
-                      animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
-                      animationDelay: fc.delay,
-                      translate: `${parallax.x * 4}px ${parallax.y * 3}px`,
-                      transition: "translate 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-                    }}
-                  >
-                    <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
-                    <div>
-                      <p className="text-[10px] text-muted-foreground leading-none mb-0.5">{fc.label}</p>
-                      <p className="text-xs font-semibold text-foreground">{fc.value}</p>
+                ].map((fc, i) => {
+                  const off = chipOffsets[i] ?? { x: 0, y: 0 };
+                  return (
+                    <div
+                      key={i}
+                      ref={(el) => { chipRefs.current[i] = el; }}
+                      className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
+                      style={{
+                        top: (fc as any).top,
+                        bottom: (fc as any).bottom,
+                        left: (fc as any).left,
+                        right: (fc as any).right,
+                        animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
+                        animationDelay: fc.delay,
+                        translate: `${off.x}px ${off.y}px`,
+                        transition: "translate 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+                      }}
+                    >
+                      <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
+                      <div>
+                        <p className="text-[10px] text-muted-foreground leading-none mb-0.5">{fc.label}</p>
+                        <p className="text-xs font-semibold text-foreground">{fc.value}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
             </div>
