@@ -370,11 +370,13 @@ const HeroDonut = memo(() => {
   let offset = 0;
   return (
     <div
-      className="col-span-1 row-span-1 rounded-2xl p-3 border flex flex-col items-center justify-center"
+      className="col-span-1 row-span-1 rounded-2xl p-3 flex flex-col items-center justify-center"
       style={{
-        background: "hsl(var(--card)/0.7)",
-        backdropFilter: "blur(16px)",
-        borderColor: "hsl(var(--border)/0.6)",
+        background: "hsl(var(--card)/0.78)",
+        backdropFilter: "blur(20px)",
+        boxShadow: "0 8px 28px hsl(var(--foreground)/0.07), 0 1px 0 hsl(var(--background)/0.6) inset",
+        outline: "1px solid hsl(var(--border)/0.45)",
+        outlineOffset: "-1px",
       }}
     >
       <svg width="44" height="44" viewBox="0 0 44 44">
