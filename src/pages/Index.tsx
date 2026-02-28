@@ -255,12 +255,15 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
 const HeroResultCard = memo(() => {
   return (
     <div
-      className="col-span-3 row-span-1 rounded-2xl p-3 border flex items-center gap-3"
+      className="col-span-3 row-span-1 rounded-2xl p-3 flex items-center gap-3"
       style={{
-        background: "linear-gradient(135deg, hsl(var(--primary)/0.12) 0%, hsl(var(--card)/0.75) 100%)",
-        backdropFilter: "blur(16px)",
-        borderColor: "hsl(var(--primary)/0.2)",
-        boxShadow: "0 4px 20px hsl(var(--primary)/0.1)",
+        background: "linear-gradient(135deg, hsl(var(--primary)/0.13) 0%, hsl(var(--card)/0.8) 100%)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid transparent",
+        backgroundClip: "padding-box",
+        boxShadow: "0 8px 32px hsl(var(--primary)/0.18), 0 1px 0 hsl(var(--primary)/0.3) inset, 0 -1px 0 hsl(var(--border)/0.15) inset",
+        outline: "1px solid hsl(var(--primary)/0.15)",
+        outlineOffset: "-1px",
       }}
     >
       <div className="p-2 rounded-xl" style={{ background: "hsl(var(--primary)/0.15)" }}>
