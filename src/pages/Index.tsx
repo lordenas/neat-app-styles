@@ -386,7 +386,7 @@ const Index = () => {
                 ].map((fc, i) => {
                   const off = chipOffsets[i] ?? { x: 0, y: 0 };
                   return (
-                  <div
+                    <div
                     key={i}
                     ref={(el) => { chipRefs.current[i] = el; }}
                     className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
