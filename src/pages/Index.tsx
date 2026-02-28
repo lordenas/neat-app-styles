@@ -206,18 +206,14 @@ const Index = () => {
               {/* RIGHT — abstract calculator illustration + floating cards */}
               <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
 
-                {/* Abstract calculator illustration — 3D tilted */}
+                {/* Abstract calculator illustration — 3D tilted with parallax */}
                 <div
                   className="relative w-72 h-80 z-10"
                   style={{
-                    transform: illustHovered
-                      ? "rotateY(0deg) rotateX(0deg) rotateZ(0deg)"
-                      : "rotateY(-18deg) rotateX(6deg) rotateZ(1deg)",
+                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg)`,
                     transformStyle: "preserve-3d",
-                    transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    transition: "transform 0.12s ease-out",
                   }}
-                  onMouseEnter={() => setIllustHovered(true)}
-                  onMouseLeave={() => setIllustHovered(false)}
                 >
                   {/* Outer shell */}
                   <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
