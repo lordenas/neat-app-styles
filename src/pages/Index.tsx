@@ -285,11 +285,13 @@ const BAR_DATA = [28, 42, 35, 58, 47, 65, 54, 78, 61, 82];
 const HeroBarChart = memo(() => {
   return (
     <div
-      className="col-span-3 row-span-1 rounded-2xl p-3 border"
+      className="col-span-3 row-span-1 rounded-2xl p-3"
       style={{
-        background: "hsl(var(--card)/0.7)",
-        backdropFilter: "blur(16px)",
-        borderColor: "hsl(var(--border)/0.6)",
+        background: "hsl(var(--card)/0.78)",
+        backdropFilter: "blur(20px)",
+        boxShadow: "0 8px 28px hsl(var(--foreground)/0.07), 0 1px 0 hsl(var(--background)/0.6) inset",
+        outline: "1px solid hsl(var(--border)/0.5)",
+        outlineOffset: "-1px",
       }}
     >
       <p className="text-[9px] text-muted-foreground uppercase tracking-widest mb-2">Динамика платежей</p>
