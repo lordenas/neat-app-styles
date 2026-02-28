@@ -176,7 +176,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
     >
       {/* Display */}
       <div
-        className="m-2.5 rounded-xl p-3 border"
+        className="m-2.5 rounded-xl p-2.5 border"
         style={{
           background: "linear-gradient(135deg, hsl(var(--muted)/0.9) 0%, hsl(var(--muted)/0.6) 100%)",
           borderColor: "hsl(var(--border)/0.5)",
