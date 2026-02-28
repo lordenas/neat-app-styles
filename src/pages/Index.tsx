@@ -208,7 +208,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
       </div>
 
       {/* Button grid */}
-      <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5 content-stretch">
+      <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5 w-full" style={{gridAutoRows: "1fr"}}>
         {[
           ["C", "±", "%", "÷"],
           ["7", "8", "9", "×"],
