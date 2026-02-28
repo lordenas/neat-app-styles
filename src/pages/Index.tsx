@@ -125,6 +125,26 @@ function useCountUp(target: number, decimals = 0, duration = 1800) {
 
 const faqKeys = ["faq1", "faq2", "faq3", "faq4", "faq5"] as const;
 
+function CounterItem({ stat, icon }: { stat: typeof counterStats[number]; icon: React.ReactNode }) {
+  const { t } = useTranslation();
+  const { count, ref } = useCountUp(stat.target, stat.decimals);
+  return (
+    <div ref={ref} className="flex items-center gap-3 justify-center animate-in fade-in duration-500">
+      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+        {icon}
+      </div>
+      <div>
+        <p className="text-xl sm:text-2xl font-bold tracking-tight tabular-nums">
+          {stat.decimals > 0 ? count.toFixed(stat.decimals) : Math.round(count)}{stat.suffix}
+        </p>
+        <p className="text-xs text-muted-foreground">{t(`trust.${stat.key}.label`)}</p>
+      </div>
+    </div>
+  );
+}
+
+
+
 
 const Index = () => {
   const { t, i18n } = useTranslation();
