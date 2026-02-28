@@ -131,9 +131,59 @@ const Index = () => {
       <main id="main-content">
         {/* Hero */}
         <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-primary/5 via-[hsl(var(--section-bg))] to-background">
+          {/* Ambient blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-            <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/[0.06] blur-3xl" />
-            <div className="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-info/[0.05] blur-3xl" />
+            <div className="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full bg-primary/[0.07] blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
+            <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-info/[0.06] blur-3xl animate-[pulse_10s_ease-in-out_infinite_2s]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-primary/[0.03] blur-3xl" />
+          </div>
+
+          {/* Floating 3D cards — left side */}
+          <div className="absolute left-4 sm:left-8 lg:left-16 top-1/2 -translate-y-1/2 hidden md:flex flex-col gap-4 pointer-events-none" aria-hidden="true">
+            {[
+              { icon: <PiggyBank className="h-5 w-5 text-primary" />, label: "Депозит", value: "+12.4%", delay: "0s" },
+              { icon: <Landmark className="h-5 w-5 text-info" />, label: "Ипотека", value: "8.5%", delay: "0.4s" },
+              { icon: <Receipt className="h-5 w-5 text-success" />, label: "НДС", value: "20%", delay: "0.8s" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="bg-card/80 backdrop-blur-sm border border-border rounded-xl px-4 py-3 shadow-lg flex items-center gap-3"
+                style={{
+                  animation: `heroFloat${i % 2 === 0 ? "A" : "B"} ${4 + i * 0.7}s ease-in-out infinite`,
+                  animationDelay: item.delay,
+                }}
+              >
+                <div className="p-2 rounded-lg bg-primary/10">{item.icon}</div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
+                  <p className="text-sm font-semibold text-foreground">{item.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Floating 3D cards — right side */}
+          <div className="absolute right-4 sm:right-8 lg:right-16 top-1/2 -translate-y-1/2 hidden md:flex flex-col gap-4 pointer-events-none" aria-hidden="true">
+            {[
+              { icon: <TrendingUp className="h-5 w-5 text-success" />, label: "Инфляция", value: "4.2%", delay: "0.2s" },
+              { icon: <Car className="h-5 w-5 text-warning" />, label: "Автокредит", value: "15.9%", delay: "0.6s" },
+              { icon: <Scale className="h-5 w-5 text-primary" />, label: "Пени", value: "₽ 1 240", delay: "1.0s" },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="bg-card/80 backdrop-blur-sm border border-border rounded-xl px-4 py-3 shadow-lg flex items-center gap-3"
+                style={{
+                  animation: `heroFloat${i % 2 === 0 ? "B" : "A"} ${4.5 + i * 0.6}s ease-in-out infinite`,
+                  animationDelay: item.delay,
+                }}
+              >
+                <div className="p-2 rounded-lg bg-primary/10">{item.icon}</div>
+                <div>
+                  <p className="text-xs text-muted-foreground">{item.label}</p>
+                  <p className="text-sm font-semibold text-foreground">{item.value}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
           <div className="container max-w-6xl relative text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
