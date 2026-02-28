@@ -193,6 +193,16 @@
 }
 
 
+/* Hero floating card animations */
+@keyframes heroFloatA {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+}
+@keyframes heroFloatB {
+  0%, 100% { transform: translateY(0px) rotate(1deg); }
+  50% { transform: translateY(-16px) rotate(-1deg); }
+}
+
 /* Progress indeterminate animation */
 @keyframes progress-indeterminate {
   0% { transform: translateX(-100%); }
