@@ -166,7 +166,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
 
   return (
     <div
-      className="col-span-2 row-span-3 rounded-2xl overflow-hidden border"
+      className="col-span-2 row-span-3 rounded-2xl overflow-hidden border flex flex-col"
       style={{
         background: "linear-gradient(160deg, hsl(var(--card)/0.95) 0%, hsl(var(--card)/0.8) 100%)",
         backdropFilter: "blur(20px)",
@@ -208,7 +208,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
       </div>
 
       {/* Button grid */}
-      <div className="px-2.5 pb-2.5 grid grid-cols-4 gap-1.5">
+      <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5 content-stretch">
         {[
           ["C", "±", "%", "÷"],
           ["7", "8", "9", "×"],
@@ -220,7 +220,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
             return (
               <div
                 key={`${ri}-${k}`}
-                className="h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 active:scale-95"
+                className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 active:scale-95"
                 style={{
                   background: isOp
                     ? `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`
@@ -237,11 +237,11 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
             );
           })
         )}
-        <div className="col-span-2 h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
+        <div className="col-span-2 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
           style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>0</div>
-        <div className="h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
+        <div className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
           style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>.</div>
-        <div className="h-8 rounded-lg flex items-center justify-center text-xs font-bold select-none cursor-default"
+        <div className="rounded-lg flex items-center justify-center text-xs font-bold select-none cursor-default"
           style={{
             background: `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`,
             color: "hsl(var(--primary-foreground))",
