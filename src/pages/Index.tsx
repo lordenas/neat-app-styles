@@ -176,7 +176,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
     >
       {/* Display */}
       <div
-        className="m-2.5 rounded-xl p-3 border"
+        className="m-2.5 rounded-xl p-2.5 border"
         style={{
           background: "linear-gradient(135deg, hsl(var(--muted)/0.9) 0%, hsl(var(--muted)/0.6) 100%)",
           borderColor: "hsl(var(--border)/0.5)",
@@ -200,8 +200,8 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
         </div>
         <p className="text-[10px] text-muted-foreground mt-1">{cycle.base}</p>
         <p
-          className="text-xl font-bold tracking-tight mt-0.5 tabular-nums transition-opacity duration-300 whitespace-nowrap overflow-hidden"
-          style={{ color: cycle.color, opacity: isAnimating ? 0 : 1, height: "1.75rem", lineHeight: "1.75rem" }}
+          className="text-[17px] font-bold tracking-tight mt-0.5 tabular-nums transition-opacity duration-300 overflow-hidden"
+          style={{ color: cycle.color, opacity: isAnimating ? 0 : 1, height: "1.5rem", lineHeight: "1.5rem", maxWidth: "100%" }}
         >
           {displayResult}<span className="animate-pulse opacity-70">|</span>
         </p>
