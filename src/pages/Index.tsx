@@ -395,20 +395,14 @@ const Index = () => {
         <section className="py-10 border-b border-border">
           <div className="container max-w-6xl">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {trustStats.map(({ key, icon }) => (
-                <div key={key} className="flex items-center gap-3 justify-center animate-in fade-in duration-500">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    {icon}
-                  </div>
-                  <div>
-                    <p className="text-xl sm:text-2xl font-bold tracking-tight">{t(`trust.${key}.value`)}</p>
-                    <p className="text-xs text-muted-foreground">{t(`trust.${key}.label`)}</p>
-                  </div>
-                </div>
-              ))}
+              {counterStats.map((stat) => {
+                const iconEl = trustStats.find(s => s.key === stat.key)?.icon;
+                return <CounterItem key={stat.key} stat={stat} icon={iconEl} />;
+              })}
             </div>
           </div>
         </section>
+
 
         {/* Categories */}
         <section id="categories" className="py-16 sm:py-20 scroll-mt-20">
