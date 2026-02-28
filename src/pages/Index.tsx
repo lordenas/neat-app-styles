@@ -589,29 +589,42 @@ const Index = () => {
                     transition: "transform 0.14s ease-out",
                   }}
                 >
-                  {/* ── Background glass layer with dot-grid ── */}
+                  {/* ── Background glass layer — premium aurora ── */}
                   <div
                     className="absolute inset-0 rounded-3xl overflow-hidden"
                     style={{
-                      background: "linear-gradient(145deg, hsl(var(--primary)/0.07) 0%, hsl(var(--background)/0.55) 60%, hsl(var(--success)/0.04) 100%)",
-                      backdropFilter: "blur(28px)",
+                      background: "linear-gradient(145deg, hsl(var(--card)/0.72) 0%, hsl(var(--background)/0.62) 100%)",
+                      backdropFilter: "blur(32px)",
                       borderRadius: "28px",
                       transform: "translateZ(-10px) scale(1.05)",
                     }}
                   >
-                    {/* Dot grid pattern */}
-                    <svg className="absolute inset-0 w-full h-full opacity-[0.18]" xmlns="http://www.w3.org/2000/svg">
+                    {/* Line grid — subtle, fades at edges */}
+                    <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
                       <defs>
-                        <pattern id="dotgrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                          <circle cx="1.5" cy="1.5" r="1.5" fill="hsl(var(--primary))" />
+                        <pattern id="linegrid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                          <path d="M 32 0 L 0 0 0 32" fill="none" stroke="hsl(var(--primary))" strokeWidth="0.5" strokeOpacity="0.18" />
                         </pattern>
+                        <radialGradient id="gridfade" cx="50%" cy="50%" r="60%">
+                          <stop offset="0%"   stopColor="white" stopOpacity="0.6" />
+                          <stop offset="100%" stopColor="white" stopOpacity="0" />
+                        </radialGradient>
+                        <mask id="gridmask">
+                          <rect width="100%" height="100%" fill="url(#gridfade)" />
+                        </mask>
                       </defs>
-                      <rect width="100%" height="100%" fill="url(#dotgrid)" />
+                      <rect width="100%" height="100%" fill="url(#linegrid)" mask="url(#gridmask)" />
                     </svg>
-                    {/* Gradient border via pseudo-layer */}
+
+                    {/* Aurora radial glow from center */}
+                    <div className="absolute inset-0" style={{
+                      background: "radial-gradient(ellipse 80% 60% at 50% 40%, hsl(var(--primary)/0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 80% 80%, hsl(var(--success)/0.09) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 10% 20%, hsl(var(--info)/0.07) 0%, transparent 70%)",
+                    }} />
+
+                    {/* Gradient border — shimmer top edge */}
                     <div className="absolute inset-0 rounded-3xl" style={{
+                      background: "linear-gradient(hsl(var(--background)/0), hsl(var(--background)/0)) padding-box, linear-gradient(135deg, hsl(var(--primary)/0.55) 0%, hsl(var(--border)/0.15) 40%, hsl(var(--success)/0.25) 100%) border-box",
                       border: "1px solid transparent",
-                      background: "linear-gradient(hsl(var(--background)/0), hsl(var(--background)/0)) padding-box, linear-gradient(145deg, hsl(var(--primary)/0.5), hsl(var(--border)/0.2), hsl(var(--success)/0.3)) border-box",
                     }} />
                   </div>
 
