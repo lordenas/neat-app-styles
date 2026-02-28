@@ -208,7 +208,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
       </div>
 
       {/* Button grid */}
-      <div className="px-2.5 pb-2.5 grid grid-cols-4 gap-1.5">
+      <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5 content-stretch">
         {[
           ["C", "±", "%", "÷"],
           ["7", "8", "9", "×"],
@@ -220,7 +220,7 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
             return (
               <div
                 key={`${ri}-${k}`}
-                className="h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 active:scale-95"
+                className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 active:scale-95"
                 style={{
                   background: isOp
                     ? `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`
