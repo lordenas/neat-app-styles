@@ -356,13 +356,13 @@ const Index = () => {
                   <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-12 bg-primary/20 blur-2xl rounded-full" />
                 </div>
 
-                {/* Floating chips — tight to illustration */}
+                {/* Floating chips — glued to illustration */}
                 {[
-                  { icon: <PiggyBank className="h-4 w-4 text-primary" />, label: "Депозит", value: "+12.4%", top: "4%", left: "-4%", animA: true, delay: "0s" },
-                  { icon: <Receipt className="h-4 w-4 text-success" />, label: "НДС", value: "20%", top: "10%", right: "2%", animA: false, delay: "0.4s" },
-                  { icon: <TrendingUp className="h-4 w-4 text-success" />, label: "Доход", value: "↑ 8.3%", bottom: "30%", left: "-2%", animA: false, delay: "0.8s" },
-                  { icon: <Car className="h-4 w-4 text-warning" />, label: "Авто", value: "15.9%", bottom: "16%", right: "0%", animA: true, delay: "1.1s" },
-                  { icon: <Scale className="h-4 w-4 text-destructive" />, label: "Пени", value: "× 1/300", bottom: "-2%", left: "22%", animA: true, delay: "1.5s" },
+                  { icon: <PiggyBank className="h-4 w-4 text-primary" />,    label: "Депозит", value: "+12.4%",  top: "6%",    left: "4%",  animA: true,  delay: "0s"   },
+                  { icon: <Receipt className="h-4 w-4 text-success" />,      label: "НДС",     value: "20%",     top: "12%",   right: "6%", animA: false, delay: "0.4s" },
+                  { icon: <TrendingUp className="h-4 w-4 text-success" />,   label: "Доход",   value: "↑ 8.3%", bottom: "28%", left: "4%",  animA: false, delay: "0.8s" },
+                  { icon: <Car className="h-4 w-4 text-warning" />,          label: "Авто",    value: "15.9%",  bottom: "14%", right: "4%", animA: true,  delay: "1.1s" },
+                  { icon: <Scale className="h-4 w-4 text-destructive" />,    label: "Пени",    value: "×1/300", bottom: "0%",  left: "28%", animA: true,  delay: "1.5s" },
                 ].map((fc, i) => (
                   <div
                     key={i}
@@ -374,8 +374,8 @@ const Index = () => {
                       right: (fc as any).right,
                       animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
                       animationDelay: fc.delay,
-                      transform: `translate(${-parallax.x * 1.5}px, ${-parallax.y * 1.5}px)`,
-                      transition: "transform 0.12s ease-out",
+                      translate: `${parallax.x * 4}px ${parallax.y * 3}px`,
+                      transition: "translate 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                     }}
                   >
                     <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
