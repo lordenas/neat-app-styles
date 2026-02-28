@@ -205,6 +205,28 @@ const Index = () => {
               {/* RIGHT — abstract calculator illustration + floating cards */}
               <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
 
+                {/* Stack shadow cards — behind illustration */}
+                <div
+                  className="absolute w-72 h-80 rounded-3xl border border-border bg-card/40"
+                  style={{
+                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg) translate(18px, 14px)`,
+                    transformStyle: "preserve-3d",
+                    transition: "transform 0.12s ease-out",
+                    zIndex: 7,
+                    opacity: 0.55,
+                  }}
+                />
+                <div
+                  className="absolute w-72 h-80 rounded-3xl border border-border bg-card/25"
+                  style={{
+                    transform: `rotateY(${-18 + parallax.x * 0.6}deg) rotateX(${6 + parallax.y * 0.5}deg) rotateZ(1deg) translate(34px, 26px)`,
+                    transformStyle: "preserve-3d",
+                    transition: "transform 0.12s ease-out",
+                    zIndex: 6,
+                    opacity: 0.35,
+                  }}
+                />
+
                 {/* Abstract calculator illustration — 3D tilted with parallax */}
                 <div
                   className="relative w-72 h-80 z-10"
