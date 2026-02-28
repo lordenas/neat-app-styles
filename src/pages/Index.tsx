@@ -123,6 +123,8 @@ function useCountUp(target: number, decimals = 0, duration = 1800) {
 }
 
 
+const faqKeys = ["faq1", "faq2", "faq3", "faq4", "faq5"] as const;
+
 
 const Index = () => {
   const { t, i18n } = useTranslation();
