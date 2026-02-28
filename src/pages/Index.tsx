@@ -187,10 +187,13 @@ const Index = () => {
               </div>
 
               {/* RIGHT — abstract calculator illustration + floating cards */}
-              <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 420 }} aria-hidden="true">
+              <div className="relative hidden lg:flex items-center justify-center animate-in fade-in slide-in-from-right-6 duration-600" style={{ minHeight: 460, perspective: "900px" }} aria-hidden="true">
 
-                {/* Abstract calculator illustration */}
-                <div className="relative w-72 h-80 z-10">
+                {/* Abstract calculator illustration — 3D tilted */}
+                <div
+                  className="relative w-72 h-80 z-10"
+                  style={{ transform: "rotateY(-18deg) rotateX(6deg) rotateZ(1deg)", transformStyle: "preserve-3d" }}
+                >
                   {/* Outer shell */}
                   <div className="absolute inset-0 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden">
                     {/* Top bar */}
@@ -201,9 +204,8 @@ const Index = () => {
                       <div className="flex-1 mx-3 h-4 rounded-full bg-muted/80" />
                     </div>
 
-                    {/* Display area — abstract bars */}
+                    {/* Fake input rows */}
                     <div className="px-5 pt-5 pb-3 space-y-2.5">
-                      {/* Fake input rows */}
                       {[70, 45, 55].map((w, i) => (
                         <div key={i} className="flex items-center gap-2">
                           <div className="w-16 h-2.5 rounded-full bg-muted" />
@@ -212,7 +214,7 @@ const Index = () => {
                       ))}
                     </div>
 
-                    {/* Chart area — abstract bar chart */}
+                    {/* Abstract bar chart */}
                     <div className="px-5 pt-1 pb-3 flex items-end gap-1.5 h-24">
                       {[40, 60, 45, 80, 55, 70, 35, 90, 65].map((h, i) => (
                         <div
@@ -242,21 +244,27 @@ const Index = () => {
                     </div>
                   </div>
 
-                  {/* Decorative glow */}
-                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-48 h-12 bg-primary/20 blur-2xl rounded-full" />
+                  {/* 3D right-side edge */}
+                  <div
+                    className="absolute top-3 bottom-3 -right-2.5 rounded-r-2xl bg-border/60"
+                    style={{ width: 10, transform: "rotateY(90deg) translateZ(-5px)", transformOrigin: "right center" }}
+                  />
+
+                  {/* Glow */}
+                  <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-56 h-12 bg-primary/20 blur-2xl rounded-full" />
                 </div>
 
-                {/* Floating chips — tighter to illustration */}
+                {/* Floating chips — tight to illustration */}
                 {[
-                  { icon: <PiggyBank className="h-4 w-4 text-primary" />, label: "Депозит", value: "+12.4%", top: "2%", left: "-18%", animA: true, delay: "0s" },
-                  { icon: <Receipt className="h-4 w-4 text-success" />, label: "НДС", value: "20%", top: "14%", right: "-18%", animA: false, delay: "0.4s" },
-                  { icon: <TrendingUp className="h-4 w-4 text-success" />, label: "Доход", value: "↑ 8.3%", bottom: "30%", left: "-20%", animA: false, delay: "0.8s" },
-                  { icon: <Car className="h-4 w-4 text-warning" />, label: "Авто", value: "15.9%", bottom: "14%", right: "-16%", animA: true, delay: "1.1s" },
-                  { icon: <Scale className="h-4 w-4 text-destructive" />, label: "Пени", value: "× 1/300", bottom: "-4%", left: "18%", animA: true, delay: "1.5s" },
+                  { icon: <PiggyBank className="h-4 w-4 text-primary" />, label: "Депозит", value: "+12.4%", top: "4%", left: "-4%", animA: true, delay: "0s" },
+                  { icon: <Receipt className="h-4 w-4 text-success" />, label: "НДС", value: "20%", top: "10%", right: "2%", animA: false, delay: "0.4s" },
+                  { icon: <TrendingUp className="h-4 w-4 text-success" />, label: "Доход", value: "↑ 8.3%", bottom: "30%", left: "-2%", animA: false, delay: "0.8s" },
+                  { icon: <Car className="h-4 w-4 text-warning" />, label: "Авто", value: "15.9%", bottom: "16%", right: "0%", animA: true, delay: "1.1s" },
+                  { icon: <Scale className="h-4 w-4 text-destructive" />, label: "Пени", value: "× 1/300", bottom: "-2%", left: "22%", animA: true, delay: "1.5s" },
                 ].map((fc, i) => (
                   <div
                     key={i}
-                    className="absolute bg-card/90 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
+                    className="absolute bg-card/95 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2 z-20"
                     style={{
                       top: (fc as any).top,
                       bottom: (fc as any).bottom,
