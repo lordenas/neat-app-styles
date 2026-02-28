@@ -314,6 +314,8 @@ const Index = () => {
                       right: (fc as any).right,
                       animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
                       animationDelay: fc.delay,
+                      transform: `translate(${-parallax.x * 1.5}px, ${-parallax.y * 1.5}px)`,
+                      transition: "transform 0.12s ease-out",
                     }}
                   >
                     <div className="p-1.5 rounded-lg bg-primary/10">{fc.icon}</div>
