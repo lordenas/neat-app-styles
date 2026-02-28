@@ -208,48 +208,45 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
       </div>
 
       {/* Button grid */}
-      <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5 w-full" style={{gridAutoRows: "1fr"}}>
-        {[
-          ["C", "±", "%", "÷"],
-          ["7", "8", "9", "×"],
-          ["4", "5", "6", "−"],
-          ["1", "2", "3", "+"],
-        ].map((row, ri) =>
-          row.map((k, ci) => {
-            const isOp = ci === 3;
-            return (
-              <div
-                key={`${ri}-${k}`}
-                className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 active:scale-95"
-                style={{
-                  background: isOp
-                    ? `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`
-                    : ri === 0
-                    ? "hsl(var(--muted)/0.8)"
-                    : "hsl(var(--secondary)/0.7)",
-                  color: isOp ? "hsl(var(--primary-foreground))" : ri === 0 ? "hsl(var(--muted-foreground))" : "hsl(var(--secondary-foreground))",
-                  boxShadow: isOp ? `0 2px 8px ${cycle.color}44` : "none",
-                  backdropFilter: "blur(8px)",
-                }}
-              >
-                {k}
-              </div>
-            );
-          })
-        )}
-        <div className="col-span-2 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
-          style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>0</div>
-        <div className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
-          style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>.</div>
-        <div className="rounded-lg flex items-center justify-center text-xs font-bold select-none cursor-default"
-          style={{
-            background: `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`,
-            color: "hsl(var(--primary-foreground))",
-            boxShadow: `0 2px 10px ${cycle.color}55`,
-          }}>
-          =
-        </div>
-      </div>
+      {(() => {
+        const btnStyle = (type: "op" | "fn" | "num") => ({
+          background: type === "op"
+            ? `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`
+            : type === "fn"
+            ? "hsl(var(--muted)/0.8)"
+            : "hsl(var(--secondary)/0.7)",
+          color: type === "op" ? "hsl(var(--primary-foreground))" : type === "fn" ? "hsl(var(--muted-foreground))" : "hsl(var(--secondary-foreground))",
+          boxShadow: type === "op" ? `0 2px 8px ${cycle.color}44` : "none",
+          backdropFilter: "blur(8px)",
+        });
+        const cls = "rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default transition-all duration-150 hover:brightness-110 active:scale-95";
+        const buttons: React.ReactNode[] = [
+          <div key="C"  className={cls} style={btnStyle("fn")}>C</div>,
+          <div key="pm" className={cls} style={btnStyle("fn")}>±</div>,
+          <div key="pc" className={cls} style={btnStyle("fn")}>%</div>,
+          <div key="dv" className={cls} style={btnStyle("op")}>÷</div>,
+          <div key="7"  className={cls} style={btnStyle("num")}>7</div>,
+          <div key="8"  className={cls} style={btnStyle("num")}>8</div>,
+          <div key="9"  className={cls} style={btnStyle("num")}>9</div>,
+          <div key="x"  className={cls} style={btnStyle("op")}>×</div>,
+          <div key="4"  className={cls} style={btnStyle("num")}>4</div>,
+          <div key="5"  className={cls} style={btnStyle("num")}>5</div>,
+          <div key="6"  className={cls} style={btnStyle("num")}>6</div>,
+          <div key="mn" className={cls} style={btnStyle("op")}>−</div>,
+          <div key="1"  className={cls} style={btnStyle("num")}>1</div>,
+          <div key="2"  className={cls} style={btnStyle("num")}>2</div>,
+          <div key="3"  className={cls} style={btnStyle("num")}>3</div>,
+          <div key="pl" className={cls} style={btnStyle("op")}>+</div>,
+          <div key="0"  className={`col-span-2 ${cls}`} style={btnStyle("num")}>0</div>,
+          <div key="dt" className={cls} style={btnStyle("num")}>.</div>,
+          <div key="eq" className={`${cls} font-bold`} style={btnStyle("op")}>=</div>,
+        ];
+        return (
+          <div className="px-2.5 pb-2.5 flex-1 grid grid-cols-4 gap-1.5" style={{ gridAutoRows: "1fr" }}>
+            {buttons}
+          </div>
+        );
+      })()}
     </div>
   );
 });
