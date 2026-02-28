@@ -656,16 +656,17 @@ const Index = () => {
                     <div
                       key={i}
                       ref={(el) => { chipRefs.current[i] = el; }}
-                      className="absolute z-20 flex items-center gap-2 px-3 py-2 rounded-xl border shadow-lg"
+                      className="absolute z-20 flex items-center gap-2 px-3 py-2 rounded-xl shadow-lg"
                       style={{
                         top: (fc as any).top,
                         bottom: (fc as any).bottom,
                         left: (fc as any).left,
                         right: (fc as any).right,
-                        background: "hsl(var(--card)/0.85)",
-                        backdropFilter: "blur(12px)",
-                        borderColor: "hsl(var(--border)/0.7)",
-                        boxShadow: "0 4px 16px hsl(var(--primary)/0.1)",
+                        background: "hsl(var(--card)/0.88)",
+                        backdropFilter: "blur(16px)",
+                        boxShadow: "0 8px 24px hsl(var(--primary)/0.15), 0 1px 0 hsl(var(--background)/0.7) inset",
+                        outline: "1px solid hsl(var(--border)/0.5)",
+                        outlineOffset: "-1px",
                         animation: `heroFloat${fc.animA ? "A" : "B"} ${4 + i * 0.5}s ease-in-out infinite`,
                         animationDelay: fc.delay,
                         translate: `${off.x}px ${off.y}px`,
