@@ -237,11 +237,11 @@ const HeroCalculator = memo(({ parallax }: { parallax: { x: number; y: number } 
             );
           })
         )}
-        <div className="col-span-2 h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
+        <div className="col-span-2 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
           style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>0</div>
-        <div className="h-8 rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
+        <div className="rounded-lg flex items-center justify-center text-xs font-semibold select-none cursor-default"
           style={{ background: "hsl(var(--secondary)/0.7)", color: "hsl(var(--secondary-foreground))" }}>.</div>
-        <div className="h-8 rounded-lg flex items-center justify-center text-xs font-bold select-none cursor-default"
+        <div className="rounded-lg flex items-center justify-center text-xs font-bold select-none cursor-default"
           style={{
             background: `linear-gradient(135deg, ${cycle.color}, ${cycle.color}cc)`,
             color: "hsl(var(--primary-foreground))",
