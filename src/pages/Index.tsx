@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -84,7 +84,67 @@ const trustStats = [
   { key: "uptime", icon: <Shield className="h-5 w-5" /> },
 ] as const;
 
+// Данные для анимированных счётчиков
+const counterStats = [
+  { key: "users",        target: 150,   suffix: "K+",  decimals: 0 },
+  { key: "calculations", target: 2,     suffix: "M+",  decimals: 0 },
+  { key: "countries",    target: 20,    suffix: "+",   decimals: 0 },
+  { key: "uptime",       target: 99.9,  suffix: "%",   decimals: 1 },
+] as const;
+
+function useCountUp(target: number, decimals = 0, duration = 1800) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        if (prefersReduced) { setCount(target); return; }
+        const start = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3); // ease-out-cubic
+          setCount(parseFloat((eased * target).toFixed(decimals)));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }, { threshold: 0.3 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, decimals, duration]);
+
+  return { count, ref };
+}
+
+
 const faqKeys = ["faq1", "faq2", "faq3", "faq4", "faq5"] as const;
+
+function CounterItem({ stat, icon }: { stat: typeof counterStats[number]; icon: React.ReactNode }) {
+  const { t } = useTranslation();
+  const { count, ref } = useCountUp(stat.target, stat.decimals);
+  return (
+    <div ref={ref} className="flex items-center gap-3 justify-center animate-in fade-in duration-500">
+      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+        {icon}
+      </div>
+      <div>
+        <p className="text-xl sm:text-2xl font-bold tracking-tight tabular-nums">
+          {stat.decimals > 0 ? count.toFixed(stat.decimals) : Math.round(count)}{stat.suffix}
+        </p>
+        <p className="text-xs text-muted-foreground">{t(`trust.${stat.key}.label`)}</p>
+      </div>
+    </div>
+  );
+}
+
+
+
 
 const Index = () => {
   const { t, i18n } = useTranslation();
@@ -335,20 +395,14 @@ const Index = () => {
         <section className="py-10 border-b border-border">
           <div className="container max-w-6xl">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-              {trustStats.map(({ key, icon }) => (
-                <div key={key} className="flex items-center gap-3 justify-center animate-in fade-in duration-500">
-                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    {icon}
-                  </div>
-                  <div>
-                    <p className="text-xl sm:text-2xl font-bold tracking-tight">{t(`trust.${key}.value`)}</p>
-                    <p className="text-xs text-muted-foreground">{t(`trust.${key}.label`)}</p>
-                  </div>
-                </div>
-              ))}
+              {counterStats.map((stat) => {
+                const iconEl = trustStats.find(s => s.key === stat.key)?.icon;
+                return <CounterItem key={stat.key} stat={stat} icon={iconEl} />;
+              })}
             </div>
           </div>
         </section>
+
 
         {/* Categories */}
         <section id="categories" className="py-16 sm:py-20 scroll-mt-20">
