@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/accordion";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { HeroIllustration } from "@/components/hero/HeroIllustration";
 import {
   categories as calcCategories,
   calculatorsByCategory,
