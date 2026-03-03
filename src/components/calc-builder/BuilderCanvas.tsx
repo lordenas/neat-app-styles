@@ -11,7 +11,7 @@ import {
   closestCenter,
   UniqueIdentifier,
 } from "@dnd-kit/core";
-import { useSortable, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CalcField, CalcFieldType, CustomCalculator } from "@/types/custom-calc";
 import { FieldCard } from "./FieldCard";
@@ -343,32 +343,75 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
             <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
           </div>
         ) : (
-          <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
+          <SortableContext items={fields.map((f) => f.id)} strategy={() => null}>
             <div className="space-y-3">
               {rows.map((rowFields) => {
                 const rowId = rowFields[0].rowId ?? rowFields[0].id;
                 const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
                 const isRowBelow = dropTarget?.rowId === rowId && dropTarget?.side === "below";
+
+                // Build the list of items for this row, injecting placeholder for left/right drops
+                const rowItems: Array<{ key: string; type: "field" | "placeholder"; field?: CalcField }> = [];
+                for (const field of rowFields) {
+                  const isLeftTarget = dropTarget?.id === field.id && dropTarget?.side === "left";
+                  const isRightTarget = dropTarget?.id === field.id && dropTarget?.side === "right";
+                  if (isLeftTarget) rowItems.push({ key: "placeholder", type: "placeholder" });
+                  rowItems.push({ key: field.id, type: "field", field });
+                  if (isRightTarget) rowItems.push({ key: "placeholder", type: "placeholder" });
+                }
+
+                // Show placeholder row for above/below drops
+                const draggingField = activeId ? fields.find((f) => f.id === String(activeId)) : null;
+                const activeRowId = draggingField ? (draggingField.rowId ?? draggingField.id) : null;
+                const isActiveRow = activeRowId === rowId;
+                // Don't show placeholder row if the active item is already in this row (it stays as ghost)
+                const showAbovePlaceholder = isRowAbove && !isActiveRow;
+                const showBelowPlaceholder = isRowBelow && !isActiveRow;
+
                 return (
-                  <div
-                    key={rowId}
-                    className={cn(
-                      "relative grid gap-2",
-                      isRowAbove && "before:absolute before:-top-2 before:inset-x-0 before:h-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
-                      isRowBelow && "after:absolute after:-bottom-2 after:inset-x-0 after:h-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
+                  <div key={rowId} className="space-y-3">
+                    {/* Placeholder row ABOVE */}
+                    {showAbovePlaceholder && (
+                      <div className="grid gap-2" style={{ gridTemplateColumns: "1fr" }}>
+                        <div className="h-16 border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center">
+                          <span className="text-xs text-primary/60 font-medium">Сюда</span>
+                        </div>
+                      </div>
                     )}
-                    style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
-                  >
-                    {rowFields.map((field) => (
-                      <SortableFieldItem
-                        key={field.id}
-                        field={field}
-                        allFields={fields}
-                        dropTarget={dropTarget}
-                        onUpdate={(updated) => updateField(field.id, updated)}
-                        onDelete={() => deleteField(field.id)}
-                      />
-                    ))}
+
+                    <div
+                      className="relative grid gap-2"
+                      style={{ gridTemplateColumns: `repeat(${rowItems.length}, 1fr)` }}
+                    >
+                      {rowItems.map((item) =>
+                        item.type === "placeholder" ? (
+                          <div
+                            key="placeholder"
+                            className="h-full min-h-[4rem] border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center"
+                          >
+                            <span className="text-xs text-primary/60 font-medium">Сюда</span>
+                          </div>
+                        ) : (
+                          <SortableFieldItem
+                            key={item.field!.id}
+                            field={item.field!}
+                            allFields={fields}
+                            dropTarget={dropTarget}
+                            onUpdate={(updated) => updateField(item.field!.id, updated)}
+                            onDelete={() => deleteField(item.field!.id)}
+                          />
+                        )
+                      )}
+                    </div>
+
+                    {/* Placeholder row BELOW */}
+                    {showBelowPlaceholder && (
+                      <div className="grid gap-2" style={{ gridTemplateColumns: "1fr" }}>
+                        <div className="h-16 border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center">
+                          <span className="text-xs text-primary/60 font-medium">Сюда</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
