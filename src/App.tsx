@@ -124,6 +124,9 @@ const App = () => (
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="/embed-widgets" element={<EmbedWidgets />} />
                   <Route path="/api-keys" element={<ApiKeys />} />
+                  <Route path="/calc-builder" element={<CalcBuilder />} />
+                  <Route path="/calc-builder/:id" element={<CalcBuilder />} />
+                  <Route path="/c/:slug" element={<CalcPlayer />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
