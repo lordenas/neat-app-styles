@@ -10,7 +10,7 @@ interface PlayerResultProps {
 }
 
 export function PlayerResult({ field, allFields, inputValues }: PlayerResultProps) {
-  if (!resolveVisibility(field.visibility, inputValues)) return null;
+  if (!resolveVisibility(field.visibility, inputValues, allFields)) return null;
 
   const results = evaluateAllFormulas(allFields, inputValues);
   const value = results[field.key];
