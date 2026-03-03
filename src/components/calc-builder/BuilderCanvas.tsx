@@ -163,7 +163,7 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }:
     : { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} data-field-id={field.id}>
       <FieldCardWrapper
         field={field}
         allFields={allFields}
@@ -229,9 +229,6 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
 
   const computeDropTarget = useCallback(
     ({ active, over }: DragMoveEvent): DropTarget | null => {
-      if (!over || over.id === active.id) return null;
-
-      const overRect = over.rect;
       const activeRect = active.rect.current.translated;
       if (!activeRect) return null;
 
@@ -239,6 +236,40 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
         x: activeRect.left + activeRect.width / 2,
         y: activeRect.top + activeRect.height / 2,
       };
+
+      // If not over any droppable, find the nearest field by distance
+      let resolvedOverId: string | null = over && over.id !== active.id ? String(over.id) : null;
+
+      if (!resolvedOverId) {
+        // Find the closest field (excluding active) by center distance
+        let minDist = Infinity;
+        for (const f of fields) {
+          if (f.id === String(active.id)) continue;
+          const el = document.querySelector(`[data-field-id="${f.id}"]`);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dist = Math.hypot(activeCenter.x - cx, activeCenter.y - cy);
+          if (dist < minDist) { minDist = dist; resolvedOverId = f.id; }
+        }
+      }
+
+      if (!resolvedOverId) return null;
+
+      const overField = fields.find((f) => f.id === resolvedOverId);
+      if (!overField) return null;
+
+      // Get the over element rect
+      let overRect = over && String(over.id) === resolvedOverId ? over.rect : null;
+      if (!overRect) {
+        const el = document.querySelector(`[data-field-id="${resolvedOverId}"]`);
+        if (el) {
+          overRect = el.getBoundingClientRect() as DOMRect;
+        }
+      }
+      if (!overRect) return null;
+
       const overCenter = {
         x: overRect.left + overRect.width / 2,
         y: overRect.top + overRect.height / 2,
@@ -247,31 +278,24 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
       const dx = activeCenter.x - overCenter.x;
       const dy = activeCenter.y - overCenter.y;
 
-      // Vertical edge zone: top/bottom 20% → always vertical reorder
+      // Vertical edge zone: top/bottom 25% → always vertical reorder
       const overHeight = overRect.height;
       const relY = activeCenter.y - overRect.top;
-      const inVerticalEdgeZone = relY < overHeight * 0.20 || relY > overHeight * 0.80;
+      const inVerticalEdgeZone = relY < overHeight * 0.25 || relY > overHeight * 0.75;
 
       // Horizontal merge: dominant horizontal movement AND not in vertical edge zone
-      // Lower threshold (0.8) makes horizontal easier to trigger
-      const isHorizontal = !inVerticalEdgeZone && Math.abs(dx) > Math.abs(dy) * 0.8;
+      const isHorizontal = !inVerticalEdgeZone && Math.abs(dx) > Math.abs(dy) * 1.2;
 
       let side: DropSide;
       if (isHorizontal) {
-        const overId = String(over.id);
-        const overField = fields.find((f) => f.id === overId);
-        if (overField) {
-          const activeField = fields.find((f) => f.id === String(active.id));
-          const targetRowId = overField.rowId ?? overField.id;
-          const rowCountWithoutActive = fields.filter(
-            (f) => (f.rowId ?? f.id) === targetRowId && f.id !== String(active.id)
-          ).length;
-          const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
-          if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
-            side = dx < 0 ? "left" : "right";
-          } else {
-            side = dy < 0 ? "above" : "below";
-          }
+        const activeField = fields.find((f) => f.id === String(active.id));
+        const targetRowId = overField.rowId ?? overField.id;
+        const rowCountWithoutActive = fields.filter(
+          (f) => (f.rowId ?? f.id) === targetRowId && f.id !== String(active.id)
+        ).length;
+        const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
+        if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
+          side = dx < 0 ? "left" : "right";
         } else {
           side = dy < 0 ? "above" : "below";
         }
@@ -281,11 +305,10 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
 
       // For above/below: store rowId so the entire row can show the indicator
       if (side === "above" || side === "below") {
-        const overField = fields.find((f) => f.id === String(over.id));
-        const rowId = overField ? (overField.rowId ?? overField.id) : String(over.id);
-        return { id: String(over.id), side, rowId };
+        const rowId = overField.rowId ?? overField.id;
+        return { id: resolvedOverId, side, rowId };
       }
-      return { id: String(over.id), side };
+      return { id: resolvedOverId, side };
     },
     [fields]
   );
