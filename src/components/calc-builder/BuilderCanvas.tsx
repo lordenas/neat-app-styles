@@ -108,7 +108,7 @@ function applyDrop(
   return sorted.map((f, i) => ({ ...f, orderIndex: i }));
 }
 
-// ─── Field Card Wrapper (with drop indicators) ───────────────
+// ─── Field Card Wrapper (left/right indicators only) ─────────
 
 interface FieldCardWrapperProps {
   field: CalcField;
@@ -121,7 +121,7 @@ interface FieldCardWrapperProps {
 }
 
 function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDragging, onUpdate, onDelete }: FieldCardWrapperProps) {
-  const isTarget = dropTarget?.id === field.id;
+  const isTarget = dropTarget?.id === field.id && (dropTarget?.side === "left" || dropTarget?.side === "right");
   const side = isTarget ? dropTarget!.side : null;
 
   return (
@@ -131,12 +131,10 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
         isDragging && "opacity-30 scale-[0.98]",
         isTarget && side === "left"  && "before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:bg-primary before:rounded-full before:z-10",
         isTarget && side === "right" && "after:absolute after:inset-y-1 after:right-0 after:w-0.5 after:bg-primary after:rounded-full after:z-10",
-        isTarget && side === "above" && "before:absolute before:inset-x-1 before:top-0 before:h-0.5 before:bg-primary before:rounded-full before:z-10",
-        isTarget && side === "below" && "after:absolute after:inset-x-1 after:bottom-0 after:h-0.5 after:bg-primary after:rounded-full after:z-10",
-        isTarget && (side === "left" || side === "right") && "ring-1 ring-primary/30 ring-inset",
+        isTarget && "ring-1 ring-primary/30 ring-inset",
       )}
     >
-      {isTarget && (side === "left" || side === "right") && (
+      {isTarget && (
         <div className={cn(
           "absolute inset-y-0 w-1/3 z-20 flex items-center justify-center pointer-events-none",
           side === "left" ? "left-0" : "right-0"
