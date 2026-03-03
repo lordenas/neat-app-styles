@@ -116,8 +116,8 @@ export function ConditionEditor({ visibility, onChange, otherFields }: Condition
                     updateRule(i, { fieldId: v, operator: defaultOp, value: "" });
                   }}
                 >
-                  <SelectTrigger className="h-8 text-xs flex-1 min-w-0">
-                    <SelectValue placeholder="Поле..." />
+                  <SelectTrigger className={`h-8 text-xs flex-1 min-w-0 ${!rule.fieldId ? "text-muted-foreground" : ""}`}>
+                    <SelectValue placeholder="Выберите поле…" />
                   </SelectTrigger>
                   <SelectContent>
                     {otherFields.map((f) => (
