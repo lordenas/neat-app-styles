@@ -361,8 +361,8 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
                 }
 
                 // Show placeholder row for above/below drops
-                const activeField = activeId ? fields.find((f) => f.id === String(activeId)) : null;
-                const activeRowId = activeField ? (activeField.rowId ?? activeField.id) : null;
+                const draggingField = activeId ? fields.find((f) => f.id === String(activeId)) : null;
+                const activeRowId = draggingField ? (draggingField.rowId ?? draggingField.id) : null;
                 const isActiveRow = activeRowId === rowId;
                 // Don't show placeholder row if the active item is already in this row (it stays as ghost)
                 const showAbovePlaceholder = isRowAbove && !isActiveRow;
