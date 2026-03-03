@@ -4,7 +4,7 @@ import { HeroBudgetIllustration } from "./HeroBudgetIllustration";
 import { HeroCalc3dIllustration } from "./HeroCalc3dIllustration";
 import type { HeroIllustrationProps } from "./types";
 
-const VARIANTS = [HeroDashboardIllustration, HeroBudgetIllustration, HeroCalc3dIllustration];
+const VARIANTS = [HeroCalc3dIllustration, HeroCalc3dIllustration, HeroCalc3dIllustration];
 
 export function HeroIllustration(props: HeroIllustrationProps) {
   const [idx] = useState(() => Math.floor(Math.random() * VARIANTS.length));
