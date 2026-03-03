@@ -292,7 +292,43 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
     },
     [fields]
   );
-...
+
+  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(active.id);
+
+  const handleDragMove = (event: DragMoveEvent) => {
+    setDropTarget(computeDropTarget(event));
+  };
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    setActiveId(null);
+    setDropTarget(null);
+    if (!over || !dropTarget || active.id === over.id) return;
+    setFields(applyDrop(fields, String(active.id), String(over.id), dropTarget.side));
+  };
+
+  const handleDragCancel = () => { setActiveId(null); setDropTarget(null); };
+
+  const activeField = activeId ? fields.find((f) => f.id === activeId) : null;
+  const rows = groupByRow(fields);
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      <div className="space-y-2">
+        {fields.length === 0 ? (
+          <div className="border-2 border-dashed rounded-xl p-10 text-center text-muted-foreground">
+            <p className="text-sm font-medium mb-1">Калькулятор пуст</p>
+            <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
+          </div>
+        ) : (
+          <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
+            <div className="space-y-2">
               {rows.map((rowFields) => {
                 const rowId = rowFields[0].rowId ?? rowFields[0].id;
                 const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
