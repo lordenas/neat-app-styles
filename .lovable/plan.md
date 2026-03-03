@@ -1,147 +1,73 @@
 
-## MVP: Конструктор пользовательских калькуляторов (Custom Calc Builder)
+## Plan: UX/UI Improvements for /gk395 Calculator
 
-### Что строим
+### Current Issues
+1. **Title** is inside the two-column grid (confined to left 1/3 column) — needs to move to the `title` prop of `CalculatorLayout` so it spans full width.
+2. **Partial payments / debt increases** inputs are raw `<Input type="date">` and a plain number input with no labels — confusing.
+3. **Excluded periods** feature exists in the data model (`ExcludedPeriod[]`) but is completely absent from the UI.
+4. **Results table** only shows period rows, not payment/debt-increase events — the full breakdown is filtered.
+5. **No empty state** for breakdown — when result is null, only a small text is shown.
+6. **Stats cards** are plain divs, could use the existing `StatsCard` pattern with better contrast.
+7. **Layout** uses inline `lg:col-span-3` grid inside the layout that already has a right sidebar — this creates a 3-column-inside-2-column which is cramped.
+8. **Collapsible sections** for optional features (partial payments, debt increases, excluded periods) would clean up the form.
 
-Полноценный клиентский MVP по пути `/calc-builder` — drag-and-drop редактор полей, логика формул через `mathjs`-совместимый парсер, условное отображение полей, превью в реальном времени, и публичный плеер `/c/:slug`.
+### Plan
+
+#### 1. Move title to `CalculatorLayout` `title` prop (same pattern as CreditEarlyRepayment)
+
+#### 2. Refactor the form panel
+- **Main fields**: Sum + Period dates — keep at top, clearly labeled
+- **Optional sections** wrapped in `<Collapsible>` with chevron toggle:
+  - "Частичные оплаты" (collapsed by default)
+  - "Увеличение долга" (collapsed by default)  
+  - "Исключённые периоды" (collapsed by default, currently missing from UI entirely)
+- Each entry row: add placeholder labels above date/amount columns for the first row
+- Remove button: icon only (Trash2), consistent
+
+#### 3. Improve results display
+- Replace plain colored divs with properly styled stat cards using `bg-primary/5` / `bg-amber-500/10` / `bg-green-500/10` scheme
+- Show total days count as a 4th stat card
+- **Breakdown table**: use `<Table>` component (already imported elsewhere) with proper columns:
+  - Период | Сумма долга | Дней | Ставка ЦБ | Формула | Проценты
+  - Payment/debt-increase rows styled differently (muted, with badge)
+  - Excluded rows shown with strikethrough / opacity
+- Add copy-to-clipboard button on the result
+
+#### 4. "О расчёте" section
+- Keep it but make it a proper accordion or collapsible to save space
+
+#### 5. No structural changes to `CalculatorLayout` needed — just use the existing `title` prop
+
+### Files to Edit
+- `src/pages/calculators/Gk395Calculator.tsx` — full refactor
 
 ---
 
-### Архитектура
+## Global UI Rules
 
-```text
-src/
-  types/
-    custom-calc.ts          ← все типы + JSDoc с бэк-контрактами
-  lib/
-    calc-engine.ts          ← evaluateFormulas() + resolveVisibility()
-  pages/
-    CalcBuilder.tsx          ← страница конструктора
-    CalcPlayer.tsx           ← страница плеера /c/:slug
-  components/
-    calc-builder/
-      BuilderCanvas.tsx      ← список полей (drag-to-reorder)
-      FieldCard.tsx          ← карточка поля с настройками
-      FieldTypeMenu.tsx      ← выбор типа поля
-      ConditionEditor.tsx    ← редактор условий видимости
-      FormulaEditor.tsx      ← редактор формулы с подсветкой переменных
-      BuilderPreview.tsx     ← live-превью справа
-    calc-player/
-      PlayerField.tsx        ← рендер одного поля с условной видимостью
-      PlayerResult.tsx       ← отображение результатов формул
+### Calculator heading rule
+**Always** use the `title` prop of `CalculatorLayout` for the page heading and description.
+Never place the `<h1>` and description `<p>` inside `children` — they must go into the `title` prop so they render full-width above the sidebar grid.
+
+```tsx
+// ✅ Correct
+<CalculatorLayout
+  calculatorId="my-calc"
+  title={
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Заголовок</h1>
+      <p className="text-muted-foreground mt-1">Описание</p>
+    </div>
+  }
+>
+  {/* no h1 here */}
+</CalculatorLayout>
+
+// ❌ Wrong — h1 inside children gets stuck in the narrow left column
+<CalculatorLayout calculatorId="my-calc">
+  <div>
+    <h1>Заголовок</h1>
+    ...
+  </div>
+</CalculatorLayout>
 ```
-
----
-
-### Типы полей
-
-| Тип | Описание |
-|-----|----------|
-| `number` | Числовой input (min/max/step) |
-| `text` | Текстовый input |
-| `select` | Выпадающий список (options) |
-| `radio` | Радио-кнопки |
-| `checkbox` | Чекбокс (boolean) |
-| `slider` | Слайдер (min/max/step) |
-| `result` | Вычисляемое поле (только формула) |
-
----
-
-### Система условий (Visibility Rules)
-
-Каждое поле может иметь массив `visibilityRules`:
-
-```typescript
-// Структура одного условия:
-type VisibilityRule = {
-  fieldId: string;           // ID поля-источника
-  operator: "gt" | "lt" | "eq" | "neq" | "gte" | "lte" | "checked" | "not_checked" | "in";
-  value: string | number;    // сравниваемое значение
-}
-
-// Логика между правилами:
-type VisibilityConfig = {
-  rules: VisibilityRule[];
-  logic: "AND" | "OR";       // как объединять несколько правил
-}
-```
-
-**Примеры из ТЗ:**
-- "Если поле А > 100 → показать поле Б": `{ fieldId: "A", operator: "gt", value: 100 }`
-- "Если checkbox C выбран → показать поле D": `{ fieldId: "C", operator: "checked", value: true }`
-- "Если radio выбрано значение X → показать поле E": `{ fieldId: "C", operator: "eq", value: "X" }`
-
----
-
-### Система формул
-
-Поля типа `result` имеют формулу в виде строки. Движок `calc-engine.ts` заменяет `{fieldId}` на текущие значения и вычисляет через безопасный парсер (на клиенте — встроенный, на беке — `mathjs`).
-
-```typescript
-// Пример формулы:
-"{amount} * {rate} / 100 / 12 * pow((1 + {rate}/100/12), {months}) / (pow((1 + {rate}/100/12), {months}) - 1)"
-// Встроенные функции: round(), floor(), ceil(), abs(), min(), max(), pow(), sqrt()
-```
-
-Движок на клиенте: собственный рекурсивный парсер (без eval()) поддерживающий +, -, *, /, скобки, и встроенные функции. ~150 строк кода, безопасен.
-
----
-
-### Бэк-контракты (JSDoc ТЗ в types/custom-calc.ts)
-
-**Таблицы БД:**
-
-```sql
--- custom_calculators: метаданные калькулятора
-CREATE TABLE custom_calculators (
-  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id     uuid NOT NULL,               -- владелец
-  slug        text UNIQUE NOT NULL,        -- /c/:slug
-  title       text NOT NULL,
-  description text,
-  theme       jsonb DEFAULT '{}',          -- primaryColor, bgColor, etc.
-  is_public   boolean DEFAULT false,
-  created_at  timestamptz DEFAULT now(),
-  updated_at  timestamptz DEFAULT now()
-);
-
--- calc_fields: поля калькулятора (упорядочены по order_index)
-CREATE TABLE calc_fields (
-  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  calculator_id   uuid REFERENCES custom_calculators(id) ON DELETE CASCADE,
-  type            text NOT NULL,           -- number|text|select|radio|checkbox|slider|result
-  label           text NOT NULL,
-  key             text NOT NULL,           -- переменная для формул {key}
-  order_index     integer NOT NULL,
-  config          jsonb DEFAULT '{}',      -- min, max, step, options[], placeholder, etc.
-  formula         text,                    -- только для type=result
-  visibility      jsonb,                   -- { rules: [...], logic: "AND"|"OR" }
-  created_at      timestamptz DEFAULT now()
-);
-```
-
-**Edge Functions (ТЗ):**
-- `POST /functions/v1/custom-calc-save` — сохранение всего калькулятора (fields + config)
-- `GET /functions/v1/custom-calc-get?slug=:slug` — публичный доступ по slug (без авторизации)
-- `POST /functions/v1/custom-calc-evaluate` — серверная проверка формул (безопасность)
-
-**RLS:**
-- `custom_calculators`: SELECT where `is_public = true` OR `auth.uid() = user_id`
-- `calc_fields`: наследуют через JOIN с калькулятором
-
----
-
-### Что реализуем в MVP (клиент)
-
-1. **`src/types/custom-calc.ts`** — все типы + полное JSDoc ТЗ для бэка
-2. **`src/lib/calc-engine.ts`** — движок формул (без eval) + resolveVisibility()
-3. **`src/pages/CalcBuilder.tsx`** — страница `/calc-builder` с SiteHeader/Footer
-4. **`src/components/calc-builder/BuilderCanvas.tsx`** — список полей с возможностью добавлять/удалять/переставлять
-5. **`src/components/calc-builder/FieldCard.tsx`** — карточка настройки поля (label, key, type, config)
-6. **`src/components/calc-builder/ConditionEditor.tsx`** — UI для rules видимости
-7. **`src/components/calc-builder/FormulaEditor.tsx`** — textarea с подсветкой `{переменных}`
-8. **`src/components/calc-builder/BuilderPreview.tsx`** — live-превью плеера
-9. **`src/pages/CalcPlayer.tsx`** — публичный плеер `/c/:slug` (из localStorage в MVP)
-10. **`src/components/calc-player/PlayerField.tsx`** + **`PlayerResult.tsx`** — рендер полей с условиями
-11. Роуты в `App.tsx`: `/calc-builder`, `/calc-builder/:id`, `/c/:slug`
-12. Хранилище MVP: `localStorage` с полным JSDoc "заменить на API"
