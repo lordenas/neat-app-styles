@@ -70,6 +70,8 @@
 
     --section-bg: 210 20% 96%;
     --stripe-bg: 210 15% 97%;
+    --notebook-page: 210 20% 97%;
+    --notebook-stack: 210 15% 90%;
   }
 
   .dark {
