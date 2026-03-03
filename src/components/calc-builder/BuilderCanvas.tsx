@@ -339,8 +339,6 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
                       "relative grid gap-2",
                       isRowAbove && "before:absolute before:-top-2 before:inset-x-0 before:h-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
                       isRowBelow && "after:absolute after:-bottom-2 after:inset-x-0 after:h-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
-                      isRowAbove && "before:absolute before:-top-2 before:inset-x-0 before:h-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
-                      isRowBelow && "after:absolute after:-bottom-2 after:inset-x-0 after:h-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
                     )}
                     style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
                   >
