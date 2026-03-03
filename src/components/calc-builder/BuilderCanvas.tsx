@@ -254,13 +254,14 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
       const dx = activeCenter.x - overCenter.x;
       const dy = activeCenter.y - overCenter.y;
 
-      // If the active center is in the top/bottom 35% of the over card → always vertical
+      // Vertical edge zone: top/bottom 20% → always vertical reorder
       const overHeight = overRect.height;
       const relY = activeCenter.y - overRect.top;
-      const inVerticalEdgeZone = relY < overHeight * 0.35 || relY > overHeight * 0.65;
+      const inVerticalEdgeZone = relY < overHeight * 0.20 || relY > overHeight * 0.80;
 
-      // Horizontal merge only when clearly moving sideways AND not in edge zone
-      const isHorizontal = !inVerticalEdgeZone && Math.abs(dx) > Math.abs(dy) * 1.2;
+      // Horizontal merge: dominant horizontal movement AND not in vertical edge zone
+      // Lower threshold (0.8) makes horizontal easier to trigger
+      const isHorizontal = !inVerticalEdgeZone && Math.abs(dx) > Math.abs(dy) * 0.8;
 
       let side: DropSide;
       if (isHorizontal) {
