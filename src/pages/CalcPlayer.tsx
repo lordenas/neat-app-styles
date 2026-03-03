@@ -111,15 +111,19 @@ export default function CalcPlayer() {
           </div>
 
           {/* Fields */}
-          <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-5">
             {sorted.map((field) => (
-              <PlayerField
+              <div
                 key={field.id}
-                field={field}
-                allFields={sorted}
-                values={values}
-                onChange={onChange}
-              />
+                className={field.colSpan === 1 ? "col-span-1" : "col-span-2"}
+              >
+                <PlayerField
+                  field={field}
+                  allFields={sorted}
+                  values={values}
+                  onChange={onChange}
+                />
+              </div>
             ))}
           </div>
 

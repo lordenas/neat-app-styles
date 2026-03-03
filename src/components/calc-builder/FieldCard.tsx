@@ -102,6 +102,17 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
         <div className="flex items-center gap-1 shrink-0">
           <Button
             variant="ghost" size="icon"
+            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            title={field.colSpan === 1 ? "Растянуть на всю ширину" : "Сузить до полуширины"}
+            onClick={() => upd({ colSpan: field.colSpan === 1 ? 2 : 1 })}
+          >
+            {field.colSpan === 1
+              ? <Square className="h-3.5 w-3.5" />
+              : <Columns2 className="h-3.5 w-3.5" />
+            }
+          </Button>
+          <Button
+            variant="ghost" size="icon"
             className="h-7 w-7 text-muted-foreground hover:text-destructive"
             onClick={onDelete}
           >
