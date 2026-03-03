@@ -347,14 +347,7 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
 
       <DragOverlay dropAnimation={{ duration: 160, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
         {activeField ? (
-          <SortableFieldItem
-            field={activeField}
-            allFields={fields}
-            dropTarget={null}
-            onUpdate={() => {}}
-            onDelete={() => {}}
-            isOverlay
-          />
+          <OverlayCard field={activeField} allFields={fields} />
         ) : null}
       </DragOverlay>
     </DndContext>
