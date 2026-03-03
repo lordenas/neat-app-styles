@@ -66,51 +66,46 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
 
   return (
     <div className={cn(
-      "border rounded-lg bg-card transition-shadow",
+      "border rounded-lg bg-card transition-shadow min-w-0 overflow-hidden",
       open ? "shadow-md" : "shadow-sm hover:shadow-md"
     )}>
       {/* Header */}
-      <div className="flex items-center gap-2 px-3 py-2.5">
+      <div className="flex items-center gap-1.5 px-2 py-2.5 min-w-0">
         {/* Drag handle */}
         <div
           {...dragHandleProps}
-          className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none"
+          className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none shrink-0"
         >
           <GripVertical className="h-4 w-4" />
         </div>
 
-        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+        <div className="flex items-center gap-1 flex-1 min-w-0 overflow-hidden">
           <span className="text-muted-foreground shrink-0">{TYPE_ICONS[field.type]}</span>
-          <span className="font-medium text-sm truncate">{field.label || "Без названия"}</span>
-          <Badge variant="secondary" className="text-[10px] px-1.5 shrink-0">
+          <span className="font-medium text-xs truncate min-w-0">{field.label || "Без названия"}</span>
+          <Badge variant="secondary" className="text-[10px] px-1 shrink-0 hidden sm:inline-flex">
             {TYPE_LABELS[field.type]}
           </Badge>
-          {field.key && (
-            <span className="font-mono text-[10px] text-muted-foreground truncate">
-              {"{" + field.key + "}"}
-            </span>
-          )}
           {hasConditions && (
-            <Badge variant="outline" className="text-[10px] px-1.5 shrink-0">
-              условие
+            <Badge variant="outline" className="text-[10px] px-1 shrink-0 hidden md:inline-flex">
+              усл.
             </Badge>
           )}
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-0.5 shrink-0">
           <Button
             variant="ghost" size="icon"
-            className="h-7 w-7 text-muted-foreground hover:text-destructive"
+            className="h-6 w-6 text-muted-foreground hover:text-destructive"
             onClick={onDelete}
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost" size="icon"
-            className="h-7 w-7 text-muted-foreground"
+            className="h-6 w-6 text-muted-foreground"
             onClick={() => setOpen(!open)}
           >
-            {open ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+            {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
           </Button>
         </div>
       </div>
