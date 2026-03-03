@@ -1,12 +1,10 @@
-import { useState, useMemo, useRef, useCallback, useEffect, memo } from "react";
+import { useState, useMemo, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import {
   Calculator,
   Landmark,
-  PiggyBank,
-  Receipt,
   Briefcase,
   TrendingUp,
   ArrowRight,
