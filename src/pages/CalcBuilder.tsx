@@ -212,44 +212,7 @@ export default function CalcBuilder() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Mobile tabs only — desktop shows split */}
-            <div className="hidden md:grid gap-6 h-full" style={{ gridTemplateColumns: "3fr 2fr" }}>
-              {/* Builder */}
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-sm font-semibold mb-1">Поля калькулятора</h2>
-                  <p className="text-xs text-muted-foreground">
-                    Добавляйте поля, настраивайте формулы и условия отображения
-                  </p>
-                </div>
-                {/* Description */}
-                <Input
-                  value={calculator.description ?? ""}
-                  onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
-                  placeholder="Описание (необязательно)"
-                  className="text-sm"
-                />
-                <BuilderCanvas calculator={calculator} onChange={setCalculator} />
-              </div>
-
-              {/* Preview */}
-              <div className="space-y-4">
-                <div>
-                  <h2 className="text-sm font-semibold mb-1">Превью</h2>
-                  <p className="text-xs text-muted-foreground">Так будет выглядеть ваш калькулятор</p>
-                </div>
-                <div className="border rounded-xl p-6 bg-card shadow-sm">
-                  <h3 className="text-lg font-bold mb-1">{calculator.title}</h3>
-                  {calculator.description && (
-                    <p className="text-sm text-muted-foreground mb-4">{calculator.description}</p>
-                  )}
-                  <BuilderPreview calculator={calculator} />
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile tabs */}
-            <TabsContent value="builder" className="md:hidden space-y-4 mt-0">
+            <TabsContent value="builder" className="space-y-4 mt-0">
               <Input
                 value={calculator.description ?? ""}
                 onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
@@ -258,7 +221,7 @@ export default function CalcBuilder() {
               />
               <BuilderCanvas calculator={calculator} onChange={setCalculator} />
             </TabsContent>
-            <TabsContent value="preview" className="md:hidden mt-0">
+            <TabsContent value="preview" className="mt-0">
               <div className="border rounded-xl p-6 bg-card shadow-sm">
                 <h3 className="text-lg font-bold mb-1">{calculator.title}</h3>
                 {calculator.description && (
