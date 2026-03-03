@@ -255,17 +255,23 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
       const dx = activeCenter.x - overCenter.x;
       const dy = activeCenter.y - overCenter.y;
 
-      // Prefer horizontal if the horizontal offset is noticeably larger
-      const isHorizontal = Math.abs(dx) > Math.abs(dy) * 0.8;
+      // Vertical threshold: require significant horizontal dominance to merge into row
+      const isHorizontal = Math.abs(dx) > Math.abs(dy) * 1.5;
 
       let side: DropSide;
       if (isHorizontal) {
         const overId = String(over.id);
         const overField = fields.find((f) => f.id === overId);
         if (overField) {
+          const activeField = fields.find((f) => f.id === String(active.id));
           const targetRowId = overField.rowId ?? overField.id;
-          const rowCount = fields.filter((f) => (f.rowId ?? f.id) === targetRowId).length;
-          if (rowCount < MAX_PER_ROW) {
+          // Count row members excluding the dragged item itself
+          const rowCountWithoutActive = fields.filter(
+            (f) => (f.rowId ?? f.id) === targetRowId && f.id !== String(active.id)
+          ).length;
+          // Also check if active is already in this row (moving within same row = always horizontal)
+          const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
+          if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
             side = dx < 0 ? "left" : "right";
           } else {
             side = dy < 0 ? "above" : "below";
