@@ -63,8 +63,9 @@ export function groupByRow(sorted: CalcField[]): CalcField[][] {
 type DropSide = "left" | "right" | "above" | "below";
 
 interface DropTarget {
-  id: string;
+  id: string;       // field id (for left/right) or rowId (for above/below)
   side: DropSide;
+  rowId?: string;   // always set for above/below
 }
 
 /** Applies a drop operation and returns new fields array. */
@@ -107,7 +108,7 @@ function applyDrop(
   return sorted.map((f, i) => ({ ...f, orderIndex: i }));
 }
 
-// ─── Field Card Wrapper (with drop indicators) ───────────────
+// ─── Field Card Wrapper (left/right indicators only) ─────────
 
 interface FieldCardWrapperProps {
   field: CalcField;
@@ -120,7 +121,7 @@ interface FieldCardWrapperProps {
 }
 
 function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDragging, onUpdate, onDelete }: FieldCardWrapperProps) {
-  const isTarget = dropTarget?.id === field.id;
+  const isTarget = dropTarget?.id === field.id && (dropTarget?.side === "left" || dropTarget?.side === "right");
   const side = isTarget ? dropTarget!.side : null;
 
   return (
@@ -130,12 +131,10 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
         isDragging && "opacity-30 scale-[0.98]",
         isTarget && side === "left"  && "before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:bg-primary before:rounded-full before:z-10",
         isTarget && side === "right" && "after:absolute after:inset-y-1 after:right-0 after:w-0.5 after:bg-primary after:rounded-full after:z-10",
-        isTarget && side === "above" && "before:absolute before:inset-x-1 before:top-0 before:h-0.5 before:bg-primary before:rounded-full before:z-10",
-        isTarget && side === "below" && "after:absolute after:inset-x-1 after:bottom-0 after:h-0.5 after:bg-primary after:rounded-full after:z-10",
-        isTarget && (side === "left" || side === "right") && "ring-1 ring-primary/30 ring-inset",
+        isTarget && "ring-1 ring-primary/30 ring-inset",
       )}
     >
-      {isTarget && (side === "left" || side === "right") && (
+      {isTarget && (
         <div className={cn(
           "absolute inset-y-0 w-1/3 z-20 flex items-center justify-center pointer-events-none",
           side === "left" ? "left-0" : "right-0"
@@ -283,6 +282,12 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
         side = dy < 0 ? "above" : "below";
       }
 
+      // For above/below: store rowId so the entire row can show the indicator
+      if (side === "above" || side === "below") {
+        const overField = fields.find((f) => f.id === String(over.id));
+        const rowId = overField ? (overField.rowId ?? overField.id) : String(over.id);
+        return { id: String(over.id), side, rowId };
+      }
       return { id: String(over.id), side };
     },
     [fields]
@@ -324,24 +329,33 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
         ) : (
           <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
             <div className="space-y-2">
-              {rows.map((rowFields) => (
-                <div
-                  key={rowFields[0].rowId ?? rowFields[0].id}
-                  className="grid gap-2"
-                  style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
-                >
-                  {rowFields.map((field) => (
-                    <SortableFieldItem
-                      key={field.id}
-                      field={field}
-                      allFields={fields}
-                      dropTarget={dropTarget}
-                      onUpdate={(updated) => updateField(field.id, updated)}
-                      onDelete={() => deleteField(field.id)}
-                    />
-                  ))}
-                </div>
-              ))}
+              {rows.map((rowFields) => {
+                const rowId = rowFields[0].rowId ?? rowFields[0].id;
+                const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
+                const isRowBelow = dropTarget?.rowId === rowId && dropTarget?.side === "below";
+                return (
+                  <div
+                    key={rowId}
+                    className={cn(
+                      "relative grid gap-2",
+                      isRowAbove && "before:absolute before:-top-1.5 before:inset-x-0 before:h-0.5 before:bg-primary before:rounded-full before:z-10",
+                      isRowBelow && "after:absolute after:-bottom-1.5 after:inset-x-0 after:h-0.5 after:bg-primary after:rounded-full after:z-10",
+                    )}
+                    style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
+                  >
+                    {rowFields.map((field) => (
+                      <SortableFieldItem
+                        key={field.id}
+                        field={field}
+                        allFields={fields}
+                        dropTarget={dropTarget}
+                        onUpdate={(updated) => updateField(field.id, updated)}
+                        onDelete={() => deleteField(field.id)}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </SortableContext>
         )}
