@@ -299,11 +299,12 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
     setDropTarget(computeDropTarget(event));
   };
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+  const handleDragEnd = ({ active }: DragEndEvent) => {
+    const pending = dropTarget;
     setActiveId(null);
     setDropTarget(null);
-    if (!over || !dropTarget || active.id === over.id) return;
-    setFields(applyDrop(fields, String(active.id), String(over.id), dropTarget.side));
+    if (!pending || pending.id === String(active.id)) return;
+    setFields(applyDrop(fields, String(active.id), pending.id, pending.side));
   };
 
   const handleDragCancel = () => { setActiveId(null); setDropTarget(null); };
