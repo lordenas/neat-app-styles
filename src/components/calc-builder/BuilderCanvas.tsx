@@ -11,7 +11,7 @@ import {
   closestCenter,
   UniqueIdentifier,
 } from "@dnd-kit/core";
-import { useSortable, SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CalcField, CalcFieldType, CustomCalculator } from "@/types/custom-calc";
 import { FieldCard } from "./FieldCard";
