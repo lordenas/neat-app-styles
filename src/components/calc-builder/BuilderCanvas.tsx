@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { CalcField, CalcFieldType, CustomCalculator } from "@/types/custom-calc";
 import { FieldCard } from "./FieldCard";
 import { FieldTypeMenu } from "./FieldTypeMenu";
-import { Button } from "@/components/ui/button";
-import { ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function nanoid(len = 12): string {
@@ -32,6 +30,7 @@ function createField(type: CalcFieldType, order: number): CalcField {
     label: "",
     key: `field_${id.slice(0, 6)}`,
     orderIndex: order,
+    colSpan: 2,
     config: defaults.config ?? {},
     formula: type === "result" ? "" : undefined,
     visibility: null,
@@ -45,6 +44,10 @@ interface BuilderCanvasProps {
 
 export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
   const fields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
+
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [overId, setOverId] = useState<string | null>(null);
+  const dragNode = useRef<HTMLDivElement | null>(null);
 
   const setFields = (newFields: CalcField[]) =>
     onChange({ ...calculator, fields: newFields.map((f, i) => ({ ...f, orderIndex: i })) });
@@ -60,12 +63,45 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
   const deleteField = (id: string) =>
     setFields(fields.filter((f) => f.id !== id));
 
-  const moveField = (i: number, dir: -1 | 1) => {
-    const j = i + dir;
-    if (j < 0 || j >= fields.length) return;
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDragId(id);
+    e.dataTransfer.effectAllowed = "move";
+    // Slight delay so ghost image captures the element
+    setTimeout(() => {
+      if (dragNode.current) dragNode.current.style.opacity = "0.4";
+    }, 0);
+  };
+
+  const handleDragEnter = (id: string) => {
+    if (id !== dragId) setOverId(id);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    if (!dragId || dragId === targetId) return;
+
+    const fromIdx = fields.findIndex((f) => f.id === dragId);
+    const toIdx = fields.findIndex((f) => f.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
     const copy = [...fields];
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    const [moved] = copy.splice(fromIdx, 1);
+    copy.splice(toIdx, 0, moved);
     setFields(copy);
+
+    setDragId(null);
+    setOverId(null);
+  };
+
+  const handleDragEnd = () => {
+    if (dragNode.current) dragNode.current.style.opacity = "";
+    setDragId(null);
+    setOverId(null);
   };
 
   return (
@@ -76,38 +112,37 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
           <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
         </div>
       ) : (
-        fields.map((field, i) => (
-          <div key={field.id} className="flex gap-1 items-start">
-            {/* Move buttons */}
-            <div className="flex flex-col gap-0.5 pt-2 shrink-0">
-              <Button
-                variant="ghost" size="icon"
-                className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                onClick={() => moveField(i, -1)}
-                disabled={i === 0}
+        <div className="grid grid-cols-2 gap-2">
+          {fields.map((field) => {
+            const isDragging = dragId === field.id;
+            const isOver = overId === field.id;
+            return (
+              <div
+                key={field.id}
+                ref={isDragging ? dragNode : null}
+                className={cn(
+                  "transition-all duration-150",
+                  field.colSpan === 1 ? "col-span-1" : "col-span-2",
+                  isDragging && "opacity-40",
+                  isOver && "ring-2 ring-primary ring-offset-1 rounded-lg"
+                )}
+                draggable
+                onDragStart={(e) => handleDragStart(e, field.id)}
+                onDragEnter={() => handleDragEnter(field.id)}
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, field.id)}
+                onDragEnd={handleDragEnd}
               >
-                <ArrowUp className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost" size="icon"
-                className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                onClick={() => moveField(i, 1)}
-                disabled={i === fields.length - 1}
-              >
-                <ArrowDown className="h-3 w-3" />
-              </Button>
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <FieldCard
-                field={field}
-                allFields={fields}
-                onChange={(updated) => updateField(field.id, updated)}
-                onDelete={() => deleteField(field.id)}
-              />
-            </div>
-          </div>
-        ))
+                <FieldCard
+                  field={field}
+                  allFields={fields}
+                  onChange={(updated) => updateField(field.id, updated)}
+                  onDelete={() => deleteField(field.id)}
+                />
+              </div>
+            );
+          })}
+        </div>
       )}
 
       <div className="pt-2">
