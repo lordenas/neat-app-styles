@@ -107,33 +107,27 @@ function applyDrop(
   return sorted.map((f, i) => ({ ...f, orderIndex: i }));
 }
 
-// ─── Sortable Item ───────────────────────────────────────────
+// ─── Field Card Wrapper (with drop indicators) ───────────────
 
-interface SortableFieldItemProps {
+interface FieldCardWrapperProps {
   field: CalcField;
   allFields: CalcField[];
   dropTarget: DropTarget | null;
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
+  isDragging?: boolean;
   onUpdate: (updated: CalcField) => void;
   onDelete: () => void;
-  isOverlay?: boolean;
 }
 
-function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete, isOverlay }: SortableFieldItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
-  const style = { transform: CSS.Transform.toString(transform), transition };
-
+function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDragging, onUpdate, onDelete }: FieldCardWrapperProps) {
   const isTarget = dropTarget?.id === field.id;
   const side = isTarget ? dropTarget!.side : null;
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
       className={cn(
         "relative rounded-lg transition-all duration-100",
-        isDragging && !isOverlay && "opacity-30 scale-[0.98]",
-        isOverlay && "shadow-2xl rotate-[0.8deg] opacity-95 scale-[1.02] cursor-grabbing pointer-events-none",
-        // Drop indicator borders
+        isDragging && "opacity-30 scale-[0.98]",
         isTarget && side === "left"  && "before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:bg-primary before:rounded-full before:z-10",
         isTarget && side === "right" && "after:absolute after:inset-y-1 after:right-0 after:w-0.5 after:bg-primary after:rounded-full after:z-10",
         isTarget && side === "above" && "before:absolute before:inset-x-1 before:top-0 before:h-0.5 before:bg-primary before:rounded-full before:z-10",
@@ -141,7 +135,6 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete, i
         isTarget && (side === "left" || side === "right") && "ring-1 ring-primary/30 ring-inset",
       )}
     >
-      {/* Inline drop zone hint */}
       {isTarget && (side === "left" || side === "right") && (
         <div className={cn(
           "absolute inset-y-0 w-1/3 z-20 flex items-center justify-center pointer-events-none",
@@ -157,7 +150,56 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete, i
         allFields={allFields}
         onChange={onUpdate}
         onDelete={onDelete}
+        dragHandleProps={dragHandleProps}
+      />
+    </div>
+  );
+}
+
+// ─── Sortable Item (uses useSortable hook) ────────────────────
+
+interface SortableFieldItemProps {
+  field: CalcField;
+  allFields: CalcField[];
+  dropTarget: DropTarget | null;
+  onUpdate: (updated: CalcField) => void;
+  onDelete: () => void;
+}
+
+function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }: SortableFieldItemProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <FieldCardWrapper
+        field={field}
+        allFields={allFields}
+        dropTarget={dropTarget}
         dragHandleProps={{ ...attributes, ...listeners }}
+        isDragging={isDragging}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    </div>
+  );
+}
+
+// ─── Overlay Card (no useSortable) ───────────────────────────
+
+interface OverlayCardProps {
+  field: CalcField;
+  allFields: CalcField[];
+}
+
+function OverlayCard({ field, allFields }: OverlayCardProps) {
+  return (
+    <div className="shadow-2xl rotate-[0.8deg] opacity-95 scale-[1.02] cursor-grabbing pointer-events-none rounded-lg">
+      <FieldCard
+        field={field}
+        allFields={allFields}
+        onChange={() => {}}
+        onDelete={() => {}}
       />
     </div>
   );
@@ -305,14 +347,7 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
 
       <DragOverlay dropAnimation={{ duration: 160, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
         {activeField ? (
-          <SortableFieldItem
-            field={activeField}
-            allFields={fields}
-            dropTarget={null}
-            onUpdate={() => {}}
-            onDelete={() => {}}
-            isOverlay
-          />
+          <OverlayCard field={activeField} allFields={fields} />
         ) : null}
       </DragOverlay>
     </DndContext>
