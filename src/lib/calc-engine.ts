@@ -277,8 +277,21 @@ export function evaluateAllFormulas(
 
 type FieldValues = Record<string, number | string | boolean>;
 
-function evalRule(rule: VisibilityRule, values: FieldValues): boolean {
-  const rawVal = values[rule.fieldId];
+/**
+ * Строит маппинг fieldId → fieldKey из массива полей.
+ * Нужен потому что VisibilityRule.fieldId хранит UUID поля,
+ * а values индексированы по field.key.
+ */
+function buildIdToKeyMap(fields: CalcField[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const f of fields) map[f.id] = f.key;
+  return map;
+}
+
+function evalRule(rule: VisibilityRule, values: FieldValues, idToKey: Record<string, string>): boolean {
+  // rule.fieldId может быть как UUID (из builder), так и key (legacy)
+  const key = idToKey[rule.fieldId] ?? rule.fieldId;
+  const rawVal = values[key];
 
   switch (rule.operator) {
     case "checked":     return rawVal === true || rawVal === 1 || rawVal === "true";
@@ -319,11 +332,13 @@ function evalRule(rule: VisibilityRule, values: FieldValues): boolean {
  */
 export function resolveVisibility(
   visibility: VisibilityConfig | null | undefined,
-  values: FieldValues
+  values: FieldValues,
+  allFields?: CalcField[]
 ): boolean {
   if (!visibility || !visibility.rules || visibility.rules.length === 0) return true;
 
-  const results = visibility.rules.map((rule) => evalRule(rule, values));
+  const idToKey = allFields ? buildIdToKeyMap(allFields) : {};
+  const results = visibility.rules.map((rule) => evalRule(rule, values, idToKey));
 
   return visibility.logic === "OR"
     ? results.some(Boolean)
@@ -340,9 +355,10 @@ export function getVisibleFieldKeys(
   fields: CalcField[],
   values: FieldValues
 ): Set<string> {
+  const idToKey = buildIdToKeyMap(fields);
   const visible = new Set<string>();
   for (const field of fields) {
-    if (resolveVisibility(field.visibility, values)) {
+    if (resolveVisibility(field.visibility, values, fields)) {
       visible.add(field.key);
     }
   }

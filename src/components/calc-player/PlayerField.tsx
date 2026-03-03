@@ -18,7 +18,7 @@ interface PlayerFieldProps {
 }
 
 export function PlayerField({ field, allFields, values, onChange }: PlayerFieldProps) {
-  const visible = resolveVisibility(field.visibility, values);
+  const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
 
   if (field.type === "result") {
