@@ -15,6 +15,7 @@ import { FormulaEditor } from "./FormulaEditor";
 import {
   GripVertical, Trash2, ChevronDown, ChevronUp,
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator, Plus, X,
+  Columns2, Square,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
