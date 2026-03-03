@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { HeroDashboardIllustration } from "./HeroDashboardIllustration";
 import { HeroBudgetIllustration } from "./HeroBudgetIllustration";
+import { HeroOrbitalIllustration } from "./HeroOrbitalIllustration";
 import type { HeroIllustrationProps } from "./types";
 
+const VARIANTS = [HeroDashboardIllustration, HeroBudgetIllustration, HeroOrbitalIllustration];
+
 export function HeroIllustration(props: HeroIllustrationProps) {
-  const [isDashboard] = useState(() => Math.random() < 0.5);
-  return isDashboard
-    ? <HeroDashboardIllustration {...props} />
-    : <HeroBudgetIllustration {...props} />;
+  const [idx] = useState(() => Math.floor(Math.random() * VARIANTS.length));
+  const Component = VARIANTS[idx];
+  return <Component {...props} />;
 }
