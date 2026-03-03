@@ -7,7 +7,7 @@ import type { HeroIllustrationProps } from "./types";
 const VARIANTS = [HeroDashboardIllustration, HeroBudgetIllustration, HeroCalc3dIllustration];
 
 export function HeroIllustration(props: HeroIllustrationProps) {
-  const [idx] = useState(() => 2); // temp: force Calc3d
+  const [idx] = useState(() => Math.floor(Math.random() * VARIANTS.length));
   const Component = VARIANTS[idx];
   return <Component {...props} />;
 }
