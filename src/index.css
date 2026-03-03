@@ -70,6 +70,8 @@
 
     --section-bg: 210 20% 96%;
     --stripe-bg: 210 15% 97%;
+    --notebook-page: 210 20% 97%;
+    --notebook-stack: 210 15% 90%;
   }
 
   .dark {
@@ -117,6 +119,8 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
     --section-bg: 220 18% 10%;
     --stripe-bg: 220 15% 14%;
+    --notebook-page: 220 15% 32%;
+    --notebook-stack: 220 12% 26%;
 
     --shadow-color: 220 40% 3%;
     --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.2);

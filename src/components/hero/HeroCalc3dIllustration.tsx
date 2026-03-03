@@ -107,9 +107,9 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
               key={offset}
               className="absolute inset-0 rounded-r-xl rounded-l-md"
               style={{
-                background: "hsl(var(--card))",
+                background: "hsl(var(--notebook-stack))",
                 transform: `translateX(${offset}px) translateY(${offset}px)`,
-                border: "1px solid hsl(var(--border))",
+                border: "1px solid hsl(var(--border-strong))",
               }}
             />
           ))}
@@ -117,9 +117,9 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
           <div
             className="absolute inset-0 rounded-r-xl rounded-l-md overflow-hidden"
             style={{
-              background: "hsl(var(--background))",
-              border: "1.5px solid hsl(var(--border))",
-              boxShadow: "0 8px 24px hsl(var(--foreground) / 0.08)",
+              background: "hsl(var(--notebook-page))",
+              border: "1.5px solid hsl(var(--border-strong))",
+              boxShadow: "0 8px 28px hsl(var(--foreground) / 0.15), inset 0 1px 0 hsl(var(--foreground) / 0.05)",
             }}
           >
             {NOTEBOOK_LINES.map((top) => (
