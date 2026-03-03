@@ -225,7 +225,6 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
     onChange({ ...calculator, fields: newFields.map((f, i) => ({ ...f, orderIndex: i })) });
 
   const addField = (type: CalcFieldType) => {
-    console.log("[BuilderCanvas] addField called", type);
     const newField = createField(type, fields.length);
     setFields([...fields, newField]);
   };
