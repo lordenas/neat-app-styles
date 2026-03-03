@@ -146,12 +146,11 @@ export function PlayerField({ field, allFields, values, onChange }: PlayerFieldP
           )}
         </div>
       );
-    }
   }
 
   return (
     <div className="space-y-2">
-      {field.type !== "checkbox" && label}
+      {label}
       {control}
       {field.config.hint && (
         <p className="text-xs text-muted-foreground">{field.config.hint}</p>
