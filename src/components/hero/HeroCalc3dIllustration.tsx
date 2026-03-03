@@ -86,9 +86,9 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
         <div
           className="absolute"
           style={{
-            width: 200, height: 240,
-            top: 40, left: 170,
-            transform: "rotateZ(8deg) rotateY(-12deg)",
+            width: 190, height: 230,
+            top: 55, left: 190,
+            transform: "rotateZ(6deg) rotateY(-10deg)",
             transformStyle: "preserve-3d",
             zIndex: 1,
           }}
@@ -98,7 +98,6 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
             className="absolute inset-y-0 left-0 w-3 rounded-l-md"
             style={{
               background: "hsl(var(--primary))",
-              transform: "translateZ(-4px)",
               boxShadow: "inset -2px 0 6px hsl(var(--primary) / 0.4)",
             }}
           />
@@ -123,29 +122,21 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
               boxShadow: "0 8px 24px hsl(var(--foreground) / 0.08)",
             }}
           >
-            {/* Lines */}
             {NOTEBOOK_LINES.map((top) => (
               <div
                 key={top}
                 className="absolute left-8 right-4"
-                style={{
-                  top,
-                  height: 1.5,
-                  background: "hsl(var(--border) / 0.6)",
-                  borderRadius: 1,
-                }}
+                style={{ top, height: 1.5, background: "hsl(var(--border) / 0.6)", borderRadius: 1 }}
               />
             ))}
-            {/* Margin line */}
             <div className="absolute inset-y-0 left-7 w-px" style={{ background: "hsl(var(--destructive) / 0.25)" }} />
-            {/* Checkmark */}
             <svg className="absolute bottom-5 right-5 opacity-60" width={28} height={28} viewBox="0 0 28 28" fill="none">
               <circle cx={14} cy={14} r={12} stroke="hsl(var(--success))" strokeWidth={2} />
               <path d="M8 14 l4 4 l8-8" stroke="hsl(var(--success))" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
           {/* Spiral rings */}
-          {[32, 64, 96, 128, 160].map((top) => (
+          {[28, 58, 88, 118, 148].map((top) => (
             <div
               key={top}
               className="absolute"
@@ -160,38 +151,48 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
           ))}
         </div>
 
-        {/* ── PENCIL ── */}
+        {/* ── PENCIL — diagonal across the top, fully visible ── */}
         <div
           className="absolute"
           style={{
-            width: 14, height: 160,
-            top: -10, left: 230,
-            transform: "rotateZ(-30deg) rotateY(-8deg)",
-            transformStyle: "preserve-3d",
-            zIndex: 5,
+            width: 14, height: 180,
+            /* position the CENTER of the pencil at top-right area */
+            top: 20, left: 285,
+            transform: "rotateZ(-42deg)",
+            transformOrigin: "50% 50%",
+            zIndex: 6,
           }}
         >
-          {/* Eraser */}
-          <div className="absolute top-0 left-0 right-0 h-10 rounded-t-full" style={{ background: "hsl(var(--destructive) / 0.7)" }} />
+          {/* Eraser (top) */}
+          <div className="absolute top-0 left-0 right-0 h-8 rounded-t-full" style={{ background: "hsl(var(--destructive) / 0.65)" }} />
           {/* Metal band */}
-          <div className="absolute top-10 left-0 right-0 h-4" style={{ background: "hsl(var(--muted-foreground) / 0.4)" }} />
+          <div className="absolute top-8 left-0 right-0 h-4" style={{ background: "hsl(var(--muted-foreground) / 0.45)" }} />
           {/* Body */}
           <div
             className="absolute left-0 right-0"
             style={{
-              top: 14, bottom: 10,
-              background: "linear-gradient(90deg, hsl(var(--success) / 0.9), hsl(var(--success)), hsl(var(--success) / 0.75))",
-              boxShadow: "2px 0 8px hsl(var(--success) / 0.3)",
+              top: 12, bottom: 18,
+              background: "linear-gradient(90deg, hsl(var(--success) / 0.85), hsl(var(--success)), hsl(var(--success) / 0.7))",
+              boxShadow: "2px 0 8px hsl(var(--success) / 0.25)",
             }}
           />
-          {/* Tip */}
+          {/* Wood cone */}
           <div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2"
+            className="absolute"
             style={{
-              width: 0, height: 0,
-              borderLeft: "7px solid transparent",
-              borderRight: "7px solid transparent",
-              borderTop: "10px solid hsl(var(--warning))",
+              bottom: 8, left: 0, right: 0, height: 18,
+              background: "linear-gradient(90deg, hsl(var(--warning) / 0.9), hsl(var(--warning) / 0.7))",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+            }}
+          />
+          {/* Graphite tip */}
+          <div
+            className="absolute bottom-0 left-1/2"
+            style={{
+              transform: "translateX(-50%)",
+              width: 4, height: 8,
+              background: "hsl(var(--foreground) / 0.6)",
+              borderRadius: "0 0 2px 2px",
             }}
           />
         </div>
