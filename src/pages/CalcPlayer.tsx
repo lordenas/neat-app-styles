@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CustomCalculator, getCalculatorBySlug } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
+import { groupByRow } from "@/components/calc-builder/BuilderCanvas";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
