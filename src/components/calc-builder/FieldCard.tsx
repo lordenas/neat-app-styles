@@ -15,7 +15,6 @@ import { FormulaEditor } from "./FormulaEditor";
 import {
   GripVertical, Trash2, ChevronDown, ChevronUp,
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator, Plus, X,
-  Columns2, Square,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -57,7 +56,6 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
   const otherFields = allFields.filter((f) => f.id !== field.id);
   const hasConditions = (field.visibility?.rules?.length ?? 0) > 0;
 
-  // Options editor for select/radio
   const options = field.config.options ?? [];
   const addOption = () =>
     updConfig({ options: [...options, { label: `Вариант ${options.length + 1}`, value: `opt${options.length + 1}` }] });
@@ -76,7 +74,7 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
         {/* Drag handle */}
         <div
           {...dragHandleProps}
-          className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors"
+          className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors touch-none"
         >
           <GripVertical className="h-4 w-4" />
         </div>
@@ -100,17 +98,6 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          <Button
-            variant="ghost" size="icon"
-            className="h-7 w-7 text-muted-foreground hover:text-foreground"
-            title={field.colSpan === 1 ? "Растянуть на всю ширину" : "Сузить до полуширины"}
-            onClick={() => upd({ colSpan: field.colSpan === 1 ? 2 : 1 })}
-          >
-            {field.colSpan === 1
-              ? <Square className="h-3.5 w-3.5" />
-              : <Columns2 className="h-3.5 w-3.5" />
-            }
-          </Button>
           <Button
             variant="ghost" size="icon"
             className="h-7 w-7 text-muted-foreground hover:text-destructive"

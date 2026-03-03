@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CustomCalculator } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
-import { cn } from "@/lib/utils";
+import { groupByRow } from "./BuilderCanvas";
 
 interface BuilderPreviewProps {
   calculator: CustomCalculator;
@@ -10,7 +10,6 @@ interface BuilderPreviewProps {
 export function BuilderPreview({ calculator }: BuilderPreviewProps) {
   const [values, setValues] = useState<Record<string, number | string | boolean>>({});
 
-  // Initialize defaults
   useEffect(() => {
     const defaults: Record<string, number | string | boolean> = {};
     for (const field of calculator.fields) {
@@ -36,6 +35,7 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
     setValues((prev) => ({ ...prev, [key]: value }));
 
   const sorted = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
+  const rows = groupByRow(sorted);
 
   return (
     <div>
@@ -44,18 +44,22 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
           Добавьте поля в калькулятор
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
-          {sorted.map((field) => (
+        <div className="space-y-4">
+          {rows.map((rowFields) => (
             <div
-              key={field.id}
-              className={cn(field.colSpan === 1 ? "col-span-1" : "col-span-2")}
+              key={rowFields[0].rowId ?? rowFields[0].id}
+              className="grid gap-4"
+              style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
             >
-              <PlayerField
-                field={field}
-                allFields={sorted}
-                values={values}
-                onChange={onChange}
-              />
+              {rowFields.map((field) => (
+                <PlayerField
+                  key={field.id}
+                  field={field}
+                  allFields={sorted}
+                  values={values}
+                  onChange={onChange}
+                />
+              ))}
             </div>
           ))}
         </div>
