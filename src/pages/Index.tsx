@@ -124,10 +124,8 @@ function useCountUp(target: number, decimals = 0, duration = 1800) {
 }
 
 
-// ─── Hero sub-components ────────────────────────────────────────────────────
 
-const CALC_CYCLES = [
-  { label: "НДС 20%", base: "1 200 000 ₽", result: "240 000 ₽", color: "hsl(var(--primary))" },
+
   { label: "Ипотека", base: "5 000 000 ₽", result: "42 380 ₽/мес", color: "hsl(var(--success))" },
   { label: "НДФЛ 13%", base: "850 000 ₽", result: "110 500 ₽", color: "hsl(var(--warning))" },
   { label: "Пени", base: "300 000 ₽", result: "8 250 ₽", color: "hsl(var(--destructive))" },
