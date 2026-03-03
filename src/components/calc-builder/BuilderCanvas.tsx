@@ -163,7 +163,7 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }:
     : { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} data-field-id={field.id}>
       <FieldCardWrapper
         field={field}
         allFields={allFields}
