@@ -101,25 +101,25 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
               boxShadow: "inset -2px 0 6px hsl(var(--primary) / 0.4)",
             }}
           />
-          {/* Pages stack — явный светлый цвет для тёмной темы */}
+          {/* Pages stack — достаточно светлые даже в dark mode */}
           {[6, 4, 2].map((offset) => (
             <div
               key={offset}
               className="absolute inset-0 rounded-r-xl rounded-l-md"
               style={{
-                background: "hsl(var(--muted))",
+                background: "hsl(var(--secondary))",
                 transform: `translateX(${offset}px) translateY(${offset}px)`,
                 border: "1px solid hsl(var(--border-strong))",
               }}
             />
           ))}
-          {/* Top page — заметно светлее фона */}
+          {/* Top page — явно светлее secondary */}
           <div
             className="absolute inset-0 rounded-r-xl rounded-l-md overflow-hidden"
             style={{
-              background: "hsl(var(--elevated))",
+              background: "hsl(var(--card))",
               border: "1.5px solid hsl(var(--border-strong))",
-              boxShadow: "0 8px 24px hsl(var(--foreground) / 0.12), inset 0 1px 0 hsl(var(--background) / 0.5)",
+              boxShadow: "0 8px 28px hsl(var(--foreground) / 0.18), inset 0 1px 0 hsl(var(--foreground) / 0.06)",
             }}
           >
             {NOTEBOOK_LINES.map((top) => (
