@@ -282,65 +282,44 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
         side = dy < 0 ? "above" : "below";
       }
 
+      // For above/below: store rowId so the entire row can show the indicator
+      if (side === "above" || side === "below") {
+        const overField = fields.find((f) => f.id === String(over.id));
+        const rowId = overField ? (overField.rowId ?? overField.id) : String(over.id);
+        return { id: String(over.id), side, rowId };
+      }
       return { id: String(over.id), side };
     },
     [fields]
   );
-
-  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(active.id);
-
-  const handleDragMove = (event: DragMoveEvent) => {
-    setDropTarget(computeDropTarget(event));
-  };
-
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    setActiveId(null);
-    setDropTarget(null);
-    if (!over || !dropTarget || active.id === over.id) return;
-    setFields(applyDrop(fields, String(active.id), String(over.id), dropTarget.side));
-  };
-
-  const handleDragCancel = () => { setActiveId(null); setDropTarget(null); };
-
-  const activeField = activeId ? fields.find((f) => f.id === activeId) : null;
-  const rows = groupByRow(fields);
-
-  return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragMove={handleDragMove}
-      onDragEnd={handleDragEnd}
-      onDragCancel={handleDragCancel}
-    >
-      <div className="space-y-2">
-        {fields.length === 0 ? (
-          <div className="border-2 border-dashed rounded-xl p-10 text-center text-muted-foreground">
-            <p className="text-sm font-medium mb-1">Калькулятор пуст</p>
-            <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
-          </div>
-        ) : (
-          <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
-            <div className="space-y-2">
-              {rows.map((rowFields) => (
-                <div
-                  key={rowFields[0].rowId ?? rowFields[0].id}
-                  className="grid gap-2"
-                  style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
-                >
-                  {rowFields.map((field) => (
-                    <SortableFieldItem
-                      key={field.id}
-                      field={field}
-                      allFields={fields}
-                      dropTarget={dropTarget}
-                      onUpdate={(updated) => updateField(field.id, updated)}
-                      onDelete={() => deleteField(field.id)}
-                    />
-                  ))}
-                </div>
-              ))}
+...
+              {rows.map((rowFields) => {
+                const rowId = rowFields[0].rowId ?? rowFields[0].id;
+                const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
+                const isRowBelow = dropTarget?.rowId === rowId && dropTarget?.side === "below";
+                return (
+                  <div
+                    key={rowId}
+                    className={cn(
+                      "relative grid gap-2",
+                      isRowAbove && "before:absolute before:-top-1.5 before:inset-x-0 before:h-0.5 before:bg-primary before:rounded-full before:z-10",
+                      isRowBelow && "after:absolute after:-bottom-1.5 after:inset-x-0 after:h-0.5 after:bg-primary after:rounded-full after:z-10",
+                    )}
+                    style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
+                  >
+                    {rowFields.map((field) => (
+                      <SortableFieldItem
+                        key={field.id}
+                        field={field}
+                        allFields={fields}
+                        dropTarget={dropTarget}
+                        onUpdate={(updated) => updateField(field.id, updated)}
+                        onDelete={() => deleteField(field.id)}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </SortableContext>
         )}
