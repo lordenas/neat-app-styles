@@ -112,18 +112,22 @@ export default function CalcPlayer() {
           </div>
 
           {/* Fields */}
-          <div className="grid grid-cols-2 gap-5">
-            {sorted.map((field) => (
+          <div className="space-y-5">
+            {groupByRow(sorted).map((rowFields) => (
               <div
-                key={field.id}
-                className={field.colSpan === 1 ? "col-span-1" : "col-span-2"}
+                key={rowFields[0].rowId ?? rowFields[0].id}
+                className="grid gap-5"
+                style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
               >
-                <PlayerField
-                  field={field}
-                  allFields={sorted}
-                  values={values}
-                  onChange={onChange}
-                />
+                {rowFields.map((field) => (
+                  <PlayerField
+                    key={field.id}
+                    field={field}
+                    allFields={sorted}
+                    values={values}
+                    onChange={onChange}
+                  />
+                ))}
               </div>
             ))}
           </div>
