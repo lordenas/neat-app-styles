@@ -1,33 +1,73 @@
 
-## Проблема
+## Plan: UX/UI Improvements for /gk395 Calculator
 
-**Две баги в `ConditionEditor.tsx`:**
+### Current Issues
+1. **Title** is inside the two-column grid (confined to left 1/3 column) — needs to move to the `title` prop of `CalculatorLayout` so it spans full width.
+2. **Partial payments / debt increases** inputs are raw `<Input type="date">` and a plain number input with no labels — confusing.
+3. **Excluded periods** feature exists in the data model (`ExcludedPeriod[]`) but is completely absent from the UI.
+4. **Results table** only shows period rows, not payment/debt-increase events — the full breakdown is filtered.
+5. **No empty state** for breakdown — when result is null, only a small text is shown.
+6. **Stats cards** are plain divs, could use the existing `StatsCard` pattern with better contrast.
+7. **Layout** uses inline `lg:col-span-3` grid inside the layout that already has a right sidebar — this creates a 3-column-inside-2-column which is cramped.
+8. **Collapsible sections** for optional features (partial payments, debt increases, excluded periods) would clean up the form.
 
-1. **Строка 99**: `relevantOps` для чекбокса = `CHECKBOX_OPS = ["checked", "not_checked"]` — это массив строк, а не объектов `{ value, label, hint }`. В рендере (строки 138–143) код обращается к `op.value`, `op.label`, `op.hint` — для строк это `undefined`, отсюда пустые SelectItem без текста.
+### Plan
 
-2. **Строка 111**: при выборе поля-источника оператор всегда сбрасывается в `"gt"` — даже если выбранное поле является чекбоксом. В итоге текущий оператор `"gt"` не входит в `relevantOps` для чекбокса → Select не находит совпадения.
+#### 1. Move title to `CalculatorLayout` `title` prop (same pattern as CreditEarlyRepayment)
 
-## Исправления
+#### 2. Refactor the form panel
+- **Main fields**: Sum + Period dates — keep at top, clearly labeled
+- **Optional sections** wrapped in `<Collapsible>` with chevron toggle:
+  - "Частичные оплаты" (collapsed by default)
+  - "Увеличение долга" (collapsed by default)  
+  - "Исключённые периоды" (collapsed by default, currently missing from UI entirely)
+- Each entry row: add placeholder labels above date/amount columns for the first row
+- Remove button: icon only (Trash2), consistent
 
-**Файл: `src/components/calc-builder/ConditionEditor.tsx`**
+#### 3. Improve results display
+- Replace plain colored divs with properly styled stat cards using `bg-primary/5` / `bg-amber-500/10` / `bg-green-500/10` scheme
+- Show total days count as a 4th stat card
+- **Breakdown table**: use `<Table>` component (already imported elsewhere) with proper columns:
+  - Период | Сумма долга | Дней | Ставка ЦБ | Формула | Проценты
+  - Payment/debt-increase rows styled differently (muted, with badge)
+  - Excluded rows shown with strikethrough / opacity
+- Add copy-to-clipboard button on the result
 
-1. Строка 99 — фильтровать из полного массива `OPERATORS`, а не использовать `CHECKBOX_OPS` как строки:
-```ts
-// было:
-const relevantOps = isCheckboxField ? CHECKBOX_OPS : OPERATORS.filter(...)
-// стало:
-const relevantOps = isCheckboxField
-  ? OPERATORS.filter(o => CHECKBOX_OPS.includes(o.value))
-  : OPERATORS.filter(o => !CHECKBOX_OPS.includes(o.value))
+#### 4. "О расчёте" section
+- Keep it but make it a proper accordion or collapsible to save space
+
+#### 5. No structural changes to `CalculatorLayout` needed — just use the existing `title` prop
+
+### Files to Edit
+- `src/pages/calculators/Gk395Calculator.tsx` — full refactor
+
+---
+
+## Global UI Rules
+
+### Calculator heading rule
+**Always** use the `title` prop of `CalculatorLayout` for the page heading and description.
+Never place the `<h1>` and description `<p>` inside `children` — they must go into the `title` prop so they render full-width above the sidebar grid.
+
+```tsx
+// ✅ Correct
+<CalculatorLayout
+  calculatorId="my-calc"
+  title={
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Заголовок</h1>
+      <p className="text-muted-foreground mt-1">Описание</p>
+    </div>
+  }
+>
+  {/* no h1 here */}
+</CalculatorLayout>
+
+// ❌ Wrong — h1 inside children gets stuck in the narrow left column
+<CalculatorLayout calculatorId="my-calc">
+  <div>
+    <h1>Заголовок</h1>
+    ...
+  </div>
+</CalculatorLayout>
 ```
-
-2. Строка 111 — при выборе поля-источника определить дефолтный оператор в зависимости от типа поля:
-```ts
-onValueChange={(v) => {
-  const selectedField = otherFields.find(f => f.id === v);
-  const defaultOp = selectedField?.type === "checkbox" ? "checked" : "gt";
-  updateRule(i, { fieldId: v, operator: defaultOp, value: "" });
-}}
-```
-
-Итого: 2 строки правок, файл один.

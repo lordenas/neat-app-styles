@@ -96,7 +96,9 @@ export function ConditionEditor({ visibility, onChange, otherFields }: Condition
           {config.rules.map((rule, i) => {
             const srcField = getFieldById(rule.fieldId);
             const isCheckboxField = srcField?.type === "checkbox";
-            const relevantOps = isCheckboxField ? CHECKBOX_OPS : OPERATORS.filter((o) => !CHECKBOX_OPS.includes(o.value));
+            const relevantOps = isCheckboxField
+              ? OPERATORS.filter((o) => CHECKBOX_OPS.includes(o.value))
+              : OPERATORS.filter((o) => !CHECKBOX_OPS.includes(o.value));
 
             return (
               <div key={i} className="flex gap-2 items-start">
@@ -108,7 +110,11 @@ export function ConditionEditor({ visibility, onChange, otherFields }: Condition
                 {/* Source field */}
                 <Select
                   value={rule.fieldId}
-                  onValueChange={(v) => updateRule(i, { fieldId: v, operator: "gt", value: "" })}
+                  onValueChange={(v) => {
+                    const selectedField = otherFields.find((f) => f.id === v);
+                    const defaultOp = selectedField?.type === "checkbox" ? "checked" : "gt";
+                    updateRule(i, { fieldId: v, operator: defaultOp, value: "" });
+                  }}
                 >
                   <SelectTrigger className="h-8 text-xs flex-1 min-w-0">
                     <SelectValue placeholder="Поле..." />
