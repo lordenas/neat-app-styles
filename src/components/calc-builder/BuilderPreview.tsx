@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CustomCalculator } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
-import { getVisibleFieldKeys } from "@/lib/calc-engine";
+import { cn } from "@/lib/utils";
 
 interface BuilderPreviewProps {
   calculator: CustomCalculator;
@@ -38,21 +38,27 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
   const sorted = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
 
   return (
-    <div className="space-y-4">
+    <div>
       {sorted.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground text-sm">
           Добавьте поля в калькулятор
         </div>
       ) : (
-        sorted.map((field) => (
-          <PlayerField
-            key={field.id}
-            field={field}
-            allFields={sorted}
-            values={values}
-            onChange={onChange}
-          />
-        ))
+        <div className="grid grid-cols-2 gap-4">
+          {sorted.map((field) => (
+            <div
+              key={field.id}
+              className={cn(field.colSpan === 1 ? "col-span-1" : "col-span-2")}
+            >
+              <PlayerField
+                field={field}
+                allFields={sorted}
+                values={values}
+                onChange={onChange}
+              />
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

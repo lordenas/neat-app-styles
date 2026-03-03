@@ -195,6 +195,11 @@ export interface CalcField {
   key: string;
   /** Позиция в списке (0-based) */
   orderIndex: number;
+  /**
+   * Ширина поля в сетке (2 колонки).
+   * 1 = пол-ширины, 2 = вся строка (default).
+   */
+  colSpan?: 1 | 2;
   /** Конфигурация поля */
   config: CalcFieldConfig;
   /**
