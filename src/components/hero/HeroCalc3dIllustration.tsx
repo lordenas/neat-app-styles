@@ -86,8 +86,8 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
         <div
           className="absolute"
           style={{
-            width: 175, height: 220,
-            top: 50, left: 215,
+            width: 160, height: 220,
+            top: 50, left: 238,
             transform: "rotateZ(5deg) rotateY(-8deg)",
             transformStyle: "preserve-3d",
             zIndex: 1,
