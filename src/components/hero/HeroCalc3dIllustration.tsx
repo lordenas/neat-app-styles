@@ -151,7 +151,7 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
           ))}
         </div>
 
-        {/* ── PENCIL — diagonal across the top, fully visible ── */}
+        {/* ── PENCIL ── */}
         <div
           className="absolute"
           style={{
@@ -163,35 +163,36 @@ export function HeroCalc3dIllustration({ parallax }: HeroIllustrationProps) {
           }}
         >
           {/* Eraser (top) */}
-          <div className="absolute top-0 left-0 right-0 h-8 rounded-t-full" style={{ background: "hsl(var(--destructive) / 0.65)" }} />
+          <div className="absolute top-0 left-0 right-0 h-8 rounded-t-full" style={{ background: "hsl(var(--destructive))" }} />
           {/* Metal band */}
-          <div className="absolute top-8 left-0 right-0 h-4" style={{ background: "hsl(var(--muted-foreground) / 0.45)" }} />
+          <div className="absolute top-8 left-0 right-0 h-3" style={{ background: "hsl(var(--muted-foreground))", opacity: 0.7 }} />
           {/* Body */}
           <div
             className="absolute left-0 right-0"
             style={{
-              top: 12, bottom: 18,
-              background: "linear-gradient(90deg, hsl(var(--success) / 0.85), hsl(var(--success)), hsl(var(--success) / 0.7))",
-              boxShadow: "2px 0 8px hsl(var(--success) / 0.25)",
+              top: 11, bottom: 24,
+              background: "linear-gradient(90deg, hsl(160 60% 38%), hsl(var(--success)), hsl(160 60% 44%))",
+              boxShadow: "2px 0 8px hsl(var(--success) / 0.3)",
             }}
           />
-          {/* Wood cone */}
+          {/* Wood cone — sharpened tip, flush to bottom */}
           <div
-            className="absolute"
+            className="absolute left-0 right-0"
             style={{
-              bottom: 8, left: 0, right: 0, height: 18,
-              background: "linear-gradient(90deg, hsl(var(--warning) / 0.9), hsl(var(--warning) / 0.7))",
+              bottom: 6, height: 20,
+              background: "linear-gradient(90deg, hsl(35 80% 55%), hsl(38 85% 62%))",
               clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             }}
           />
-          {/* Graphite tip */}
+          {/* Graphite tip — very thin point */}
           <div
-            className="absolute bottom-0 left-1/2"
+            className="absolute"
             style={{
+              bottom: 0, left: "50%",
               transform: "translateX(-50%)",
-              width: 4, height: 8,
-              background: "hsl(var(--foreground) / 0.6)",
-              borderRadius: "0 0 2px 2px",
+              width: 3, height: 6,
+              background: "hsl(220 10% 25%)",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             }}
           />
         </div>
