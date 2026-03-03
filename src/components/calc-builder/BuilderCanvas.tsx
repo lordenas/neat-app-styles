@@ -63,8 +63,9 @@ export function groupByRow(sorted: CalcField[]): CalcField[][] {
 type DropSide = "left" | "right" | "above" | "below";
 
 interface DropTarget {
-  id: string;
+  id: string;       // field id (for left/right) or rowId (for above/below)
   side: DropSide;
+  rowId?: string;   // always set for above/below
 }
 
 /** Applies a drop operation and returns new fields array. */
