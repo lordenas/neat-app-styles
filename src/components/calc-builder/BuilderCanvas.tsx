@@ -295,8 +295,50 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
     },
     [fields]
   );
-...
+
+  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(active.id);
+  const handleDragMove = (event: DragMoveEvent) => setDropTarget(computeDropTarget(event));
+  const handleDragEnd = ({ active }: DragEndEvent) => {
+    const pending = dropTarget;
+    setActiveId(null);
+    setDropTarget(null);
+    if (!pending || pending.id === String(active.id)) return;
+    setFields(applyDrop(fields, String(active.id), pending.id, pending.side));
+  };
+  const handleDragCancel = () => { setActiveId(null); setDropTarget(null); };
+
+  const activeField = activeId ? fields.find((f) => f.id === activeId) : null;
+  const rows = groupByRow(fields);
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragMove={handleDragMove}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+    >
+      <div className="space-y-2">
+        {fields.length === 0 ? (
+          <div className="border-2 border-dashed rounded-xl p-10 text-center text-muted-foreground">
+            <p className="text-sm font-medium mb-1">Калькулятор пуст</p>
+            <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
+          </div>
+        ) : (
+          <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
+            <div className="space-y-3">
+              {rows.map((rowFields) => {
+                const rowId = rowFields[0].rowId ?? rowFields[0].id;
+                const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
+                const isRowBelow = dropTarget?.rowId === rowId && dropTarget?.side === "below";
+                return (
+                  <div
+                    key={rowId}
+                    className={cn(
                       "relative grid gap-2",
+                      isRowAbove && "before:absolute before:-top-2 before:inset-x-0 before:h-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
+                      isRowBelow && "after:absolute after:-bottom-2 after:inset-x-0 after:h-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
                       isRowAbove && "before:absolute before:-top-2 before:inset-x-0 before:h-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
                       isRowBelow && "after:absolute after:-bottom-2 after:inset-x-0 after:h-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_6px_2px_hsl(var(--primary)/0.4)]",
                     )}
