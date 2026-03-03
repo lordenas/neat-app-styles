@@ -29,6 +29,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
 const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
+const CalcBuilder = lazy(() => import("./pages/CalcBuilder"));
+const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
