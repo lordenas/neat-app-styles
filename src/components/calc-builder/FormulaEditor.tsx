@@ -1,16 +1,13 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { CalcField } from "@/types/custom-calc";
 import { evaluateFormula } from "@/lib/calc-engine";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 interface FormulaEditorProps {
   value: string;
   onChange: (v: string) => void;
-  /** Все поля калькулятора для подстановки переменных */
   fields: CalcField[];
-  /** ID текущего поля (чтобы не включать его в список переменных) */
   currentFieldId?: string;
 }
 
@@ -29,19 +26,14 @@ const BUILTIN_FUNCTIONS = [
 export function FormulaEditor({ value, onChange, fields, currentFieldId }: FormulaEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Тестовые значения для валидации формулы
   const testValues: Record<string, number> = {};
   for (const f of fields) {
     if (f.type !== "result") testValues[f.key] = 100;
   }
 
-  const previewResult = value.trim()
-    ? evaluateFormula(value, testValues)
-    : null;
-
+  const previewResult = value.trim() ? evaluateFormula(value, testValues) : null;
   const isValid = previewResult !== null && !isNaN(previewResult);
 
-  // Вставить переменную в курсор
   const insertVariable = (key: string) => {
     const ta = textareaRef.current;
     if (!ta) return;
@@ -49,7 +41,6 @@ export function FormulaEditor({ value, onChange, fields, currentFieldId }: Formu
     const end = ta.selectionEnd;
     const newVal = value.slice(0, start) + `{${key}}` + value.slice(end);
     onChange(newVal);
-    // Восстановить фокус
     setTimeout(() => {
       ta.focus();
       const pos = start + key.length + 2;
@@ -63,7 +54,6 @@ export function FormulaEditor({ value, onChange, fields, currentFieldId }: Formu
     <div className="space-y-2">
       <Label className="text-xs text-muted-foreground">Формула</Label>
 
-      {/* Переменные */}
       {inputFields.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {inputFields.map((f) => (
@@ -80,40 +70,33 @@ export function FormulaEditor({ value, onChange, fields, currentFieldId }: Formu
         </div>
       )}
 
-      {/* Textarea */}
-      <div className="relative">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Например: {amount} * {rate} / 100"
-          className={cn(
-            "w-full min-h-[80px] font-mono text-sm resize-y rounded-md border bg-background px-3 py-2",
-            "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            value && !isValid && "border-destructive focus-visible:ring-destructive",
-            value && isValid && "border-green-500/50 focus-visible:ring-green-500/50"
-          )}
-          spellCheck={false}
-        />
-      </div>
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Например: {amount} * {rate} / 100"
+        className={cn(
+          "w-full min-h-[80px] font-mono text-sm resize-y rounded-md border bg-background px-3 py-2",
+          "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          value && !isValid && "border-destructive",
+          value && isValid && "border-green-500/50"
+        )}
+        spellCheck={false}
+      />
 
-      {/* Превью результата */}
       {value && (
         <div className={cn(
           "text-xs px-3 py-1.5 rounded-md",
-          isValid
-            ? "bg-green-500/10 text-green-700 dark:text-green-400"
-            : "bg-destructive/10 text-destructive"
+          isValid ? "bg-muted text-muted-foreground" : "bg-destructive/10 text-destructive"
         )}>
           {isValid
-            ? `✓ Тест (все переменные = 100): ${previewResult}`
+            ? `✓ Тест (все поля = 100): ${previewResult}`
             : "✗ Ошибка в формуле"}
         </div>
       )}
 
-      {/* Встроенные функции */}
       <details className="group">
-        <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground list-none flex items-center gap-1">
+        <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground list-none flex items-center gap-1 select-none">
           <span className="group-open:hidden">▶</span>
           <span className="group-open:block hidden">▼</span>
           Доступные функции

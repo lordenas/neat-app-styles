@@ -92,7 +92,7 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
             </span>
           )}
           {hasConditions && (
-            <Badge variant="outline" className="text-[10px] px-1.5 shrink-0 text-amber-600 border-amber-500/30">
+            <Badge variant="outline" className="text-[10px] px-1.5 shrink-0">
               условие
             </Badge>
           )}
@@ -128,7 +128,6 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
                 value={field.label}
                 onChange={(e) => {
                   const label = e.target.value;
-                  // Auto-generate key from label if key is default
                   const autoKey = field.key === slugify(field.label) || field.key === ""
                     ? slugify(label) : field.key;
                   upd({ label, key: autoKey });
@@ -235,7 +234,7 @@ export function FieldCard({ field, allFields, onChange, onDelete, dragHandleProp
                 <span>{condOpen ? "▼" : "▶"}</span>
                 <span>Условия отображения</span>
                 {hasConditions && (
-                  <Badge variant="outline" className="text-[10px] px-1.5 text-amber-600 border-amber-500/30 ml-auto">
+                  <Badge variant="outline" className="text-[10px] px-1.5 ml-auto">
                     {field.visibility!.rules.length} усл.
                   </Badge>
                 )}
