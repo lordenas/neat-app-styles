@@ -146,6 +146,7 @@ export function PlayerField({ field, allFields, values, onChange }: PlayerFieldP
           )}
         </div>
       );
+    }
   }
 
   return (
