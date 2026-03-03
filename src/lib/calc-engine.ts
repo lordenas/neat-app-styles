@@ -332,11 +332,13 @@ function evalRule(rule: VisibilityRule, values: FieldValues, idToKey: Record<str
  */
 export function resolveVisibility(
   visibility: VisibilityConfig | null | undefined,
-  values: FieldValues
+  values: FieldValues,
+  allFields?: CalcField[]
 ): boolean {
   if (!visibility || !visibility.rules || visibility.rules.length === 0) return true;
 
-  const results = visibility.rules.map((rule) => evalRule(rule, values));
+  const idToKey = allFields ? buildIdToKeyMap(allFields) : {};
+  const results = visibility.rules.map((rule) => evalRule(rule, values, idToKey));
 
   return visibility.logic === "OR"
     ? results.some(Boolean)
@@ -353,9 +355,10 @@ export function getVisibleFieldKeys(
   fields: CalcField[],
   values: FieldValues
 ): Set<string> {
+  const idToKey = buildIdToKeyMap(fields);
   const visible = new Set<string>();
   for (const field of fields) {
-    if (resolveVisibility(field.visibility, values)) {
+    if (resolveVisibility(field.visibility, values, fields)) {
       visible.add(field.key);
     }
   }
