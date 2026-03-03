@@ -157,7 +157,10 @@ interface SortableFieldItemProps {
 
 function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }: SortableFieldItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
-  const style = { transform: CSS.Transform.toString(transform), transition };
+  // When dragging, suppress the transform so the placeholder stays in place without stretching
+  const style = isDragging
+    ? { transition, opacity: 0.3 }
+    : { transform: CSS.Transform.toString(transform), transition };
 
   return (
     <div ref={setNodeRef} style={style}>
