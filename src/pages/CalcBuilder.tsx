@@ -213,7 +213,7 @@ export default function CalcBuilder() {
             </TabsList>
 
             {/* Mobile tabs only — desktop shows split */}
-            <div className="hidden md:grid md:grid-cols-2 gap-6 h-full">
+            <div className="hidden md:grid gap-6 h-full" style={{ gridTemplateColumns: "3fr 2fr" }}>
               {/* Builder */}
               <div className="space-y-4">
                 <div>
