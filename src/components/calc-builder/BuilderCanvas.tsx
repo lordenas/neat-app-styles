@@ -129,21 +129,11 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
       className={cn(
         "relative rounded-lg transition-all duration-100",
         isDragging && "opacity-30 scale-[0.98]",
-        isTarget && side === "left"  && "before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:bg-primary before:rounded-full before:z-10",
-        isTarget && side === "right" && "after:absolute after:inset-y-1 after:right-0 after:w-0.5 after:bg-primary after:rounded-full after:z-10",
-        isTarget && "ring-1 ring-primary/30 ring-inset",
+        isTarget && side === "left"  && "before:absolute before:inset-y-0 before:-left-1 before:w-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
+        isTarget && side === "right" && "after:absolute after:inset-y-0 after:-right-1 after:w-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
+        isTarget && "ring-2 ring-primary/50 ring-inset bg-primary/5",
       )}
     >
-      {isTarget && (
-        <div className={cn(
-          "absolute inset-y-0 w-1/3 z-20 flex items-center justify-center pointer-events-none",
-          side === "left" ? "left-0" : "right-0"
-        )}>
-          <div className="bg-primary/10 border border-primary/40 rounded text-primary text-[10px] px-1.5 py-0.5 font-medium whitespace-nowrap backdrop-blur-sm">
-            {side === "left" ? "← В строку" : "В строку →"}
-          </div>
-        </div>
-      )}
       <FieldCard
         field={field}
         allFields={allFields}
