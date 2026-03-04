@@ -34,9 +34,20 @@ function createField(type: CalcFieldType, order: number): CalcField {
     defaults.config = { options: [{ label: "Вариант 1", value: "opt1" }, { label: "Вариант 2", value: "opt2" }] };
   } else if (type === "result") {
     defaults.config = { format: "number", decimals: 2 };
+  } else if (type === "textarea") {
+    defaults.config = { rows: 3 };
+  } else if (type === "button") {
+    defaults.config = { buttonVariant: "default", buttonAction: { type: "calculate" } };
+  } else if (type === "label") {
+    defaults.config = { labelVariant: "body", labelContent: "" };
   }
+  const labelMap: Partial<Record<CalcFieldType, string>> = {
+    button: "Кнопка", label: "Текст",
+  };
   return {
-    id, type, label: "", key: `field_${id.slice(0, 6)}`,
+    id, type,
+    label: labelMap[type] ?? "",
+    key: `field_${id.slice(0, 6)}`,
     orderIndex: order, rowId: id,
     config: defaults.config ?? {},
     formula: type === "result" ? "" : undefined,
