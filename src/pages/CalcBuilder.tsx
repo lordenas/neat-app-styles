@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
-  Calculator, Globe, Lock, Layers,
+  Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
