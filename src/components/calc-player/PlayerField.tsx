@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PlayerResult } from "./PlayerResult";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import DOMPurify from "dompurify";
 
 interface PlayerFieldProps {
   field: CalcField;
