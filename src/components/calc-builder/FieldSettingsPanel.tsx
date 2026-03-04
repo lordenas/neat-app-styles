@@ -1,4 +1,5 @@
 import { CalcField, CalcFieldType, CalcPage, SelectOption, ButtonActionType, LabelVariant, WebhookPostAction } from "@/types/custom-calc";
+import { RichTextEditor } from "./RichTextEditor";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
