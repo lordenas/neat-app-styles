@@ -74,6 +74,7 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
                   allFields={sorted}
                   values={values}
                   onChange={onChange}
+                  onReset={handleReset}
                 />
               ))}
             </div>
