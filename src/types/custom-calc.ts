@@ -99,7 +99,8 @@ export type CalcFieldType =
   | "slider"    // Слайдер (min/max/step)
   | "result"    // Вычисляемое поле — только формула, нет ввода
   | "button"    // Кнопка с действием
-  | "label";    // Статический текст / заголовок
+  | "label"     // Статический текст / заголовок
+  | "image";    // Картинка (загружается пользователем, хранится в base64)
 
 /** Тип действия кнопки */
 export type ButtonActionType =
@@ -195,6 +196,17 @@ export interface CalcFieldConfig {
    * только по триггеру кнопки (calculate action).
    */
   manualCalculation?: boolean;
+  /**
+   * Для image: base64-строка или URL.
+   * Временное хранилище до интеграции с S3.
+   */
+  imageData?: string;
+  /** Для image: alt-текст / подпись */
+  imageAlt?: string;
+  /** Для image: выравнивание (left | center | right) */
+  imageAlign?: "left" | "center" | "right";
+  /** Для image: максимальная ширина в px (или auto) */
+  imageMaxWidth?: number;
 }
 
 // ─── Visibility System ───────────────────────────────────────

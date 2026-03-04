@@ -44,6 +44,26 @@ export function PlayerField({
     );
   }
 
+  // ── Image ─────────────────────────────────────────────────────
+  if (field.type === "image") {
+    const src = field.config.imageData;
+    const alt = field.config.imageAlt ?? field.label ?? "";
+    const align = field.config.imageAlign ?? "center";
+    const maxWidth = field.config.imageMaxWidth;
+    if (!src) return null;
+    return (
+      <div className={cn("py-1", align === "center" && "flex justify-center", align === "right" && "flex justify-end")}>
+        <img
+          src={src}
+          alt={alt}
+          style={maxWidth ? { maxWidth } : { maxWidth: "100%" }}
+          className="rounded-md object-contain"
+        />
+        {alt && <p className="text-xs text-muted-foreground mt-1 text-center">{alt}</p>}
+      </div>
+    );
+  }
+
   // ── Label / static text ──────────────────────────────────────
   if (field.type === "label") {
     const variant = field.config.labelVariant ?? "body";

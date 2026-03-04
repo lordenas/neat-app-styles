@@ -11,7 +11,7 @@ import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,12 +26,13 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   result:   <Calculator className="h-4 w-4" />,
   button:   <MousePointerClick className="h-4 w-4" />,
   label:    <TextQuote className="h-4 w-4" />,
+  image:    <ImageIcon className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
-  button: "Кнопка", label: "Текст",
+  button: "Кнопка", label: "Текст", image: "Картинка",
 };
 
 function slugify(s: string): string {
@@ -277,6 +278,10 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
           </div>
         )}
 
+        {field.type === "image" && (
+          <ImageSettings field={field} updConfig={updConfig} />
+        )}
+
         {field.type === "button" && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
@@ -512,4 +517,88 @@ function ButtonSettings({ field, allFields, pages, updConfig }: ButtonSettingsPr
     </div>
   );
 }
+// ─── ImageSettings sub-component ─────────────────────────────
 
+interface ImageSettingsProps {
+  field: CalcField;
+  updConfig: (partial: Partial<CalcField["config"]>) => void;
+}
+
+function ImageSettings({ field, updConfig }: ImageSettingsProps) {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => updConfig({ imageData: reader.result as string });
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки картинки</p>
+      <div className="space-y-2">
+        {/* Upload */}
+        <div className="space-y-1.5">
+          <Label className="text-xs">Файл изображения</Label>
+          {field.config.imageData ? (
+            <div className="space-y-2">
+              <div className="rounded-md border border-border overflow-hidden bg-muted/30 flex items-center justify-center" style={{ maxHeight: 120 }}>
+                <img src={field.config.imageData} alt="preview" className="max-h-[120px] object-contain" />
+              </div>
+              <button
+                className="text-xs text-destructive hover:underline"
+                onClick={() => updConfig({ imageData: undefined })}
+              >
+                Удалить изображение
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center gap-2 rounded-md border border-dashed border-border bg-muted/20 py-4 cursor-pointer hover:bg-muted/40 transition-colors">
+              <ImageIcon className="h-6 w-6 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Нажмите, чтобы выбрать файл</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            </label>
+          )}
+        </div>
+
+        {/* Alt / caption */}
+        <div className="space-y-1.5">
+          <Label className="text-xs">Alt-текст / подпись</Label>
+          <Input
+            inputSize="sm"
+            value={field.config.imageAlt ?? ""}
+            onChange={(e) => updConfig({ imageAlt: e.target.value })}
+            placeholder="Описание изображения"
+          />
+        </div>
+
+        {/* Max width */}
+        <div className="space-y-1.5">
+          <Label className="text-xs">Макс. ширина (px, 0 = авто)</Label>
+          <Input
+            inputSize="sm"
+            type="number"
+            value={field.config.imageMaxWidth ?? 0}
+            onChange={(e) => updConfig({ imageMaxWidth: Number(e.target.value) || undefined })}
+            placeholder="0"
+            min={0}
+          />
+        </div>
+
+        {/* Alignment */}
+        <div className="space-y-1.5">
+          <Label className="text-xs">Выравнивание</Label>
+          <select
+            className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+            value={field.config.imageAlign ?? "center"}
+            onChange={(e) => updConfig({ imageAlign: e.target.value as "left" | "center" | "right" })}
+          >
+            <option value="left">По левому краю</option>
+            <option value="center">По центру</option>
+            <option value="right">По правому краю</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+}
