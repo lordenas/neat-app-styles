@@ -4,22 +4,44 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Hash, Type, ChevronDown, ToggleLeft, SlidersHorizontal,
-  List, CircleDot, Calculator, PlusCircle,
+  List, CircleDot, Calculator, PlusCircle, AlignLeft,
+  MousePointerClick, TextQuote,
 } from "lucide-react";
 
-const FIELD_TYPES: { type: CalcFieldType; label: string; icon: React.ReactNode; description: string }[] = [
-  { type: "number",   label: "Число",       icon: <Hash className="h-4 w-4" />,             description: "Числовой ввод с min/max" },
-  { type: "text",     label: "Текст",        icon: <Type className="h-4 w-4" />,              description: "Текстовое поле" },
-  { type: "slider",   label: "Слайдер",      icon: <SlidersHorizontal className="h-4 w-4" />, description: "Ползунок с диапазоном" },
-  { type: "select",   label: "Список",       icon: <List className="h-4 w-4" />,              description: "Выпадающий список" },
-  { type: "radio",    label: "Радио",        icon: <CircleDot className="h-4 w-4" />,         description: "Выбор одного варианта" },
-  { type: "checkbox", label: "Чекбокс",      icon: <ToggleLeft className="h-4 w-4" />,        description: "Да / нет" },
-  { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
+const FIELD_TYPES_GROUPS: {
+  group: string;
+  items: { type: CalcFieldType; label: string; icon: React.ReactNode; description: string }[];
+}[] = [
+  {
+    group: "Ввод данных",
+    items: [
+      { type: "number",   label: "Число",        icon: <Hash className="h-4 w-4" />,              description: "Числовой ввод с min/max" },
+      { type: "text",     label: "Текст",         icon: <Type className="h-4 w-4" />,              description: "Однострочное текстовое поле" },
+      { type: "textarea", label: "Многострочный", icon: <AlignLeft className="h-4 w-4" />,         description: "Textarea для длинного текста" },
+      { type: "slider",   label: "Слайдер",       icon: <SlidersHorizontal className="h-4 w-4" />, description: "Ползунок с диапазоном" },
+      { type: "select",   label: "Список",        icon: <List className="h-4 w-4" />,              description: "Выпадающий список" },
+      { type: "radio",    label: "Радио",         icon: <CircleDot className="h-4 w-4" />,         description: "Выбор одного варианта" },
+      { type: "checkbox", label: "Чекбокс",       icon: <ToggleLeft className="h-4 w-4" />,        description: "Да / нет" },
+    ],
+  },
+  {
+    group: "Вывод и действия",
+    items: [
+      { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
+      { type: "button",   label: "Кнопка",       icon: <MousePointerClick className="h-4 w-4" />, description: "Кнопка с действием" },
+      { type: "label",    label: "Текст / заголовок", icon: <TextQuote className="h-4 w-4" />,    description: "Статический текст, разделитель" },
+    ],
+  },
 ];
+
+// Flat list for backward compatibility
+const FIELD_TYPES = FIELD_TYPES_GROUPS.flatMap((g) => g.items);
 
 interface FieldTypeMenuProps {
   onAdd: (type: CalcFieldType) => void;

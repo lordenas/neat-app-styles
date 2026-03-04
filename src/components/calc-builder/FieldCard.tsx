@@ -4,22 +4,27 @@ import { Button } from "@/components/ui/button";
 import {
   GripVertical,
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
+  MousePointerClick, AlignLeft, TextQuote,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-3.5 w-3.5" />,
   text:     <Type className="h-3.5 w-3.5" />,
+  textarea: <AlignLeft className="h-3.5 w-3.5" />,
   slider:   <SlidersHorizontal className="h-3.5 w-3.5" />,
   select:   <List className="h-3.5 w-3.5" />,
   radio:    <CircleDot className="h-3.5 w-3.5" />,
   checkbox: <ToggleLeft className="h-3.5 w-3.5" />,
   result:   <Calculator className="h-3.5 w-3.5" />,
+  button:   <MousePointerClick className="h-3.5 w-3.5" />,
+  label:    <TextQuote className="h-3.5 w-3.5" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
-  number: "Число", text: "Текст", slider: "Слайдер",
+  number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
+  button: "Кнопка", label: "Текст",
 };
 
 interface FieldCardProps {

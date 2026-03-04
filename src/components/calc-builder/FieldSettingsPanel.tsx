@@ -11,23 +11,28 @@ import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote,
 } from "lucide-react";
 import { useState } from "react";
+import { ButtonActionType, LabelVariant } from "@/types/custom-calc";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-4 w-4" />,
   text:     <Type className="h-4 w-4" />,
+  textarea: <AlignLeft className="h-4 w-4" />,
   slider:   <SlidersHorizontal className="h-4 w-4" />,
   select:   <List className="h-4 w-4" />,
   radio:    <CircleDot className="h-4 w-4" />,
   checkbox: <ToggleLeft className="h-4 w-4" />,
   result:   <Calculator className="h-4 w-4" />,
+  button:   <MousePointerClick className="h-4 w-4" />,
+  label:    <TextQuote className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
-  number: "Число", text: "Текст", slider: "Слайдер",
+  number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
+  button: "Кнопка", label: "Текст",
 };
 
 function slugify(s: string): string {
