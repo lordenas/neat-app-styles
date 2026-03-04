@@ -13,28 +13,24 @@ import { cn } from "@/lib/utils";
 
 // ── Slide animation helpers ──────────────────────────────────
 
-type SlideDir = "left" | "right" | "none";
+type SlideDir = "left" | "right";
 
-function useSlide(totalPages: number) {
+function usePageSlide(totalPages: number) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [animating, setAnimating] = useState(false);
-  const [direction, setDirection] = useState<SlideDir>("none");
+  // Direction of the INCOMING page: "left" = new page slides in from right, "right" = from left
+  const [enterDir, setEnterDir] = useState<SlideDir>("left");
 
   const goTo = useCallback((target: number, dir?: SlideDir) => {
-    if (target < 0 || target >= totalPages || target === currentPage || animating) return;
+    if (target < 0 || target >= totalPages || target === currentPage) return;
     const autoDir = dir ?? (target > currentPage ? "left" : "right");
-    setDirection(autoDir);
-    setAnimating(true);
-    setTimeout(() => {
-      setCurrentPage(target);
-      setAnimating(false);
-    }, 320);
-  }, [currentPage, totalPages, animating]);
+    setEnterDir(autoDir);
+    setCurrentPage(target);
+  }, [currentPage, totalPages]);
 
   const next = useCallback(() => goTo(currentPage + 1, "left"), [goTo, currentPage]);
   const prev = useCallback(() => goTo(currentPage - 1, "right"), [goTo, currentPage]);
 
-  return { currentPage, animating, direction, goTo, next, prev };
+  return { currentPage, enterDir, goTo, next, prev };
 }
 
 // ── Progress bar ─────────────────────────────────────────────
