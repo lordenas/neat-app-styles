@@ -26,10 +26,56 @@ interface PlayerFieldProps {
   onNavigatePage?: (target: "next" | "prev" | number) => void;
   /** Manual result values keyed by field.key */
   manualResults?: Record<string, number>;
+  /** Validation errors keyed by field.key */
+  validationErrors?: Record<string, string>;
+}
+
+/** Returns a validation error message if the value violates configured rules, or null if valid */
+export function validateField(field: CalcField, value: number | string | boolean): string | null {
+  const cfg = field.config;
+
+  // Required check
+  if (cfg.required) {
+    const isEmpty =
+      value === "" ||
+      value === undefined ||
+      value === null ||
+      (typeof value === "number" && isNaN(value as number));
+    if (isEmpty) {
+      return cfg.requiredMessage || "Это поле обязательно для заполнения";
+    }
+  }
+
+  // Numeric min/max validation
+  if (field.type === "number" || field.type === "slider") {
+    const num = typeof value === "number" ? value : parseFloat(String(value));
+    if (!isNaN(num)) {
+      if (cfg.validationMin !== undefined && num < cfg.validationMin) {
+        return cfg.validationMinMessage || `Значение должно быть не менее ${cfg.validationMin}`;
+      }
+      if (cfg.validationMax !== undefined && num > cfg.validationMax) {
+        return cfg.validationMaxMessage || `Значение должно быть не более ${cfg.validationMax}`;
+      }
+    }
+  }
+
+  // Pattern validation for text
+  if ((field.type === "text" || field.type === "textarea") && cfg.validationPattern) {
+    try {
+      const regex = new RegExp(cfg.validationPattern);
+      if (String(value) && !regex.test(String(value))) {
+        return cfg.validationPatternMessage || "Значение не соответствует формату";
+      }
+    } catch {
+      // Invalid regex — ignore
+    }
+  }
+
+  return null;
 }
 
 export function PlayerField({
-  field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults,
+  field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults, validationErrors,
 }: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
