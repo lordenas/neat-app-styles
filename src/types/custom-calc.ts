@@ -143,6 +143,11 @@ export interface ButtonAction {
   newTab?: boolean;
   /** После webhook: что сделать */
   webhookPostAction?: WebhookPostAction;
+  /**
+   * Для navigate_page: целевая страница.
+   * "next" | "prev" | номер (0-based index)
+   */
+  targetPage?: "next" | "prev" | number;
 }
 
 /** Вариант оформления статического текста */
