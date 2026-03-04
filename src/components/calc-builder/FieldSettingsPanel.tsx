@@ -297,6 +297,39 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
 
         <Separator />
 
+        {/* Padding controls */}
+        <div className="space-y-3">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Отступы (внутренние)</p>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs">Сверху (px)</Label>
+              <Input
+                inputSize="sm"
+                type="number"
+                min={0}
+                max={64}
+                value={field.config.paddingTop ?? 0}
+                onChange={(e) => updConfig({ paddingTop: Math.min(64, Math.max(0, Number(e.target.value))) })}
+                placeholder="0"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">Снизу (px)</Label>
+              <Input
+                inputSize="sm"
+                type="number"
+                min={0}
+                max={64}
+                value={field.config.paddingBottom ?? 0}
+                onChange={(e) => updConfig({ paddingBottom: Math.min(64, Math.max(0, Number(e.target.value))) })}
+                placeholder="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Conditions */}
         <Collapsible open={condOpen} onOpenChange={setCondOpen}>
           <CollapsibleTrigger asChild>

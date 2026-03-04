@@ -213,6 +213,10 @@ export interface CalcFieldConfig {
    * Поддерживает интерполяцию {key} из значений формы.
    */
   htmlContent?: string;
+  /** Внутренний отступ сверху (0–64px) */
+  paddingTop?: number;
+  /** Внутренний отступ снизу (0–64px) */
+  paddingBottom?: number;
 }
 
 // ─── Visibility System ───────────────────────────────────────

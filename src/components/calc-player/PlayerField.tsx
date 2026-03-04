@@ -34,8 +34,15 @@ export function PlayerField({
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
 
+  const pt = field.config.paddingTop;
+  const pb = field.config.paddingBottom;
+  const paddingStyle = (pt || pb) ? { paddingTop: pt ? `${pt}px` : undefined, paddingBottom: pb ? `${pb}px` : undefined } : undefined;
+
+  const wrap = (node: React.ReactNode) =>
+    paddingStyle ? <div style={paddingStyle}>{node}</div> : <>{node}</>;
+
   if (field.type === "result") {
-    return (
+    return wrap(
       <PlayerResult
         field={field}
         allFields={allFields}
@@ -97,7 +104,7 @@ export function PlayerField({
 
     if (!clean && !scopedStyles) return null;
 
-    return (
+    return wrap(
       <div {...{ [scopeAttr]: "" }} className="prose prose-sm max-w-none dark:prose-invert">
         {scopedStyles && (
           <style dangerouslySetInnerHTML={{ __html: scopedStyles }} />
@@ -116,7 +123,7 @@ export function PlayerField({
     const align = field.config.imageAlign ?? "center";
     const maxWidth = field.config.imageMaxWidth;
     if (!src) return null;
-    return (
+    return wrap(
       <div className={cn("py-1", align === "center" && "flex justify-center", align === "right" && "flex justify-end")}>
         <img
           src={src}
@@ -135,7 +142,7 @@ export function PlayerField({
     const content = field.config.labelContent ?? field.label ?? "";
 
     if (variant === "divider") {
-      return (
+      return wrap(
         <div className="flex items-center gap-3 py-1">
           <Separator className="flex-1" />
           {content && <span className="text-xs text-muted-foreground shrink-0 font-medium">{content}</span>}
@@ -144,7 +151,7 @@ export function PlayerField({
       );
     }
 
-    return (
+    return wrap(
       <div className={cn(
         variant === "h1" && "text-2xl font-bold",
         variant === "h2" && "text-xl font-semibold",
@@ -226,7 +233,7 @@ export function PlayerField({
       }
     };
 
-    return (
+    return wrap(
       <div>
         <Button variant={variant} onClick={handleClick} className="w-full">
           {field.label || "Кнопка"}
@@ -357,7 +364,7 @@ export function PlayerField({
           <Label htmlFor={field.key} className="cursor-pointer font-normal">{field.label}</Label>
         </div>
       );
-      return (
+      return wrap(
         <div className="py-1">
           {control}
           {field.config.hint && (
@@ -368,7 +375,7 @@ export function PlayerField({
     }
   }
 
-  return (
+  return wrap(
     <div className="space-y-2">
       {label}
       {control}
