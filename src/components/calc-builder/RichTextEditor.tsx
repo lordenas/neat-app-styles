@@ -234,11 +234,6 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
         </div>
       )}
 
-      {/* Hint */}
-      <div className="text-[10px] text-muted-foreground px-2 pt-0.5 pointer-events-none absolute right-2 top-[6px]">
-        Выделите текст для форматирования
-      </div>
-
       <EditorContent editor={editor} />
     </div>
   );
