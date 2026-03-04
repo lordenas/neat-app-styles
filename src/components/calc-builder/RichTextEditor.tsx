@@ -108,7 +108,7 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
   const currentColor = editor.getAttributes("textStyle").color as string | undefined;
 
   return (
-    <div className={cn("", className)}>
+    <div className={cn("space-y-1", className)}>
     <div className="relative rounded-md border border-input bg-background">
       {/* Toolbar */}
       <div className="flex items-center gap-0.5 px-1.5 py-1 border-b border-border flex-wrap">
