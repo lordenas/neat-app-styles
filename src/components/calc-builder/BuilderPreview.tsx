@@ -3,6 +3,7 @@ import { CustomCalculator, CalcPage } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "./BuilderCanvas";
 import { evaluateAllFormulas } from "@/lib/calc-engine";
+import { buildThemeVars } from "./ThemePanel";
 
 interface BuilderPreviewProps {
   calculator: CustomCalculator;
@@ -82,9 +83,10 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
     : sorted;
 
   const rows = groupByRow(pageFields);
+  const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
 
   return (
-    <div>
+    <div style={themeVars}>
       {sorted.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground text-sm">
           Добавьте поля в калькулятор

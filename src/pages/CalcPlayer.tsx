@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { CustomCalculator, CalcPage, getCalculatorBySlug } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "@/components/calc-builder/BuilderCanvas";
+import { buildThemeVars } from "@/components/calc-builder/ThemePanel";
 import { evaluateAllFormulas, resolveVisibility } from "@/lib/calc-engine";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
