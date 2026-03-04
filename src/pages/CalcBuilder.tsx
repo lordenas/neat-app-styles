@@ -279,6 +279,7 @@ export default function CalcBuilder() {
             <FieldSettingsPanel
               field={selectedField}
               allFields={calculator.fields}
+              pages={pages}
               onChange={updateSelectedField}
               onDelete={deleteSelectedField}
             />
