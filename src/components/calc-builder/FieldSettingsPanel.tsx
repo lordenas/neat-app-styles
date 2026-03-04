@@ -171,6 +171,26 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
         {(field.type === "select" || field.type === "radio") && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Варианты</p>
+            {field.type === "radio" && (
+              <div className="space-y-1.5">
+                <Label className="text-xs">Расположение</Label>
+                <div className="flex gap-1">
+                  {(["horizontal", "vertical"] as const).map((o) => (
+                    <button
+                      key={o}
+                      onClick={() => updConfig({ radioOrientation: o })}
+                      className={`flex-1 h-7 text-xs rounded-md border transition-colors ${
+                        (field.config.radioOrientation ?? "horizontal") === o
+                          ? "border-primary bg-primary/10 text-primary font-medium"
+                          : "border-input bg-background text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {o === "horizontal" ? "Горизонтально" : "Вертикально"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="space-y-2">
               {options.map((opt, i) => (
                 <div key={i} className="flex gap-2 items-center">

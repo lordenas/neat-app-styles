@@ -338,7 +338,7 @@ export function PlayerField({
         <RadioGroup
           value={strVal}
           onValueChange={(v) => onChange(field.key, v)}
-          className="flex flex-wrap gap-3"
+          className={field.config.radioOrientation === "vertical" ? "flex flex-col gap-2" : "flex flex-wrap gap-3"}
         >
           {(field.config.options ?? []).map((opt) => (
             <div key={opt.value} className="flex items-center gap-2">
