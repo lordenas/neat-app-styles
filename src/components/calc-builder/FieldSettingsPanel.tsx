@@ -280,7 +280,7 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
         {field.type === "button" && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
-            <ButtonSettings field={field} allFields={allFields} updConfig={updConfig} />
+            <ButtonSettings field={field} allFields={allFields} pages={pages} updConfig={updConfig} />
           </div>
         )}
 
