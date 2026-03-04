@@ -279,77 +279,7 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
         {field.type === "button" && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
-            <div className="space-y-2">
-              <div className="space-y-1.5">
-                <Label className="text-xs">Вид кнопки</Label>
-                <select
-                  className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
-                  value={field.config.buttonVariant ?? "default"}
-                  onChange={(e) => updConfig({ buttonVariant: e.target.value as "default" | "outline" | "destructive" | "ghost" })}
-                >
-                  <option value="default">Основная</option>
-                  <option value="outline">Контурная</option>
-                  <option value="destructive">Деструктивная (красная)</option>
-                  <option value="ghost">Призрак</option>
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Действие</Label>
-                <select
-                  className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
-                  value={field.config.buttonAction?.type ?? "calculate"}
-                  onChange={(e) => updConfig({
-                    buttonAction: {
-                      ...(field.config.buttonAction ?? {}),
-                      type: e.target.value as ButtonActionType,
-                    },
-                  })}
-                >
-                  <option value="calculate">Рассчитать результат</option>
-                  <option value="navigate">Перейти по ссылке</option>
-                  <option value="reset">Сбросить форму</option>
-                  <option value="pdf">Скачать PDF</option>
-                  <option value="webhook">Отправить в webhook</option>
-                </select>
-              </div>
-              {(field.config.buttonAction?.type === "navigate" || field.config.buttonAction?.type === "webhook") && (
-                <div className="space-y-1.5">
-                  <Label className="text-xs">URL <span className="text-muted-foreground font-normal">(поддерживает {"{key}"})</span></Label>
-                  <Input
-                    inputSize="sm"
-                    value={field.config.buttonAction?.url ?? ""}
-                    onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "navigate" }), url: e.target.value } })}
-                    placeholder="https://example.com?sum={amount}"
-                  />
-                  {field.config.buttonAction?.type === "navigate" && (
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={field.config.buttonAction?.newTab ?? false}
-                        onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "navigate" }), newTab: e.target.checked } })}
-                        className="rounded"
-                      />
-                      <span className="text-xs text-muted-foreground">Открыть в новой вкладке</span>
-                    </label>
-                  )}
-                </div>
-              )}
-              {field.config.buttonAction?.type === "calculate" && (
-                <div className="space-y-1.5">
-                  <Label className="text-xs">Поле результата <span className="text-muted-foreground font-normal">(пусто = все)</span></Label>
-                  <select
-                    className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
-                    value={field.config.buttonAction?.targetFieldId ?? ""}
-                    onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "calculate" }), targetFieldId: e.target.value } })}
-                  >
-                    <option value="">Все result-поля</option>
-                    {allFields.filter((f) => f.type === "result").map((f) => (
-                      <option key={f.id} value={f.id}>{f.label || f.key}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
+            <ButtonSettings field={field} allFields={allFields} updConfig={updConfig} />
           </div>
         )}
 
