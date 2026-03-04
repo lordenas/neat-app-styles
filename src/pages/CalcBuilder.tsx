@@ -53,6 +53,7 @@ export default function CalcBuilder() {
   const [saved, setSaved] = useState(false);
   const [listOpen, setListOpen] = useState(false);
   const [calcList, setCalcList] = useState<CustomCalculator[]>([]);
+  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
 
   useEffect(() => {
     setCalcList(loadCalculators());
@@ -81,18 +82,40 @@ export default function CalcBuilder() {
   const handleNew = () => {
     navigate("/calc-builder");
     setCalculator(makeNew());
+    setSelectedFieldId(null);
   };
 
   const handleOpen = (calc: CustomCalculator) => {
     setCalculator(calc);
     navigate(`/calc-builder/${calc.id}`);
     setListOpen(false);
+    setSelectedFieldId(null);
   };
 
   const copyPlayerLink = () => {
     const url = `${window.location.origin}/c/${calculator.slug}`;
     navigator.clipboard.writeText(url);
     toast({ title: "Ссылка скопирована", description: url });
+  };
+
+  const selectedField = selectedFieldId
+    ? calculator.fields.find((f) => f.id === selectedFieldId) ?? null
+    : null;
+
+  const updateSelectedField = (updated: CalcField) => {
+    setCalculator((c) => ({
+      ...c,
+      fields: c.fields.map((f) => (f.id === updated.id ? updated : f)),
+    }));
+  };
+
+  const deleteSelectedField = () => {
+    if (!selectedFieldId) return;
+    setCalculator((c) => ({
+      ...c,
+      fields: c.fields.filter((f) => f.id !== selectedFieldId),
+    }));
+    setSelectedFieldId(null);
   };
 
   const playerUrl = `/c/${calculator.slug}`;
@@ -155,8 +178,8 @@ export default function CalcBuilder() {
       </div>
 
       <div className="flex flex-1 max-w-screen-xl mx-auto w-full">
-        {/* Sidebar — calculator list */}
-        <aside className="w-60 border-r bg-card hidden md:flex flex-col py-4 px-3 gap-3 shrink-0">
+        {/* Left sidebar — calculator list */}
+        <aside className="w-56 border-r bg-card hidden md:flex flex-col py-4 px-3 gap-3 shrink-0">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Калькуляторы</span>
             <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleNew}>
@@ -199,7 +222,7 @@ export default function CalcBuilder() {
         </aside>
 
         {/* Main area */}
-        <main className="flex-1 min-w-0 p-4 md:p-6">
+        <main className="flex-1 min-w-0 p-4 md:p-6 overflow-hidden">
           <Tabs defaultValue="builder" className="h-full">
             <TabsList className="mb-4">
               <TabsTrigger value="builder" className="gap-1.5">
@@ -212,14 +235,34 @@ export default function CalcBuilder() {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="builder" className="space-y-4 mt-0">
-              <Input
-                value={calculator.description ?? ""}
-                onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
-                placeholder="Описание (необязательно)"
-                className="text-sm"
-              />
-              <BuilderCanvas calculator={calculator} onChange={setCalculator} />
+            <TabsContent value="builder" className="mt-0">
+              <div className="flex gap-4 items-start">
+                {/* Canvas area */}
+                <div className="flex-1 min-w-0 space-y-4">
+                  <Input
+                    value={calculator.description ?? ""}
+                    onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
+                    placeholder="Описание (необязательно)"
+                    className="text-sm"
+                  />
+                  <BuilderCanvas
+                    calculator={calculator}
+                    onChange={setCalculator}
+                    selectedFieldId={selectedFieldId}
+                    onSelectField={setSelectedFieldId}
+                  />
+                </div>
+
+                {/* Right settings panel */}
+                <aside className="w-72 shrink-0 border rounded-xl bg-card shadow-sm overflow-hidden hidden lg:flex flex-col sticky top-[105px]" style={{ maxHeight: "calc(100vh - 120px)" }}>
+                  <FieldSettingsPanel
+                    field={selectedField}
+                    allFields={calculator.fields}
+                    onChange={updateSelectedField}
+                    onDelete={deleteSelectedField}
+                  />
+                </aside>
+              </div>
             </TabsContent>
             <TabsContent value="preview" className="mt-0">
               <div className="border rounded-xl p-6 bg-card shadow-sm">
