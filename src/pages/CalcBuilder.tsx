@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  CustomCalculator, CalcField, CalcPage, loadCalculators, saveCalculator,
+  CustomCalculator, CalcField, CalcPage, CalcTheme, loadCalculators, saveCalculator,
 } from "@/types/custom-calc";
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
 import { FieldSettingsPanel } from "@/components/calc-builder/FieldSettingsPanel";
 import { PageManager } from "@/components/calc-builder/PageManager";
+import { ThemePanel } from "@/components/calc-builder/ThemePanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2,
+  Undo2, Redo2, Palette,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
@@ -80,7 +81,7 @@ export default function CalcBuilder() {
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
   const [tab, setTab] = useState<"builder" | "preview">("builder");
   const [activePage, setActivePage] = useState(0);
-  const [leftTab, setLeftTab] = useState<"field" | "pages">("field");
+  const [leftTab, setLeftTab] = useState<"field" | "pages" | "theme">("field");
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -289,36 +290,33 @@ export default function CalcBuilder() {
         <aside className="w-96 shrink-0 border-r bg-card flex flex-col overflow-hidden">
           {/* Left panel tabs */}
           <div className="flex shrink-0 border-b">
-            <button
-              onClick={() => setLeftTab("field")}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium transition-colors",
-                leftTab === "field"
-                  ? "text-foreground border-b-2 border-primary -mb-px"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Calculator className="h-3.5 w-3.5" />
-              Поле
-            </button>
-            <button
-              onClick={() => setLeftTab("pages")}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium transition-colors",
-                leftTab === "pages"
-                  ? "text-foreground border-b-2 border-primary -mb-px"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Layers className="h-3.5 w-3.5" />
-              Страницы
-              {pages.length > 1 && (
-                <span className="ml-0.5 text-[10px] bg-primary text-primary-foreground rounded-full px-1.5 py-0">{pages.length}</span>
-              )}
-            </button>
+            {(["field", "pages", "theme"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setLeftTab(t)}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1 py-2 text-xs font-medium transition-colors",
+                  leftTab === t
+                    ? "text-foreground border-b-2 border-primary -mb-px"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {t === "field" && <><Calculator className="h-3 w-3" />Поле</>}
+                {t === "pages" && (
+                  <>
+                    <Layers className="h-3 w-3" />
+                    Страницы
+                    {pages.length > 1 && (
+                      <span className="text-[9px] bg-primary text-primary-foreground rounded-full px-1">{pages.length}</span>
+                    )}
+                  </>
+                )}
+                {t === "theme" && <><Palette className="h-3 w-3" />Тема</>}
+              </button>
+            ))}
           </div>
 
-          {leftTab === "field" ? (
+          {leftTab === "field" && (
             <FieldSettingsPanel
               field={selectedField}
               allFields={calculator.fields}
@@ -326,7 +324,8 @@ export default function CalcBuilder() {
               onChange={updateSelectedField}
               onDelete={deleteSelectedField}
             />
-          ) : (
+          )}
+          {leftTab === "pages" && (
             <div className="flex-1 overflow-y-auto p-3">
               <PageManager
                 pages={pages}
@@ -340,6 +339,12 @@ export default function CalcBuilder() {
                 onDeletePage={handleDeletePage}
               />
             </div>
+          )}
+          {leftTab === "theme" && (
+            <ThemePanel
+              theme={calculator.theme ?? {}}
+              onChange={(theme: CalcTheme) => setCalculator({ ...calculator, theme })}
+            />
           )}
         </aside>
 

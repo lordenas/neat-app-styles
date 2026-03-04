@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { CustomCalculator, CalcPage, getCalculatorBySlug } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "@/components/calc-builder/BuilderCanvas";
+import { buildThemeVars } from "@/components/calc-builder/ThemePanel";
 import { evaluateAllFormulas, resolveVisibility } from "@/lib/calc-engine";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -208,12 +209,13 @@ export default function CalcPlayer() {
   );
 
   const hasMultiplePages = pages.length > 1;
+  const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
 
-      <main className="flex-1 py-8 px-4">
+      <main className="flex-1 py-8 px-4" style={themeVars}>
         <div className="max-w-lg mx-auto">
           {/* Title */}
           <div className="mb-6">
