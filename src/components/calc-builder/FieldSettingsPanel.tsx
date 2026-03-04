@@ -412,14 +412,9 @@ function ButtonSettings({ field, allFields, pages, updConfig }: ButtonSettingsPr
           >
             <option value="next">Следующая →</option>
             <option value="prev">← Предыдущая</option>
-            {allFields
-              .filter((f, _, arr) => {
-                // Get unique pageIds — placeholder approach
-                return arr.findIndex((x) => x.pageId === f.pageId) === arr.indexOf(f);
-              })
-              .map((_, i) => (
-                <option key={i} value={i}>Страница {i + 1}</option>
-              ))}
+            {pages.map((page, i) => (
+              <option key={page.id} value={i}>Страница {i + 1}{page.title ? `: ${page.title}` : ""}</option>
+            ))}
           </select>
         </div>
       )}
