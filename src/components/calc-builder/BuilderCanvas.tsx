@@ -305,75 +305,104 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
       const otherInRow = bestRow.filter((f) => f.id !== activeFieldId);
       if (otherInRow.length === 0) return null;
 
-      // ── Step 2: Inside that row, find the closest field by horizontal distance ──
-      // We use horizontal distance only here, since we've already resolved vertical.
-      let bestField: CalcField | null = null;
-      let bestHDist = Infinity;
-
-      for (const f of otherInRow) {
-        const el = document.querySelector(`[data-field-id="${f.id}"]`);
-        if (!el) continue;
-        const r = el.getBoundingClientRect();
-        const fieldCX = r.left + r.width / 2;
-        const hDist = Math.abs(cursorX - fieldCX);
-        if (hDist < bestHDist) {
-          bestHDist = hDist;
-          bestField = f;
-        }
-      }
-
-      if (!bestField) return null;
-
-      // ── Step 3: Determine side ──
-      const overEl = document.querySelector(`[data-field-id="${bestField.id}"]`);
-      if (!overEl) return null;
-      const overRect = overEl.getBoundingClientRect();
-      const overCX = overRect.left + overRect.width / 2;
-      const overCY = overRect.top + overRect.height / 2;
       const overRowBounds = getRowYCenter(bestRow);
-
-      // If cursor is clearly in the same horizontal band as this row → horizontal placement
       const inSameRowBand = overRowBounds
         ? cursorY >= overRowBounds.top - 8 && cursorY <= overRowBounds.bottom + 8
         : false;
 
-      const dx = cursorX - overCX;
-      const dy = cursorY - overCY;
-
-      let side: DropSide;
-
-      if (inSameRowBand) {
-        // Cursor is in this row's vertical band → prefer horizontal unless in top/bottom edge zone
-        const relY = cursorY - overRect.top;
-        const inVerticalEdge = relY < overRect.height * 0.20 || relY > overRect.height * 0.80;
-
-        if (inVerticalEdge) {
-          side = dy < 0 ? "above" : "below";
-        } else {
-          // Horizontal — check row capacity
-          const targetRowId = bestField.rowId ?? bestField.id;
-          const rowCountWithoutActive = fields.filter(
-            (f) => (f.rowId ?? f.id) === targetRowId && f.id !== activeFieldId
-          ).length;
-          const activeField = fields.find((f) => f.id === activeFieldId);
-          const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
-
-          if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
-            side = dx < 0 ? "left" : "right";
-          } else {
-            side = dy < 0 ? "above" : "below";
-          }
+      // ── Step 2 (vertical edge): top/bottom 20% of any field → above/below row ──
+      // Check against the closest field vertically to see if we're in edge zone
+      const firstEl = document.querySelector(`[data-field-id="${otherInRow[0].id}"]`);
+      if (firstEl && inSameRowBand) {
+        const firstRect = firstEl.getBoundingClientRect();
+        const relY = cursorY - firstRect.top;
+        if (relY < firstRect.height * 0.20 || relY > firstRect.height * 0.80) {
+          const rowId = otherInRow[0].rowId ?? otherInRow[0].id;
+          const dy = cursorY - (firstRect.top + firstRect.height / 2);
+          return { id: otherInRow[0].id, side: dy < 0 ? "above" : "below", rowId };
         }
-      } else {
-        // Cursor is between rows → vertical reorder
-        side = dy < 0 ? "above" : "below";
       }
 
-      if (side === "above" || side === "below") {
-        const rowId = bestField.rowId ?? bestField.id;
-        return { id: bestField.id, side, rowId };
+      if (!inSameRowBand) {
+        // Between rows → pick closest field vertically, then above/below
+        let closestF = otherInRow[0];
+        let closestDY = Infinity;
+        for (const f of otherInRow) {
+          const el = document.querySelector(`[data-field-id="${f.id}"]`);
+          if (!el) continue;
+          const r = el.getBoundingClientRect();
+          const d = Math.abs(cursorY - (r.top + r.height / 2));
+          if (d < closestDY) { closestDY = d; closestF = f; }
+        }
+        const rowId = closestF.rowId ?? closestF.id;
+        const el = document.querySelector(`[data-field-id="${closestF.id}"]`);
+        const dy = el ? cursorY - (el.getBoundingClientRect().top + el.getBoundingClientRect().height / 2) : -1;
+        return { id: closestF.id, side: dy < 0 ? "above" : "below", rowId };
       }
-      return { id: bestField.id, side };
+
+      // ── Step 3: Find the nearest GAP between fields (not field center) ──
+      // Build list of rects for all fields in row (excluding active)
+      type FieldRect = { field: CalcField; left: number; right: number; cx: number };
+      const rects: FieldRect[] = [];
+      for (const f of otherInRow) {
+        const el = document.querySelector(`[data-field-id="${f.id}"]`);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        rects.push({ field: f, left: r.left, right: r.right, cx: r.left + r.width / 2 });
+      }
+      if (rects.length === 0) return null;
+
+      // Sort left-to-right
+      rects.sort((a, b) => a.cx - b.cx);
+
+      // Build gaps: [before first, between each pair, after last]
+      // Each gap: { x: gap center X, fieldId: adjacent field id, side }
+      type Gap = { x: number; fieldId: string; side: "left" | "right" };
+      const gaps: Gap[] = [];
+
+      // Before first field
+      gaps.push({ x: rects[0].left - 20, fieldId: rects[0].field.id, side: "left" });
+
+      // Between consecutive fields
+      for (let i = 0; i < rects.length - 1; i++) {
+        const gapX = (rects[i].right + rects[i + 1].left) / 2;
+        // "right of i" and "left of i+1" are the same gap — use the one that makes more sense
+        // We anchor to the field cursor is closer to
+        const distToI = Math.abs(cursorX - rects[i].cx);
+        const distToNext = Math.abs(cursorX - rects[i + 1].cx);
+        if (distToI <= distToNext) {
+          gaps.push({ x: gapX, fieldId: rects[i].field.id, side: "right" });
+        } else {
+          gaps.push({ x: gapX, fieldId: rects[i + 1].field.id, side: "left" });
+        }
+      }
+
+      // After last field
+      gaps.push({ x: rects[rects.length - 1].right + 20, fieldId: rects[rects.length - 1].field.id, side: "right" });
+
+      // Find the nearest gap
+      let bestGap = gaps[0];
+      let bestGapDist = Math.abs(cursorX - gaps[0].x);
+      for (const gap of gaps) {
+        const d = Math.abs(cursorX - gap.x);
+        if (d < bestGapDist) { bestGapDist = d; bestGap = gap; }
+      }
+
+      // Check capacity
+      const targetRowId = otherInRow[0].rowId ?? otherInRow[0].id;
+      const rowCountWithoutActive = fields.filter(
+        (f) => (f.rowId ?? f.id) === targetRowId && f.id !== activeFieldId
+      ).length;
+      const activeField = fields.find((f) => f.id === activeFieldId);
+      const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
+
+      if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
+        return { id: bestGap.fieldId, side: bestGap.side };
+      }
+
+      // Row full → above/below
+      const rowId = targetRowId;
+      return { id: bestGap.fieldId, side: cursorY < (overRowBounds ? (overRowBounds.top + overRowBounds.bottom) / 2 : 0) ? "above" : "below", rowId };
     },
     [fields]
   );
