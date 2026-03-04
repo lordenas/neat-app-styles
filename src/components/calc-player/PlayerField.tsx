@@ -44,6 +44,33 @@ export function PlayerField({
     );
   }
 
+  // ── HTML block ────────────────────────────────────────────────
+  if (field.type === "html") {
+    const raw = field.config.htmlContent ?? "";
+    // Interpolate {key} placeholders with current values
+    const interpolated = raw.replace(/\{(\w+)\}/g, (_, key) => {
+      const val = values[key];
+      return val !== undefined ? String(val) : `{${key}}`;
+    });
+    const clean = DOMPurify.sanitize(interpolated, {
+      ALLOWED_TAGS: [
+        "p","br","span","div","strong","em","b","i","u","s",
+        "h1","h2","h3","h4","h5","h6",
+        "ul","ol","li","a","blockquote","pre","code",
+        "table","thead","tbody","tr","th","td",
+        "img","hr","small","sup","sub",
+      ],
+      ALLOWED_ATTR: ["href","target","rel","src","alt","class","style","width","height"],
+    });
+    if (!clean) return null;
+    return (
+      <div
+        className="prose prose-sm max-w-none dark:prose-invert"
+        dangerouslySetInnerHTML={{ __html: clean }}
+      />
+    );
+  }
+
   // ── Image ─────────────────────────────────────────────────────
   if (field.type === "image") {
     const src = field.config.imageData;
