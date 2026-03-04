@@ -300,6 +300,27 @@ export interface CalcTheme {
   fontFamily?: string;
 }
 
+// ─── Page ────────────────────────────────────────────────────
+
+/**
+ * Страница калькулятора.
+ * Каждый CalcField принадлежит странице через field.pageId.
+ * Страницы отображаются как слайды с анимацией.
+ */
+export interface CalcPage {
+  /** UUID страницы */
+  id: string;
+  /** Заголовок страницы (опционально) */
+  title?: string;
+  /** Порядковый индекс (0-based) */
+  orderIndex: number;
+  /**
+   * Авто-переход на следующую страницу при выполнении условия.
+   * Работает как visibility: если правила выполняются — сразу переходим.
+   */
+  autoAdvance?: VisibilityConfig | null;
+}
+
 /** Полный калькулятор */
 export interface CustomCalculator {
   /** UUID (в MVP: nanoid) */
@@ -314,6 +335,11 @@ export interface CustomCalculator {
   title: string;
   /** Описание */
   description?: string;
+  /**
+   * Страницы калькулятора (опционально).
+   * Если пусто/undefined — все поля на одной странице (legacy).
+   */
+  pages?: CalcPage[];
   /** Поля калькулятора (отсортированы по orderIndex) */
   fields: CalcField[];
   /** Тема */
