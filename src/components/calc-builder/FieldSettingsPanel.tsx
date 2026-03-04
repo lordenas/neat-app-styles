@@ -611,8 +611,6 @@ function ImageSettings({ field, updConfig }: ImageSettingsProps) {
 
 // ─── HtmlSettings sub-component ──────────────────────────────
 
-import CodeEditor from "@uiw/react-textarea-code-editor";
-
 interface HtmlSettingsProps {
   field: CalcField;
   allFields: CalcField[];
