@@ -100,7 +100,8 @@ export type CalcFieldType =
   | "result"    // Вычисляемое поле — только формула, нет ввода
   | "button"    // Кнопка с действием
   | "label"     // Статический текст / заголовок
-  | "image";    // Картинка (загружается пользователем, хранится в base64)
+  | "image"     // Картинка (загружается пользователем, хранится в base64)
+  | "html";     // Произвольный HTML-блок (поддерживает {key} интерполяцию)
 
 /** Тип действия кнопки */
 export type ButtonActionType =
@@ -207,6 +208,11 @@ export interface CalcFieldConfig {
   imageAlign?: "left" | "center" | "right";
   /** Для image: максимальная ширина в px (или auto) */
   imageMaxWidth?: number;
+  /**
+   * Для html: HTML-контент поля.
+   * Поддерживает интерполяцию {key} из значений формы.
+   */
+  htmlContent?: string;
 }
 
 // ─── Visibility System ───────────────────────────────────────

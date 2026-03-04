@@ -11,7 +11,7 @@ import {
 import {
   Hash, Type, ChevronDown, ToggleLeft, SlidersHorizontal,
   List, CircleDot, Calculator, PlusCircle, AlignLeft,
-  MousePointerClick, TextQuote, ImageIcon,
+  MousePointerClick, TextQuote, ImageIcon, Code2,
 } from "lucide-react";
 
 const FIELD_TYPES_GROUPS: {
@@ -37,6 +37,7 @@ const FIELD_TYPES_GROUPS: {
       { type: "button",   label: "Кнопка",       icon: <MousePointerClick className="h-4 w-4" />, description: "Кнопка с действием" },
       { type: "label",    label: "Текст / заголовок", icon: <TextQuote className="h-4 w-4" />,    description: "Статический текст, разделитель" },
       { type: "image",    label: "Картинка",     icon: <ImageIcon className="h-4 w-4" />,         description: "Изображение, загруженное разработчиком" },
+      { type: "html",     label: "HTML-блок",    icon: <Code2 className="h-4 w-4" />,             description: "Произвольный HTML с интерполяцией {key}" },
     ],
   },
 ];

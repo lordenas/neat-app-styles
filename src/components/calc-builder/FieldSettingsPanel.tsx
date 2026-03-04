@@ -11,9 +11,10 @@ import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2,
 } from "lucide-react";
 import { useState } from "react";
+import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-4 w-4" />,
@@ -27,12 +28,13 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   button:   <MousePointerClick className="h-4 w-4" />,
   label:    <TextQuote className="h-4 w-4" />,
   image:    <ImageIcon className="h-4 w-4" />,
+  html:     <Code2 className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
-  button: "Кнопка", label: "Текст", image: "Картинка",
+  button: "Кнопка", label: "Текст", image: "Картинка", html: "HTML",
 };
 
 function slugify(s: string): string {
@@ -280,6 +282,10 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
 
         {field.type === "image" && (
           <ImageSettings field={field} updConfig={updConfig} />
+        )}
+
+        {field.type === "html" && (
+          <HtmlSettings field={field} updConfig={updConfig} allFields={allFields} />
         )}
 
         {field.type === "button" && (
@@ -602,3 +608,65 @@ function ImageSettings({ field, updConfig }: ImageSettingsProps) {
     </div>
   );
 }
+
+// ─── HtmlSettings sub-component ──────────────────────────────
+
+interface HtmlSettingsProps {
+  field: CalcField;
+  allFields: CalcField[];
+  updConfig: (partial: Partial<CalcField["config"]>) => void;
+}
+
+function HtmlSettings({ field, allFields, updConfig }: HtmlSettingsProps) {
+  const inputFields = allFields.filter(
+    (f) => f.type !== "result" && f.type !== "button" && f.type !== "label" && f.type !== "image" && f.type !== "html"
+  );
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">HTML-блок</p>
+      <div className="space-y-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs">HTML-код</Label>
+          <div className="rounded-md border border-input overflow-hidden text-xs">
+            <CodeEditor
+              value={field.config.htmlContent ?? ""}
+              language="html"
+              placeholder="<p>Ваш HTML...</p>"
+              onChange={(e) => updConfig({ htmlContent: e.target.value })}
+              padding={10}
+              style={{
+                fontSize: 12,
+                fontFamily: "ui-monospace, monospace",
+                minHeight: 120,
+                backgroundColor: "hsl(var(--muted))",
+                color: "hsl(var(--foreground))",
+              }}
+            />
+          </div>
+        </div>
+
+        {inputFields.length > 0 && (
+          <div className="rounded-md border border-dashed border-border bg-muted/20 p-2.5 space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Доступные переменные</p>
+            <div className="flex flex-wrap gap-1.5">
+              {inputFields.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                  onClick={() => updConfig({ htmlContent: (field.config.htmlContent ?? "") + `{${f.key}}` })}
+                  title={f.label}
+                >
+                  {"{" + f.key + "}"}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground">Нажмите на переменную, чтобы вставить в код</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
