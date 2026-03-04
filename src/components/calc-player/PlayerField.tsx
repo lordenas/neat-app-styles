@@ -156,26 +156,36 @@ export function PlayerField({
       );
     }
 
-    const textAlign = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+    // Detect HTML content (from rich text editor)
+    const isHtml = content.trim().startsWith("<");
 
+    const variantClass = cn(
+      variant === "h1" && "text-2xl font-bold",
+      variant === "h2" && "text-xl font-semibold",
+      variant === "h3" && "text-base font-semibold",
+      variant === "body" && "text-sm",
+      variant === "caption" && "text-xs text-muted-foreground",
+    );
+
+    if (isHtml) {
+      return wrap(
+        <div
+          className={cn(variantClass, "prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_p]:my-0")}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      );
+    }
+
+    // Legacy plain-text fallback
+    const textAlign = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
     const inner = (
       <div
-        className={cn(
-          variant === "h1" && "text-2xl font-bold",
-          variant === "h2" && "text-xl font-semibold",
-          variant === "h3" && "text-base font-semibold",
-          variant === "body" && "text-sm",
-          variant === "caption" && "text-xs text-muted-foreground",
-          bold && "font-bold",
-          italic && "italic",
-          textAlign,
-        )}
+        className={cn(variantClass, bold && "font-bold", italic && "italic", textAlign)}
         style={color ? { color } : undefined}
       >
         {content || <span className="text-muted-foreground italic text-xs">(пустой текст)</span>}
       </div>
     );
-
     return wrap(
       href
         ? <a href={href} target="_blank" rel="noopener noreferrer" className="hover:underline">{inner}</a>
