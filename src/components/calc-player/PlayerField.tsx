@@ -142,7 +142,7 @@ export function PlayerField({
     const content = field.config.labelContent ?? field.label ?? "";
 
     if (variant === "divider") {
-      return (
+      return wrap(
         <div className="flex items-center gap-3 py-1">
           <Separator className="flex-1" />
           {content && <span className="text-xs text-muted-foreground shrink-0 font-medium">{content}</span>}
@@ -151,7 +151,7 @@ export function PlayerField({
       );
     }
 
-    return (
+    return wrap(
       <div className={cn(
         variant === "h1" && "text-2xl font-bold",
         variant === "h2" && "text-xl font-semibold",
