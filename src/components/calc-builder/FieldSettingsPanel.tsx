@@ -381,6 +381,15 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
 
         <Separator />
 
+        {/* Validation */}
+        {(field.type === "number" || field.type === "slider" || field.type === "text" || field.type === "textarea") && (
+          <ValidationSection field={field} updConfig={updConfig} />
+        )}
+
+        {(field.type === "number" || field.type === "slider" || field.type === "text" || field.type === "textarea") && (
+          <Separator />
+        )}
+
         {/* Conditions */}
         <Collapsible open={condOpen} onOpenChange={setCondOpen}>
           <CollapsibleTrigger asChild>
