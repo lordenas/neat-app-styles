@@ -184,6 +184,11 @@ export interface CalcFieldConfig {
   labelContent?: string;
   /** Для textarea: количество строк */
   rows?: number;
+  /**
+   * Для result: если true — не пересчитывать автоматически при вводе,
+   * только по триггеру кнопки (calculate action).
+   */
+  manualCalculation?: boolean;
 }
 
 // ─── Visibility System ───────────────────────────────────────
