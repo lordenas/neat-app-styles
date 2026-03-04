@@ -316,12 +316,13 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
 const ACTION_LABELS: Record<ButtonActionType, string> = {
   calculate: "Рассчитать результат",
   navigate: "Перейти по ссылке",
+  navigate_page: "Перейти на страницу",
   reset: "Сбросить форму",
   pdf: "Скачать PDF",
   webhook: "Отправить webhook",
 };
 
-const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate", "reset", "pdf", "webhook"];
+const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate_page", "navigate", "reset", "pdf", "webhook"];
 
 interface ButtonSettingsProps {
   field: CalcField;
@@ -394,6 +395,32 @@ function ButtonSettings({ field, allFields, updConfig }: ButtonSettingsProps) {
           ))}
         </div>
       </div>
+
+      {/* navigate_page target */}
+      {(action.type === "navigate_page" || extraActions.includes("navigate_page")) && (
+        <div className="space-y-1.5">
+          <Label className="text-xs">Целевая страница</Label>
+          <select
+            className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+            value={action.targetPage === undefined ? "next" : String(action.targetPage)}
+            onChange={(e) => {
+              const v = e.target.value;
+              updAction({ targetPage: v === "next" ? "next" : v === "prev" ? "prev" : Number(v) });
+            }}
+          >
+            <option value="next">Следующая →</option>
+            <option value="prev">← Предыдущая</option>
+            {allFields
+              .filter((f, _, arr) => {
+                // Get unique pageIds — placeholder approach
+                return arr.findIndex((x) => x.pageId === f.pageId) === arr.indexOf(f);
+              })
+              .map((_, i) => (
+                <option key={i} value={i}>Страница {i + 1}</option>
+              ))}
+          </select>
+        </div>
+      )}
 
       {/* URL for navigate / webhook */}
       {(action.type === "navigate" || action.type === "webhook" || extraActions.includes("navigate") || extraActions.includes("webhook")) && (

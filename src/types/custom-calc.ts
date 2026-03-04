@@ -103,11 +103,12 @@ export type CalcFieldType =
 
 /** Тип действия кнопки */
 export type ButtonActionType =
-  | "calculate"  // Пересчитать конкретный result-блок
-  | "navigate"   // Перейти по URL (поддержка {переменных})
-  | "reset"      // Сбросить форму к значениям по умолчанию
-  | "pdf"        // Скачать PDF с результатами
-  | "webhook";   // POST-запрос на внешний URL с данными формы
+  | "calculate"      // Пересчитать конкретный result-блок
+  | "navigate"       // Перейти по URL (поддержка {переменных})
+  | "navigate_page"  // Перейти на страницу калькулятора (next/prev/номер)
+  | "reset"          // Сбросить форму к значениям по умолчанию
+  | "pdf"            // Скачать PDF с результатами
+  | "webhook";       // POST-запрос на внешний URL с данными формы
 
 /**
  * Действие «после webhook» — выполняется после успешной отправки.
@@ -142,6 +143,11 @@ export interface ButtonAction {
   newTab?: boolean;
   /** После webhook: что сделать */
   webhookPostAction?: WebhookPostAction;
+  /**
+   * Для navigate_page: целевая страница.
+   * "next" | "prev" | номер (0-based index)
+   */
+  targetPage?: "next" | "prev" | number;
 }
 
 /** Вариант оформления статического текста */
@@ -265,6 +271,11 @@ export interface CalcField {
    * По умолчанию = field.id (каждое поле в своей строке).
    */
   rowId: string;
+  /**
+   * ID страницы, которой принадлежит поле.
+   * Если undefined — поле принадлежит первой (единственной) странице.
+   */
+  pageId?: string;
   /** Конфигурация поля */
   config: CalcFieldConfig;
   /**
@@ -294,6 +305,27 @@ export interface CalcTheme {
   fontFamily?: string;
 }
 
+// ─── Page ────────────────────────────────────────────────────
+
+/**
+ * Страница калькулятора.
+ * Каждый CalcField принадлежит странице через field.pageId.
+ * Страницы отображаются как слайды с анимацией.
+ */
+export interface CalcPage {
+  /** UUID страницы */
+  id: string;
+  /** Заголовок страницы (опционально) */
+  title?: string;
+  /** Порядковый индекс (0-based) */
+  orderIndex: number;
+  /**
+   * Авто-переход на следующую страницу при выполнении условия.
+   * Работает как visibility: если правила выполняются — сразу переходим.
+   */
+  autoAdvance?: VisibilityConfig | null;
+}
+
 /** Полный калькулятор */
 export interface CustomCalculator {
   /** UUID (в MVP: nanoid) */
@@ -308,6 +340,11 @@ export interface CustomCalculator {
   title: string;
   /** Описание */
   description?: string;
+  /**
+   * Страницы калькулятора (опционально).
+   * Если пусто/undefined — все поля на одной странице (legacy).
+   */
+  pages?: CalcPage[];
   /** Поля калькулятора (отсортированы по orderIndex) */
   fields: CalcField[];
   /** Тема */
