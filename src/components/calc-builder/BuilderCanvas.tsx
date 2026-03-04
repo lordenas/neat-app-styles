@@ -108,7 +108,7 @@ function applyDrop(
   return sorted.map((f, i) => ({ ...f, orderIndex: i }));
 }
 
-// ─── Field Card Wrapper (left/right indicators only) ─────────
+// ─── Field Card Wrapper ───────────────────────────────────────
 
 interface FieldCardWrapperProps {
   field: CalcField;
@@ -127,8 +127,8 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
   return (
     <div
       className={cn(
-        "relative rounded-lg transition-all duration-100",
-        isDragging && "opacity-30 scale-[0.98]",
+        "relative rounded-lg transition-all duration-150",
+        isDragging && "opacity-25 scale-[0.97]",
         isTarget && side === "left"  && "before:absolute before:inset-y-0 before:-left-1 before:w-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
         isTarget && side === "right" && "after:absolute after:inset-y-0 after:-right-1 after:w-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
         isTarget && "ring-2 ring-primary/50 ring-inset bg-primary/5",
@@ -145,7 +145,7 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
   );
 }
 
-// ─── Sortable Item (uses useSortable hook) ────────────────────
+// ─── Sortable Item ────────────────────────────────────────────
 
 interface SortableFieldItemProps {
   field: CalcField;
@@ -157,9 +157,8 @@ interface SortableFieldItemProps {
 
 function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }: SortableFieldItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
-  // When dragging, suppress the transform so the placeholder stays in place without stretching
   const style = isDragging
-    ? { transition, opacity: 0.3 }
+    ? { transition, opacity: 0.25 }
     : { transform: CSS.Transform.toString(transform), transition };
 
   return (
@@ -177,7 +176,7 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }:
   );
 }
 
-// ─── Overlay Card (no useSortable) ───────────────────────────
+// ─── Overlay Card ─────────────────────────────────────────────
 
 interface OverlayCardProps {
   field: CalcField;
@@ -197,6 +196,23 @@ function OverlayCard({ field, allFields }: OverlayCardProps) {
   );
 }
 
+// ─── Placeholder ──────────────────────────────────────────────
+
+function DropPlaceholder({ inline }: { inline?: boolean }) {
+  return (
+    <div
+      className={cn(
+        "border-2 border-dashed border-primary/60 rounded-lg bg-primary/5",
+        "flex items-center justify-center",
+        "animate-fade-in",
+        inline ? "h-full min-h-[4rem]" : "h-16 w-full"
+      )}
+    >
+      <span className="text-xs text-primary/70 font-medium select-none">Сюда</span>
+    </div>
+  );
+}
+
 // ─── Builder Canvas ──────────────────────────────────────────
 
 interface BuilderCanvasProps {
@@ -206,12 +222,32 @@ interface BuilderCanvasProps {
 
 const MAX_PER_ROW = 4;
 
+/**
+ * Returns the Y-center of the row containing the given field, based on DOM rects.
+ * Used to determine if the cursor is in the same horizontal band as a row.
+ */
+function getRowYCenter(rowFields: CalcField[]): { top: number; bottom: number } | null {
+  let minTop = Infinity, maxBottom = -Infinity;
+  for (const f of rowFields) {
+    const el = document.querySelector(`[data-field-id="${f.id}"]`);
+    if (!el) continue;
+    const r = el.getBoundingClientRect();
+    if (r.top < minTop) minTop = r.top;
+    if (r.bottom > maxBottom) maxBottom = r.bottom;
+  }
+  return minTop === Infinity ? null : { top: minTop, bottom: maxBottom };
+}
+
 export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
   const fields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  // Debounce ref: prevents flickering by only updating dropTarget after a brief stable period
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingTargetRef = useRef<DropTarget | null>(null);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const setFields = (newFields: CalcField[]) =>
     onChange({ ...calculator, fields: newFields.map((f, i) => ({ ...f, orderIndex: i })) });
@@ -232,97 +268,150 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
       const activeRect = active.rect.current.translated;
       if (!activeRect) return null;
 
-      const activeCenter = {
-        x: activeRect.left + activeRect.width / 2,
-        y: activeRect.top + activeRect.height / 2,
-      };
+      const cursorX = activeRect.left + activeRect.width / 2;
+      const cursorY = activeRect.top + activeRect.height / 2;
 
-      // If not over any droppable, find the nearest field by distance
-      let resolvedOverId: string | null = over && over.id !== active.id ? String(over.id) : null;
+      const rows = groupByRow(fields);
+      const activeFieldId = String(active.id);
 
-      if (!resolvedOverId) {
-        // Find the closest field (excluding active) by center distance
-        let minDist = Infinity;
-        for (const f of fields) {
-          if (f.id === String(active.id)) continue;
-          const el = document.querySelector(`[data-field-id="${f.id}"]`);
-          if (!el) continue;
-          const rect = el.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const dist = Math.hypot(activeCenter.x - cx, activeCenter.y - cy);
-          if (dist < minDist) { minDist = dist; resolvedOverId = f.id; }
+      // ── Step 1: Find which row the cursor is vertically closest to ──
+      // Score each row by vertical distance from cursorY to row center.
+      // If cursorY is within the row's Y-band, score = 0 (same row).
+      let bestRowScore = Infinity;
+      let bestRow: CalcField[] | null = null;
+
+      for (const row of rows) {
+        // Skip rows that only contain the active field
+        const otherFields = row.filter((f) => f.id !== activeFieldId);
+        if (otherFields.length === 0) continue;
+
+        const bounds = getRowYCenter(row);
+        if (!bounds) continue;
+
+        const rowMid = (bounds.top + bounds.bottom) / 2;
+        // If cursor is inside the row band, vertical score = 0 (strong preference)
+        const vertScore = cursorY >= bounds.top - 8 && cursorY <= bounds.bottom + 8
+          ? 0
+          : Math.abs(cursorY - rowMid);
+
+        if (vertScore < bestRowScore) {
+          bestRowScore = vertScore;
+          bestRow = row;
         }
       }
 
-      if (!resolvedOverId) return null;
+      if (!bestRow) return null;
 
-      const overField = fields.find((f) => f.id === resolvedOverId);
-      if (!overField) return null;
+      const otherInRow = bestRow.filter((f) => f.id !== activeFieldId);
+      if (otherInRow.length === 0) return null;
 
-      // Get the over element rect
-      let overRect = over && String(over.id) === resolvedOverId ? over.rect : null;
-      if (!overRect) {
-        const el = document.querySelector(`[data-field-id="${resolvedOverId}"]`);
-        if (el) {
-          overRect = el.getBoundingClientRect() as DOMRect;
+      // ── Step 2: Inside that row, find the closest field by horizontal distance ──
+      // We use horizontal distance only here, since we've already resolved vertical.
+      let bestField: CalcField | null = null;
+      let bestHDist = Infinity;
+
+      for (const f of otherInRow) {
+        const el = document.querySelector(`[data-field-id="${f.id}"]`);
+        if (!el) continue;
+        const r = el.getBoundingClientRect();
+        const fieldCX = r.left + r.width / 2;
+        const hDist = Math.abs(cursorX - fieldCX);
+        if (hDist < bestHDist) {
+          bestHDist = hDist;
+          bestField = f;
         }
       }
-      if (!overRect) return null;
 
-      const overCenter = {
-        x: overRect.left + overRect.width / 2,
-        y: overRect.top + overRect.height / 2,
-      };
+      if (!bestField) return null;
 
-      const dx = activeCenter.x - overCenter.x;
-      const dy = activeCenter.y - overCenter.y;
+      // ── Step 3: Determine side ──
+      const overEl = document.querySelector(`[data-field-id="${bestField.id}"]`);
+      if (!overEl) return null;
+      const overRect = overEl.getBoundingClientRect();
+      const overCX = overRect.left + overRect.width / 2;
+      const overCY = overRect.top + overRect.height / 2;
+      const overRowBounds = getRowYCenter(bestRow);
 
-      // Vertical edge zone: top/bottom 25% → always vertical reorder
-      const overHeight = overRect.height;
-      const relY = activeCenter.y - overRect.top;
-      const inVerticalEdgeZone = relY < overHeight * 0.25 || relY > overHeight * 0.75;
+      // If cursor is clearly in the same horizontal band as this row → horizontal placement
+      const inSameRowBand = overRowBounds
+        ? cursorY >= overRowBounds.top - 8 && cursorY <= overRowBounds.bottom + 8
+        : false;
 
-      // Horizontal merge: dominant horizontal movement AND not in vertical edge zone
-      const isHorizontal = !inVerticalEdgeZone && Math.abs(dx) > Math.abs(dy) * 1.2;
+      const dx = cursorX - overCX;
+      const dy = cursorY - overCY;
 
       let side: DropSide;
-      if (isHorizontal) {
-        const activeField = fields.find((f) => f.id === String(active.id));
-        const targetRowId = overField.rowId ?? overField.id;
-        const rowCountWithoutActive = fields.filter(
-          (f) => (f.rowId ?? f.id) === targetRowId && f.id !== String(active.id)
-        ).length;
-        const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
-        if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
-          side = dx < 0 ? "left" : "right";
-        } else {
+
+      if (inSameRowBand) {
+        // Cursor is in this row's vertical band → prefer horizontal unless in top/bottom edge zone
+        const relY = cursorY - overRect.top;
+        const inVerticalEdge = relY < overRect.height * 0.20 || relY > overRect.height * 0.80;
+
+        if (inVerticalEdge) {
           side = dy < 0 ? "above" : "below";
+        } else {
+          // Horizontal — check row capacity
+          const targetRowId = bestField.rowId ?? bestField.id;
+          const rowCountWithoutActive = fields.filter(
+            (f) => (f.rowId ?? f.id) === targetRowId && f.id !== activeFieldId
+          ).length;
+          const activeField = fields.find((f) => f.id === activeFieldId);
+          const activeInSameRow = activeField && (activeField.rowId ?? activeField.id) === targetRowId;
+
+          if (rowCountWithoutActive < MAX_PER_ROW || activeInSameRow) {
+            side = dx < 0 ? "left" : "right";
+          } else {
+            side = dy < 0 ? "above" : "below";
+          }
         }
       } else {
+        // Cursor is between rows → vertical reorder
         side = dy < 0 ? "above" : "below";
       }
 
-      // For above/below: store rowId so the entire row can show the indicator
       if (side === "above" || side === "below") {
-        const rowId = overField.rowId ?? overField.id;
-        return { id: resolvedOverId, side, rowId };
+        const rowId = bestField.rowId ?? bestField.id;
+        return { id: bestField.id, side, rowId };
       }
-      return { id: resolvedOverId, side };
+      return { id: bestField.id, side };
     },
     [fields]
   );
 
-  const handleDragStart = ({ active }: DragStartEvent) => setActiveId(active.id);
-  const handleDragMove = (event: DragMoveEvent) => setDropTarget(computeDropTarget(event));
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    setActiveId(active.id);
+    setDropTarget(null);
+  };
+
+  const handleDragMove = useCallback(
+    (event: DragMoveEvent) => {
+      const target = computeDropTarget(event);
+      pendingTargetRef.current = target;
+
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        setDropTarget(pendingTargetRef.current);
+      }, 40); // 40ms debounce — snappy but no flicker
+    },
+    [computeDropTarget]
+  );
+
   const handleDragEnd = ({ active }: DragEndEvent) => {
-    const pending = dropTarget;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const pending = pendingTargetRef.current ?? dropTarget;
     setActiveId(null);
     setDropTarget(null);
+    pendingTargetRef.current = null;
     if (!pending || pending.id === String(active.id)) return;
     setFields(applyDrop(fields, String(active.id), pending.id, pending.side));
   };
-  const handleDragCancel = () => { setActiveId(null); setDropTarget(null); };
+
+  const handleDragCancel = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    setActiveId(null);
+    setDropTarget(null);
+    pendingTargetRef.current = null;
+  };
 
   const activeField = activeId ? fields.find((f) => f.id === activeId) : null;
   const rows = groupByRow(fields);
@@ -350,47 +439,34 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
                 const isRowAbove = dropTarget?.rowId === rowId && dropTarget?.side === "above";
                 const isRowBelow = dropTarget?.rowId === rowId && dropTarget?.side === "below";
 
-                // Build the list of items for this row, injecting placeholder for left/right drops
+                // Inject horizontal placeholders
                 const rowItems: Array<{ key: string; type: "field" | "placeholder"; field?: CalcField }> = [];
                 for (const field of rowFields) {
                   const isLeftTarget = dropTarget?.id === field.id && dropTarget?.side === "left";
                   const isRightTarget = dropTarget?.id === field.id && dropTarget?.side === "right";
-                  if (isLeftTarget) rowItems.push({ key: "placeholder", type: "placeholder" });
+                  if (isLeftTarget) rowItems.push({ key: `ph-left-${field.id}`, type: "placeholder" });
                   rowItems.push({ key: field.id, type: "field", field });
-                  if (isRightTarget) rowItems.push({ key: "placeholder", type: "placeholder" });
+                  if (isRightTarget) rowItems.push({ key: `ph-right-${field.id}`, type: "placeholder" });
                 }
 
-                // Show placeholder row for above/below drops
                 const draggingField = activeId ? fields.find((f) => f.id === String(activeId)) : null;
                 const activeRowId = draggingField ? (draggingField.rowId ?? draggingField.id) : null;
                 const isActiveRow = activeRowId === rowId;
-                // Don't show placeholder row if the active item is already in this row (it stays as ghost)
                 const showAbovePlaceholder = isRowAbove && !isActiveRow;
                 const showBelowPlaceholder = isRowBelow && !isActiveRow;
 
                 return (
                   <div key={rowId} className="space-y-3">
                     {/* Placeholder row ABOVE */}
-                    {showAbovePlaceholder && (
-                      <div className="grid gap-2" style={{ gridTemplateColumns: "1fr" }}>
-                        <div className="h-16 border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center">
-                          <span className="text-xs text-primary/60 font-medium">Сюда</span>
-                        </div>
-                      </div>
-                    )}
+                    {showAbovePlaceholder && <DropPlaceholder />}
 
                     <div
-                      className="relative grid gap-2"
+                      className="relative grid gap-2 transition-all duration-150"
                       style={{ gridTemplateColumns: `repeat(${rowItems.length}, 1fr)` }}
                     >
                       {rowItems.map((item) =>
                         item.type === "placeholder" ? (
-                          <div
-                            key="placeholder"
-                            className="h-full min-h-[4rem] border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center"
-                          >
-                            <span className="text-xs text-primary/60 font-medium">Сюда</span>
-                          </div>
+                          <DropPlaceholder key={item.key} inline />
                         ) : (
                           <SortableFieldItem
                             key={item.field!.id}
@@ -405,13 +481,7 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
                     </div>
 
                     {/* Placeholder row BELOW */}
-                    {showBelowPlaceholder && (
-                      <div className="grid gap-2" style={{ gridTemplateColumns: "1fr" }}>
-                        <div className="h-16 border-2 border-dashed border-primary/50 rounded-lg bg-primary/5 flex items-center justify-center">
-                          <span className="text-xs text-primary/60 font-medium">Сюда</span>
-                        </div>
-                      </div>
-                    )}
+                    {showBelowPlaceholder && <DropPlaceholder />}
                   </div>
                 );
               })}
@@ -424,7 +494,7 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
         </div>
       </div>
 
-      <DragOverlay dropAnimation={{ duration: 160, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
+      <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
         {activeField ? (
           <OverlayCard field={activeField} allFields={fields} />
         ) : null}
