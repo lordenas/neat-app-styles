@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { CustomCalculator } from "@/types/custom-calc";
+import { CustomCalculator, CalcPage } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "./BuilderCanvas";
-import { evaluateAllFormulas } from "@/lib/calc-engine";
+import { evaluateAllFormulas, resolveVisibility } from "@/lib/calc-engine";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface BuilderPreviewProps {
   calculator: CustomCalculator;
@@ -11,6 +14,10 @@ interface BuilderPreviewProps {
 export function BuilderPreview({ calculator }: BuilderPreviewProps) {
   const [values, setValues] = useState<Record<string, number | string | boolean>>({});
   const [manualResults, setManualResults] = useState<Record<string, number>>({});
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pages: CalcPage[] = calculator.pages?.length ? calculator.pages : [];
+  const totalPages = pages.length;
 
   useEffect(() => {
     const defaults: Record<string, number | string | boolean> = {};
@@ -32,6 +39,7 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
     }
     setValues(defaults);
     setManualResults({});
+    setCurrentPage(0);
   }, [calculator.fields.length]);
 
   const onChange = (key: string, value: number | string | boolean) =>
@@ -70,8 +78,26 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
     setManualResults(newManual);
   };
 
+  const goTo = (target: number) => {
+    if (target < 0 || target >= totalPages) return;
+    setCurrentPage(target);
+  };
+
+  const handleNavigatePage = (target: "next" | "prev" | number) => {
+    if (target === "next") goTo(currentPage + 1);
+    else if (target === "prev") goTo(currentPage - 1);
+    else goTo(target);
+  };
+
   const sorted = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
-  const rows = groupByRow(sorted);
+
+  // Filter fields for current page
+  const pageId = pages[currentPage]?.id;
+  const pageFields = totalPages > 0 && pageId
+    ? sorted.filter((f) => (f.pageId ?? pages[0]?.id) === pageId)
+    : sorted;
+
+  const rows = groupByRow(pageFields);
 
   return (
     <div>
@@ -81,6 +107,29 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
         </div>
       ) : (
         <div className="space-y-4">
+          {/* Page progress dots */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                {pages.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    className={cn(
+                      "h-2 rounded-full transition-all",
+                      i === currentPage
+                        ? "w-6 bg-primary"
+                        : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+                    )}
+                  />
+                ))}
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {pages[currentPage]?.title || `Страница ${currentPage + 1}`} · {currentPage + 1} / {totalPages}
+              </span>
+            </div>
+          )}
+
           {rows.map((rowFields) => (
             <div
               key={rowFields[0].rowId ?? rowFields[0].id}
@@ -96,11 +145,38 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
                   onChange={onChange}
                   onReset={handleReset}
                   onTriggerCalculate={handleTriggerCalculate}
+                  onNavigatePage={handleNavigatePage}
                   manualResults={manualResults}
                 />
               ))}
             </div>
           ))}
+
+          {/* Prev/Next nav */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goTo(currentPage - 1)}
+                disabled={currentPage === 0}
+                className="gap-1.5"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                Назад
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => goTo(currentPage + 1)}
+                disabled={currentPage === totalPages - 1}
+                className="gap-1.5"
+              >
+                Далее
+                <ChevronRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
