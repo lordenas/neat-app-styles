@@ -51,45 +51,15 @@ export default function CalcBuilder() {
   });
 
   const [saved, setSaved] = useState(false);
-  const [listOpen, setListOpen] = useState(false);
-  const [calcList, setCalcList] = useState<CustomCalculator[]>([]);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCalcList(loadCalculators());
-  }, []);
 
   const handleSave = () => {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
     setCalculator(updated);
     saveCalculator(updated);
-    setCalcList(loadCalculators());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
     toast({ title: "Сохранено", description: `Калькулятор «${updated.title}» сохранён локально.` });
-  };
-
-  const handleDelete = (calcId: string) => {
-    deleteCalculator(calcId);
-    setCalcList(loadCalculators());
-    if (calcId === calculator.id) {
-      navigate("/calc-builder");
-      setCalculator(makeNew());
-    }
-    toast({ title: "Удалено" });
-  };
-
-  const handleNew = () => {
-    navigate("/calc-builder");
-    setCalculator(makeNew());
-    setSelectedFieldId(null);
-  };
-
-  const handleOpen = (calc: CustomCalculator) => {
-    setCalculator(calc);
-    navigate(`/calc-builder/${calc.id}`);
-    setListOpen(false);
-    setSelectedFieldId(null);
   };
 
   const copyPlayerLink = () => {

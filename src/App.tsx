@@ -30,6 +30,7 @@ const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
 const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const CalcBuilder = lazy(() => import("./pages/CalcBuilder"));
+const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
 
 // Calculator pages
