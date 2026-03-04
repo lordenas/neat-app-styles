@@ -310,3 +310,182 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
     </div>
   );
 }
+
+// ─── ButtonSettings sub-component ────────────────────────────
+
+const ACTION_LABELS: Record<ButtonActionType, string> = {
+  calculate: "Рассчитать результат",
+  navigate: "Перейти по ссылке",
+  reset: "Сбросить форму",
+  pdf: "Скачать PDF",
+  webhook: "Отправить webhook",
+};
+
+const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate", "reset", "pdf", "webhook"];
+
+interface ButtonSettingsProps {
+  field: CalcField;
+  allFields: CalcField[];
+  updConfig: (partial: Partial<CalcField["config"]>) => void;
+}
+
+function ButtonSettings({ field, allFields, updConfig }: ButtonSettingsProps) {
+  const action = field.config.buttonAction ?? { type: "calculate" as ButtonActionType };
+  const extraActions = action.extraActions ?? [];
+  const post = action.webhookPostAction ?? {} as WebhookPostAction;
+  const isWebhook = action.type === "webhook" || extraActions.includes("webhook");
+
+  const updAction = (partial: Partial<typeof action>) =>
+    updConfig({ buttonAction: { ...action, ...partial } });
+
+  const toggleExtra = (type: ButtonActionType) => {
+    const has = extraActions.includes(type);
+    updAction({ extraActions: has ? extraActions.filter((t) => t !== type) : [...extraActions, type] });
+  };
+
+  const updPost = (partial: Partial<WebhookPostAction>) =>
+    updAction({ webhookPostAction: { ...post, ...partial } });
+
+  return (
+    <div className="space-y-3">
+      {/* Button variant */}
+      <div className="space-y-1.5">
+        <Label className="text-xs">Вид кнопки</Label>
+        <select
+          className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+          value={field.config.buttonVariant ?? "default"}
+          onChange={(e) => updConfig({ buttonVariant: e.target.value as "default" | "outline" | "destructive" | "ghost" })}
+        >
+          <option value="default">Основная</option>
+          <option value="outline">Контурная</option>
+          <option value="destructive">Деструктивная (красная)</option>
+          <option value="ghost">Призрак</option>
+        </select>
+      </div>
+
+      {/* Primary action */}
+      <div className="space-y-1.5">
+        <Label className="text-xs">Основное действие</Label>
+        <select
+          className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+          value={action.type}
+          onChange={(e) => updAction({ type: e.target.value as ButtonActionType })}
+        >
+          {ALL_BUTTON_ACTIONS.map((t) => (
+            <option key={t} value={t}>{ACTION_LABELS[t]}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Extra (additional) actions */}
+      <div className="space-y-1.5">
+        <Label className="text-xs">Дополнительные действия <span className="text-muted-foreground font-normal">(вместе с основным)</span></Label>
+        <div className="space-y-1">
+          {ALL_BUTTON_ACTIONS.filter((t) => t !== action.type).map((t) => (
+            <label key={t} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={extraActions.includes(t)}
+                onChange={() => toggleExtra(t)}
+                className="rounded"
+              />
+              <span className="text-xs text-muted-foreground">{ACTION_LABELS[t]}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* URL for navigate / webhook */}
+      {(action.type === "navigate" || action.type === "webhook" || extraActions.includes("navigate") || extraActions.includes("webhook")) && (
+        <div className="space-y-1.5">
+          <Label className="text-xs">URL <span className="text-muted-foreground font-normal">(поддерживает {"{key}"})</span></Label>
+          <Input
+            inputSize="sm"
+            value={action.url ?? ""}
+            onChange={(e) => updAction({ url: e.target.value })}
+            placeholder="https://example.com?sum={amount}"
+          />
+          {(action.type === "navigate" || extraActions.includes("navigate")) && (
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={action.newTab ?? false}
+                onChange={(e) => updAction({ newTab: e.target.checked })}
+                className="rounded"
+              />
+              <span className="text-xs text-muted-foreground">Открыть в новой вкладке</span>
+            </label>
+          )}
+        </div>
+      )}
+
+      {/* Target result field for calculate */}
+      {(action.type === "calculate" || extraActions.includes("calculate")) && (
+        <div className="space-y-1.5">
+          <Label className="text-xs">Поле результата <span className="text-muted-foreground font-normal">(пусто = все)</span></Label>
+          <select
+            className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+            value={action.targetFieldId ?? ""}
+            onChange={(e) => updAction({ targetFieldId: e.target.value })}
+          >
+            <option value="">Все result-поля</option>
+            {allFields.filter((f) => f.type === "result").map((f) => (
+              <option key={f.id} value={f.id}>{f.label || f.key}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Webhook post-actions */}
+      {isWebhook && (
+        <div className="space-y-2 rounded-md border border-dashed border-border p-3 bg-muted/20">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">После отправки webhook</p>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={post.showToast ?? false}
+              onChange={(e) => updPost({ showToast: e.target.checked })}
+              className="rounded"
+            />
+            <span className="text-xs">Показать уведомление</span>
+          </label>
+
+          {post.showToast && (
+            <div className="space-y-1.5 ml-4">
+              <Input inputSize="sm" value={post.successMessage ?? ""} onChange={(e) => updPost({ successMessage: e.target.value })} placeholder="Успешно отправлено" />
+              <Input inputSize="sm" value={post.errorMessage ?? ""} onChange={(e) => updPost({ errorMessage: e.target.value })} placeholder="Ошибка при отправке" />
+            </div>
+          )}
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={post.resetAfter ?? false}
+              onChange={(e) => updPost({ resetAfter: e.target.checked })}
+              className="rounded"
+            />
+            <span className="text-xs">Сбросить форму</span>
+          </label>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Редирект после успеха</Label>
+            <Input inputSize="sm" value={post.redirectUrl ?? ""} onChange={(e) => updPost({ redirectUrl: e.target.value })} placeholder="https://thank-you.com" />
+            {post.redirectUrl && (
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={post.redirectNewTab ?? false}
+                  onChange={(e) => updPost({ redirectNewTab: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs text-muted-foreground">Открыть в новой вкладке</span>
+              </label>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
