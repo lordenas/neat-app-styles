@@ -140,6 +140,11 @@ export function PlayerField({
   if (field.type === "label") {
     const variant = field.config.labelVariant ?? "body";
     const content = field.config.labelContent ?? field.label ?? "";
+    const color = field.config.labelColor;
+    const bold = field.config.labelBold;
+    const italic = field.config.labelItalic;
+    const align = field.config.labelAlign ?? "left";
+    const href = field.config.labelHref;
 
     if (variant === "divider") {
       return wrap(
@@ -151,16 +156,30 @@ export function PlayerField({
       );
     }
 
-    return wrap(
-      <div className={cn(
-        variant === "h1" && "text-2xl font-bold",
-        variant === "h2" && "text-xl font-semibold",
-        variant === "h3" && "text-base font-semibold",
-        variant === "body" && "text-sm",
-        variant === "caption" && "text-xs text-muted-foreground",
-      )}>
+    const textAlign = align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+
+    const inner = (
+      <div
+        className={cn(
+          variant === "h1" && "text-2xl font-bold",
+          variant === "h2" && "text-xl font-semibold",
+          variant === "h3" && "text-base font-semibold",
+          variant === "body" && "text-sm",
+          variant === "caption" && "text-xs text-muted-foreground",
+          bold && "font-bold",
+          italic && "italic",
+          textAlign,
+        )}
+        style={color ? { color } : undefined}
+      >
         {content || <span className="text-muted-foreground italic text-xs">(пустой текст)</span>}
       </div>
+    );
+
+    return wrap(
+      href
+        ? <a href={href} target="_blank" rel="noopener noreferrer" className="hover:underline">{inner}</a>
+        : inner
     );
   }
 

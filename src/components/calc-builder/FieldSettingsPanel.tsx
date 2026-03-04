@@ -13,6 +13,7 @@ import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
   Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info,
+  Bold, Italic, Link, AlignCenter, AlignRight, AlignJustify,
 } from "lucide-react";
 import { useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
@@ -313,6 +314,100 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
                   value={field.config.labelContent ?? ""}
                   onChange={(e) => updConfig({ labelContent: e.target.value })}
                   placeholder="Введите текст..."
+                />
+              </div>
+
+              {/* Formatting toolbar */}
+              <div className="space-y-1.5">
+                <Label className="text-xs">Форматирование</Label>
+                <div className="flex items-center gap-1 flex-wrap">
+                  {/* Bold */}
+                  <SimpleTooltip content="Жирный" side="top">
+                    <button
+                      onClick={() => updConfig({ labelBold: !field.config.labelBold })}
+                      className={`h-7 w-7 flex items-center justify-center rounded-md border transition-colors ${
+                        field.config.labelBold
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-input bg-background text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <Bold className="h-3.5 w-3.5" />
+                    </button>
+                  </SimpleTooltip>
+                  {/* Italic */}
+                  <SimpleTooltip content="Курсив" side="top">
+                    <button
+                      onClick={() => updConfig({ labelItalic: !field.config.labelItalic })}
+                      className={`h-7 w-7 flex items-center justify-center rounded-md border transition-colors ${
+                        field.config.labelItalic
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-input bg-background text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <Italic className="h-3.5 w-3.5" />
+                    </button>
+                  </SimpleTooltip>
+                  <div className="w-px h-5 bg-border mx-0.5" />
+                  {/* Align */}
+                  {(["left", "center", "right"] as const).map((align) => {
+                    const Icon = align === "left" ? AlignLeft : align === "center" ? AlignCenter : AlignRight;
+                    const label = align === "left" ? "По левому краю" : align === "center" ? "По центру" : "По правому краю";
+                    return (
+                      <SimpleTooltip key={align} content={label} side="top">
+                        <button
+                          onClick={() => updConfig({ labelAlign: align })}
+                          className={`h-7 w-7 flex items-center justify-center rounded-md border transition-colors ${
+                            (field.config.labelAlign ?? "left") === align
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-input bg-background text-muted-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                        </button>
+                      </SimpleTooltip>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Color */}
+              <div className="space-y-1.5">
+                <Label className="text-xs">Цвет текста</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={field.config.labelColor ?? "#000000"}
+                    onChange={(e) => updConfig({ labelColor: e.target.value })}
+                    className="h-7 w-10 rounded border border-input cursor-pointer bg-background p-0.5"
+                  />
+                  <Input
+                    inputSize="sm"
+                    value={field.config.labelColor ?? ""}
+                    onChange={(e) => updConfig({ labelColor: e.target.value || undefined })}
+                    placeholder="Авто (по теме)"
+                    className="flex-1 font-mono"
+                  />
+                  {field.config.labelColor && (
+                    <button
+                      onClick={() => updConfig({ labelColor: undefined })}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Link */}
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1.5">
+                  <Link className="h-3 w-3" /> Ссылка (href)
+                </Label>
+                <Input
+                  inputSize="sm"
+                  value={field.config.labelHref ?? ""}
+                  onChange={(e) => updConfig({ labelHref: e.target.value || undefined })}
+                  placeholder="https://..."
                 />
               </div>
             </div>

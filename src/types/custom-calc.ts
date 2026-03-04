@@ -227,6 +227,16 @@ export interface CalcFieldConfig {
    * Поддерживает интерполяцию {key} из значений формы.
    */
   htmlContent?: string;
+  /** Для label: цвет текста (hex или css color) */
+  labelColor?: string;
+  /** Для label: жирный текст */
+  labelBold?: boolean;
+  /** Для label: курсив */
+  labelItalic?: boolean;
+  /** Для label: ссылка (href) */
+  labelHref?: string;
+  /** Для label: выравнивание текста */
+  labelAlign?: "left" | "center" | "right";
   /** Внутренний отступ сверху (0–64px) */
   paddingTop?: number;
   /** Внутренний отступ снизу (0–64px) */
