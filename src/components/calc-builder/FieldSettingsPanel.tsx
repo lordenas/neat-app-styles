@@ -839,3 +839,119 @@ function HtmlSettings({ field, allFields, updConfig }: HtmlSettingsProps) {
   );
 }
 
+// ─── ValidationSection sub-component ─────────────────────────
+
+interface ValidationSectionProps {
+  field: CalcField;
+  updConfig: (partial: Partial<CalcField["config"]>) => void;
+}
+
+function ValidationSection({ field, updConfig }: ValidationSectionProps) {
+  const isNumeric = field.type === "number" || field.type === "slider";
+  const isText = field.type === "text" || field.type === "textarea";
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Валидация</p>
+
+      {/* Required */}
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={field.config.required ?? false}
+          onChange={(e) => updConfig({ required: e.target.checked })}
+          className="rounded"
+        />
+        <span className="text-xs font-medium">Обязательное поле</span>
+      </label>
+      {field.config.required && (
+        <div className="space-y-1.5 ml-5">
+          <Label className="text-xs text-muted-foreground">Сообщение об ошибке</Label>
+          <Input
+            inputSize="sm"
+            value={field.config.requiredMessage ?? ""}
+            onChange={(e) => updConfig({ requiredMessage: e.target.value })}
+            placeholder="Это поле обязательно для заполнения"
+          />
+        </div>
+      )}
+
+      {/* Min / Max validation for numeric */}
+      {isNumeric && (
+        <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs">Мин. значение</Label>
+              <Input
+                inputSize="sm"
+                type="number"
+                value={field.config.validationMin ?? ""}
+                onChange={(e) => updConfig({ validationMin: e.target.value === "" ? undefined : Number(e.target.value) })}
+                placeholder="Не задано"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs">Макс. значение</Label>
+              <Input
+                inputSize="sm"
+                type="number"
+                value={field.config.validationMax ?? ""}
+                onChange={(e) => updConfig({ validationMax: e.target.value === "" ? undefined : Number(e.target.value) })}
+                placeholder="Не задано"
+              />
+            </div>
+          </div>
+          {field.config.validationMin !== undefined && (
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Сообщение при нарушении мин.</Label>
+              <Input
+                inputSize="sm"
+                value={field.config.validationMinMessage ?? ""}
+                onChange={(e) => updConfig({ validationMinMessage: e.target.value })}
+                placeholder={`Значение должно быть не менее ${field.config.validationMin}`}
+              />
+            </div>
+          )}
+          {field.config.validationMax !== undefined && (
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Сообщение при нарушении макс.</Label>
+              <Input
+                inputSize="sm"
+                value={field.config.validationMaxMessage ?? ""}
+                onChange={(e) => updConfig({ validationMaxMessage: e.target.value })}
+                placeholder={`Значение должно быть не более ${field.config.validationMax}`}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Pattern validation for text */}
+      {isText && (
+        <div className="space-y-2">
+          <div className="space-y-1.5">
+            <Label className="text-xs">Regex-паттерн</Label>
+            <Input
+              inputSize="sm"
+              value={field.config.validationPattern ?? ""}
+              onChange={(e) => updConfig({ validationPattern: e.target.value })}
+              placeholder="^[0-9]+$"
+              className="font-mono"
+            />
+          </div>
+          {field.config.validationPattern && (
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Сообщение при нарушении паттерна</Label>
+              <Input
+                inputSize="sm"
+                value={field.config.validationPatternMessage ?? ""}
+                onChange={(e) => updConfig({ validationPatternMessage: e.target.value })}
+                placeholder="Значение не соответствует формату"
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
