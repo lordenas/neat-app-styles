@@ -365,6 +365,7 @@ export interface CalcField {
 export interface CalcTheme {
   primaryColor?: string;   // hex
   bgColor?: string;        // hex
+  accentColor?: string;    // hex (акцентный/фоновый цвет для полей)
   borderRadius?: "none" | "sm" | "md" | "lg";
   fontFamily?: string;
 }
