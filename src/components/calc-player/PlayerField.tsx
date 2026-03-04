@@ -22,12 +22,13 @@ interface PlayerFieldProps {
   onChange: (key: string, value: number | string | boolean) => void;
   onTriggerCalculate?: (targetFieldId?: string) => void;
   onReset?: () => void;
+  onNavigatePage?: (target: "next" | "prev" | number) => void;
   /** Manual result values keyed by field.key */
   manualResults?: Record<string, number>;
 }
 
 export function PlayerField({
-  field, allFields, values, onChange, onTriggerCalculate, onReset, manualResults,
+  field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults,
 }: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
