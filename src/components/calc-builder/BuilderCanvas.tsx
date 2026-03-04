@@ -449,11 +449,14 @@ export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectF
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="space-y-2">
+      <div className="space-y-3">
+        {/* Add field button — always at the top */}
+        <FieldTypeMenu onAdd={addField} />
+
         {fields.length === 0 ? (
           <div className="border-2 border-dashed rounded-xl p-10 text-center text-muted-foreground">
             <p className="text-sm font-medium mb-1">Калькулятор пуст</p>
-            <p className="text-xs">Добавьте первое поле с помощью меню ниже</p>
+            <p className="text-xs">Добавьте первое поле с помощью меню выше</p>
           </div>
         ) : (
           <SortableContext items={fields.map((f) => f.id)} strategy={() => null}>
@@ -512,9 +515,6 @@ export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectF
           </SortableContext>
         )}
 
-        <div className="pt-2">
-          <FieldTypeMenu onAdd={addField} />
-        </div>
       </div>
 
       <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
