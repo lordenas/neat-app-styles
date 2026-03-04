@@ -607,3 +607,67 @@ function ImageSettings({ field, updConfig }: ImageSettingsProps) {
     </div>
   );
 }
+
+// ─── HtmlSettings sub-component ──────────────────────────────
+
+import CodeEditor from "@uiw/react-textarea-code-editor";
+
+interface HtmlSettingsProps {
+  field: CalcField;
+  allFields: CalcField[];
+  updConfig: (partial: Partial<CalcField["config"]>) => void;
+}
+
+function HtmlSettings({ field, allFields, updConfig }: HtmlSettingsProps) {
+  const inputFields = allFields.filter(
+    (f) => f.type !== "result" && f.type !== "button" && f.type !== "label" && f.type !== "image" && f.type !== "html"
+  );
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">HTML-блок</p>
+      <div className="space-y-2">
+        <div className="space-y-1.5">
+          <Label className="text-xs">HTML-код</Label>
+          <div className="rounded-md border border-input overflow-hidden text-xs">
+            <CodeEditor
+              value={field.config.htmlContent ?? ""}
+              language="html"
+              placeholder="<p>Ваш HTML...</p>"
+              onChange={(e) => updConfig({ htmlContent: e.target.value })}
+              padding={10}
+              style={{
+                fontSize: 12,
+                fontFamily: "ui-monospace, monospace",
+                minHeight: 120,
+                backgroundColor: "hsl(var(--muted))",
+                color: "hsl(var(--foreground))",
+              }}
+            />
+          </div>
+        </div>
+
+        {inputFields.length > 0 && (
+          <div className="rounded-md border border-dashed border-border bg-muted/20 p-2.5 space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Доступные переменные</p>
+            <div className="flex flex-wrap gap-1.5">
+              {inputFields.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                  onClick={() => updConfig({ htmlContent: (field.config.htmlContent ?? "") + `{${f.key}}` })}
+                  title={f.label}
+                >
+                  {"{" + f.key + "}"}
+                </button>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted-foreground">Нажмите на переменную, чтобы вставить в код</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
