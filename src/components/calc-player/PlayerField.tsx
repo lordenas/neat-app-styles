@@ -122,6 +122,9 @@ export function PlayerField({
           case "reset":
             onReset?.();
             break;
+          case "navigate_page":
+            onNavigatePage?.(action.targetPage ?? "next");
+            break;
           case "navigate": {
             const url = resolveUrl(action.url ?? "", values);
             if (action.newTab) window.open(url, "_blank");
