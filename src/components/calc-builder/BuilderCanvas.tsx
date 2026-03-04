@@ -230,7 +230,7 @@ function getRowYCenter(rowFields: CalcField[]): { top: number; bottom: number } 
   return minTop === Infinity ? null : { top: minTop, bottom: maxBottom };
 }
 
-export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
+export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectField }: BuilderCanvasProps) {
   const fields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
