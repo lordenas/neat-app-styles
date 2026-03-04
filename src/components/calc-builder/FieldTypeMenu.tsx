@@ -35,7 +35,7 @@ export function FieldTypeMenu({ onAdd }: FieldTypeMenuProps) {
           <ChevronDown className="h-3 w-3 ml-auto opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64">
+      <DropdownMenuContent align="start" side="top" avoidCollisions collisionPadding={12} className="w-64 max-h-[70vh] overflow-y-auto">
         {FIELD_TYPES.map(({ type, label, icon, description }) => (
           <DropdownMenuItem
             key={type}
