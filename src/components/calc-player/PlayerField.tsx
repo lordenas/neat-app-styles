@@ -67,12 +67,12 @@ export function PlayerField({
       (_, css: string) => {
         const prefixed = css.replace(
           /([^{}]+)\{/g,
-          (ruleHead: string) => {
-            const selectors = ruleHead
+          (_match: string, selectorPart: string) => {
+            const selectors = selectorPart
               .split(",")
               .map((sel) => {
                 const s = sel.trim();
-                if (s.startsWith("@")) return s;
+                if (!s || s.startsWith("@")) return s;
                 return `[${scopeAttr}] ${s}`;
               })
               .join(", ");
