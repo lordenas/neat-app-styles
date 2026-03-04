@@ -104,7 +104,7 @@ export function PlayerField({
 
     if (!clean && !scopedStyles) return null;
 
-    return (
+    return wrap(
       <div {...{ [scopeAttr]: "" }} className="prose prose-sm max-w-none dark:prose-invert">
         {scopedStyles && (
           <style dangerouslySetInnerHTML={{ __html: scopedStyles }} />
