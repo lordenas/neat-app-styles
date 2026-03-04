@@ -6,8 +6,6 @@ import {
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
 import { FieldSettingsPanel } from "@/components/calc-builder/FieldSettingsPanel";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -37,6 +35,10 @@ function makeNew(): CustomCalculator {
   };
 }
 
+const TOPBAR_H = 48; // px — top toolbar height
+const HEADER_H = 57; // px — site header height
+const PANEL_TOP = HEADER_H + TOPBAR_H; // 105px
+
 export default function CalcBuilder() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
@@ -52,6 +54,7 @@ export default function CalcBuilder() {
 
   const [saved, setSaved] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"builder" | "preview">("builder");
 
   const handleSave = () => {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
@@ -91,107 +94,122 @@ export default function CalcBuilder() {
   const playerUrl = `/c/${calculator.slug}`;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <SiteHeader />
+    <div className="h-screen flex flex-col overflow-hidden bg-background">
 
-      {/* Top bar */}
-      <div className="border-b bg-card sticky top-[57px] z-30">
-        <div className="max-w-screen-xl mx-auto px-4 h-12 flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => navigate("/calc-list")}>
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Мои калькуляторы
+      {/* ── Top toolbar ── */}
+      <header className="h-12 shrink-0 border-b bg-card flex items-center px-4 gap-3 z-30">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 text-muted-foreground"
+          onClick={() => navigate("/calc-list")}
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Мои калькуляторы
+        </Button>
+
+        <Separator orientation="vertical" className="h-5" />
+
+        <Input
+          value={calculator.title}
+          onChange={(e) => setCalculator((c) => ({ ...c, title: e.target.value }))}
+          className="h-8 w-56 text-sm font-medium border-0 shadow-none bg-transparent focus-visible:ring-0 px-1"
+          placeholder="Название калькулятора"
+        />
+
+        {/* Tab switcher */}
+        <div className="flex items-center gap-1 ml-4 bg-muted rounded-lg p-1">
+          <button
+            onClick={() => setTab("builder")}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors",
+              tab === "builder"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Calculator className="h-3.5 w-3.5" />
+            Редактор
+          </button>
+          <button
+            onClick={() => setTab("preview")}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors",
+              tab === "preview"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Eye className="h-3.5 w-3.5" />
+            Превью
+          </button>
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setCalculator((c) => ({ ...c, isPublic: !c.isPublic }))}
+            className={cn(
+              "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border transition-colors",
+              calculator.isPublic
+                ? "bg-primary/10 text-primary border-primary/30"
+                : "text-muted-foreground border-border hover:border-primary/30"
+            )}
+          >
+            {calculator.isPublic ? <Globe className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
+            {calculator.isPublic ? "Публичный" : "Приватный"}
+          </button>
+
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={copyPlayerLink}>
+            <Copy className="h-3.5 w-3.5" />
+            Ссылка
           </Button>
 
-          <Separator orientation="vertical" className="h-5" />
+          <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => window.open(playerUrl, "_blank")}>
+            <ExternalLink className="h-3.5 w-3.5" />
+            Открыть
+          </Button>
 
-          {/* Title */}
-          <Input
-            value={calculator.title}
-            onChange={(e) => setCalculator((c) => ({ ...c, title: e.target.value }))}
-            className="h-8 text-sm font-medium border-0 shadow-none bg-transparent focus-visible:ring-0 w-64 px-1"
-            placeholder="Название калькулятора"
-          />
-
-          <div className="ml-auto flex items-center gap-2">
-            {/* Public toggle */}
-            <button
-              onClick={() => setCalculator((c) => ({ ...c, isPublic: !c.isPublic }))}
-              className={cn(
-                "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border transition-colors",
-                calculator.isPublic
-                  ? "bg-primary/10 text-primary border-primary/30"
-                  : "text-muted-foreground border-border hover:border-primary/30"
-              )}
-            >
-              {calculator.isPublic ? <Globe className="h-3 w-3" /> : <Lock className="h-3 w-3" />}
-              {calculator.isPublic ? "Публичный" : "Приватный"}
-            </button>
-
-            {/* Copy link */}
-            <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={copyPlayerLink}>
-              <Copy className="h-3.5 w-3.5" />
-              Ссылка
-            </Button>
-
-            {/* Open player */}
-            <Button variant="ghost" size="sm" className="gap-1.5 text-xs" onClick={() => window.open(playerUrl, "_blank")}>
-              <ExternalLink className="h-3.5 w-3.5" />
-              Открыть
-            </Button>
-
-            <Button size="sm" className="gap-1.5" onClick={handleSave}>
-              <Save className="h-3.5 w-3.5" />
-              {saved ? "Сохранено ✓" : "Сохранить"}
-            </Button>
-          </div>
+          <Button size="sm" className="gap-1.5" onClick={handleSave}>
+            <Save className="h-3.5 w-3.5" />
+            {saved ? "Сохранено ✓" : "Сохранить"}
+          </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="flex flex-1 max-w-screen-xl mx-auto w-full">
-        {/* Main area */}
-        <main className="flex-1 min-w-0 p-4 md:p-6 overflow-hidden">
-          <Tabs defaultValue="builder" className="h-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="builder" className="gap-1.5">
-                <Calculator className="h-3.5 w-3.5" />
-                Редактор
-              </TabsTrigger>
-              <TabsTrigger value="preview" className="gap-1.5">
-                <Eye className="h-3.5 w-3.5" />
-                Превью
-              </TabsTrigger>
-            </TabsList>
+      {/* ── Body ── */}
+      <div className="flex flex-1 overflow-hidden">
 
-            <TabsContent value="builder" className="mt-0">
-              <div className="flex gap-4 items-start">
-                {/* Canvas area */}
-                <div className="flex-1 min-w-0 space-y-4">
-                  <Input
-                    value={calculator.description ?? ""}
-                    onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
-                    placeholder="Описание (необязательно)"
-                    className="text-sm"
-                  />
-                  <BuilderCanvas
-                    calculator={calculator}
-                    onChange={setCalculator}
-                    selectedFieldId={selectedFieldId}
-                    onSelectField={setSelectedFieldId}
-                  />
-                </div>
+        {/* Left settings panel — fixed width, full remaining height */}
+        <aside
+          className="w-80 shrink-0 border-r bg-card flex flex-col overflow-hidden"
+        >
+          <FieldSettingsPanel
+            field={selectedField}
+            allFields={calculator.fields}
+            onChange={updateSelectedField}
+            onDelete={deleteSelectedField}
+          />
+        </aside>
 
-                {/* Right settings panel */}
-                <aside className="w-72 shrink-0 border rounded-xl bg-card shadow-sm overflow-hidden hidden lg:flex flex-col sticky top-[105px]" style={{ maxHeight: "calc(100vh - 120px)" }}>
-                  <FieldSettingsPanel
-                    field={selectedField}
-                    allFields={calculator.fields}
-                    onChange={updateSelectedField}
-                    onDelete={deleteSelectedField}
-                  />
-                </aside>
-              </div>
-            </TabsContent>
-            <TabsContent value="preview" className="mt-0">
+        {/* Canvas / preview — scrollable */}
+        <main className="flex-1 overflow-y-auto">
+          {tab === "builder" ? (
+            <div className="p-6 space-y-4 max-w-5xl">
+              <Input
+                value={calculator.description ?? ""}
+                onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
+                placeholder="Описание (необязательно)"
+                className="text-sm max-w-xl"
+              />
+              <BuilderCanvas
+                calculator={calculator}
+                onChange={setCalculator}
+                selectedFieldId={selectedFieldId}
+                onSelectField={setSelectedFieldId}
+              />
+            </div>
+          ) : (
+            <div className="p-6 max-w-2xl">
               <div className="border rounded-xl p-6 bg-card shadow-sm">
                 <h3 className="text-lg font-bold mb-1">{calculator.title}</h3>
                 {calculator.description && (
@@ -199,12 +217,10 @@ export default function CalcBuilder() {
                 )}
                 <BuilderPreview calculator={calculator} />
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
         </main>
       </div>
-
-      <SiteFooter />
     </div>
   );
 }
