@@ -14,6 +14,7 @@ import {
   Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2,
 } from "lucide-react";
 import { useState } from "react";
+import CodeEditor from "@uiw/react-textarea-code-editor";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-4 w-4" />,
