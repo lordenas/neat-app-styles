@@ -1,5 +1,4 @@
 import { useEditor, EditorContent } from "@tiptap/react";
-import { BubbleMenu } from "@tiptap/extension-bubble-menu";
 import StarterKit from "@tiptap/starter-kit";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
@@ -61,7 +60,7 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
     const normalizedCurrent = current === "<p></p>" ? "" : current;
     if (normalizedCurrent !== normalized) {
       isUpdatingRef.current = true;
-      editor.commands.setContent(normalized || "", false);
+      editor.commands.setContent(normalized || "");
       isUpdatingRef.current = false;
     }
   }, [value, editor]);
@@ -106,25 +105,21 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
         : "text-muted-foreground hover:bg-muted hover:text-foreground"
     );
 
-  // Current text color
   const currentColor = editor.getAttributes("textStyle").color as string | undefined;
 
   return (
     <div className={cn("relative rounded-md border border-input bg-background", className)}>
       {/* Toolbar */}
       <div className="flex items-center gap-0.5 px-1.5 py-1 border-b border-border flex-wrap">
-        {/* Bold */}
         <button type="button" onMouseDown={(e) => { e.preventDefault(); editor.chain().focus().toggleBold().run(); }} className={btnClass(editor.isActive("bold"))}>
           <Bold className="h-3 w-3" />
         </button>
-        {/* Italic */}
         <button type="button" onMouseDown={(e) => { e.preventDefault(); editor.chain().focus().toggleItalic().run(); }} className={btnClass(editor.isActive("italic"))}>
           <Italic className="h-3 w-3" />
         </button>
 
         <div className="w-px h-4 bg-border mx-0.5" />
 
-        {/* Align */}
         <button type="button" onMouseDown={(e) => { e.preventDefault(); editor.chain().focus().setTextAlign("left").run(); }} className={btnClass(editor.isActive({ textAlign: "left" }))}>
           <AlignLeft className="h-3 w-3" />
         </button>
@@ -145,12 +140,9 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
             className={btnClass(!!currentColor)}
             title="Цвет текста"
           >
-            <span className="relative flex flex-col items-center">
+            <span className="relative flex flex-col items-center gap-px">
               <span className="font-bold text-[10px] leading-none" style={currentColor ? { color: currentColor } : undefined}>A</span>
-              <span
-                className="block w-3.5 h-0.5 rounded-full mt-0.5"
-                style={{ backgroundColor: currentColor ?? "hsl(var(--foreground))" }}
-              />
+              <span className="block w-3.5 h-0.5 rounded-full" style={{ backgroundColor: currentColor ?? "hsl(var(--foreground))" }} />
             </span>
           </button>
           {showColorPicker && (
@@ -212,7 +204,7 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
             onMouseDown={(e) => { e.preventDefault(); editor.chain().focus().unsetLink().run(); }}
             className="h-6 px-1.5 text-[10px] flex items-center rounded text-destructive hover:bg-destructive/10 transition-colors"
           >
-            Убрать ссылку
+            Убрать
           </button>
         )}
       </div>
@@ -234,7 +226,7 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
             className="flex-1 text-xs bg-transparent focus:outline-none"
           />
           <button type="button" onClick={applyLink} className="text-[10px] text-primary font-medium hover:underline">
-            Применить
+            OK
           </button>
           <button type="button" onClick={() => setShowLinkInput(false)} className="text-muted-foreground hover:text-foreground">
             <X className="h-3 w-3" />
@@ -242,38 +234,12 @@ export function RichTextEditor({ value, onChange, placeholder = "Введите 
         </div>
       )}
 
-      {/* Bubble menu for quick formatting on selection */}
-      <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }} className="flex items-center gap-0.5 bg-popover border border-border rounded-md shadow-lg px-1.5 py-1">
-        <button type="button" onClick={() => editor.chain().focus().toggleBold().run()} className={btnClass(editor.isActive("bold"))}>
-          <Bold className="h-3 w-3" />
-        </button>
-        <button type="button" onClick={() => editor.chain().focus().toggleItalic().run()} className={btnClass(editor.isActive("italic"))}>
-          <Italic className="h-3 w-3" />
-        </button>
-        <button type="button" onClick={openLinkInput} className={btnClass(editor.isActive("link"))}>
-          <LinkIcon className="h-3 w-3" />
-        </button>
-        <div className="w-px h-4 bg-border mx-0.5" />
-        {PRESET_COLORS.slice(0, 6).map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => editor.chain().focus().setColor(c).run()}
-            className="w-4 h-4 rounded-full border border-border hover:scale-110 transition-transform"
-            style={{ backgroundColor: c }}
-          />
-        ))}
-      </BubbleMenu>
+      {/* Hint */}
+      <div className="text-[10px] text-muted-foreground px-2 pt-0.5 pointer-events-none absolute right-2 top-[6px]">
+        Выделите текст для форматирования
+      </div>
 
-      {/* Editor area */}
       <EditorContent editor={editor} />
-
-      {/* Empty placeholder */}
-      {!value && (
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 top-[calc(100%-60px)] px-2 py-1.5 text-xs text-muted-foreground select-none" style={{ top: "auto" }}>
-          {/* Tiptap handles placeholder via CSS */}
-        </div>
-      )}
     </div>
   );
 }
