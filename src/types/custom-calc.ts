@@ -158,6 +158,8 @@ export type LabelVariant = "h1" | "h2" | "h3" | "body" | "caption" | "divider";
 export interface SelectOption {
   label: string;
   value: string;
+  /** Числовое значение, подставляемое в формулы вместо строкового value */
+  numericValue?: number;
 }
 
 /** Конфигурация поля (хранится в jsonb calc_fields.config) */
