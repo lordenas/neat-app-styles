@@ -34,8 +34,15 @@ export function PlayerField({
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
 
+  const pt = field.config.paddingTop;
+  const pb = field.config.paddingBottom;
+  const paddingStyle = (pt || pb) ? { paddingTop: pt ? `${pt}px` : undefined, paddingBottom: pb ? `${pb}px` : undefined } : undefined;
+
+  const wrap = (node: React.ReactNode) =>
+    paddingStyle ? <div style={paddingStyle}>{node}</div> : <>{node}</>;
+
   if (field.type === "result") {
-    return (
+    return wrap(
       <PlayerResult
         field={field}
         allFields={allFields}
