@@ -82,7 +82,7 @@ export function PageManager({
               </span>
 
               {hasAutoAdvance && (
-                <Zap className="h-3 w-3 text-yellow-500 shrink-0" />
+                <Zap className="h-3 w-3 text-foreground opacity-60 shrink-0" />
               )}
 
               <Badge variant="outline" className="text-[10px] px-1 py-0 shrink-0">
