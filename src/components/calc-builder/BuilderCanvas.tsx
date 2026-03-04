@@ -515,9 +515,6 @@ export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectF
           </SortableContext>
         )}
 
-        <div className="pt-2">
-          <FieldTypeMenu onAdd={addField} />
-        </div>
       </div>
 
       <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
