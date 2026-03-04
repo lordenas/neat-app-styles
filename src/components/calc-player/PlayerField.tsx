@@ -364,7 +364,7 @@ export function PlayerField({
           <Label htmlFor={field.key} className="cursor-pointer font-normal">{field.label}</Label>
         </div>
       );
-      return (
+      return wrap(
         <div className="py-1">
           {control}
           {field.config.hint && (
@@ -375,7 +375,7 @@ export function PlayerField({
     }
   }
 
-  return (
+  return wrap(
     <div className="space-y-2">
       {label}
       {control}
