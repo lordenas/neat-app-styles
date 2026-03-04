@@ -11,23 +11,28 @@ import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote,
 } from "lucide-react";
 import { useState } from "react";
+import { ButtonActionType, LabelVariant } from "@/types/custom-calc";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-4 w-4" />,
   text:     <Type className="h-4 w-4" />,
+  textarea: <AlignLeft className="h-4 w-4" />,
   slider:   <SlidersHorizontal className="h-4 w-4" />,
   select:   <List className="h-4 w-4" />,
   radio:    <CircleDot className="h-4 w-4" />,
   checkbox: <ToggleLeft className="h-4 w-4" />,
   result:   <Calculator className="h-4 w-4" />,
+  button:   <MousePointerClick className="h-4 w-4" />,
+  label:    <TextQuote className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
-  number: "Число", text: "Текст", slider: "Слайдер",
+  number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
+  button: "Кнопка", label: "Текст",
 };
 
 function slugify(s: string): string {
@@ -206,6 +211,131 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
                 <Label className="text-xs">Знаков после запятой</Label>
                 <Input inputSize="sm" type="number" value={field.config.decimals ?? 2} onChange={(e) => updConfig({ decimals: Number(e.target.value) })} min={0} max={10} />
               </div>
+            </div>
+          </div>
+        )}
+
+        {field.type === "textarea" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки textarea</p>
+            <div className="space-y-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Количество строк</Label>
+                <Input inputSize="sm" type="number" value={field.config.rows ?? 3} onChange={(e) => updConfig({ rows: Number(e.target.value) })} min={2} max={20} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Подсказка</Label>
+                <Input inputSize="sm" value={field.config.hint ?? ""} onChange={(e) => updConfig({ hint: e.target.value })} placeholder="Необязательно" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {field.type === "label" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Статический текст</p>
+            <div className="space-y-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Вариант оформления</Label>
+                <select
+                  className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+                  value={field.config.labelVariant ?? "body"}
+                  onChange={(e) => updConfig({ labelVariant: e.target.value as LabelVariant })}
+                >
+                  <option value="h1">Заголовок H1 (крупный)</option>
+                  <option value="h2">Заголовок H2 (средний)</option>
+                  <option value="h3">Заголовок H3 (мелкий)</option>
+                  <option value="body">Обычный текст</option>
+                  <option value="caption">Подпись (мелкий серый)</option>
+                  <option value="divider">Разделитель с текстом</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Содержимое</Label>
+                <textarea
+                  className="w-full text-xs rounded-md border border-input bg-background px-2 py-1.5 min-h-[60px] resize-y focus:outline-none focus:ring-1 focus:ring-ring"
+                  value={field.config.labelContent ?? ""}
+                  onChange={(e) => updConfig({ labelContent: e.target.value })}
+                  placeholder="Введите текст..."
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {field.type === "button" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
+            <div className="space-y-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Вид кнопки</Label>
+                <select
+                  className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+                  value={field.config.buttonVariant ?? "default"}
+                  onChange={(e) => updConfig({ buttonVariant: e.target.value as "default" | "outline" | "destructive" | "ghost" })}
+                >
+                  <option value="default">Основная</option>
+                  <option value="outline">Контурная</option>
+                  <option value="destructive">Деструктивная (красная)</option>
+                  <option value="ghost">Призрак</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Действие</Label>
+                <select
+                  className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+                  value={field.config.buttonAction?.type ?? "calculate"}
+                  onChange={(e) => updConfig({
+                    buttonAction: {
+                      ...(field.config.buttonAction ?? {}),
+                      type: e.target.value as ButtonActionType,
+                    },
+                  })}
+                >
+                  <option value="calculate">Рассчитать результат</option>
+                  <option value="navigate">Перейти по ссылке</option>
+                  <option value="reset">Сбросить форму</option>
+                  <option value="pdf">Скачать PDF</option>
+                  <option value="webhook">Отправить в webhook</option>
+                </select>
+              </div>
+              {(field.config.buttonAction?.type === "navigate" || field.config.buttonAction?.type === "webhook") && (
+                <div className="space-y-1.5">
+                  <Label className="text-xs">URL <span className="text-muted-foreground font-normal">(поддерживает {"{key}"})</span></Label>
+                  <Input
+                    inputSize="sm"
+                    value={field.config.buttonAction?.url ?? ""}
+                    onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "navigate" }), url: e.target.value } })}
+                    placeholder="https://example.com?sum={amount}"
+                  />
+                  {field.config.buttonAction?.type === "navigate" && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={field.config.buttonAction?.newTab ?? false}
+                        onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "navigate" }), newTab: e.target.checked } })}
+                        className="rounded"
+                      />
+                      <span className="text-xs text-muted-foreground">Открыть в новой вкладке</span>
+                    </label>
+                  )}
+                </div>
+              )}
+              {field.config.buttonAction?.type === "calculate" && (
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Поле результата <span className="text-muted-foreground font-normal">(пусто = все)</span></Label>
+                  <select
+                    className="h-8 w-full text-xs rounded-md border border-input bg-background px-2"
+                    value={field.config.buttonAction?.targetFieldId ?? ""}
+                    onChange={(e) => updConfig({ buttonAction: { ...(field.config.buttonAction ?? { type: "calculate" }), targetFieldId: e.target.value } })}
+                  >
+                    <option value="">Все result-поля</option>
+                    {allFields.filter((f) => f.type === "result").map((f) => (
+                      <option key={f.id} value={f.id}>{f.label || f.key}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           </div>
         )}
