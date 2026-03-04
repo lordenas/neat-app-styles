@@ -233,7 +233,7 @@ export function PlayerField({
       }
     };
 
-    return (
+    return wrap(
       <div>
         <Button variant={variant} onClick={handleClick} className="w-full">
           {field.label || "Кнопка"}
