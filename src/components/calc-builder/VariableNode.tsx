@@ -1,9 +1,11 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer, NodeViewWrapper } from "@tiptap/react";
+import type { ReactNodeViewProps } from "@tiptap/react";
 import { cn } from "@/lib/utils";
 
 /** Renders the variable badge in the editor UI */
-function VariableBadgeView({ node }: { node: { attrs: { key: string } } }) {
+function VariableBadgeView(props: ReactNodeViewProps) {
+  const key = props.node.attrs["key"] as string;
   return (
     <NodeViewWrapper as="span" className="inline" contentEditable={false}>
       <span
@@ -14,7 +16,7 @@ function VariableBadgeView({ node }: { node: { attrs: { key: string } } }) {
         )}
       >
         <span className="opacity-60">{`{`}</span>
-        {node.attrs.key}
+        {key}
         <span className="opacity-60">{`}`}</span>
       </span>
     </NodeViewWrapper>
@@ -45,14 +47,17 @@ export const VariableNode = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    const key = HTMLAttributes.key ?? "";
+    const key = HTMLAttributes["key"] ?? "";
     return [
       "span",
-      mergeAttributes({ "data-variable": key }, {
-        class:
-          "inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-primary/15 text-primary border border-primary/30 mx-0.5",
-        contenteditable: "false",
-      }),
+      mergeAttributes(
+        { "data-variable": key },
+        {
+          class:
+            "inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-primary/15 text-primary border border-primary/30 mx-0.5",
+          contenteditable: "false",
+        }
+      ),
       `{${key}}`,
     ];
   },
