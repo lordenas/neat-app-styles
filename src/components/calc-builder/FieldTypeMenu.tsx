@@ -33,9 +33,10 @@ const FIELD_TYPES_GROUPS: {
   {
     group: "Вывод и действия",
     items: [
-      { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
+    { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
       { type: "button",   label: "Кнопка",       icon: <MousePointerClick className="h-4 w-4" />, description: "Кнопка с действием" },
       { type: "label",    label: "Текст / заголовок", icon: <TextQuote className="h-4 w-4" />,    description: "Статический текст, разделитель" },
+      { type: "image",    label: "Картинка",     icon: <ImageIcon className="h-4 w-4" />,         description: "Изображение, загруженное разработчиком" },
     ],
   },
 ];

@@ -278,6 +278,10 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
           </div>
         )}
 
+        {field.type === "image" && (
+          <ImageSettings field={field} updConfig={updConfig} />
+        )}
+
         {field.type === "button" && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
