@@ -264,12 +264,15 @@ export function BuilderCanvas({ calculator, onChange }: BuilderCanvasProps) {
     setFields(fields.filter((f) => f.id !== id));
 
   const computeDropTarget = useCallback(
-    ({ active, over }: DragMoveEvent): DropTarget | null => {
+    ({ active, over, activatorEvent, delta }: DragMoveEvent): DropTarget | null => {
       const activeRect = active.rect.current.translated;
       if (!activeRect) return null;
 
-      const cursorX = activeRect.left + activeRect.width / 2;
-      const cursorY = activeRect.top + activeRect.height / 2;
+      // Use actual cursor position (activator + delta) instead of dragged element center
+      // This makes large blocks behave the same as small ones
+      const pointerEvent = activatorEvent as PointerEvent;
+      const cursorX = pointerEvent.clientX + delta.x;
+      const cursorY = pointerEvent.clientY + delta.y;
 
       const rows = groupByRow(fields);
       const activeFieldId = String(active.id);
