@@ -1,4 +1,4 @@
-import { CalcField, CalcFieldType, SelectOption, ButtonActionType, LabelVariant, WebhookPostAction } from "@/types/custom-calc";
+import { CalcField, CalcFieldType, CalcPage, SelectOption, ButtonActionType, LabelVariant, WebhookPostAction } from "@/types/custom-calc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -41,11 +41,12 @@ function slugify(s: string): string {
 interface FieldSettingsPanelProps {
   field: CalcField | null;
   allFields: CalcField[];
+  pages?: CalcPage[];
   onChange: (updated: CalcField) => void;
   onDelete: () => void;
 }
 
-export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: FieldSettingsPanelProps) {
+export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onDelete }: FieldSettingsPanelProps) {
   const [condOpen, setCondOpen] = useState(false);
 
   if (!field) {
@@ -279,7 +280,7 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
         {field.type === "button" && (
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
-            <ButtonSettings field={field} allFields={allFields} updConfig={updConfig} />
+            <ButtonSettings field={field} allFields={allFields} pages={pages} updConfig={updConfig} />
           </div>
         )}
 
@@ -327,10 +328,11 @@ const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate_page", "n
 interface ButtonSettingsProps {
   field: CalcField;
   allFields: CalcField[];
+  pages: CalcPage[];
   updConfig: (partial: Partial<CalcField["config"]>) => void;
 }
 
-function ButtonSettings({ field, allFields, updConfig }: ButtonSettingsProps) {
+function ButtonSettings({ field, allFields, pages, updConfig }: ButtonSettingsProps) {
   const action = field.config.buttonAction ?? { type: "calculate" as ButtonActionType };
   const extraActions = action.extraActions ?? [];
   const post = action.webhookPostAction ?? {} as WebhookPostAction;
@@ -410,14 +412,9 @@ function ButtonSettings({ field, allFields, updConfig }: ButtonSettingsProps) {
           >
             <option value="next">Следующая →</option>
             <option value="prev">← Предыдущая</option>
-            {allFields
-              .filter((f, _, arr) => {
-                // Get unique pageIds — placeholder approach
-                return arr.findIndex((x) => x.pageId === f.pageId) === arr.indexOf(f);
-              })
-              .map((_, i) => (
-                <option key={i} value={i}>Страница {i + 1}</option>
-              ))}
+            {pages.map((page, i) => (
+              <option key={page.id} value={i}>Страница {i + 1}{page.title ? `: ${page.title}` : ""}</option>
+            ))}
           </select>
         </div>
       )}
