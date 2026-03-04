@@ -210,6 +210,20 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
                 <Label className="text-xs">Знаков после запятой</Label>
                 <Input inputSize="sm" type="number" value={field.config.decimals ?? 2} onChange={(e) => updConfig({ decimals: Number(e.target.value) })} min={0} max={10} />
               </div>
+              <label className="flex items-center gap-2 cursor-pointer pt-1">
+                <input
+                  type="checkbox"
+                  checked={field.config.manualCalculation ?? false}
+                  onChange={(e) => updConfig({ manualCalculation: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Считать только по кнопке</span>
+              </label>
+              {field.config.manualCalculation && (
+                <p className="text-[10px] text-muted-foreground leading-tight">
+                  Результат не обновляется при вводе — только когда кнопка с действием «Рассчитать» нацелена на это поле.
+                </p>
+              )}
             </div>
           </div>
         )}
