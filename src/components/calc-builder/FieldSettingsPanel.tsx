@@ -191,35 +191,7 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
                 </div>
               </div>
             )}
-            <div className="space-y-2">
-              {/* Column headers */}
-              <div className="flex gap-2 items-center px-0.5">
-                <span className="text-[10px] text-muted-foreground flex-1">Название</span>
-                <span className="text-[10px] text-muted-foreground w-20">Строка</span>
-                <span className="text-[10px] text-muted-foreground w-16">Число</span>
-                <span className="w-7" />
-              </div>
-              {options.map((opt, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  <Input inputSize="sm" value={opt.label} onChange={(e) => updateOption(i, { label: e.target.value })} placeholder="Название" className="flex-1" />
-                  <Input inputSize="sm" value={opt.value} onChange={(e) => updateOption(i, { value: e.target.value })} placeholder="opt1" className="w-20 font-mono" />
-                  <Input
-                    inputSize="sm"
-                    type="number"
-                    value={opt.numericValue ?? ""}
-                    onChange={(e) => updateOption(i, { numericValue: e.target.value === "" ? undefined : Number(e.target.value) })}
-                    placeholder="—"
-                    className="w-16 font-mono"
-                  />
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive shrink-0" onClick={() => removeOption(i)}>
-                    <X className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              ))}
-              <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 text-muted-foreground w-full justify-start" onClick={addOption}>
-                <Plus className="h-3.5 w-3.5" /> Добавить вариант
-              </Button>
-            </div>
+            <OptionsEditor options={options} updateOption={updateOption} removeOption={removeOption} addOption={addOption} />
           </div>
         )}
 
