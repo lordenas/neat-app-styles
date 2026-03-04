@@ -1,6 +1,7 @@
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/extension-bubble-menu";
 import StarterKit from "@tiptap/starter-kit";
-import TextStyle from "@tiptap/extension-text-style";
+import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
