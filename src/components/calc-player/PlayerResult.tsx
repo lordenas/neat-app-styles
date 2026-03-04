@@ -7,13 +7,39 @@ interface PlayerResultProps {
   field: CalcField;
   allFields: CalcField[];
   inputValues: Record<string, number | string | boolean>;
+  /** Если передан — поле использует ручной расчёт, значение уже вычислено снаружи */
+  manualValue?: number | undefined;
 }
 
-export function PlayerResult({ field, allFields, inputValues }: PlayerResultProps) {
+export function PlayerResult({ field, allFields, inputValues, manualValue }: PlayerResultProps) {
   if (!resolveVisibility(field.visibility, inputValues, allFields)) return null;
 
-  const results = evaluateAllFormulas(allFields, inputValues);
-  const value = results[field.key];
+  // Manual mode: show manualValue (undefined = not yet calculated)
+  const isManual = field.config.manualCalculation;
+  let value: number;
+
+  if (isManual) {
+    if (manualValue === undefined) {
+      return (
+        <div className="rounded-xl border p-4 bg-muted/30">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 p-2 rounded-lg bg-muted text-muted-foreground">
+              <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-muted-foreground mb-1">{field.label}</p>
+              <p className="text-sm text-muted-foreground italic">Нажмите кнопку для расчёта</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    value = manualValue;
+  } else {
+    const results = evaluateAllFormulas(allFields, inputValues);
+    value = results[field.key];
+  }
+
   const formatted = formatResult(
     value,
     field.config.format ?? "number",
