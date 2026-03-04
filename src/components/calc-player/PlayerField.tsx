@@ -13,6 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PlayerResult } from "./PlayerResult";
 import { cn } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
 
 interface PlayerFieldProps {
   field: CalcField;
@@ -21,15 +22,24 @@ interface PlayerFieldProps {
   onChange: (key: string, value: number | string | boolean) => void;
   onTriggerCalculate?: (targetFieldId?: string) => void;
   onReset?: () => void;
+  /** Manual result values keyed by field.key */
+  manualResults?: Record<string, number>;
 }
 
-export function PlayerField({ field, allFields, values, onChange, onTriggerCalculate, onReset }: PlayerFieldProps) {
+export function PlayerField({
+  field, allFields, values, onChange, onTriggerCalculate, onReset, manualResults,
+}: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
 
   if (field.type === "result") {
     return (
-      <PlayerResult field={field} allFields={allFields} inputValues={values} />
+      <PlayerResult
+        field={field}
+        allFields={allFields}
+        inputValues={values}
+        manualValue={field.config.manualCalculation ? manualResults?.[field.key] : undefined}
+      />
     );
   }
 
@@ -66,33 +76,64 @@ export function PlayerField({ field, allFields, values, onChange, onTriggerCalcu
     const action = field.config.buttonAction;
     const variant = (field.config.buttonVariant ?? "default") as "default" | "outline" | "destructive" | "ghost";
 
-    const handleClick = () => {
+    /** All action types to execute on click */
+    const allActionTypes = action
+      ? [action.type, ...(action.extraActions ?? [])]
+      : [];
+
+    const executeWebhook = async () => {
+      if (!action?.url) return;
+      const url = resolveUrl(action.url, values);
+      const post = action.webhookPostAction;
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+        if (post?.showToast) {
+          toast({ title: post.successMessage || "Отправлено успешно" });
+        }
+        if (post?.resetAfter) onReset?.();
+        if (post?.redirectUrl) {
+          const rUrl = resolveUrl(post.redirectUrl, values);
+          if (post.redirectNewTab) window.open(rUrl, "_blank");
+          else window.location.href = rUrl;
+        }
+      } catch {
+        if (post?.showToast) {
+          toast({
+            title: post.errorMessage || "Ошибка отправки",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+
+    const handleClick = async () => {
       if (!action) return;
-      switch (action.type) {
-        case "calculate":
-          onTriggerCalculate?.(action.targetFieldId);
-          break;
-        case "reset":
-          onReset?.();
-          break;
-        case "navigate": {
-          const url = resolveUrl(action.url ?? "", values);
-          if (action.newTab) window.open(url, "_blank");
-          else window.location.href = url;
-          break;
+
+      for (const type of allActionTypes) {
+        switch (type) {
+          case "calculate":
+            onTriggerCalculate?.(action.targetFieldId);
+            break;
+          case "reset":
+            onReset?.();
+            break;
+          case "navigate": {
+            const url = resolveUrl(action.url ?? "", values);
+            if (action.newTab) window.open(url, "_blank");
+            else window.location.href = url;
+            break;
+          }
+          case "webhook":
+            await executeWebhook();
+            break;
+          case "pdf":
+            window.print();
+            break;
         }
-        case "webhook": {
-          const url = resolveUrl(action.url ?? "", values);
-          fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(values),
-          }).catch(console.error);
-          break;
-        }
-        case "pdf":
-          window.print();
-          break;
       }
     };
 

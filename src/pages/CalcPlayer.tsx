@@ -3,25 +3,19 @@ import { useParams, Link } from "react-router-dom";
 import { CustomCalculator, getCalculatorBySlug } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "@/components/calc-builder/BuilderCanvas";
+import { evaluateAllFormulas } from "@/lib/calc-engine";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { Calculator, ArrowLeft } from "lucide-react";
 
-/**
- * Публичный плеер калькулятора по slug.
- *
- * MVP: Загружает калькулятор из localStorage по slug.
- *
- * TODO (бэк): Заменить на запрос к Edge Function:
- *   GET /functions/v1/custom-calc-get?slug=:slug
- *   Возвращает калькулятор, если is_public=true ИЛИ авторизован владелец.
- */
 export default function CalcPlayer() {
   const { slug } = useParams<{ slug: string }>();
   const [calculator, setCalculator] = useState<CustomCalculator | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [values, setValues] = useState<Record<string, number | string | boolean>>({});
+  /** Хранит вычисленные вручную результаты: key → number */
+  const [manualResults, setManualResults] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (!slug) { setNotFound(true); return; }
@@ -29,7 +23,6 @@ export default function CalcPlayer() {
     if (!calc) { setNotFound(true); return; }
     setCalculator(calc);
 
-    // Initialize defaults
     const defaults: Record<string, number | string | boolean> = {};
     for (const field of calc.fields) {
       if (field.type === "result") continue;
@@ -68,6 +61,32 @@ export default function CalcPlayer() {
       } else defaults[field.key] = "";
     }
     setValues(defaults);
+    setManualResults({});
+  };
+
+  /**
+   * Запускает вычисление result-полей.
+   * targetFieldId — конкретное поле или пусто = все.
+   * Обновляет только manual-поля (auto-поля считаются всегда).
+   */
+  const handleTriggerCalculate = (targetFieldId?: string) => {
+    if (!calculator) return;
+    const allFields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
+    const results = evaluateAllFormulas(allFields, values);
+
+    const manualFields = allFields.filter(
+      (f) => f.type === "result" && f.config.manualCalculation
+    );
+
+    const fieldsToCalc = targetFieldId
+      ? manualFields.filter((f) => f.id === targetFieldId)
+      : manualFields;
+
+    const newManual: Record<string, number> = { ...manualResults };
+    for (const f of fieldsToCalc) {
+      newManual[f.key] = results[f.key];
+    }
+    setManualResults(newManual);
   };
 
   if (notFound) {
@@ -115,7 +134,6 @@ export default function CalcPlayer() {
 
       <main className="flex-1 py-8 px-4">
         <div className="max-w-lg mx-auto">
-          {/* Header */}
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
@@ -128,7 +146,6 @@ export default function CalcPlayer() {
             )}
           </div>
 
-          {/* Fields */}
           <div className="space-y-5">
             {groupByRow(sorted).map((rowFields) => (
               <div
@@ -137,20 +154,21 @@ export default function CalcPlayer() {
                 style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
               >
                 {rowFields.map((field) => (
-                   <PlayerField
-                     key={field.id}
-                     field={field}
-                     allFields={sorted}
-                     values={values}
-                     onChange={onChange}
-                     onReset={handleReset}
-                   />
-                 ))}
+                  <PlayerField
+                    key={field.id}
+                    field={field}
+                    allFields={sorted}
+                    values={values}
+                    onChange={onChange}
+                    onTriggerCalculate={handleTriggerCalculate}
+                    onReset={handleReset}
+                    manualResults={manualResults}
+                  />
+                ))}
               </div>
             ))}
           </div>
 
-          {/* Powered by */}
           <div className="mt-10 text-center">
             <Link
               to="/calc-builder"

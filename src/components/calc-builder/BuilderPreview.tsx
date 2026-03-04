@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { CustomCalculator } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "./BuilderCanvas";
+import { evaluateAllFormulas } from "@/lib/calc-engine";
 
 interface BuilderPreviewProps {
   calculator: CustomCalculator;
@@ -9,6 +10,7 @@ interface BuilderPreviewProps {
 
 export function BuilderPreview({ calculator }: BuilderPreviewProps) {
   const [values, setValues] = useState<Record<string, number | string | boolean>>({});
+  const [manualResults, setManualResults] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const defaults: Record<string, number | string | boolean> = {};
@@ -29,6 +31,7 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
       }
     }
     setValues(defaults);
+    setManualResults({});
   }, [calculator.fields.length]);
 
   const onChange = (key: string, value: number | string | boolean) =>
@@ -48,6 +51,23 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
       } else defaults[field.key] = "";
     }
     setValues(defaults);
+    setManualResults({});
+  };
+
+  const handleTriggerCalculate = (targetFieldId?: string) => {
+    const allFields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
+    const results = evaluateAllFormulas(allFields, values);
+    const manualFields = allFields.filter(
+      (f) => f.type === "result" && f.config.manualCalculation
+    );
+    const fieldsToCalc = targetFieldId
+      ? manualFields.filter((f) => f.id === targetFieldId)
+      : manualFields;
+    const newManual: Record<string, number> = { ...manualResults };
+    for (const f of fieldsToCalc) {
+      newManual[f.key] = results[f.key];
+    }
+    setManualResults(newManual);
   };
 
   const sorted = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
@@ -75,6 +95,8 @@ export function BuilderPreview({ calculator }: BuilderPreviewProps) {
                   values={values}
                   onChange={onChange}
                   onReset={handleReset}
+                  onTriggerCalculate={handleTriggerCalculate}
+                  manualResults={manualResults}
                 />
               ))}
             </div>
