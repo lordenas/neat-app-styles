@@ -410,7 +410,7 @@ function OptionsEditor({ options, updateOption, removeOption, addOption }: Optio
     <div className="space-y-2">
       <div className="flex gap-2 items-center px-0.5">
         <span className="text-[10px] text-muted-foreground flex-1">Название</span>
-        <span className="text-[10px] text-muted-foreground w-16">Число</span>
+        <span className="text-[10px] text-muted-foreground w-20">Число</span>
         <button
           className="text-[10px] text-muted-foreground hover:text-foreground transition-colors w-5 text-right"
           title={showId ? "Скрыть строковый ID" : "Показать строковый ID (нужен для условий отображения)"}
