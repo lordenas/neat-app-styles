@@ -11,7 +11,7 @@ import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon,
 } from "lucide-react";
 import { useState } from "react";
 

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   GripVertical,
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  MousePointerClick, AlignLeft, TextQuote,
+  MousePointerClick, AlignLeft, TextQuote, ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
