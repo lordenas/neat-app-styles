@@ -150,6 +150,16 @@ export interface CalcFieldConfig {
   decimals?: number;
   /** Подсказка под полем */
   hint?: string;
+  /** Для button: вид кнопки */
+  buttonVariant?: "default" | "outline" | "destructive" | "ghost";
+  /** Для button: действие */
+  buttonAction?: ButtonAction;
+  /** Для label: вариант оформления */
+  labelVariant?: LabelVariant;
+  /** Для label: текст содержимого */
+  labelContent?: string;
+  /** Для textarea: количество строк */
+  rows?: number;
 }
 
 // ─── Visibility System ───────────────────────────────────────
