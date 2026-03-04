@@ -196,6 +196,17 @@ export interface CalcFieldConfig {
    * только по триггеру кнопки (calculate action).
    */
   manualCalculation?: boolean;
+  /**
+   * Для image: base64-строка или URL.
+   * Временное хранилище до интеграции с S3.
+   */
+  imageData?: string;
+  /** Для image: alt-текст / подпись */
+  imageAlt?: string;
+  /** Для image: выравнивание (left | center | right) */
+  imageAlign?: "left" | "center" | "right";
+  /** Для image: максимальная ширина в px (или auto) */
+  imageMaxWidth?: number;
 }
 
 // ─── Visibility System ───────────────────────────────────────
