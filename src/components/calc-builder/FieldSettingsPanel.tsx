@@ -309,11 +309,20 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
               </div>
               <div className="space-y-1.5">
                 <Label className="text-xs">Содержимое</Label>
-                <RichTextEditor
-                  value={field.config.labelContent ?? ""}
-                  onChange={(html) => updConfig({ labelContent: html })}
-                  placeholder="Введите текст..."
-                />
+                {(field.config.labelVariant ?? "body") === "divider" ? (
+                  <textarea
+                    className="w-full min-h-[60px] text-xs rounded-md border border-input bg-background px-2 py-1.5 resize-y focus:outline-none focus:ring-1 focus:ring-ring"
+                    value={field.config.labelContent ?? ""}
+                    onChange={(e) => updConfig({ labelContent: e.target.value })}
+                    placeholder="Введите текст разделителя..."
+                  />
+                ) : (
+                  <RichTextEditor
+                    value={field.config.labelContent ?? ""}
+                    onChange={(html) => updConfig({ labelContent: html })}
+                    placeholder="Введите текст..."
+                  />
+                )}
               </div>
             </div>
           </div>
