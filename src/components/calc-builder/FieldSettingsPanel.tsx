@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/collapsible";
 import { ConditionEditor } from "./ConditionEditor";
 import { FormulaEditor } from "./FormulaEditor";
+import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info,
 } from "lucide-react";
 import { useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
@@ -410,7 +411,14 @@ function OptionsEditor({ options, updateOption, removeOption, addOption }: Optio
     <div className="space-y-2">
       <div className="flex gap-2 items-center px-0.5">
         <span className="text-[10px] text-muted-foreground flex-1">Название</span>
-        <span className="text-[10px] text-muted-foreground w-20">Число</span>
+        <SimpleTooltip
+          content={<span>Числовое значение варианта.<br />Используется в формулах как <code className="bg-muted px-1 rounded font-mono">{"{key}"}</code></span>}
+          side="top"
+        >
+          <span className="text-[10px] text-muted-foreground w-20 flex items-center gap-1 cursor-help">
+            Число <Info className="h-3 w-3 shrink-0" />
+          </span>
+        </SimpleTooltip>
         <button
           className="text-[10px] text-muted-foreground hover:text-foreground transition-colors w-5 text-right"
           title={showId ? "Скрыть строковый ID" : "Показать строковый ID (нужен для условий отображения)"}
