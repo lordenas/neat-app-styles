@@ -316,12 +316,13 @@ export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: Fie
 const ACTION_LABELS: Record<ButtonActionType, string> = {
   calculate: "Рассчитать результат",
   navigate: "Перейти по ссылке",
+  navigate_page: "Перейти на страницу",
   reset: "Сбросить форму",
   pdf: "Скачать PDF",
   webhook: "Отправить webhook",
 };
 
-const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate", "reset", "pdf", "webhook"];
+const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate_page", "navigate", "reset", "pdf", "webhook"];
 
 interface ButtonSettingsProps {
   field: CalcField;
