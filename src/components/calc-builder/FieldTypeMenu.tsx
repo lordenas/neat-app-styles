@@ -37,6 +37,7 @@ const FIELD_TYPES_GROUPS: {
       { type: "button",   label: "Кнопка",       icon: <MousePointerClick className="h-4 w-4" />, description: "Кнопка с действием" },
       { type: "label",    label: "Текст / заголовок", icon: <TextQuote className="h-4 w-4" />,    description: "Статический текст, разделитель" },
       { type: "image",    label: "Картинка",     icon: <ImageIcon className="h-4 w-4" />,         description: "Изображение, загруженное разработчиком" },
+      { type: "html",     label: "HTML-блок",    icon: <Code2 className="h-4 w-4" />,             description: "Произвольный HTML с интерполяцией {key}" },
     ],
   },
 ];
