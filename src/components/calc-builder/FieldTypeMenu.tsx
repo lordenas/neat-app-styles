@@ -11,7 +11,7 @@ import {
 import {
   Hash, Type, ChevronDown, ToggleLeft, SlidersHorizontal,
   List, CircleDot, Calculator, PlusCircle, AlignLeft,
-  MousePointerClick, TextQuote,
+  MousePointerClick, TextQuote, ImageIcon,
 } from "lucide-react";
 
 const FIELD_TYPES_GROUPS: {
