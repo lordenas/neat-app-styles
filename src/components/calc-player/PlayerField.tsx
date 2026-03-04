@@ -45,15 +45,46 @@ export function PlayerField({
     );
   }
 
+
   // ── HTML block ────────────────────────────────────────────────
   if (field.type === "html") {
     const raw = field.config.htmlContent ?? "";
+
     // Interpolate {key} placeholders with current values
     const interpolated = raw.replace(/\{(\w+)\}/g, (_, key) => {
       const val = values[key];
       return val !== undefined ? String(val) : `{${key}}`;
     });
-    const clean = DOMPurify.sanitize(interpolated, {
+
+    // Unique scope id per field instance so styles don't leak
+    const scopeAttr = `data-html-scope-${field.id}`;
+
+    // Extract <style> blocks, prefix every selector with the scope attribute,
+    // then re-inject them alongside the sanitized HTML
+    let scopedStyles = "";
+    const htmlWithoutStyle = interpolated.replace(
+      /<style[^>]*>([\s\S]*?)<\/style>/gi,
+      (_, css: string) => {
+        const prefixed = css.replace(
+          /([^{}]+)\{/g,
+          (ruleHead: string) => {
+            const selectors = ruleHead
+              .split(",")
+              .map((sel) => {
+                const s = sel.trim();
+                if (s.startsWith("@")) return s;
+                return `[${scopeAttr}] ${s}`;
+              })
+              .join(", ");
+            return `${selectors} {`;
+          }
+        );
+        scopedStyles += prefixed;
+        return "";
+      }
+    );
+
+    const clean = DOMPurify.sanitize(htmlWithoutStyle, {
       ALLOWED_TAGS: [
         "p","br","span","div","strong","em","b","i","u","s",
         "h1","h2","h3","h4","h5","h6",
@@ -63,14 +94,20 @@ export function PlayerField({
       ],
       ALLOWED_ATTR: ["href","target","rel","src","alt","class","style","width","height"],
     });
-    if (!clean) return null;
+
+    if (!clean && !scopedStyles) return null;
+
     return (
-      <div
-        className="prose prose-sm max-w-none dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: clean }}
-      />
+      <div {...{ [scopeAttr]: "" }} className="prose prose-sm max-w-none dark:prose-invert">
+        {scopedStyles && (
+          <style dangerouslySetInnerHTML={{ __html: scopedStyles }} />
+        )}
+        <div dangerouslySetInnerHTML={{ __html: clean }} />
+      </div>
     );
   }
+
+
 
   // ── Image ─────────────────────────────────────────────────────
   if (field.type === "image") {
