@@ -208,6 +208,11 @@ export interface CalcFieldConfig {
   imageAlign?: "left" | "center" | "right";
   /** Для image: максимальная ширина в px (или auto) */
   imageMaxWidth?: number;
+  /**
+   * Для html: HTML-контент поля.
+   * Поддерживает интерполяцию {key} из значений формы.
+   */
+  htmlContent?: string;
 }
 
 // ─── Visibility System ───────────────────────────────────────
