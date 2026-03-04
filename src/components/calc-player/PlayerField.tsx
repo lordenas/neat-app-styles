@@ -4,26 +4,104 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PlayerResult } from "./PlayerResult";
+import { cn } from "@/lib/utils";
 
 interface PlayerFieldProps {
   field: CalcField;
   allFields: CalcField[];
   values: Record<string, number | string | boolean>;
   onChange: (key: string, value: number | string | boolean) => void;
+  onTriggerCalculate?: (targetFieldId?: string) => void;
+  onReset?: () => void;
 }
 
-export function PlayerField({ field, allFields, values, onChange }: PlayerFieldProps) {
+export function PlayerField({ field, allFields, values, onChange, onTriggerCalculate, onReset }: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
 
   if (field.type === "result") {
     return (
       <PlayerResult field={field} allFields={allFields} inputValues={values} />
+    );
+  }
+
+  // ── Label / static text ──────────────────────────────────────
+  if (field.type === "label") {
+    const variant = field.config.labelVariant ?? "body";
+    const content = field.config.labelContent ?? field.label ?? "";
+
+    if (variant === "divider") {
+      return (
+        <div className="flex items-center gap-3 py-1">
+          <Separator className="flex-1" />
+          {content && <span className="text-xs text-muted-foreground shrink-0 font-medium">{content}</span>}
+          <Separator className="flex-1" />
+        </div>
+      );
+    }
+
+    return (
+      <div className={cn(
+        variant === "h1" && "text-2xl font-bold",
+        variant === "h2" && "text-xl font-semibold",
+        variant === "h3" && "text-base font-semibold",
+        variant === "body" && "text-sm",
+        variant === "caption" && "text-xs text-muted-foreground",
+      )}>
+        {content || <span className="text-muted-foreground italic text-xs">(пустой текст)</span>}
+      </div>
+    );
+  }
+
+  // ── Button ───────────────────────────────────────────────────
+  if (field.type === "button") {
+    const action = field.config.buttonAction;
+    const variant = (field.config.buttonVariant ?? "default") as "default" | "outline" | "destructive" | "ghost";
+
+    const handleClick = () => {
+      if (!action) return;
+      switch (action.type) {
+        case "calculate":
+          onTriggerCalculate?.(action.targetFieldId);
+          break;
+        case "reset":
+          onReset?.();
+          break;
+        case "navigate": {
+          const url = resolveUrl(action.url ?? "", values);
+          if (action.newTab) window.open(url, "_blank");
+          else window.location.href = url;
+          break;
+        }
+        case "webhook": {
+          const url = resolveUrl(action.url ?? "", values);
+          fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(values),
+          }).catch(console.error);
+          break;
+        }
+        case "pdf":
+          window.print();
+          break;
+      }
+    };
+
+    return (
+      <div>
+        <Button variant={variant} onClick={handleClick} className="w-full">
+          {field.label || "Кнопка"}
+        </Button>
+      </div>
     );
   }
 
@@ -63,6 +141,17 @@ export function PlayerField({ field, allFields, values, onChange }: PlayerFieldP
           value={strVal}
           onChange={(e) => onChange(field.key, e.target.value)}
           placeholder={field.config.placeholder ?? "Введите текст"}
+        />
+      );
+      break;
+
+    case "textarea":
+      control = (
+        <Textarea
+          value={strVal}
+          onChange={(e) => onChange(field.key, e.target.value)}
+          placeholder={field.config.placeholder ?? "Введите текст"}
+          rows={field.config.rows ?? 3}
         />
       );
       break;
@@ -158,4 +247,9 @@ export function PlayerField({ field, allFields, values, onChange }: PlayerFieldP
       )}
     </div>
   );
+}
+
+/** Replaces {key} placeholders in URL with actual values */
+function resolveUrl(url: string, values: Record<string, number | string | boolean>): string {
+  return url.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? ""));
 }
