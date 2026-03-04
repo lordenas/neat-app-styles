@@ -91,12 +91,37 @@
 
 export type CalcFieldType =
   | "number"    // Числовой input (min/max/step)
-  | "text"      // Текстовый input
+  | "text"      // Текстовый input (однострочный)
+  | "textarea"  // Текстовый input (многострочный)
   | "select"    // Выпадающий список (options[])
   | "radio"     // Радио-кнопки (options[])
   | "checkbox"  // Чекбокс (boolean → 1 / 0 в формулах)
   | "slider"    // Слайдер (min/max/step)
-  | "result";   // Вычисляемое поле — только формула, нет ввода
+  | "result"    // Вычисляемое поле — только формула, нет ввода
+  | "button"    // Кнопка с действием
+  | "label";    // Статический текст / заголовок
+
+/** Тип действия кнопки */
+export type ButtonActionType =
+  | "calculate"  // Пересчитать конкретный result-блок
+  | "navigate"   // Перейти по URL (поддержка {переменных})
+  | "reset"      // Сбросить форму к значениям по умолчанию
+  | "pdf"        // Скачать PDF с результатами
+  | "webhook";   // POST-запрос на внешний URL с данными формы
+
+/** Конфигурация действия кнопки */
+export interface ButtonAction {
+  type: ButtonActionType;
+  /** Для navigate/webhook: URL (поддерживает {key}) */
+  url?: string;
+  /** Для calculate: id поля-результата (или пусто = пересчитать все) */
+  targetFieldId?: string;
+  /** Для navigate: открыть в новой вкладке */
+  newTab?: boolean;
+}
+
+/** Вариант оформления статического текста */
+export type LabelVariant = "h1" | "h2" | "h3" | "body" | "caption" | "divider";
 
 export interface SelectOption {
   label: string;
