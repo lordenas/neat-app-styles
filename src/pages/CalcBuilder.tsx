@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   CustomCalculator, CalcField, CalcPage, loadCalculators, saveCalculator,
@@ -13,8 +13,10 @@ import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
+  Undo2, Redo2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
 
 function nanoid(len = 8): string {
@@ -41,29 +43,38 @@ function makeNew(): CustomCalculator {
   };
 }
 
+function loadInitial(id?: string): CustomCalculator {
+  if (id) {
+    const found = loadCalculators().find((c) => c.id === id);
+    if (found) {
+      if (!found.pages || found.pages.length === 0) {
+        const firstPage = makeDefaultPage();
+        return {
+          ...found,
+          pages: [firstPage],
+          fields: found.fields.map((f) => ({ ...f, pageId: firstPage.id })),
+        };
+      }
+      return found;
+    }
+  }
+  return makeNew();
+}
+
 export default function CalcBuilder() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const [calculator, setCalculator] = useState<CustomCalculator>(() => {
-    if (id) {
-      const found = loadCalculators().find((c) => c.id === id);
-      if (found) {
-        // Migrate legacy calculators without pages
-        if (!found.pages || found.pages.length === 0) {
-          const firstPage = makeDefaultPage();
-          return {
-            ...found,
-            pages: [firstPage],
-            fields: found.fields.map((f) => ({ ...f, pageId: firstPage.id })),
-          };
-        }
-        return found;
-      }
-    }
-    return makeNew();
-  });
+  const {
+    state: calculator,
+    setState: setCalculator,
+    setStateDirectly,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useHistory<CustomCalculator>(loadInitial(id));
 
   const [saved, setSaved] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
@@ -71,12 +82,25 @@ export default function CalcBuilder() {
   const [activePage, setActivePage] = useState(0);
   const [leftTab, setLeftTab] = useState<"field" | "pages">("field");
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.includes("Mac");
+      const ctrl = isMac ? e.metaKey : e.ctrlKey;
+      if (!ctrl) return;
+      if (e.key === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+      if ((e.key === "y") || (e.key === "z" && e.shiftKey)) { e.preventDefault(); redo(); }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [undo, redo]);
+
   const pages = calculator.pages ?? [makeDefaultPage()];
   const activepageObj = pages[activePage];
 
   const handleSave = () => {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
-    setCalculator(updated);
+    setStateDirectly(updated);
     saveCalculator(updated);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -94,42 +118,39 @@ export default function CalcBuilder() {
     : null;
 
   const updateSelectedField = (updated: CalcField) => {
-    setCalculator((c) => ({
-      ...c,
-      fields: c.fields.map((f) => (f.id === updated.id ? updated : f)),
-    }));
+    setCalculator({
+      ...calculator,
+      fields: calculator.fields.map((f) => (f.id === updated.id ? updated : f)),
+    });
   };
 
   const deleteSelectedField = () => {
     if (!selectedFieldId) return;
-    setCalculator((c) => ({
-      ...c,
-      fields: c.fields.filter((f) => f.id !== selectedFieldId),
-    }));
+    setCalculator({
+      ...calculator,
+      fields: calculator.fields.filter((f) => f.id !== selectedFieldId),
+    });
     setSelectedFieldId(null);
   };
 
-  // Page management
   const handlePagesChange = (newPages: CalcPage[]) => {
-    setCalculator((c) => ({ ...c, pages: newPages }));
+    setCalculator({ ...calculator, pages: newPages });
   };
 
   const handleDeletePage = (pageIndex: number) => {
     if (pages.length <= 1) return;
     const deletedId = pages[pageIndex].id;
     const prevPage = pages[pageIndex > 0 ? pageIndex - 1 : 1];
-    setCalculator((c) => ({
-      ...c,
-      pages: (c.pages ?? []).filter((_, i) => i !== pageIndex).map((p, i) => ({ ...p, orderIndex: i })),
-      // Move fields from deleted page to the adjacent page
-      fields: c.fields.map((f) =>
+    setCalculator({
+      ...calculator,
+      pages: (calculator.pages ?? []).filter((_, i) => i !== pageIndex).map((p, i) => ({ ...p, orderIndex: i })),
+      fields: calculator.fields.map((f) =>
         f.pageId === deletedId ? { ...f, pageId: prevPage.id } : f
       ),
-    }));
+    });
     setActivePage(Math.max(0, pageIndex - 1));
   };
 
-  // Fields for current page only (in the canvas)
   const fieldsForPage = calculator.fields.filter(
     (f) => (f.pageId ?? pages[0]?.id) === activepageObj?.id
   );
@@ -139,19 +160,17 @@ export default function CalcBuilder() {
   };
 
   const handleCanvasChange = (updated: CustomCalculator) => {
-    // Assign pageId to new fields (those without pageId or with old page)
     const newFields = updated.fields.map((f) =>
       !f.pageId ? { ...f, pageId: activepageObj?.id } : f
     );
-    // Merge: keep fields from other pages + updated page fields
     const otherPageFields = calculator.fields.filter(
       (f) => (f.pageId ?? pages[0]?.id) !== activepageObj?.id
     );
-    setCalculator((c) => ({
-      ...c,
+    setCalculator({
+      ...calculator,
       ...updated,
       fields: [...otherPageFields, ...newFields],
-    }));
+    });
   };
 
   const playerUrl = `/c/${calculator.slug}`;
@@ -175,7 +194,7 @@ export default function CalcBuilder() {
 
         <Input
           value={calculator.title}
-          onChange={(e) => setCalculator((c) => ({ ...c, title: e.target.value }))}
+          onChange={(e) => setCalculator({ ...calculator, title: e.target.value })}
           className="h-8 w-56 text-sm font-medium border-0 shadow-none bg-transparent focus-visible:ring-0 px-1"
           placeholder="Название калькулятора"
         />
@@ -208,9 +227,33 @@ export default function CalcBuilder() {
           </button>
         </div>
 
+        {/* Undo / Redo */}
+        <div className="flex items-center gap-0.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={undo}
+            disabled={!canUndo}
+            title="Отменить (Ctrl+Z)"
+          >
+            <Undo2 className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={redo}
+            disabled={!canRedo}
+            title="Повторить (Ctrl+Y)"
+          >
+            <Redo2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+
         <div className="ml-auto flex items-center gap-2">
           <button
-            onClick={() => setCalculator((c) => ({ ...c, isPublic: !c.isPublic }))}
+            onClick={() => setCalculator({ ...calculator, isPublic: !calculator.isPublic })}
             className={cn(
               "flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border transition-colors",
               calculator.isPublic
@@ -329,7 +372,7 @@ export default function CalcBuilder() {
 
               <Input
                 value={calculator.description ?? ""}
-                onChange={(e) => setCalculator((c) => ({ ...c, description: e.target.value }))}
+                onChange={(e) => setCalculator({ ...calculator, description: e.target.value })}
                 placeholder="Описание (необязательно)"
                 className="text-sm max-w-xl"
               />
