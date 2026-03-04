@@ -19,12 +19,13 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   result:   <Calculator className="h-3.5 w-3.5" />,
   button:   <MousePointerClick className="h-3.5 w-3.5" />,
   label:    <TextQuote className="h-3.5 w-3.5" />,
+  image:    <ImageIcon className="h-3.5 w-3.5" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
-  button: "Кнопка", label: "Текст",
+  button: "Кнопка", label: "Текст", image: "Картинка",
 };
 
 interface FieldCardProps {

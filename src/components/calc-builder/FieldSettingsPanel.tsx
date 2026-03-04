@@ -26,12 +26,13 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   result:   <Calculator className="h-4 w-4" />,
   button:   <MousePointerClick className="h-4 w-4" />,
   label:    <TextQuote className="h-4 w-4" />,
+  image:    <ImageIcon className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
-  button: "Кнопка", label: "Текст",
+  button: "Кнопка", label: "Текст", image: "Картинка",
 };
 
 function slugify(s: string): string {
