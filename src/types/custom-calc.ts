@@ -241,6 +241,24 @@ export interface CalcFieldConfig {
   paddingTop?: number;
   /** Внутренний отступ снизу (0–64px) */
   paddingBottom?: number;
+
+  // ── Validation ────────────────────────────────────────────────
+  /** Поле обязательно для заполнения */
+  required?: boolean;
+  /** Кастомное сообщение при нарушении required */
+  requiredMessage?: string;
+  /** Минимальное валидируемое значение (для number/slider независимо от min) */
+  validationMin?: number;
+  /** Кастомное сообщение при нарушении validationMin */
+  validationMinMessage?: string;
+  /** Максимальное валидируемое значение (для number/slider независимо от max) */
+  validationMax?: number;
+  /** Кастомное сообщение при нарушении validationMax */
+  validationMaxMessage?: string;
+  /** Regex-паттерн для валидации text/textarea */
+  validationPattern?: string;
+  /** Кастомное сообщение при нарушении pattern */
+  validationPatternMessage?: string;
 }
 
 // ─── Visibility System ───────────────────────────────────────

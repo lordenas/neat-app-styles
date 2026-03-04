@@ -26,10 +26,56 @@ interface PlayerFieldProps {
   onNavigatePage?: (target: "next" | "prev" | number) => void;
   /** Manual result values keyed by field.key */
   manualResults?: Record<string, number>;
+  /** Validation errors keyed by field.key */
+  validationErrors?: Record<string, string>;
+}
+
+/** Returns a validation error message if the value violates configured rules, or null if valid */
+export function validateField(field: CalcField, value: number | string | boolean): string | null {
+  const cfg = field.config;
+
+  // Required check
+  if (cfg.required) {
+    const isEmpty =
+      value === "" ||
+      value === undefined ||
+      value === null ||
+      (typeof value === "number" && isNaN(value as number));
+    if (isEmpty) {
+      return cfg.requiredMessage || "Это поле обязательно для заполнения";
+    }
+  }
+
+  // Numeric min/max validation
+  if (field.type === "number" || field.type === "slider") {
+    const num = typeof value === "number" ? value : parseFloat(String(value));
+    if (!isNaN(num)) {
+      if (cfg.validationMin !== undefined && num < cfg.validationMin) {
+        return cfg.validationMinMessage || `Значение должно быть не менее ${cfg.validationMin}`;
+      }
+      if (cfg.validationMax !== undefined && num > cfg.validationMax) {
+        return cfg.validationMaxMessage || `Значение должно быть не более ${cfg.validationMax}`;
+      }
+    }
+  }
+
+  // Pattern validation for text
+  if ((field.type === "text" || field.type === "textarea") && cfg.validationPattern) {
+    try {
+      const regex = new RegExp(cfg.validationPattern);
+      if (String(value) && !regex.test(String(value))) {
+        return cfg.validationPatternMessage || "Значение не соответствует формату";
+      }
+    } catch {
+      // Invalid regex — ignore
+    }
+  }
+
+  return null;
 }
 
 export function PlayerField({
-  field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults,
+  field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults, validationErrors,
 }: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
@@ -289,9 +335,13 @@ export function PlayerField({
   const strVal = rawVal !== undefined ? String(rawVal) : "";
   const numVal = parseFloat(strVal) || 0;
 
+  // Validate current value
+  const validationError = validationErrors?.[field.key] ?? validateField(field, rawVal ?? "");
+
   const label = (
-    <Label className="text-sm font-medium">
+    <Label className={cn("text-sm font-medium", validationError && "text-destructive")}>
       {field.label}
+      {field.config.required && <span className="ml-0.5 text-destructive">*</span>}
       {field.config.unit && (
         <span className="ml-1 text-muted-foreground font-normal text-xs">({field.config.unit})</span>
       )}
@@ -311,6 +361,7 @@ export function PlayerField({
           max={field.config.max}
           step={field.config.step}
           placeholder={field.config.placeholder ?? "Введите значение"}
+          error={validationError ?? undefined}
         />
       );
       break;
@@ -321,6 +372,7 @@ export function PlayerField({
           value={strVal}
           onChange={(e) => onChange(field.key, e.target.value)}
           placeholder={field.config.placeholder ?? "Введите текст"}
+          error={validationError ?? undefined}
         />
       );
       break;
@@ -332,6 +384,7 @@ export function PlayerField({
           onChange={(e) => onChange(field.key, e.target.value)}
           placeholder={field.config.placeholder ?? "Введите текст"}
           rows={field.config.rows ?? 3}
+          error={validationError ?? undefined}
         />
       );
       break;
@@ -355,7 +408,11 @@ export function PlayerField({
             min={min}
             max={max}
             step={step}
+            className={validationError ? "accent-destructive" : undefined}
           />
+          {validationError && (
+            <p className="text-xs text-destructive" role="alert">{validationError}</p>
+          )}
         </div>
       );
       break;
@@ -363,35 +420,45 @@ export function PlayerField({
 
     case "select":
       control = (
-        <Select value={strVal} onValueChange={(v) => onChange(field.key, v)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Выберите..." />
-          </SelectTrigger>
-          <SelectContent>
-            {(field.config.options ?? []).map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div>
+          <Select value={strVal} onValueChange={(v) => onChange(field.key, v)}>
+            <SelectTrigger className={validationError ? "border-destructive" : undefined}>
+              <SelectValue placeholder="Выберите..." />
+            </SelectTrigger>
+            <SelectContent>
+              {(field.config.options ?? []).map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {validationError && (
+            <p className="text-xs text-destructive mt-1" role="alert">{validationError}</p>
+          )}
+        </div>
       );
       break;
 
     case "radio":
       control = (
-        <RadioGroup
-          value={strVal}
-          onValueChange={(v) => onChange(field.key, v)}
-          className={field.config.radioOrientation === "vertical" ? "flex flex-col gap-2" : "flex flex-wrap gap-3"}
-        >
-          {(field.config.options ?? []).map((opt) => (
-            <div key={opt.value} className="flex items-center gap-2">
-              <RadioGroupItem value={opt.value} id={`${field.key}_${opt.value}`} />
-              <Label htmlFor={`${field.key}_${opt.value}`} className="cursor-pointer font-normal">
-                {opt.label}
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+        <div>
+          <RadioGroup
+            value={strVal}
+            onValueChange={(v) => onChange(field.key, v)}
+            className={field.config.radioOrientation === "vertical" ? "flex flex-col gap-2" : "flex flex-wrap gap-3"}
+          >
+            {(field.config.options ?? []).map((opt) => (
+              <div key={opt.value} className="flex items-center gap-2">
+                <RadioGroupItem value={opt.value} id={`${field.key}_${opt.value}`} />
+                <Label htmlFor={`${field.key}_${opt.value}`} className="cursor-pointer font-normal">
+                  {opt.label}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+          {validationError && (
+            <p className="text-xs text-destructive mt-1" role="alert">{validationError}</p>
+          )}
+        </div>
       );
       break;
 
@@ -413,6 +480,9 @@ export function PlayerField({
           {field.config.hint && (
             <p className="text-xs text-muted-foreground mt-1 ml-6">{field.config.hint}</p>
           )}
+          {validationError && (
+            <p className="text-xs text-destructive mt-1 ml-6" role="alert">{validationError}</p>
+          )}
         </div>
       );
     }
@@ -422,7 +492,7 @@ export function PlayerField({
     <div className="space-y-2">
       {label}
       {control}
-      {field.config.hint && (
+      {field.config.hint && !validationError && (
         <p className="text-xs text-muted-foreground">{field.config.hint}</p>
       )}
     </div>
