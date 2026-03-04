@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  CustomCalculator, CalcField, loadCalculators, saveCalculator, deleteCalculator,
+  CustomCalculator, CalcField, loadCalculators, saveCalculator,
 } from "@/types/custom-calc";
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Save, Eye, Trash2, Plus, ArrowLeft, Copy, ExternalLink,
+  Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -51,45 +51,15 @@ export default function CalcBuilder() {
   });
 
   const [saved, setSaved] = useState(false);
-  const [listOpen, setListOpen] = useState(false);
-  const [calcList, setCalcList] = useState<CustomCalculator[]>([]);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCalcList(loadCalculators());
-  }, []);
 
   const handleSave = () => {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
     setCalculator(updated);
     saveCalculator(updated);
-    setCalcList(loadCalculators());
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
     toast({ title: "Сохранено", description: `Калькулятор «${updated.title}» сохранён локально.` });
-  };
-
-  const handleDelete = (calcId: string) => {
-    deleteCalculator(calcId);
-    setCalcList(loadCalculators());
-    if (calcId === calculator.id) {
-      navigate("/calc-builder");
-      setCalculator(makeNew());
-    }
-    toast({ title: "Удалено" });
-  };
-
-  const handleNew = () => {
-    navigate("/calc-builder");
-    setCalculator(makeNew());
-    setSelectedFieldId(null);
-  };
-
-  const handleOpen = (calc: CustomCalculator) => {
-    setCalculator(calc);
-    navigate(`/calc-builder/${calc.id}`);
-    setListOpen(false);
-    setSelectedFieldId(null);
   };
 
   const copyPlayerLink = () => {
@@ -127,9 +97,9 @@ export default function CalcBuilder() {
       {/* Top bar */}
       <div className="border-b bg-card sticky top-[57px] z-30">
         <div className="max-w-screen-xl mx-auto px-4 h-12 flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => navigate("/")}>
+          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => navigate("/calc-list")}>
             <ArrowLeft className="h-3.5 w-3.5" />
-            Назад
+            Мои калькуляторы
           </Button>
 
           <Separator orientation="vertical" className="h-5" />
@@ -178,49 +148,6 @@ export default function CalcBuilder() {
       </div>
 
       <div className="flex flex-1 max-w-screen-xl mx-auto w-full">
-        {/* Left sidebar — calculator list */}
-        <aside className="w-56 border-r bg-card hidden md:flex flex-col py-4 px-3 gap-3 shrink-0">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Калькуляторы</span>
-            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleNew}>
-              <Plus className="h-3.5 w-3.5" />
-            </Button>
-          </div>
-
-          <div className="space-y-1 flex-1 overflow-y-auto">
-            {calcList.length === 0 ? (
-              <p className="text-xs text-muted-foreground px-2 py-3">Нет сохранённых калькуляторов</p>
-            ) : (
-              calcList.map((c) => (
-                <div
-                  key={c.id}
-                  className={cn(
-                    "group flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm transition-colors",
-                    c.id === calculator.id
-                      ? "bg-primary/10 text-primary"
-                      : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                  )}
-                  onClick={() => handleOpen(c)}
-                >
-                  <Calculator className="h-3.5 w-3.5 shrink-0" />
-                  <span className="flex-1 truncate text-xs">{c.title}</span>
-                  <button
-                    className="opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => { e.stopPropagation(); handleDelete(c.id); }}
-                  >
-                    <Trash2 className="h-3 w-3 text-muted-foreground hover:text-destructive" />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-
-          <Button variant="outline" size="sm" className="gap-1.5 text-xs w-full" onClick={handleNew}>
-            <Plus className="h-3.5 w-3.5" />
-            Новый
-          </Button>
-        </aside>
-
         {/* Main area */}
         <main className="flex-1 min-w-0 p-4 md:p-6 overflow-hidden">
           <Tabs defaultValue="builder" className="h-full">

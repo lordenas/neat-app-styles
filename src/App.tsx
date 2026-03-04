@@ -30,6 +30,7 @@ const EmbedBuilder = lazy(() => import("./pages/EmbedBuilder"));
 const EmbedWidgets = lazy(() => import("./pages/EmbedWidgets"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const CalcBuilder = lazy(() => import("./pages/CalcBuilder"));
+const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
 
 // Calculator pages
@@ -124,6 +125,7 @@ const App = () => (
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="/embed-widgets" element={<EmbedWidgets />} />
                   <Route path="/api-keys" element={<ApiKeys />} />
+                  <Route path="/calc-list" element={<CalcList />} />
                   <Route path="/calc-builder" element={<CalcBuilder />} />
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />
                   <Route path="/c/:slug" element={<CalcPlayer />} />
