@@ -112,15 +112,14 @@ function applyDrop(
 
 interface FieldCardWrapperProps {
   field: CalcField;
-  allFields: CalcField[];
+  isSelected: boolean;
   dropTarget: DropTarget | null;
   dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
   isDragging?: boolean;
-  onUpdate: (updated: CalcField) => void;
-  onDelete: () => void;
+  onSelect: () => void;
 }
 
-function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDragging, onUpdate, onDelete }: FieldCardWrapperProps) {
+function FieldCardWrapper({ field, isSelected, dropTarget, dragHandleProps, isDragging, onSelect }: FieldCardWrapperProps) {
   const isTarget = dropTarget?.id === field.id && (dropTarget?.side === "left" || dropTarget?.side === "right");
   const side = isTarget ? dropTarget!.side : null;
 
@@ -128,18 +127,17 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
     <div
       className={cn(
         "relative rounded-lg transition-all duration-150",
-        isDragging && "opacity-25 scale-[0.97]",
         isTarget && side === "left"  && "before:absolute before:inset-y-0 before:-left-1 before:w-1 before:bg-primary before:rounded-full before:z-10 before:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
         isTarget && side === "right" && "after:absolute after:inset-y-0 after:-right-1 after:w-1 after:bg-primary after:rounded-full after:z-10 after:shadow-[0_0_8px_2px_hsl(var(--primary)/0.5)]",
-        isTarget && "ring-2 ring-primary/50 ring-inset bg-primary/5",
+        isTarget && "ring-2 ring-primary/50 ring-inset",
       )}
     >
       <FieldCard
         field={field}
-        allFields={allFields}
-        onChange={onUpdate}
-        onDelete={onDelete}
+        isSelected={isSelected}
+        onSelect={onSelect}
         dragHandleProps={dragHandleProps}
+        isDragging={isDragging}
       />
     </div>
   );
@@ -149,13 +147,12 @@ function FieldCardWrapper({ field, allFields, dropTarget, dragHandleProps, isDra
 
 interface SortableFieldItemProps {
   field: CalcField;
-  allFields: CalcField[];
+  isSelected: boolean;
   dropTarget: DropTarget | null;
-  onUpdate: (updated: CalcField) => void;
-  onDelete: () => void;
+  onSelect: () => void;
 }
 
-function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }: SortableFieldItemProps) {
+function SortableFieldItem({ field, isSelected, dropTarget, onSelect }: SortableFieldItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
   const style = isDragging
     ? { transition, opacity: 0.25 }
@@ -165,12 +162,11 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }:
     <div ref={setNodeRef} style={style} data-field-id={field.id}>
       <FieldCardWrapper
         field={field}
-        allFields={allFields}
+        isSelected={isSelected}
         dropTarget={dropTarget}
         dragHandleProps={{ ...attributes, ...listeners }}
         isDragging={isDragging}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
+        onSelect={onSelect}
       />
     </div>
   );
@@ -178,19 +174,13 @@ function SortableFieldItem({ field, allFields, dropTarget, onUpdate, onDelete }:
 
 // ─── Overlay Card ─────────────────────────────────────────────
 
-interface OverlayCardProps {
-  field: CalcField;
-  allFields: CalcField[];
-}
-
-function OverlayCard({ field, allFields }: OverlayCardProps) {
+function OverlayCard({ field }: { field: CalcField }) {
   return (
     <div className="shadow-2xl rotate-[0.8deg] opacity-95 scale-[1.02] cursor-grabbing pointer-events-none rounded-lg">
       <FieldCard
         field={field}
-        allFields={allFields}
-        onChange={() => {}}
-        onDelete={() => {}}
+        isSelected={false}
+        onSelect={() => {}}
       />
     </div>
   );
