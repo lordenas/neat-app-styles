@@ -1,4 +1,4 @@
-import { CalcField, CalcFieldType, SelectOption } from "@/types/custom-calc";
+import { CalcField, CalcFieldType, SelectOption, ButtonActionType, LabelVariant, WebhookPostAction } from "@/types/custom-calc";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import {
   Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote,
 } from "lucide-react";
 import { useState } from "react";
-import { ButtonActionType, LabelVariant } from "@/types/custom-calc";
 
 const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   number:   <Hash className="h-4 w-4" />,
