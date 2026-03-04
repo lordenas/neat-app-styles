@@ -69,10 +69,10 @@ export function FieldTypeMenu({ onAdd }: FieldTypeMenuProps) {
             {items.map(({ type, label, icon, description }) => (
               <DropdownMenuItem
                 key={type}
-                className="gap-3 cursor-pointer py-2.5"
+                className="gap-3 cursor-pointer py-2.5 items-start"
                 onClick={() => onAdd(type)}
               >
-                <span className="text-muted-foreground shrink-0">{icon}</span>
+                <span className="text-muted-foreground shrink-0 mt-0.5">{icon}</span>
                 <div>
                   <div className="font-medium text-sm">{label}</div>
                   <div className="text-xs text-muted-foreground">{description}</div>
