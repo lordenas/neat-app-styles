@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 
-export function useHistory<T>(initial: T, maxSize = 10) {
+export function useHistory<T>(initial: T | (() => T), maxSize = 10) {
   const [current, setCurrent] = useState<T>(typeof initial === "function" ? (initial as () => T)() : initial);
   const past = useRef<T[]>([]);
   const future = useRef<T[]>([]);
