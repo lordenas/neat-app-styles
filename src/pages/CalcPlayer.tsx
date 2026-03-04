@@ -209,12 +209,13 @@ export default function CalcPlayer() {
   );
 
   const hasMultiplePages = pages.length > 1;
+  const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
 
-      <main className="flex-1 py-8 px-4">
+      <main className="flex-1 py-8 px-4" style={themeVars}>
         <div className="max-w-lg mx-auto">
           {/* Title */}
           <div className="mb-6">
