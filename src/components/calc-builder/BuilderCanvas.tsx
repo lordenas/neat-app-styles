@@ -488,17 +488,16 @@ export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectF
                       className="relative grid gap-2 transition-all duration-150"
                       style={{ gridTemplateColumns: `repeat(${rowItems.length}, 1fr)` }}
                     >
-                      {rowItems.map((item) =>
+                       {rowItems.map((item) =>
                         item.type === "placeholder" ? (
                           <DropPlaceholder key={item.key} inline />
                         ) : (
                           <SortableFieldItem
                             key={item.field!.id}
                             field={item.field!}
-                            allFields={fields}
+                            isSelected={selectedFieldId === item.field!.id}
                             dropTarget={dropTarget}
-                            onUpdate={(updated) => updateField(item.field!.id, updated)}
-                            onDelete={() => deleteField(item.field!.id)}
+                            onSelect={() => onSelectField(item.field!.id)}
                           />
                         )
                       )}
