@@ -271,6 +271,11 @@ export interface CalcField {
    * По умолчанию = field.id (каждое поле в своей строке).
    */
   rowId: string;
+  /**
+   * ID страницы, которой принадлежит поле.
+   * Если undefined — поле принадлежит первой (единственной) странице.
+   */
+  pageId?: string;
   /** Конфигурация поля */
   config: CalcFieldConfig;
   /**
