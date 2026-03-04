@@ -230,13 +230,13 @@ export default function CalcPlayer() {
           <PageProgress pages={pages} current={currentPage} />
 
           {/* Slide container */}
-          <div className="overflow-hidden relative">
+          <div className="overflow-hidden">
             <div
+              key={currentPage}
               className={cn(
-                "transition-all duration-300",
-                animating && direction === "left" && "-translate-x-full opacity-0",
-                animating && direction === "right" && "translate-x-full opacity-0",
-                !animating && "translate-x-0 opacity-100"
+                enterDir === "left"
+                  ? "animate-[slide-in-from-right_0.3s_cubic-bezier(0.25,0.46,0.45,0.94)]"
+                  : "animate-[slide-in-from-left_0.3s_cubic-bezier(0.25,0.46,0.45,0.94)]"
               )}
             >
               {/* Page title */}
