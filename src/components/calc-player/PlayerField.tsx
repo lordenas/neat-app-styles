@@ -123,7 +123,7 @@ export function PlayerField({
     const align = field.config.imageAlign ?? "center";
     const maxWidth = field.config.imageMaxWidth;
     if (!src) return null;
-    return (
+    return wrap(
       <div className={cn("py-1", align === "center" && "flex justify-center", align === "right" && "flex justify-end")}>
         <img
           src={src}
