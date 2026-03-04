@@ -168,11 +168,20 @@ export function PlayerField({
     );
 
     if (isHtml) {
-      // Interpolate {key} placeholders with current field values
-      const interpolatedContent = content.replace(/\{(\w+)\}/g, (_, key) => {
-        const val = values[key];
-        return val !== undefined ? String(val) : `{${key}}`;
-      });
+      // Interpolate both {key} text and <span data-variable="key"> nodes
+      const interpolateHtml = (html: string) =>
+        html
+          // Replace VariableNode spans: <span data-variable="key">...</span>
+          .replace(/<span[^>]*data-variable="(\w+)"[^>]*>[^<]*<\/span>/g, (_, key) => {
+            const val = values[key];
+            return val !== undefined ? String(val) : `{${key}}`;
+          })
+          // Fallback plain {key}
+          .replace(/\{(\w+)\}/g, (_, key) => {
+            const val = values[key];
+            return val !== undefined ? String(val) : `{${key}}`;
+          });
+      const interpolatedContent = interpolateHtml(content);
       return wrap(
         <div
           className={cn(variantClass, "prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_p]:my-0")}
