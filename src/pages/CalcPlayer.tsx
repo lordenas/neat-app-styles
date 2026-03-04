@@ -13,28 +13,24 @@ import { cn } from "@/lib/utils";
 
 // ── Slide animation helpers ──────────────────────────────────
 
-type SlideDir = "left" | "right" | "none";
+type SlideDir = "left" | "right";
 
-function useSlide(totalPages: number) {
+function usePageSlide(totalPages: number) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [animating, setAnimating] = useState(false);
-  const [direction, setDirection] = useState<SlideDir>("none");
+  // Direction of the INCOMING page: "left" = new page slides in from right, "right" = from left
+  const [enterDir, setEnterDir] = useState<SlideDir>("left");
 
   const goTo = useCallback((target: number, dir?: SlideDir) => {
-    if (target < 0 || target >= totalPages || target === currentPage || animating) return;
+    if (target < 0 || target >= totalPages || target === currentPage) return;
     const autoDir = dir ?? (target > currentPage ? "left" : "right");
-    setDirection(autoDir);
-    setAnimating(true);
-    setTimeout(() => {
-      setCurrentPage(target);
-      setAnimating(false);
-    }, 320);
-  }, [currentPage, totalPages, animating]);
+    setEnterDir(autoDir);
+    setCurrentPage(target);
+  }, [currentPage, totalPages]);
 
   const next = useCallback(() => goTo(currentPage + 1, "left"), [goTo, currentPage]);
   const prev = useCallback(() => goTo(currentPage - 1, "right"), [goTo, currentPage]);
 
-  return { currentPage, animating, direction, goTo, next, prev };
+  return { currentPage, enterDir, goTo, next, prev };
 }
 
 // ── Progress bar ─────────────────────────────────────────────
@@ -78,7 +74,7 @@ export default function CalcPlayer() {
     ? calculator.pages
     : [{ id: "__single__", title: "", orderIndex: 0 }];
 
-  const { currentPage, animating, direction, goTo, next, prev } = useSlide(pages.length);
+  const { currentPage, enterDir, goTo, next, prev } = usePageSlide(pages.length);
 
   useEffect(() => {
     if (!slug) { setNotFound(true); return; }
@@ -234,13 +230,13 @@ export default function CalcPlayer() {
           <PageProgress pages={pages} current={currentPage} />
 
           {/* Slide container */}
-          <div className="overflow-hidden relative">
+          <div className="overflow-hidden">
             <div
+              key={currentPage}
               className={cn(
-                "transition-all duration-300",
-                animating && direction === "left" && "-translate-x-full opacity-0",
-                animating && direction === "right" && "translate-x-full opacity-0",
-                !animating && "translate-x-0 opacity-100"
+                enterDir === "left"
+                  ? "animate-[slide-in-from-right_0.3s_cubic-bezier(0.25,0.46,0.45,0.94)]"
+                  : "animate-[slide-in-from-left_0.3s_cubic-bezier(0.25,0.46,0.45,0.94)]"
               )}
             >
               {/* Page title */}
