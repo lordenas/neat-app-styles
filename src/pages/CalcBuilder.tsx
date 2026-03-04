@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  CustomCalculator, CalcField, loadCalculators, saveCalculator, deleteCalculator,
+  CustomCalculator, CalcField, loadCalculators, saveCalculator,
 } from "@/types/custom-calc";
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
@@ -13,8 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Save, Eye, Trash2, Plus, ArrowLeft, Copy, ExternalLink,
-  Calculator, Globe, Lock,
+  Save, Eye, ArrowLeft, Copy, ExternalLink,
+  Calculator, Globe, Lock, List,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
