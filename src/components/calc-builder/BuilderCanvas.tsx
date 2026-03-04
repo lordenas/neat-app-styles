@@ -519,7 +519,7 @@ export function BuilderCanvas({ calculator, onChange, selectedFieldId, onSelectF
 
       <DragOverlay dropAnimation={{ duration: 180, easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)" }}>
         {activeField ? (
-          <OverlayCard field={activeField} allFields={fields} />
+          <OverlayCard field={activeField} />
         ) : null}
       </DragOverlay>
     </DndContext>
