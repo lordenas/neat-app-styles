@@ -208,6 +208,8 @@ function DropPlaceholder({ inline }: { inline?: boolean }) {
 interface BuilderCanvasProps {
   calculator: CustomCalculator;
   onChange: (calc: CustomCalculator) => void;
+  selectedFieldId: string | null;
+  onSelectField: (id: string | null) => void;
 }
 
 const MAX_PER_ROW = 4;
