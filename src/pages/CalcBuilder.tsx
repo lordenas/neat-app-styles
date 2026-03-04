@@ -74,7 +74,7 @@ export default function CalcBuilder() {
     redo,
     canUndo,
     canRedo,
-  } = useHistory<CustomCalculator>(() => loadInitial(id));
+  } = useHistory<CustomCalculator>(loadInitial(id));
 
   const [saved, setSaved] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
