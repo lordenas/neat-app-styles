@@ -74,7 +74,7 @@ export default function CalcPlayer() {
     ? calculator.pages
     : [{ id: "__single__", title: "", orderIndex: 0 }];
 
-  const { currentPage, animating, direction, goTo, next, prev } = useSlide(pages.length);
+  const { currentPage, enterDir, goTo, next, prev } = usePageSlide(pages.length);
 
   useEffect(() => {
     if (!slug) { setNotFound(true); return; }
