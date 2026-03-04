@@ -109,15 +109,39 @@ export type ButtonActionType =
   | "pdf"        // Скачать PDF с результатами
   | "webhook";   // POST-запрос на внешний URL с данными формы
 
-/** Конфигурация действия кнопки */
+/**
+ * Действие «после webhook» — выполняется после успешной отправки.
+ * Можно комбинировать несколько.
+ */
+export interface WebhookPostAction {
+  /** Показать toast-сообщение */
+  showToast?: boolean;
+  /** Текст toast при успехе */
+  successMessage?: string;
+  /** Текст toast при ошибке */
+  errorMessage?: string;
+  /** Перейти по URL после успеха */
+  redirectUrl?: string;
+  /** Открыть redirect в новой вкладке */
+  redirectNewTab?: boolean;
+  /** Сбросить форму после успеха */
+  resetAfter?: boolean;
+}
+
+/** Конфигурация кнопки: поддерживает несколько одновременных первичных действий */
 export interface ButtonAction {
+  /** Основные действия (можно несколько: calculate + webhook, reset + navigate и т.д.) */
   type: ButtonActionType;
+  /** Дополнительные действия, выполняемые вместе с основным */
+  extraActions?: ButtonActionType[];
   /** Для navigate/webhook: URL (поддерживает {key}) */
   url?: string;
   /** Для calculate: id поля-результата (или пусто = пересчитать все) */
   targetFieldId?: string;
   /** Для navigate: открыть в новой вкладке */
   newTab?: boolean;
+  /** После webhook: что сделать */
+  webhookPostAction?: WebhookPostAction;
 }
 
 /** Вариант оформления статического текста */
