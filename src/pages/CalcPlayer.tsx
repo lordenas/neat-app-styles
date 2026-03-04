@@ -137,14 +137,15 @@ export default function CalcPlayer() {
                 style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
               >
                 {rowFields.map((field) => (
-                  <PlayerField
-                    key={field.id}
-                    field={field}
-                    allFields={sorted}
-                    values={values}
-                    onChange={onChange}
-                  />
-                ))}
+                   <PlayerField
+                     key={field.id}
+                     field={field}
+                     allFields={sorted}
+                     values={values}
+                     onChange={onChange}
+                     onReset={handleReset}
+                   />
+                 ))}
               </div>
             ))}
           </div>
