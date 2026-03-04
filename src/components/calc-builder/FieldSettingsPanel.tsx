@@ -192,10 +192,25 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
               </div>
             )}
             <div className="space-y-2">
+              {/* Column headers */}
+              <div className="flex gap-2 items-center px-0.5">
+                <span className="text-[10px] text-muted-foreground flex-1">Название</span>
+                <span className="text-[10px] text-muted-foreground w-20">Строка</span>
+                <span className="text-[10px] text-muted-foreground w-16">Число</span>
+                <span className="w-7" />
+              </div>
               {options.map((opt, i) => (
                 <div key={i} className="flex gap-2 items-center">
                   <Input inputSize="sm" value={opt.label} onChange={(e) => updateOption(i, { label: e.target.value })} placeholder="Название" className="flex-1" />
-                  <Input inputSize="sm" value={opt.value} onChange={(e) => updateOption(i, { value: e.target.value })} placeholder="значение" className="w-24 font-mono" />
+                  <Input inputSize="sm" value={opt.value} onChange={(e) => updateOption(i, { value: e.target.value })} placeholder="opt1" className="w-20 font-mono" />
+                  <Input
+                    inputSize="sm"
+                    type="number"
+                    value={opt.numericValue ?? ""}
+                    onChange={(e) => updateOption(i, { numericValue: e.target.value === "" ? undefined : Number(e.target.value) })}
+                    placeholder="—"
+                    className="w-16 font-mono"
+                  />
                   <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive shrink-0" onClick={() => removeOption(i)}>
                     <X className="h-3.5 w-3.5" />
                   </Button>
@@ -204,6 +219,37 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
               <Button variant="ghost" size="sm" className="h-7 text-xs gap-1.5 text-muted-foreground w-full justify-start" onClick={addOption}>
                 <Plus className="h-3.5 w-3.5" /> Добавить вариант
               </Button>
+            </div>
+          </div>
+        )}
+
+        {field.type === "checkbox" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Числовые значения</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              Используются в формулах как <code className="bg-muted px-1 rounded">{`{${field.key || "key"}}`}</code>
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Если активен</Label>
+                <Input
+                  inputSize="sm"
+                  type="number"
+                  value={field.config.checkedValue ?? 1}
+                  onChange={(e) => updConfig({ checkedValue: Number(e.target.value) })}
+                  placeholder="1"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Если неактивен</Label>
+                <Input
+                  inputSize="sm"
+                  type="number"
+                  value={field.config.uncheckedValue ?? 0}
+                  onChange={(e) => updConfig({ uncheckedValue: Number(e.target.value) })}
+                  placeholder="0"
+                />
+              </div>
             </div>
           </div>
         )}
