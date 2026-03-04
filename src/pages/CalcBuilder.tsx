@@ -81,7 +81,7 @@ export default function CalcBuilder() {
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
   const [tab, setTab] = useState<"builder" | "preview">("builder");
   const [activePage, setActivePage] = useState(0);
-  const [leftTab, setLeftTab] = useState<"field" | "pages">("field");
+  const [leftTab, setLeftTab] = useState<"field" | "pages" | "theme">("field");
 
   // Keyboard shortcuts
   useEffect(() => {
