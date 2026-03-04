@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  CustomCalculator, CalcField, CalcPage, loadCalculators, saveCalculator,
+  CustomCalculator, CalcField, CalcPage, CalcTheme, loadCalculators, saveCalculator,
 } from "@/types/custom-calc";
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
 import { FieldSettingsPanel } from "@/components/calc-builder/FieldSettingsPanel";
 import { PageManager } from "@/components/calc-builder/PageManager";
+import { ThemePanel } from "@/components/calc-builder/ThemePanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2,
+  Undo2, Redo2, Palette,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
