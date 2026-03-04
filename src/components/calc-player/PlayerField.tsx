@@ -168,10 +168,15 @@ export function PlayerField({
     );
 
     if (isHtml) {
+      // Interpolate {key} placeholders with current field values
+      const interpolatedContent = content.replace(/\{(\w+)\}/g, (_, key) => {
+        const val = values[key];
+        return val !== undefined ? String(val) : `{${key}}`;
+      });
       return wrap(
         <div
           className={cn(variantClass, "prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_p]:my-0")}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: interpolatedContent }}
         />
       );
     }

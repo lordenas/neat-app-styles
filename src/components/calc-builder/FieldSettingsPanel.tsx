@@ -321,6 +321,9 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
                     value={field.config.labelContent ?? ""}
                     onChange={(html) => updConfig({ labelContent: html })}
                     placeholder="Введите текст..."
+                    fields={otherFields
+                      .filter((f) => f.key)
+                      .map((f) => ({ key: f.key, label: f.label || f.key }))}
                   />
                 )}
               </div>
