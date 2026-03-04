@@ -94,10 +94,10 @@ export function PageManager({
               </span>
 
               {hasAutoAdvance && (
-                <Zap className="h-3 w-3 text-foreground opacity-60 shrink-0" title="Авто-переход" />
+                <Zap className="h-3 w-3 text-foreground opacity-60 shrink-0" />
               )}
               {hasRoutes && (
-                <GitBranch className="h-3 w-3 text-primary/70 shrink-0" title="Условные переходы" />
+                <GitBranch className="h-3 w-3 text-primary/70 shrink-0" />
               )}
 
               <Badge variant="outline" className="text-[10px] px-1 py-0 shrink-0">
