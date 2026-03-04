@@ -250,12 +250,40 @@ export function evaluateAllFormulas(
   fields: CalcField[],
   inputValues: Record<string, number | string | boolean>
 ): Record<string, number> {
-  // Нормализуем входные значения в числа
+  // Нормализуем входные значения в числа, учитывая числовые веса полей
   const numValues: Record<string, number> = {};
+  for (const field of fields) {
+    const rawVal = inputValues[field.key];
+    if (rawVal === undefined) continue;
+
+    if (field.type === "checkbox") {
+      const isChecked = rawVal === true || rawVal === 1 || rawVal === "true";
+      const checkedVal = field.config.checkedValue ?? 1;
+      const uncheckedVal = field.config.uncheckedValue ?? 0;
+      numValues[field.key] = isChecked ? checkedVal : uncheckedVal;
+    } else if (field.type === "radio" || field.type === "select") {
+      const strVal = String(rawVal);
+      const option = field.config.options?.find((o) => o.value === strVal);
+      if (option?.numericValue !== undefined) {
+        numValues[field.key] = option.numericValue;
+      } else {
+        numValues[field.key] = parseFloat(strVal) || 0;
+      }
+    } else if (typeof rawVal === "boolean") {
+      numValues[field.key] = rawVal ? 1 : 0;
+    } else if (typeof rawVal === "string") {
+      numValues[field.key] = parseFloat(rawVal) || 0;
+    } else {
+      numValues[field.key] = rawVal;
+    }
+  }
+  // Поля без определения в fields (на случай если что-то пропустили)
   for (const [k, v] of Object.entries(inputValues)) {
-    if (typeof v === "boolean") numValues[k] = v ? 1 : 0;
-    else if (typeof v === "string") numValues[k] = parseFloat(v) || 0;
-    else numValues[k] = v;
+    if (numValues[k] === undefined) {
+      if (typeof v === "boolean") numValues[k] = v ? 1 : 0;
+      else if (typeof v === "string") numValues[k] = parseFloat(v) || 0;
+      else numValues[k] = v as number;
+    }
   }
 
   const results: Record<string, number> = {};

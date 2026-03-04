@@ -158,6 +158,8 @@ export type LabelVariant = "h1" | "h2" | "h3" | "body" | "caption" | "divider";
 export interface SelectOption {
   label: string;
   value: string;
+  /** Числовое значение, подставляемое в формулы вместо строкового value */
+  numericValue?: number;
 }
 
 /** Конфигурация поля (хранится в jsonb calc_fields.config) */
@@ -182,6 +184,16 @@ export interface CalcFieldConfig {
   decimals?: number;
   /** Подсказка под полем */
   hint?: string;
+  /**
+   * Для checkbox: числовое значение когда активен (подставляется в формулы вместо 1).
+   * По умолчанию: 1
+   */
+  checkedValue?: number;
+  /**
+   * Для checkbox: числовое значение когда неактивен (подставляется в формулы вместо 0).
+   * По умолчанию: 0
+   */
+  uncheckedValue?: number;
   /** Для button: вид кнопки */
   buttonVariant?: "default" | "outline" | "destructive" | "ghost";
   /** Для button: действие */
