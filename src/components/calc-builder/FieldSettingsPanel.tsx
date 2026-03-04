@@ -328,10 +328,11 @@ const ALL_BUTTON_ACTIONS: ButtonActionType[] = ["calculate", "navigate_page", "n
 interface ButtonSettingsProps {
   field: CalcField;
   allFields: CalcField[];
+  pages: CalcPage[];
   updConfig: (partial: Partial<CalcField["config"]>) => void;
 }
 
-function ButtonSettings({ field, allFields, updConfig }: ButtonSettingsProps) {
+function ButtonSettings({ field, allFields, pages, updConfig }: ButtonSettingsProps) {
   const action = field.config.buttonAction ?? { type: "calculate" as ButtonActionType };
   const extraActions = action.extraActions ?? [];
   const post = action.webhookPostAction ?? {} as WebhookPostAction;
