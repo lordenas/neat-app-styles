@@ -57,19 +57,27 @@ export function FieldTypeMenu({ onAdd }: FieldTypeMenuProps) {
           <ChevronDown className="h-3 w-3 ml-auto opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" side="bottom" avoidCollisions collisionPadding={12} className="w-64 max-h-[min(360px,60vh)] overflow-y-auto">
-        {FIELD_TYPES.map(({ type, label, icon, description }) => (
-          <DropdownMenuItem
-            key={type}
-            className="gap-3 cursor-pointer py-2.5"
-            onClick={() => onAdd(type)}
-          >
-            <span className="text-muted-foreground shrink-0">{icon}</span>
-            <div>
-              <div className="font-medium text-sm">{label}</div>
-              <div className="text-xs text-muted-foreground">{description}</div>
-            </div>
-          </DropdownMenuItem>
+      <DropdownMenuContent align="start" side="bottom" avoidCollisions collisionPadding={12} className="w-64 max-h-[min(420px,65vh)] overflow-y-auto">
+        {FIELD_TYPES_GROUPS.map(({ group, items }, gi) => (
+          <div key={group}>
+            {gi > 0 && <DropdownMenuSeparator />}
+            <DropdownMenuLabel className="text-[10px] uppercase tracking-wide text-muted-foreground px-2 py-1">
+              {group}
+            </DropdownMenuLabel>
+            {items.map(({ type, label, icon, description }) => (
+              <DropdownMenuItem
+                key={type}
+                className="gap-3 cursor-pointer py-2.5"
+                onClick={() => onAdd(type)}
+              >
+                <span className="text-muted-foreground shrink-0">{icon}</span>
+                <div>
+                  <div className="font-medium text-sm">{label}</div>
+                  <div className="text-xs text-muted-foreground">{description}</div>
+                </div>
+              </DropdownMenuItem>
+            ))}
+          </div>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
