@@ -41,11 +41,12 @@ function slugify(s: string): string {
 interface FieldSettingsPanelProps {
   field: CalcField | null;
   allFields: CalcField[];
+  pages?: CalcPage[];
   onChange: (updated: CalcField) => void;
   onDelete: () => void;
 }
 
-export function FieldSettingsPanel({ field, allFields, onChange, onDelete }: FieldSettingsPanelProps) {
+export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onDelete }: FieldSettingsPanelProps) {
   const [condOpen, setCondOpen] = useState(false);
 
   if (!field) {
