@@ -410,7 +410,7 @@ function OptionsEditor({ options, updateOption, removeOption, addOption }: Optio
     <div className="space-y-2">
       <div className="flex gap-2 items-center px-0.5">
         <span className="text-[10px] text-muted-foreground flex-1">Название</span>
-        <span className="text-[10px] text-muted-foreground w-16">Число</span>
+        <span className="text-[10px] text-muted-foreground w-20">Число</span>
         <button
           className="text-[10px] text-muted-foreground hover:text-foreground transition-colors w-5 text-right"
           title={showId ? "Скрыть строковый ID" : "Показать строковый ID (нужен для условий отображения)"}
@@ -434,13 +434,12 @@ function OptionsEditor({ options, updateOption, removeOption, addOption }: Optio
             placeholder="Название"
             className="flex-1"
           />
-          <Input
-            inputSize="sm"
+          <input
             type="number"
             value={opt.numericValue ?? ""}
             onChange={(e) => updateOption(i, { numericValue: e.target.value === "" ? undefined : Number(e.target.value) })}
-            placeholder="—"
-            className="w-16 font-mono"
+            placeholder="0"
+            className="w-20 h-7 text-xs font-mono rounded-md border border-input bg-background px-2 text-center focus:outline-none focus:ring-1 focus:ring-ring [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           />
           {showId && (
             <Input
