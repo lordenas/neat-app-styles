@@ -97,9 +97,9 @@ export default function CalcBuilder() {
       {/* Top bar */}
       <div className="border-b bg-card sticky top-[57px] z-30">
         <div className="max-w-screen-xl mx-auto px-4 h-12 flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => navigate("/")}>
+          <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => navigate("/calc-list")}>
             <ArrowLeft className="h-3.5 w-3.5" />
-            Назад
+            Мои калькуляторы
           </Button>
 
           <Separator orientation="vertical" className="h-5" />
