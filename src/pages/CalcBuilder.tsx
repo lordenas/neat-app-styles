@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
-  Calculator, Globe, Lock, Layers,
+  Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -344,13 +344,60 @@ export default function CalcBuilder() {
               />
             </div>
           ) : (
-            <div className="p-6 max-w-2xl">
+            <div className="p-6 max-w-2xl space-y-3">
+              {/* Dev-only page navigation — outside the calculator card */}
+              {pages.length > 1 && (
+                <div className="flex items-center justify-between px-1">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setActivePage((p) => Math.max(0, p - 1))}
+                      disabled={activePage === 0}
+                    >
+                      <ChevronLeft />
+                    </Button>
+                    <div className="flex items-center gap-1">
+                      {pages.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setActivePage(i)}
+                          className={cn(
+                            "h-1.5 rounded-full transition-all",
+                            i === activePage ? "w-5 bg-primary" : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setActivePage((p) => Math.min(pages.length - 1, p + 1))}
+                      disabled={activePage === pages.length - 1}
+                    >
+                      <ChevronRight />
+                    </Button>
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {pages[activePage]?.title || `Страница ${activePage + 1}`} · {activePage + 1} / {pages.length}
+                  </span>
+                </div>
+              )}
+
               <div className="border rounded-xl p-6 bg-card shadow-sm">
                 <h3 className="text-lg font-bold mb-1">{calculator.title}</h3>
                 {calculator.description && (
                   <p className="text-sm text-muted-foreground mb-4">{calculator.description}</p>
                 )}
-                <BuilderPreview calculator={calculator} />
+                <BuilderPreview
+                  calculator={calculator}
+                  currentPage={activePage}
+                  onNavigatePage={(target) => {
+                    if (target === "next") setActivePage((p) => Math.min(pages.length - 1, p + 1));
+                    else if (target === "prev") setActivePage((p) => Math.max(0, p - 1));
+                    else setActivePage(Math.max(0, Math.min(pages.length - 1, target as number)));
+                  }}
+                />
               </div>
             </div>
           )}
