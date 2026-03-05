@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { CustomCalculator, CalcPage } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "./BuilderCanvas";
-import { evaluateAllFormulas } from "@/lib/calc-engine";
+import { evaluateAllFormulas, resolveVisibility } from "@/lib/calc-engine";
 import { buildThemeVars } from "./ThemePanel";
 
 interface BuilderPreviewProps {
