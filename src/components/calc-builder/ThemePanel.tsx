@@ -168,6 +168,9 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
     };
     vars["--radius"] = radMap[theme.borderRadius] ?? "0.375rem";
   }
+  if (theme.fontFamily) {
+    vars["--calc-font"] = `'${theme.fontFamily}', sans-serif`;
+  }
   return vars as React.CSSProperties;
 }
 
