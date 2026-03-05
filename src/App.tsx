@@ -32,6 +32,7 @@ const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const CalcBuilder = lazy(() => import("./pages/CalcBuilder"));
 const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
@@ -129,6 +130,7 @@ const App = () => (
                   <Route path="/calc-builder" element={<CalcBuilder />} />
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />
                   <Route path="/c/:slug" element={<CalcPlayer />} />
+                  <Route path="/pricing" element={<Pricing />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

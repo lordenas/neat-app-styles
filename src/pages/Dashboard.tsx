@@ -15,6 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   Code2,
+  Zap,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +29,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
+import { usePlan, PLAN_META } from "@/hooks/usePlan";
 
 interface SavedCalculation {
   id: string;
@@ -62,6 +65,7 @@ export default function Dashboard() {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const { widgets } = useEmbedWidgets();
+  const { plan, limits, calcCount, subscription, loading: planLoading } = usePlan();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -198,10 +202,44 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Embed Widgets — compact teaser */}
+        {/* Plan card + Embed Widgets */}
         <section className="py-8 border-b border-border">
-          <div className="container max-w-4xl">
-            <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+          <div className="container max-w-4xl flex flex-col sm:flex-row gap-4">
+
+            {/* Current plan */}
+            {!planLoading && (
+              <div className="flex-1 flex items-center justify-between gap-3 rounded-xl border px-5 py-4 bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                    <Zap className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold flex items-center gap-2">
+                      Тариф
+                      <Badge variant="outline" className="text-xs">{PLAN_META[plan].label}</Badge>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {limits.maxCalcs === -1
+                        ? `${calcCount} калькуляторов — без лимита`
+                        : `${calcCount} / ${limits.maxCalcs} калькуляторов`}
+                    </p>
+                    {subscription?.current_period_end && (
+                      <p className="text-xs text-muted-foreground">
+                        Следующее списание: {new Date(subscription.current_period_end).toLocaleDateString("ru")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Link to="/pricing" className="shrink-0">
+                  <Button variant="outline" size="sm" className="gap-1.5">
+                    {plan === "pro" ? "Управлять" : <><ArrowRight className="h-3.5 w-3.5" />Апгрейд</>}
+                  </Button>
+                </Link>
+              </div>
+            )}
+
+            {/* Embed Widgets */}
+            <div className="flex-1 flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <Code2 className="h-5 w-5 text-primary" />
@@ -210,7 +248,7 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold">Embed-виджеты</p>
                   <p className="text-xs text-muted-foreground">
                     {widgets.length > 0
-                      ? `${widgets.length} виджет${widgets.length === 1 ? "" : widgets.length < 5 ? "а" : "ов"} — встройте калькулятор на свой сайт`
+                      ? `${widgets.length} виджет${widgets.length === 1 ? "" : widgets.length < 5 ? "а" : "ов"} — встройте калькулятор на сайт`
                       : "Встройте калькулятор на свой сайт"}
                   </p>
                 </div>
@@ -218,10 +256,11 @@ export default function Dashboard() {
               <Link to="/embed-widgets" className="shrink-0">
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <Code2 className="h-3.5 w-3.5" />
-                  Мои виджеты
+                  Виджеты
                 </Button>
               </Link>
             </div>
+
           </div>
         </section>
 

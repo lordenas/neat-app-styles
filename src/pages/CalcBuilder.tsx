@@ -14,11 +14,13 @@ import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2, Palette,
+  Undo2, Redo2, Palette, AlertTriangle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
+import { usePlan } from "@/hooks/usePlan";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 function nanoid(len = 8): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -82,6 +84,10 @@ export default function CalcBuilder() {
   const [tab, setTab] = useState<"builder" | "preview">("builder");
   const [activePage, setActivePage] = useState(0);
   const [leftTab, setLeftTab] = useState<"field" | "pages" | "theme">("field");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState("");
+
+  const { plan, limits, isPageLimitReached } = usePlan();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -326,12 +332,36 @@ export default function CalcBuilder() {
             />
           )}
           {leftTab === "pages" && (
-            <div className="flex-1 overflow-y-auto p-3">
+            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+              {isPageLimitReached(pages.length) && (
+                <div className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/5 px-3 py-2.5 text-xs text-muted-foreground">
+                  <AlertTriangle className="h-3.5 w-3.5 text-warning shrink-0 mt-0.5" />
+                  <span>
+                    Лимит страниц ({limits.maxPages}) достигнут на вашем тарифе.{" "}
+                    <button
+                      className="underline text-primary"
+                      onClick={() => {
+                        setUpgradeReason(`На тарифе «${plan}» можно создать не более ${limits.maxPages} страниц в одном калькуляторе.`);
+                        setUpgradeOpen(true);
+                      }}
+                    >
+                      Апгрейд
+                    </button>
+                  </span>
+                </div>
+              )}
               <PageManager
                 pages={pages}
                 fields={calculator.fields}
                 activePage={activePage}
-                onPagesChange={handlePagesChange}
+                onPagesChange={(newPages) => {
+                  if (newPages.length > pages.length && isPageLimitReached(pages.length)) {
+                    setUpgradeReason(`На тарифе «${plan}» можно создать не более ${limits.maxPages} страниц в одном калькуляторе.`);
+                    setUpgradeOpen(true);
+                    return;
+                  }
+                  handlePagesChange(newPages);
+                }}
                 onActivePage={(idx) => {
                   setActivePage(idx);
                   setSelectedFieldId(null);
@@ -451,6 +481,13 @@ export default function CalcBuilder() {
           )}
         </main>
       </div>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        reason={upgradeReason}
+        currentPlan={plan}
+      />
     </div>
   );
 }
