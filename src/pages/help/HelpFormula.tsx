@@ -58,10 +58,10 @@ export default function HelpFormula() {
               { op: "*", name: "Умножение", ex: "{a} * {b}" },
               { op: "/", name: "Деление", ex: "{a} / {b}" },
             ].map(({ op, name, ex }) => (
-              <div key={op} className="border border-border rounded-lg p-3 text-center">
+          <div key={op} className="border border-border rounded-lg p-3 text-center">
                 <div className="text-2xl font-mono font-bold text-primary mb-1">{op}</div>
                 <p className="text-xs font-medium">{name}</p>
-                <code className="text-[10px] text-muted-foreground">{ex}</code>
+                <code className="text-[10px] text-muted-foreground font-mono">{ex}</code>
               </div>
             ))}
           </div>
