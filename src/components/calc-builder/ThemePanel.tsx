@@ -180,6 +180,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
               onClick={() => upd({
                 primaryColor: preset.primary,
                 bgColor: preset.bg,
+                cardColor: preset.card,
                 accentColor: preset.accent,
                 borderRadius: preset.borderRadius,
               })}
