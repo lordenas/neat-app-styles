@@ -179,7 +179,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
   const upd = (patch: Partial<CalcTheme>) => onChange({ ...theme, ...patch });
 
   // Inject Google Fonts once
-  React.useEffect(() => {
+  useEffect(() => {
     if (!document.getElementById("calc-google-fonts")) {
       const link = document.createElement("link");
       link.id = "calc-google-fonts";
