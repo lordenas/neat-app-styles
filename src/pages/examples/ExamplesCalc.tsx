@@ -126,14 +126,15 @@ export default function ExamplesCalc() {
   const category = getCategoryBySlug(categorySlug ?? "");
   const calc = getCalcBySlug(categorySlug ?? "", calcSlug ?? "");
 
-  if (!category || !calc) return <Navigate to="/examples" replace />;
+  const relatedCalcs = useMemo(
+    () => category && calc
+      ? getCalcsByCategory(category.slug).filter((c) => c.slug !== calc.slug).slice(0, 4)
+      : [],
+    [category, calc],
+  );
 
-  const relatedCalcs = getCalcsByCategory(category.slug)
-    .filter((c) => c.slug !== calc.slug)
-    .slice(0, 4);
-
-  // Field state
   const initialValues = useMemo(() => {
+    if (!calc) return {};
     const map: Record<string, number> = {};
     calc.fields.forEach((f) => { map[f.key] = f.defaultValue; });
     return map;
@@ -146,12 +147,15 @@ export default function ExamplesCalc() {
   };
 
   const results = useMemo(() => {
+    if (!calc) return {};
     try {
       return calc.calculate(values);
     } catch {
       return {};
     }
   }, [values, calc]);
+
+  if (!category || !calc) return <Navigate to="/examples" replace />;
 
   const embedCode = `<iframe src="https://neat-app-styles.lovable.app/examples/${category.slug}/${calc.slug}" width="100%" height="480" frameborder="0" title="${calc.name}"></iframe>`;
 
