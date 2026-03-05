@@ -279,7 +279,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
               : 8,
           }}
         >
-          <div className="text-xs font-semibold" style={{ color: "#0f172a" }}>Пример поля</div>
+          <div className="text-xs font-semibold" style={{ color: isDark ? "#f1f5f9" : "#0f172a" }}>Пример поля</div>
           <div
             className="h-8 rounded border px-2 flex items-center text-xs"
             style={{
@@ -292,7 +292,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
                 : 8,
             }}
           >
-            <span style={{ color: "#94a3b8" }}>1 000 000</span>
+            <span style={{ color: isDark ? "#94a3b8" : "#94a3b8" }}>1 000 000</span>
           </div>
           <div
             className="h-8 flex items-center justify-center text-xs font-medium text-white rounded cursor-pointer"
