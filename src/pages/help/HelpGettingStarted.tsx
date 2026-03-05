@@ -172,11 +172,11 @@ export default function HelpGettingStarted() {
 
 function MockHeader({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-muted/50">
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-muted/50">
       <div className="flex gap-1.5">
-        <div className="w-2.5 h-2.5 rounded-full bg-red-400/70" />
-        <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/70" />
-        <div className="w-2.5 h-2.5 rounded-full bg-green-400/70" />
+        <div className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+        <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/40" />
+        <div className="w-2.5 h-2.5 rounded-full bg-primary/50" />
       </div>
       <span className="text-xs text-muted-foreground ml-1 font-mono">{title}</span>
     </div>
