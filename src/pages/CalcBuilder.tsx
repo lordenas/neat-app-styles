@@ -8,13 +8,14 @@ import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
 import { FieldSettingsPanel } from "@/components/calc-builder/FieldSettingsPanel";
 import { PageManager } from "@/components/calc-builder/PageManager";
 import { ThemePanel } from "@/components/calc-builder/ThemePanel";
+import { OnboardingTour, useOnboardingTour } from "@/components/calc-builder/OnboardingTour";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2, Palette, AlertTriangle,
+  Undo2, Redo2, Palette, AlertTriangle, HelpCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
