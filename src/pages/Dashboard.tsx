@@ -204,11 +204,11 @@ export default function Dashboard() {
 
         {/* Plan card + Embed Widgets */}
         <section className="py-8 border-b border-border">
-          <div className="container max-w-4xl flex flex-col sm:flex-row gap-4">
+          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             {/* Current plan */}
             {!planLoading && (
-              <div className="flex-1 flex items-center justify-between gap-3 rounded-xl border px-5 py-4 bg-muted/30">
+              <div className="flex items-center justify-between gap-3 rounded-xl border px-5 py-4 bg-muted/30">
                 <div className="flex items-center gap-3">
                   <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <Zap className="h-5 w-5 text-primary" />
@@ -239,7 +239,7 @@ export default function Dashboard() {
             )}
 
             {/* Embed Widgets */}
-            <div className="flex-1 flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+            <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <Code2 className="h-5 w-5 text-primary" />
@@ -248,8 +248,8 @@ export default function Dashboard() {
                   <p className="text-sm font-semibold">Embed-виджеты</p>
                   <p className="text-xs text-muted-foreground">
                     {widgets.length > 0
-                      ? `${widgets.length} виджет${widgets.length === 1 ? "" : widgets.length < 5 ? "а" : "ов"} — встройте калькулятор на сайт`
-                      : "Встройте калькулятор на свой сайт"}
+                      ? `${widgets.length} виджет${widgets.length === 1 ? "" : widgets.length < 5 ? "а" : "ов"}`
+                      : "Встройте калькулятор на сайт"}
                   </p>
                 </div>
               </div>
@@ -262,14 +262,14 @@ export default function Dashboard() {
             </div>
 
             {/* My Calculators */}
-            <div className="flex-1 flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+            <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <Calculator className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Мои калькуляторы</p>
-                  <p className="text-xs text-muted-foreground">Управляйте созданными калькуляторами</p>
+                  <p className="text-xs text-muted-foreground">Созданные калькуляторы</p>
                 </div>
               </div>
               <Link to="/calc-list" className="shrink-0">
