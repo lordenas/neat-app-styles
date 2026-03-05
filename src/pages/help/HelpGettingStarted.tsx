@@ -269,7 +269,7 @@ function StepVisualFormula() {
             </span>
           ))}
         </div>
-        <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-2 text-xs text-green-700 dark:text-green-400">
+        <div className="bg-primary/10 border border-primary/30 rounded-lg p-2 text-xs text-primary">
           ✓ Формула корректна
         </div>
       </div>
