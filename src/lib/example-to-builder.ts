@@ -9,6 +9,7 @@ import {
   type CalcPage,
   saveCalculator,
 } from "@/types/custom-calc";
+import { transpileCalculateToFormulas } from "@/lib/js-to-calcformula";
 
 function nanoid(len = 8): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
