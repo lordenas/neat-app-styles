@@ -1,11 +1,12 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Plus, Hash, Eye, Share2, Code2, ArrowRight,
-  CheckCircle2, Sliders, List, Type, Calculator
+  CheckCircle2, Sliders, List, Type, Calculator, Play
 } from "lucide-react";
 import { HelpLayout } from "./HelpLayout";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
@@ -67,6 +68,13 @@ const tips = [
 ];
 
 export default function HelpGettingStarted() {
+  const navigate = useNavigate();
+
+  const startTour = () => {
+    localStorage.removeItem("calc_builder_tour_done");
+    navigate("/calc-builder");
+  };
+
   return (
     <HelpLayout>
       <Helmet>
@@ -84,6 +92,10 @@ export default function HelpGettingStarted() {
           <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
             От пустого проекта до рабочего виджета — пошаговое руководство с иллюстрациями интерфейса.
           </p>
+          <Button onClick={startTour} className="mt-4 gap-2" size="sm">
+            <Play className="h-3.5 w-3.5" />
+            Запустить интерактивный тур
+          </Button>
         </div>
 
         {/* Steps */}
