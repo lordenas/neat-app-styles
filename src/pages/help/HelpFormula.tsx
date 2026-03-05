@@ -38,9 +38,9 @@ export default function HelpFormula() {
             Чтобы использовать значение поля в формуле, оберните его ключ в фигурные скобки:
           </p>
           <div className="bg-muted rounded-lg p-4 font-mono text-sm">
-            <span className="text-violet-400">{"{сумма}"}</span>
+            <span className="text-primary">{"{сумма}"}</span>
             {" * "}
-            <span className="text-violet-400">{"{ставка}"}</span>
+            <span className="text-primary">{"{ставка}"}</span>
             {" / 100"}
           </div>
           <p className="text-xs text-muted-foreground">
