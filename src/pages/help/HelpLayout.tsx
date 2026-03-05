@@ -12,6 +12,7 @@ export const helpNav = [
     items: [
       { path: "/help", label: "Обзор", icon: BookOpen },
       { path: "/help/getting-started", label: "Быстрый старт", icon: ChevronRight },
+
     ],
   },
   {
