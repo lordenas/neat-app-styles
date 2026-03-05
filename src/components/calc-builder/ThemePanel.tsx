@@ -24,6 +24,14 @@ export const THEME_PRESETS: ThemePreset[] = [
     borderRadius: "md",
   },
   {
+    id: "dark",
+    label: "Dark",
+    primary: "#6366f1",
+    bg: "#0f172a",
+    accent: "#1e293b",
+    borderRadius: "md",
+  },
+  {
     id: "ocean",
     label: "Ocean",
     primary: "#0ea5e9",
