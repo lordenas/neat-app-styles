@@ -150,6 +150,9 @@ const App = () => (
                   <Route path="/help/pages" element={<HelpPages />} />
                   <Route path="/help/logic" element={<HelpLogic />} />
                   <Route path="/help/examples" element={<HelpExamples />} />
+                  <Route path="/examples" element={<ExamplesIndex />} />
+                  <Route path="/examples/:categorySlug" element={<ExamplesCategory />} />
+                  <Route path="/examples/:categorySlug/:calcSlug" element={<ExamplesCalc />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
