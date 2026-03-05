@@ -332,12 +332,36 @@ export default function CalcBuilder() {
             />
           )}
           {leftTab === "pages" && (
-            <div className="flex-1 overflow-y-auto p-3">
+            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+              {isPageLimitReached(pages.length) && (
+                <div className="flex items-start gap-2 rounded-lg border border-warning/40 bg-warning/5 px-3 py-2.5 text-xs text-muted-foreground">
+                  <AlertTriangle className="h-3.5 w-3.5 text-warning shrink-0 mt-0.5" />
+                  <span>
+                    Лимит страниц ({limits.maxPages}) достигнут на вашем тарифе.{" "}
+                    <button
+                      className="underline text-primary"
+                      onClick={() => {
+                        setUpgradeReason(`На тарифе «${plan}» можно создать не более ${limits.maxPages} страниц в одном калькуляторе.`);
+                        setUpgradeOpen(true);
+                      }}
+                    >
+                      Апгрейд
+                    </button>
+                  </span>
+                </div>
+              )}
               <PageManager
                 pages={pages}
                 fields={calculator.fields}
                 activePage={activePage}
-                onPagesChange={handlePagesChange}
+                onPagesChange={(newPages) => {
+                  if (newPages.length > pages.length && isPageLimitReached(pages.length)) {
+                    setUpgradeReason(`На тарифе «${plan}» можно создать не более ${limits.maxPages} страниц в одном калькуляторе.`);
+                    setUpgradeOpen(true);
+                    return;
+                  }
+                  handlePagesChange(newPages);
+                }}
                 onActivePage={(idx) => {
                   setActivePage(idx);
                   setSelectedFieldId(null);
