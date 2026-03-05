@@ -318,11 +318,41 @@ export default function ExamplesCalc() {
                     {embedCode}
                   </code>
                 </div>
-                <Link to="/calc-landing">
-                  <Button size="sm" className="w-full gap-2">
-                    <Wrench className="h-3.5 w-3.5" /> Создать свой вариант
-                  </Button>
-                </Link>
+                <Button
+                  size="sm"
+                  className="w-full gap-2"
+                  onClick={() => {
+                    const id = createBuilderTemplateFromExample(calc);
+                    navigate(`/calc-builder/${id}`);
+                  }}
+                >
+                  <Wand2 className="h-3.5 w-3.5" /> Создать похожий в конструкторе
+                </Button>
+              </div>
+
+              {/* Builder CTA */}
+              <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                    <Wand2 className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-sm">Шаблон в 1 клик</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Откроет конструктор с уже созданными полями из этого примера.
+                  Останется только написать формулы и настроить внешний вид.
+                </p>
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="w-full gap-2"
+                  onClick={() => {
+                    const id = createBuilderTemplateFromExample(calc);
+                    navigate(`/calc-builder/${id}`);
+                  }}
+                >
+                  <Wand2 className="h-3.5 w-3.5" /> Создать похожий в конструкторе
+                </Button>
               </div>
 
               {/* Why embed */}
