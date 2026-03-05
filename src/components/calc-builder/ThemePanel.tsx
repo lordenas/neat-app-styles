@@ -372,6 +372,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
                 backgroundColor: bg,
                 borderColor: `${theme.primaryColor ?? "#3b82f6"}33`,
                 borderRadius: rad,
+                fontFamily: theme.fontFamily ? `'${theme.fontFamily}', sans-serif` : undefined,
               }}
             >
               <div className="text-xs font-semibold" style={{ color: isDarkBg ? "#f1f5f9" : "#0f172a" }}>Пример поля</div>
