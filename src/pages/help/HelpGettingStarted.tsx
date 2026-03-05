@@ -1,11 +1,12 @@
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Plus, Hash, Eye, Share2, Code2, ArrowRight,
-  CheckCircle2, Sliders, List, Type, Calculator
+  CheckCircle2, Sliders, List, Type, Calculator, Play
 } from "lucide-react";
 import { HelpLayout } from "./HelpLayout";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const steps = [
   {
