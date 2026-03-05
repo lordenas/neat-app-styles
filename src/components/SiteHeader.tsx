@@ -56,6 +56,12 @@ export function SiteHeader() {
               <span className="hidden sm:inline">Конструктор</span>
             </Button>
           </Link>
+          <Link to="/help">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
+              <HelpCircle className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Помощь</span>
+            </Button>
+          </Link>
           <Link to="/blog">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               <BookOpen className="h-3.5 w-3.5" />
