@@ -19,6 +19,7 @@ export default function CalcList() {
   const { user } = useAuth();
   const [calcList, setCalcList] = useState<CustomCalculator[]>(() => loadCalculators());
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [embedCalc, setEmbedCalc] = useState<CustomCalculator | null>(null);
   const { plan, limits, isCalcLimitReached, loading: planLoading } = usePlan();
 
   const handleDelete = (id: string) => {
