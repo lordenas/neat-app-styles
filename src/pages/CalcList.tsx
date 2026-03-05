@@ -3,7 +3,7 @@ import { loadCalculators, deleteCalculator, CustomCalculator } from "@/types/cus
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
-import { Plus, Calculator, Trash2, ExternalLink, Pencil, Lock } from "lucide-react";
+import { Plus, Calculator, Trash2, ExternalLink, Pencil, Lock, Code2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { usePlan } from "@/hooks/usePlan";
@@ -11,6 +11,7 @@ import { UpgradeModal } from "@/components/UpgradeModal";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
 import { PLAN_META } from "@/hooks/usePlan";
+import { EmbedCodeModal } from "@/components/calc-list/EmbedCodeModal";
 
 export default function CalcList() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function CalcList() {
   const { user } = useAuth();
   const [calcList, setCalcList] = useState<CustomCalculator[]>(() => loadCalculators());
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [embedCalc, setEmbedCalc] = useState<CustomCalculator | null>(null);
   const { plan, limits, isCalcLimitReached, loading: planLoading } = usePlan();
 
   const handleDelete = (id: string) => {
@@ -110,6 +112,9 @@ export default function CalcList() {
                   </p>
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" title="Получить код" onClick={() => setEmbedCalc(c)}>
+                    <Code2 className="h-3.5 w-3.5" />
+                  </Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => window.open(`/c/${c.slug}`, "_blank")}>
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Button>
@@ -132,6 +137,12 @@ export default function CalcList() {
         onOpenChange={setUpgradeOpen}
         reason={`На тарифе «${planMeta.label}» можно создать не более ${limits.maxCalcs} калькуляторов. Перейдите на следующий тариф для увеличения лимита.`}
         currentPlan={plan}
+      />
+
+      <EmbedCodeModal
+        calc={embedCalc}
+        open={!!embedCalc}
+        onOpenChange={(v) => { if (!v) setEmbedCalc(null); }}
       />
     </div>
   );
