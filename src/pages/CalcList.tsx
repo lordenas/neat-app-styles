@@ -138,6 +138,12 @@ export default function CalcList() {
         reason={`На тарифе «${planMeta.label}» можно создать не более ${limits.maxCalcs} калькуляторов. Перейдите на следующий тариф для увеличения лимита.`}
         currentPlan={plan}
       />
+
+      <EmbedCodeModal
+        calc={embedCalc}
+        open={!!embedCalc}
+        onOpenChange={(v) => { if (!v) setEmbedCalc(null); }}
+      />
     </div>
   );
 }
