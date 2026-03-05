@@ -204,7 +204,7 @@ export default function Dashboard() {
 
         {/* Plan card + Embed Widgets */}
         <section className="py-8 border-b border-border">
-          <div className="container max-w-4xl flex flex-col sm:flex-row gap-4">
+          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             {/* Current plan */}
             {!planLoading && (
