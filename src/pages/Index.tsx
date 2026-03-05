@@ -393,6 +393,131 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Calculator Builder promo */}
+        <section className="py-16 sm:py-24 bg-[hsl(var(--section-bg))]">
+          <div className="container max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+              {/* Left: builder mockup */}
+              <div className="relative order-2 lg:order-1">
+                <div className="rounded-2xl border bg-card shadow-xl overflow-hidden">
+                  {/* Title bar */}
+                  <div className="flex items-center gap-1.5 px-4 py-3 bg-muted/70 border-b">
+                    <span className="h-2.5 w-2.5 rounded-full bg-destructive/50" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/30" />
+                    <div className="flex-1 mx-3 rounded bg-background/80 px-2 py-0.5 text-xs text-muted-foreground font-mono">
+                      calchub.app/calc-builder
+                    </div>
+                    <div className="h-5 w-16 rounded bg-primary/80 text-[10px] text-primary-foreground flex items-center justify-center font-semibold">Сохранить</div>
+                  </div>
+
+                  <div className="flex h-64 divide-x divide-border">
+                    {/* Left sidebar */}
+                    <div className="w-36 shrink-0 p-3 space-y-2 bg-muted/30">
+                      <div className="h-2.5 w-20 rounded bg-muted-foreground/20 mb-3" />
+                      {["Число", "Слайдер", "Выбор", "Текст", "Результат"].map((label) => (
+                        <div key={label} className="flex items-center gap-1.5 rounded-lg bg-card border px-2 py-1.5 cursor-default">
+                          <div className="h-3 w-3 rounded bg-primary/40 shrink-0" />
+                          <span className="text-[10px] text-muted-foreground">{label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Canvas */}
+                    <div className="flex-1 p-4 space-y-3">
+                      <div className="h-2.5 w-24 rounded bg-primary/30" />
+                      {/* Fields */}
+                      {[
+                        { label: "Сумма кредита", w: "65%" },
+                        { label: "Ставка (%)", w: "45%" },
+                        { label: "Срок (мес.)", w: "55%" },
+                      ].map(({ label, w }) => (
+                        <div key={label} className="rounded-lg border bg-background/80 px-3 py-2 space-y-1.5">
+                          <div className="h-2 rounded bg-muted-foreground/20" style={{ width: w }} />
+                          <div className="h-6 rounded bg-muted/60 border" />
+                        </div>
+                      ))}
+                      {/* Result block */}
+                      <div className="rounded-lg border border-primary/30 bg-primary/8 px-3 py-2 flex items-center gap-2">
+                        <div className="h-4 w-4 rounded bg-primary/40 shrink-0" />
+                        <div className="space-y-1 flex-1">
+                          <div className="h-2 w-20 rounded bg-primary/30" />
+                          <div className="h-3 w-28 rounded bg-primary/50" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right settings panel */}
+                    <div className="w-32 shrink-0 p-3 space-y-2 bg-muted/20 hidden sm:block">
+                      <div className="h-2.5 w-16 rounded bg-muted-foreground/20 mb-3" />
+                      {[40, 70, 55, 80, 45].map((w) => (
+                        <div key={w} className="space-y-1">
+                          <div className="h-2 rounded bg-muted-foreground/15" style={{ width: `${w}%` }} />
+                          <div className="h-6 rounded border bg-card" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Badge floating */}
+                <div className="absolute -top-3 -right-3 hidden lg:flex items-center gap-1.5 rounded-full border bg-card shadow-md px-3 py-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" />
+                  <span className="text-xs font-semibold">Без кода</span>
+                </div>
+
+                <div className="absolute -bottom-4 -left-4 w-40 h-40 rounded-full bg-primary/[0.07] blur-3xl pointer-events-none" />
+              </div>
+
+              {/* Right: text */}
+              <div className="space-y-6 order-1 lg:order-2">
+                <Badge variant="secondary" className="gap-1.5 text-sm px-3 py-1">
+                  <Zap className="h-3.5 w-3.5" />
+                  Конструктор калькуляторов
+                </Badge>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-snug">
+                  Создайте свой калькулятор{" "}
+                  <span className="text-primary">без программиста</span>
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Визуальный конструктор с drag-and-drop позволяет собрать любой финансовый калькулятор за минуты —
+                  добавляйте поля, задавайте формулы, настраивайте логику ветвлений и делитесь результатом по ссылке.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    { icon: Palette,          text: "Drag-and-drop поля: числа, слайдеры, выпадающие списки, текст" },
+                    { icon: Zap,              text: "Формульный движок: пишите выражения как в Excel" },
+                    { icon: MonitorSmartphone,text: "Превью в реальном времени — видите результат сразу" },
+                    { icon: Code2,            text: "Embed на сайт: один тег <script> или <iframe>" },
+                  ].map(({ icon: Icon, text }) => (
+                    <li key={text} className="flex items-start gap-3 text-sm">
+                      <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                        <Icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="text-muted-foreground leading-relaxed">{text}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link to="/calc-landing">
+                    <Button size="lg" className="gap-2 shadow-md">
+                      Попробовать конструктор
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/calc-landing#demo">
+                    <Button size="lg" variant="outline" className="gap-2">
+                      Смотреть демо
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="py-16 sm:py-20 bg-[hsl(var(--section-bg))]">
           <div className="container max-w-3xl space-y-10">
