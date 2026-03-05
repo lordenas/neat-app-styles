@@ -75,8 +75,8 @@ export function usePlan() {
 
   const fetchSubscription = useCallback(async () => {
     if (!user) { setLoading(false); return; }
-    const { data } = await supabase
-      .from("subscriptions" as any)
+    const { data } = await (supabase as any)
+      .from("subscriptions")
       .select("id, plan, status, current_period_end")
       .eq("user_id", user.id)
       .single();
