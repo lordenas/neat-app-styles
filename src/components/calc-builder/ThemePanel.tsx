@@ -177,6 +177,17 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
 export function ThemePanel({ theme, onChange }: ThemePanelProps) {
   const upd = (patch: Partial<CalcTheme>) => onChange({ ...theme, ...patch });
 
+  // Inject Google Fonts once
+  React.useEffect(() => {
+    if (!document.getElementById("calc-google-fonts")) {
+      const link = document.createElement("link");
+      link.id = "calc-google-fonts";
+      link.rel = "stylesheet";
+      link.href = GOOGLE_FONTS_URL;
+      document.head.appendChild(link);
+    }
+  }, []);
+
   const activePresetId = THEME_PRESETS.find(
     (p) => p.primary === theme.primaryColor && p.bg === theme.bgColor && p.card === (theme.cardColor ?? theme.bgColor)
   )?.id;
