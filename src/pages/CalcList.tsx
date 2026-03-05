@@ -112,6 +112,9 @@ export default function CalcList() {
                   </p>
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="icon" className="h-8 w-8" title="Получить код" onClick={() => setEmbedCalc(c)}>
+                    <Code2 className="h-3.5 w-3.5" />
+                  </Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => window.open(`/c/${c.slug}`, "_blank")}>
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Button>
