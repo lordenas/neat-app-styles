@@ -14,11 +14,13 @@ import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2, Palette,
+  Undo2, Redo2, Palette, AlertTriangle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
+import { usePlan } from "@/hooks/usePlan";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 function nanoid(len = 8): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
