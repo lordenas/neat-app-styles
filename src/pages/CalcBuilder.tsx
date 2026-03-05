@@ -311,7 +311,7 @@ export default function CalcBuilder() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Left panel — field settings + pages */}
-        <aside className="w-96 shrink-0 border-r bg-card flex flex-col overflow-hidden">
+        <aside data-tour="left-panel" className="w-96 shrink-0 border-r bg-card flex flex-col overflow-hidden">
           {/* Left panel tabs */}
           <div className="flex shrink-0 border-b">
             {(["field", "pages", "theme"] as const).map((t) => (
