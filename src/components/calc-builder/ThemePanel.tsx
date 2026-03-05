@@ -10,6 +10,7 @@ export interface ThemePreset {
   label: string;
   primary: string;
   bg: string;
+  card: string;
   accent: string;
   borderRadius: CalcTheme["borderRadius"];
 }
