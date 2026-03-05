@@ -163,7 +163,7 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
   const upd = (patch: Partial<CalcTheme>) => onChange({ ...theme, ...patch });
 
   const activePresetId = THEME_PRESETS.find(
-    (p) => p.primary === theme.primaryColor && p.bg === theme.bgColor
+    (p) => p.primary === theme.primaryColor && p.bg === theme.bgColor && p.card === (theme.cardColor ?? theme.bgColor)
   )?.id;
 
   return (
