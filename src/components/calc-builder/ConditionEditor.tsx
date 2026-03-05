@@ -173,12 +173,30 @@ export function ConditionEditor({ visibility, onChange, otherFields }: Condition
                 {showValue && (
                   <div className="space-y-1">
                     <Label className="text-xs text-muted-foreground">Значение</Label>
-                    <Input
-                      className="h-8 text-xs"
-                      value={String(rule.value)}
-                      onChange={(e) => updateRule(i, { value: e.target.value })}
-                      placeholder={rule.operator === "in" ? "a, b, c" : "значение"}
-                    />
+                    {srcField && (srcField.type === "select" || srcField.type === "radio") && rule.operator !== "in" ? (
+                      <Select
+                        value={String(rule.value)}
+                        onValueChange={(v) => updateRule(i, { value: v })}
+                      >
+                        <SelectTrigger className="h-8 text-xs w-full">
+                          <SelectValue placeholder="Выберите вариант…" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {(srcField.config.options ?? []).map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input
+                        className="h-8 text-xs"
+                        value={String(rule.value)}
+                        onChange={(e) => updateRule(i, { value: e.target.value })}
+                        placeholder={rule.operator === "in" ? "a, b, c" : "значение"}
+                      />
+                    )}
                   </div>
                 )}
               </div>
