@@ -130,6 +130,7 @@ const App = () => (
                   <Route path="/calc-builder" element={<CalcBuilder />} />
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />
                   <Route path="/c/:slug" element={<CalcPlayer />} />
+                  <Route path="/pricing" element={<Pricing />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
