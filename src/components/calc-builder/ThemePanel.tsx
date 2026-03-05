@@ -235,11 +235,20 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
           </div>
 
           <div className="flex items-center justify-between gap-2">
-            <Label className="text-xs shrink-0">Фон</Label>
+            <Label className="text-xs shrink-0">Фон страницы</Label>
             <ColorPicker
               size="sm"
-              value={theme.bgColor ?? "#ffffff"}
+              value={theme.bgColor ?? "#f8fafc"}
               onChange={(c) => upd({ bgColor: c })}
+            />
+          </div>
+
+          <div className="flex items-center justify-between gap-2">
+            <Label className="text-xs shrink-0">Фон калькулятора</Label>
+            <ColorPicker
+              size="sm"
+              value={theme.cardColor ?? theme.bgColor ?? "#ffffff"}
+              onChange={(c) => upd({ cardColor: c })}
             />
           </div>
 
