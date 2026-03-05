@@ -324,7 +324,9 @@ export default function CalcLanding() {
               </p>
             </div>
 
-            <HeroMockup />
+            <div className="hidden sm:block">
+              <HeroMockup />
+            </div>
           </div>
         </section>
 
