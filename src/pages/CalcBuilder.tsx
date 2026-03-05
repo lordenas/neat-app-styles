@@ -8,13 +8,14 @@ import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
 import { FieldSettingsPanel } from "@/components/calc-builder/FieldSettingsPanel";
 import { PageManager } from "@/components/calc-builder/PageManager";
 import { ThemePanel } from "@/components/calc-builder/ThemePanel";
+import { OnboardingTour, useOnboardingTour } from "@/components/calc-builder/OnboardingTour";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   Save, Eye, ArrowLeft, Copy, ExternalLink,
   Calculator, Globe, Lock, Layers, ChevronLeft, ChevronRight,
-  Undo2, Redo2, Palette, AlertTriangle,
+  Undo2, Redo2, Palette, AlertTriangle, HelpCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
@@ -88,6 +89,7 @@ export default function CalcBuilder() {
   const [upgradeReason, setUpgradeReason] = useState("");
 
   const { plan, limits, isPageLimitReached } = usePlan();
+  const { forceShow, startTour, onComplete } = useOnboardingTour();
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -200,6 +202,7 @@ export default function CalcBuilder() {
         <Separator orientation="vertical" className="h-5" />
 
         <Input
+          data-tour="title"
           value={calculator.title}
           onChange={(e) => setCalculator({ ...calculator, title: e.target.value })}
           className="h-8 w-56 text-sm font-medium border-0 shadow-none bg-transparent focus-visible:ring-0 px-1"
@@ -207,7 +210,7 @@ export default function CalcBuilder() {
         />
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-1 ml-4 bg-muted rounded-lg p-1">
+        <div data-tour="tab-switcher" className="flex items-center gap-1 ml-4 bg-muted rounded-lg p-1">
           <button
             onClick={() => setTab("builder")}
             className={cn(
@@ -282,9 +285,24 @@ export default function CalcBuilder() {
             Открыть
           </Button>
 
-          <Button size="sm" className="gap-1.5" onClick={handleSave}>
+          <Button
+            data-tour="save-btn"
+            size="sm"
+            className="gap-1.5"
+            onClick={handleSave}
+          >
             <Save className="h-3.5 w-3.5" />
             {saved ? "Сохранено ✓" : "Сохранить"}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={startTour}
+            title="Показать обучение"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
       </header>
@@ -293,7 +311,7 @@ export default function CalcBuilder() {
       <div className="flex flex-1 overflow-hidden">
 
         {/* Left panel — field settings + pages */}
-        <aside className="w-96 shrink-0 border-r bg-card flex flex-col overflow-hidden">
+        <aside data-tour="left-panel" className="w-96 shrink-0 border-r bg-card flex flex-col overflow-hidden">
           {/* Left panel tabs */}
           <div className="flex shrink-0 border-b">
             {(["field", "pages", "theme"] as const).map((t) => (
@@ -411,15 +429,17 @@ export default function CalcBuilder() {
                 placeholder="Описание (необязательно)"
                 className="text-sm max-w-xl"
               />
-              <BuilderCanvas
-                calculator={fieldsForPageCalc}
-                onChange={handleCanvasChange}
-                selectedFieldId={selectedFieldId}
-                onSelectField={(fid) => {
-                  setSelectedFieldId(fid);
-                  if (fid) setLeftTab("field");
-                }}
-              />
+              <div data-tour="canvas">
+                <BuilderCanvas
+                  calculator={fieldsForPageCalc}
+                  onChange={handleCanvasChange}
+                  selectedFieldId={selectedFieldId}
+                  onSelectField={(fid) => {
+                    setSelectedFieldId(fid);
+                    if (fid) setLeftTab("field");
+                  }}
+                />
+              </div>
             </div>
           ) : (
             <div className="p-6 max-w-2xl space-y-3">
@@ -488,6 +508,8 @@ export default function CalcBuilder() {
         reason={upgradeReason}
         currentPlan={plan}
       />
+
+      <OnboardingTour forceShow={forceShow} onComplete={onComplete} />
     </div>
   );
 }
