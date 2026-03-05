@@ -141,6 +141,7 @@ const App = () => (
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/calc-landing" element={<CalcLanding />} />
                   <Route path="/help" element={<HelpIndex />} />
+                  <Route path="/help/getting-started" element={<HelpGettingStarted />} />
                   <Route path="/help/formula" element={<HelpFormula />} />
                   <Route path="/help/fields" element={<HelpFields />} />
                   <Route path="/help/pages" element={<HelpPages />} />
