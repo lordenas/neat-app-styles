@@ -227,15 +227,18 @@ export default function CalcPlayer() {
 
   const hasMultiplePages = pages.length > 1;
   const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
+  const bgStyle: React.CSSProperties = calculator.theme?.bgColor
+    ? { backgroundColor: calculator.theme.bgColor }
+    : {};
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <SiteHeader />
 
-      <main className="flex-1 py-8 px-4" style={themeVars}>
+      <main className="flex-1 py-8 px-4" style={{ ...themeVars, ...bgStyle }}>
         <div className="max-w-lg mx-auto">
           {/* Title */}
-          <div className="mb-6">
+          <div className="mb-6 px-1">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
                 <Calculator className="h-4 w-4" />
@@ -250,6 +253,8 @@ export default function CalcPlayer() {
           {/* Page progress */}
           <PageProgress pages={pages} current={currentPage} />
 
+          {/* Card wrapper */}
+          <div className="rounded-xl bg-card border border-border shadow-sm p-6">
           {/* Slide container */}
           <div className="overflow-hidden">
             <div
@@ -318,6 +323,7 @@ export default function CalcPlayer() {
               )}
             </div>
           </div>
+          </div>{/* /card */}
 
           <div className="mt-10 text-center">
             <Link
