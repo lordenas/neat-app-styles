@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Link, useParams, Navigate } from "react-router-dom";
+import { Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ChevronRight, Wrench, Code2, CheckCircle2, ArrowRight, Info } from "lucide-react";
+import { ChevronRight, Wrench, Code2, CheckCircle2, ArrowRight, Info, Wand2 } from "lucide-react";
+import { createBuilderTemplateFromExample } from "@/lib/example-to-builder";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
