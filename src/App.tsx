@@ -32,6 +32,7 @@ const ApiKeys = lazy(() => import("./pages/ApiKeys"));
 const CalcBuilder = lazy(() => import("./pages/CalcBuilder"));
 const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
+const Pricing = lazy(() => import("./pages/Pricing"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
