@@ -104,12 +104,16 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
 
   const rows = groupByRow(pageFields);
   const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
+  const cardBg = calculator.theme?.cardColor ?? calculator.theme?.bgColor;
 
   return (
     <div style={themeVars}>
       <div
         className="rounded-xl border border-border p-4 transition-colors"
-        style={{ backgroundColor: "hsl(var(--card))", color: "hsl(var(--card-foreground, var(--foreground)))" }}
+        style={{
+          backgroundColor: cardBg ?? undefined,
+          color: "hsl(var(--card-foreground, var(--foreground)))",
+        }}
       >
         {sorted.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground text-sm">
