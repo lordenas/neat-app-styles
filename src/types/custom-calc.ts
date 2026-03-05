@@ -364,7 +364,8 @@ export interface CalcField {
 /** Тема калькулятора (хранится в jsonb custom_calculators.theme) */
 export interface CalcTheme {
   primaryColor?: string;   // hex
-  bgColor?: string;        // hex
+  bgColor?: string;        // hex — фон страницы/обёртки
+  cardColor?: string;      // hex — фон карточки калькулятора
   accentColor?: string;    // hex (акцентный/фоновый цвет для полей)
   borderRadius?: "none" | "sm" | "md" | "lg";
   fontFamily?: string;
