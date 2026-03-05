@@ -139,6 +139,12 @@ const App = () => (
                   <Route path="/c/:slug" element={<CalcPlayer />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/calc-landing" element={<CalcLanding />} />
+                  <Route path="/help" element={<HelpIndex />} />
+                  <Route path="/help/formula" element={<HelpFormula />} />
+                  <Route path="/help/fields" element={<HelpFields />} />
+                  <Route path="/help/pages" element={<HelpPages />} />
+                  <Route path="/help/logic" element={<HelpLogic />} />
+                  <Route path="/help/examples" element={<HelpExamples />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
