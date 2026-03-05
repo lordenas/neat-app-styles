@@ -107,35 +107,40 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
 
   return (
     <div style={themeVars}>
-      {sorted.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground text-sm">
-          Добавьте поля в калькулятор
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {rows.map((rowFields) => (
-            <div
-              key={rowFields[0].rowId ?? rowFields[0].id}
-              className="grid gap-4"
-              style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
-            >
-              {rowFields.map((field) => (
-                <PlayerField
-                  key={field.id}
-                  field={field}
-                  allFields={sorted}
-                  values={values}
-                  onChange={onChange}
-                  onReset={handleReset}
-                  onTriggerCalculate={handleTriggerCalculate}
-                  onNavigatePage={onNavigatePage}
-                  manualResults={manualResults}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      <div
+        className="rounded-xl border border-border p-4 transition-colors"
+        style={{ backgroundColor: "hsl(var(--card))", color: "hsl(var(--card-foreground, var(--foreground)))" }}
+      >
+        {sorted.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground text-sm">
+            Добавьте поля в калькулятор
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {rows.map((rowFields) => (
+              <div
+                key={rowFields[0].rowId ?? rowFields[0].id}
+                className="grid gap-4"
+                style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
+              >
+                {rowFields.map((field) => (
+                  <PlayerField
+                    key={field.id}
+                    field={field}
+                    allFields={sorted}
+                    values={values}
+                    onChange={onChange}
+                    onReset={handleReset}
+                    onTriggerCalculate={handleTriggerCalculate}
+                    onNavigatePage={onNavigatePage}
+                    manualResults={manualResults}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
