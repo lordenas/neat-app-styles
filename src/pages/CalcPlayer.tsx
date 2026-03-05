@@ -105,7 +105,10 @@ export default function CalcPlayer() {
   // Auto-advance + conditional routes: check current page on every values change
   useEffect(() => {
     if (!calculator) return;
-    const page = pages[currentPage];
+    const currentPages: CalcPage[] = calculator.pages?.length
+      ? calculator.pages
+      : [{ id: "__single__", title: "", orderIndex: 0 }];
+    const page = currentPages[currentPage];
     const allFields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
 
     // 1. Check conditional page routes (specific target pages) — first match wins
@@ -115,7 +118,7 @@ export default function CalcPlayer() {
         const satisfied = noCondition || resolveVisibility(route.condition, values, allFields);
         if (satisfied) {
           const target = route.targetPageIndex;
-          if (target !== currentPage && target >= 0 && target < pages.length) {
+          if (target !== currentPage && target >= 0 && target < currentPages.length) {
             goTo(target);
             return;
           }
@@ -126,12 +129,12 @@ export default function CalcPlayer() {
     // 2. Auto-advance to next page
     if (page?.autoAdvance?.rules?.length) {
       const satisfied = resolveVisibility(page.autoAdvance, values, allFields);
-      if (satisfied && currentPage < pages.length - 1) {
+      if (satisfied && currentPage < currentPages.length - 1) {
         next();
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, currentPage]);
+  }, [values, currentPage, calculator]);
 
   const onChange = (key: string, value: number | string | boolean) =>
     setValues((prev) => ({ ...prev, [key]: value }));

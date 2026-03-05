@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { CustomCalculator, CalcPage } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "./BuilderCanvas";
-import { evaluateAllFormulas } from "@/lib/calc-engine";
+import { evaluateAllFormulas, resolveVisibility } from "@/lib/calc-engine";
 import { buildThemeVars } from "./ThemePanel";
 
 interface BuilderPreviewProps {
@@ -38,6 +38,26 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
     setValues(defaults);
     setManualResults({});
   }, [calculator.fields.length]);
+
+  // Evaluate conditional page routes whenever values change
+  useEffect(() => {
+    if (!onNavigatePage || pages.length <= 1) return;
+    const page = pages[currentPage];
+    if (!page?.routes?.length) return;
+    const allFields = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
+    for (const route of page.routes) {
+      const noCondition = !route.condition.rules?.length;
+      const satisfied = noCondition || resolveVisibility(route.condition, values, allFields);
+      if (satisfied) {
+        const target = route.targetPageIndex;
+        if (target !== currentPage && target >= 0 && target < pages.length) {
+          onNavigatePage(target);
+          return;
+        }
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, currentPage]);
 
   const onChange = (key: string, value: number | string | boolean) =>
     setValues((prev) => ({ ...prev, [key]: value }));
