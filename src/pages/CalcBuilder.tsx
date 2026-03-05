@@ -89,6 +89,7 @@ export default function CalcBuilder() {
   const [upgradeReason, setUpgradeReason] = useState("");
 
   const { plan, limits, isPageLimitReached } = usePlan();
+  const { forceShow, startTour, onComplete } = useOnboardingTour();
 
   // Keyboard shortcuts
   useEffect(() => {
