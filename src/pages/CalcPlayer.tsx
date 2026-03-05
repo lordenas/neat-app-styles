@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CustomCalculator, CalcPage, getCalculatorBySlug } from "@/types/custom-calc";
 import { PlayerField } from "@/components/calc-player/PlayerField";
