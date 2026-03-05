@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail, User, LogIn } from "lucide-react";
+import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail, User, LogIn, Wrench } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,6 +50,12 @@ export function SiteHeader() {
 
         {/* Nav + controls */}
         <div className="flex items-center gap-1">
+          <Link to="/calc-landing">
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
+              <Wrench className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Конструктор</span>
+            </Button>
+          </Link>
           <Link to="/blog">
             <Button variant="ghost" size="sm" className="gap-1.5 text-xs h-8 px-2">
               <BookOpen className="h-3.5 w-3.5" />
