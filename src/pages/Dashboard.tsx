@@ -65,6 +65,7 @@ export default function Dashboard() {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const { widgets } = useEmbedWidgets();
+  const { plan, limits, calcCount, subscription, loading: planLoading } = usePlan();
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
