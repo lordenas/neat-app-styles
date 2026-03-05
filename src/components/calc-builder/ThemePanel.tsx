@@ -20,7 +20,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     id: "default",
     label: "Default",
     primary: "#3b82f6",
-    bg: "#ffffff",
+    bg: "#f8fafc",
+    card: "#ffffff",
     accent: "#eff6ff",
     borderRadius: "md",
   },
@@ -29,6 +30,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Dark",
     primary: "#6366f1",
     bg: "#0f172a",
+    card: "#1e293b",
     accent: "#1e293b",
     borderRadius: "md",
   },
@@ -37,6 +39,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Ocean",
     primary: "#0ea5e9",
     bg: "#f0f9ff",
+    card: "#ffffff",
     accent: "#e0f2fe",
     borderRadius: "lg",
   },
@@ -45,6 +48,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Forest",
     primary: "#16a34a",
     bg: "#f0fdf4",
+    card: "#ffffff",
     accent: "#dcfce7",
     borderRadius: "md",
   },
@@ -53,6 +57,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Sunset",
     primary: "#f97316",
     bg: "#fff7ed",
+    card: "#ffffff",
     accent: "#ffedd5",
     borderRadius: "lg",
   },
@@ -61,6 +66,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Violet",
     primary: "#7c3aed",
     bg: "#faf5ff",
+    card: "#ffffff",
     accent: "#ede9fe",
     borderRadius: "md",
   },
@@ -69,6 +75,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     label: "Rose",
     primary: "#e11d48",
     bg: "#fff1f2",
+    card: "#ffffff",
     accent: "#ffe4e6",
     borderRadius: "sm",
   },
@@ -114,17 +121,19 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
     vars["--ring"] = hsl;
   }
   if (theme.bgColor) {
-    const bgHsl = hexToHsl(theme.bgColor);
-    vars["--background"] = bgHsl;
-    vars["--card"] = bgHsl;
-    // Auto-detect dark background and adjust text/border tokens
-    const hex = theme.bgColor;
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
+    vars["--background"] = hexToHsl(theme.bgColor);
+  }
+  // Card background (калькулятор-карточка)
+  const cardHex = theme.cardColor ?? theme.bgColor;
+  if (cardHex) {
+    const cardHsl = hexToHsl(cardHex);
+    vars["--card"] = cardHsl;
+    // Auto-detect dark card and adjust text/border tokens
+    const r = parseInt(cardHex.slice(1, 3), 16);
+    const g = parseInt(cardHex.slice(3, 5), 16);
+    const b = parseInt(cardHex.slice(5, 7), 16);
     const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
     if (lum < 0.4) {
-      // Dark background — light text
       vars["--foreground"] = "210 40% 98%";
       vars["--card-foreground"] = "210 40% 98%";
       vars["--muted"] = hexToHsl(theme.accentColor ?? "#1e293b");
