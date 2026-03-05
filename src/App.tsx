@@ -132,6 +132,7 @@ const App = () => (
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />
                   <Route path="/c/:slug" element={<CalcPlayer />} />
                   <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/calc-landing" element={<CalcLanding />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
