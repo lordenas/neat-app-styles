@@ -123,6 +123,7 @@ function CalcField({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ExamplesCalc() {
+  const navigate = useNavigate();
   const { categorySlug, calcSlug } = useParams<{ categorySlug: string; calcSlug: string }>();
   const category = getCategoryBySlug(categorySlug ?? "");
   const calc = getCalcBySlug(categorySlug ?? "", calcSlug ?? "");
