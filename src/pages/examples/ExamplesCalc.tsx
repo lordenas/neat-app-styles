@@ -170,6 +170,16 @@ export default function ExamplesCalc() {
         <link rel="canonical" href={`https://neat-app-styles.lovable.app/examples/${category.slug}/${calc.slug}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Главная", "item": "https://neat-app-styles.lovable.app/" },
+            { "@type": "ListItem", "position": 2, "name": "Примеры", "item": "https://neat-app-styles.lovable.app/examples" },
+            { "@type": "ListItem", "position": 3, "name": category.name, "item": `https://neat-app-styles.lovable.app/examples/${category.slug}` },
+            { "@type": "ListItem", "position": 4, "name": calc.name, "item": `https://neat-app-styles.lovable.app/examples/${category.slug}/${calc.slug}` },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
           "@type": "WebApplication",
           "name": calc.name,
           "description": calc.description,
