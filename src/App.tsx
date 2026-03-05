@@ -41,6 +41,9 @@ const HelpFields = lazy(() => import("./pages/help/HelpFields"));
 const HelpPages = lazy(() => import("./pages/help/HelpPages"));
 const HelpLogic = lazy(() => import("./pages/help/HelpLogic"));
 const HelpExamples = lazy(() => import("./pages/help/HelpExamples"));
+const ExamplesIndex = lazy(() => import("./pages/examples/ExamplesIndex"));
+const ExamplesCategory = lazy(() => import("./pages/examples/ExamplesCategory"));
+const ExamplesCalc = lazy(() => import("./pages/examples/ExamplesCalc"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
