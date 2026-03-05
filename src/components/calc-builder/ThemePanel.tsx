@@ -24,6 +24,14 @@ export const THEME_PRESETS: ThemePreset[] = [
     borderRadius: "md",
   },
   {
+    id: "dark",
+    label: "Dark",
+    primary: "#6366f1",
+    bg: "#0f172a",
+    accent: "#1e293b",
+    borderRadius: "md",
+  },
+  {
     id: "ocean",
     label: "Ocean",
     primary: "#0ea5e9",
@@ -105,8 +113,25 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
     vars["--ring"] = hsl;
   }
   if (theme.bgColor) {
-    vars["--background"] = hexToHsl(theme.bgColor);
-    vars["--card"] = hexToHsl(theme.bgColor);
+    const bgHsl = hexToHsl(theme.bgColor);
+    vars["--background"] = bgHsl;
+    vars["--card"] = bgHsl;
+    // Auto-detect dark background and adjust text/border tokens
+    const hex = theme.bgColor;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    if (lum < 0.4) {
+      // Dark background — light text
+      vars["--foreground"] = "210 40% 98%";
+      vars["--card-foreground"] = "210 40% 98%";
+      vars["--muted"] = hexToHsl(theme.accentColor ?? "#1e293b");
+      vars["--muted-foreground"] = "215 20% 65%";
+      vars["--border"] = "217 33% 22%";
+      vars["--input"] = "217 33% 22%";
+      vars["--primary-foreground"] = "222 47% 11%";
+    }
   }
   if (theme.accentColor) {
     vars["--accent"] = hexToHsl(theme.accentColor);
@@ -259,47 +284,43 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
       {/* Live preview */}
       <div className="space-y-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Предпросмотр</p>
-        <div
-          className="rounded-lg p-4 border space-y-3 transition-all"
-          style={{
-            backgroundColor: theme.bgColor ?? "#ffffff",
-            borderColor: `${theme.primaryColor ?? "#3b82f6"}33`,
-            borderRadius:
-              theme.borderRadius === "none" ? 0
-              : theme.borderRadius === "sm" ? 4
-              : theme.borderRadius === "lg" ? 16
-              : 8,
-          }}
-        >
-          <div className="text-xs font-semibold" style={{ color: "#0f172a" }}>Пример поля</div>
-          <div
-            className="h-8 rounded border px-2 flex items-center text-xs"
-            style={{
-              borderColor: `${theme.primaryColor ?? "#3b82f6"}60`,
-              backgroundColor: theme.accentColor ?? "#eff6ff",
-              borderRadius:
-                theme.borderRadius === "none" ? 0
-                : theme.borderRadius === "sm" ? 4
-                : theme.borderRadius === "lg" ? 16
-                : 8,
-            }}
-          >
-            <span style={{ color: "#94a3b8" }}>1 000 000</span>
-          </div>
-          <div
-            className="h-8 flex items-center justify-center text-xs font-medium text-white rounded cursor-pointer"
-            style={{
-              backgroundColor: theme.primaryColor ?? "#3b82f6",
-              borderRadius:
-                theme.borderRadius === "none" ? 0
-                : theme.borderRadius === "sm" ? 4
-                : theme.borderRadius === "lg" ? 16
-                : 8,
-            }}
-          >
-            Рассчитать
-          </div>
-        </div>
+        {(() => {
+          const bg = theme.bgColor ?? "#ffffff";
+          const rx = parseInt(bg.slice(1, 3), 16);
+          const gx = parseInt(bg.slice(3, 5), 16);
+          const bx = parseInt(bg.slice(5, 7), 16);
+          const lum = (0.299 * rx + 0.587 * gx + 0.114 * bx) / 255;
+          const isDarkBg = lum < 0.4;
+          const rad = theme.borderRadius === "none" ? 0 : theme.borderRadius === "sm" ? 4 : theme.borderRadius === "lg" ? 16 : 8;
+          return (
+            <div
+              className="rounded-lg p-4 border space-y-3 transition-all"
+              style={{
+                backgroundColor: bg,
+                borderColor: `${theme.primaryColor ?? "#3b82f6"}33`,
+                borderRadius: rad,
+              }}
+            >
+              <div className="text-xs font-semibold" style={{ color: isDarkBg ? "#f1f5f9" : "#0f172a" }}>Пример поля</div>
+              <div
+                className="h-8 rounded border px-2 flex items-center text-xs"
+                style={{
+                  borderColor: `${theme.primaryColor ?? "#3b82f6"}60`,
+                  backgroundColor: theme.accentColor ?? "#eff6ff",
+                  borderRadius: rad,
+                }}
+              >
+                <span style={{ color: isDarkBg ? "#94a3b8" : "#64748b" }}>1 000 000</span>
+              </div>
+              <div
+                className="h-8 flex items-center justify-center text-xs font-medium text-white rounded cursor-pointer"
+                style={{ backgroundColor: theme.primaryColor ?? "#3b82f6", borderRadius: rad }}
+              >
+                Рассчитать
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
