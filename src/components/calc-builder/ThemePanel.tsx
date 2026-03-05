@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { CalcTheme } from "@/types/custom-calc";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Label } from "@/components/ui/label";
