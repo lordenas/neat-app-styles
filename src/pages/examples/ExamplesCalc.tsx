@@ -268,8 +268,17 @@ export default function ExamplesCalc() {
                 </div>
 
                 {/* Formula */}
-                <div className="border-t border-border px-5 sm:px-6 py-3 bg-muted/10">
+                <div className="border-t border-border px-5 sm:px-6 py-3 bg-muted/10 flex items-center justify-between gap-3 flex-wrap">
                   <span className="text-[11px] font-mono text-muted-foreground">{calc.formula}</span>
+                  <button
+                    onClick={() => {
+                      const id = createBuilderTemplateFromExample(calc);
+                      navigate(`/calc-builder/${id}`);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline shrink-0"
+                  >
+                    <Wand2 className="h-3 w-3" /> Создать похожий в конструкторе
+                  </button>
                 </div>
               </div>
 
