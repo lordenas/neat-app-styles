@@ -84,6 +84,10 @@ export default function CalcBuilder() {
   const [tab, setTab] = useState<"builder" | "preview">("builder");
   const [activePage, setActivePage] = useState(0);
   const [leftTab, setLeftTab] = useState<"field" | "pages" | "theme">("field");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState("");
+
+  const { plan, limits, isPageLimitReached } = usePlan();
 
   // Keyboard shortcuts
   useEffect(() => {
