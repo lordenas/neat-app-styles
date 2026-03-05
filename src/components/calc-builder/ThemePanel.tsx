@@ -278,6 +278,32 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
       {/* Separator */}
       <div className="border-t" />
 
+      {/* Font family */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Шрифт</p>
+        <div className="grid grid-cols-2 gap-1.5">
+          {FONT_OPTIONS.map((font) => (
+            <button
+              key={font.value}
+              type="button"
+              onClick={() => upd({ fontFamily: font.value })}
+              className={cn(
+                "h-9 px-2 text-sm rounded-md border transition-colors truncate",
+                (theme.fontFamily ?? "Inter") === font.value
+                  ? "border-primary bg-primary/10 text-primary font-medium"
+                  : "border-input bg-background text-muted-foreground hover:bg-muted"
+              )}
+              style={{ fontFamily: `'${font.value}', sans-serif` }}
+            >
+              {font.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Separator */}
+      <div className="border-t" />
+
       {/* Border radius */}
       <div className="space-y-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Скругление углов</p>
