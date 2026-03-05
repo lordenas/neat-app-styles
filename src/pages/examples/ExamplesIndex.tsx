@@ -5,18 +5,44 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { exampleCategories, getCalcsByCategory } from "@/data/example-calculators";
+import { exampleCategories, exampleCalcs, getCalcsByCategory } from "@/data/example-calculators";
 
-const colorMap: Record<string, string> = {
-  emerald: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  blue: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  orange: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
-  amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  rose: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
-  violet: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-};
+const BASE = "https://neat-app-styles.lovable.app";
 
 export default function ExamplesIndex() {
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Главная", "item": `${BASE}/` },
+      { "@type": "ListItem", "position": 2, "name": "Примеры калькуляторов", "item": `${BASE}/examples` },
+    ],
+  };
+
+  const collectionLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Примеры онлайн-калькуляторов",
+    "description": "Коллекция бесплатных онлайн-калькуляторов: финансы, бизнес, авто, ремонт, здоровье и повседневные расчёты.",
+    "url": `${BASE}/examples`,
+    "hasPart": [
+      ...exampleCategories.map((cat) => ({
+        "@type": "CollectionPage",
+        "name": `${cat.name} — онлайн-калькуляторы`,
+        "description": cat.description,
+        "url": `${BASE}/examples/${cat.slug}`,
+      })),
+      ...exampleCalcs.map((c) => ({
+        "@type": "WebApplication",
+        "name": c.name,
+        "description": c.shortDesc,
+        "url": `${BASE}/examples/${c.categorySlug}/${c.slug}`,
+        "applicationCategory": "UtilitiesApplication",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+      })),
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
@@ -26,14 +52,9 @@ export default function ExamplesIndex() {
           content="Готовые онлайн-калькуляторы: скидка, проценты, ИМТ, расход топлива, стоимость ремонта и другие. Используйте бесплатно или встройте на свой сайт."
         />
         <meta name="keywords" content="онлайн калькулятор, калькулятор скидки, ИМТ калькулятор, расход топлива, стоимость ремонта, маржа бизнес" />
-        <link rel="canonical" href="https://neat-app-styles.lovable.app/examples" />
-        <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Примеры онлайн-калькуляторов",
-          "description": "Коллекция бесплатных онлайн-калькуляторов: финансы, бизнес, авто, ремонт, здоровье",
-          "url": "https://neat-app-styles.lovable.app/examples",
-        })}</script>
+        <link rel="canonical" href={`${BASE}/examples`} />
+        <script type="application/ld+json">{JSON.stringify(breadcrumbLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(collectionLd)}</script>
       </Helmet>
 
       <SiteHeader />
