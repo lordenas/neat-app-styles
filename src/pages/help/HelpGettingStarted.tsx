@@ -250,13 +250,13 @@ function StepVisualFormula() {
         <div>
           <p className="text-[10px] text-muted-foreground mb-1 font-medium uppercase tracking-wide">Формула</p>
           <div className="bg-muted rounded-lg p-2.5 font-mono text-xs border border-border">
-            <span className="text-blue-500">{"{"}</span>
+            <span className="text-primary">{"{"}</span>
             <span className="text-foreground">площадь</span>
-            <span className="text-blue-500">{"}"}</span>
+            <span className="text-primary">{"}"}</span>
             <span className="text-muted-foreground"> * </span>
-            <span className="text-blue-500">{"{"}</span>
+            <span className="text-primary">{"{"}</span>
             <span className="text-foreground">цена_за_м2</span>
-            <span className="text-blue-500">{"}"}</span>
+            <span className="text-primary">{"}"}</span>
           </div>
         </div>
         <div className="flex items-center justify-between text-xs">
