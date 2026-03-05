@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { DemoCalcSection } from "@/components/calc-landing/DemoCalcSection";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -432,6 +433,9 @@ export default function CalcLanding() {
             </div>
           </div>
         </section>
+
+        {/* ── Live demo ──────────────────────────────────────── */}
+        <DemoCalcSection />
 
         {/* ── Embed section ──────────────────────────────────── */}
         <section className="py-20 px-4 bg-muted/20 border-y border-border">
