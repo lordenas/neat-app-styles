@@ -34,6 +34,12 @@ const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const CalcLanding = lazy(() => import("./pages/CalcLanding"));
+const HelpIndex = lazy(() => import("./pages/help/HelpIndex"));
+const HelpFormula = lazy(() => import("./pages/help/HelpFormula"));
+const HelpFields = lazy(() => import("./pages/help/HelpFields"));
+const HelpPages = lazy(() => import("./pages/help/HelpPages"));
+const HelpLogic = lazy(() => import("./pages/help/HelpLogic"));
+const HelpExamples = lazy(() => import("./pages/help/HelpExamples"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
@@ -133,6 +139,12 @@ const App = () => (
                   <Route path="/c/:slug" element={<CalcPlayer />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/calc-landing" element={<CalcLanding />} />
+                  <Route path="/help" element={<HelpIndex />} />
+                  <Route path="/help/formula" element={<HelpFormula />} />
+                  <Route path="/help/fields" element={<HelpFields />} />
+                  <Route path="/help/pages" element={<HelpPages />} />
+                  <Route path="/help/logic" element={<HelpLogic />} />
+                  <Route path="/help/examples" element={<HelpExamples />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
