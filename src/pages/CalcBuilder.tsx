@@ -481,6 +481,13 @@ export default function CalcBuilder() {
           )}
         </main>
       </div>
+
+      <UpgradeModal
+        open={upgradeOpen}
+        onOpenChange={setUpgradeOpen}
+        reason={upgradeReason}
+        currentPlan={plan}
+      />
     </div>
   );
 }
