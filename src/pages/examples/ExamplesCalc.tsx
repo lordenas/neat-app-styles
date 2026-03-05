@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { Link, useParams, Navigate } from "react-router-dom";
+import { Link, useParams, Navigate, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ChevronRight, Wrench, Code2, CheckCircle2, ArrowRight, Info } from "lucide-react";
+import { ChevronRight, Wrench, Code2, CheckCircle2, ArrowRight, Info, Wand2 } from "lucide-react";
+import { createBuilderTemplateFromExample } from "@/lib/example-to-builder";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
@@ -122,6 +123,7 @@ function CalcField({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ExamplesCalc() {
+  const navigate = useNavigate();
   const { categorySlug, calcSlug } = useParams<{ categorySlug: string; calcSlug: string }>();
   const category = getCategoryBySlug(categorySlug ?? "");
   const calc = getCalcBySlug(categorySlug ?? "", calcSlug ?? "");
@@ -266,8 +268,17 @@ export default function ExamplesCalc() {
                 </div>
 
                 {/* Formula */}
-                <div className="border-t border-border px-5 sm:px-6 py-3 bg-muted/10">
+                <div className="border-t border-border px-5 sm:px-6 py-3 bg-muted/10 flex items-center justify-between gap-3 flex-wrap">
                   <span className="text-[11px] font-mono text-muted-foreground">{calc.formula}</span>
+                  <button
+                    onClick={() => {
+                      const id = createBuilderTemplateFromExample(calc);
+                      navigate(`/calc-builder/${id}`);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline shrink-0"
+                  >
+                    <Wand2 className="h-3 w-3" /> Создать похожий в конструкторе
+                  </button>
                 </div>
               </div>
 
@@ -316,11 +327,41 @@ export default function ExamplesCalc() {
                     {embedCode}
                   </code>
                 </div>
-                <Link to="/calc-landing">
-                  <Button size="sm" className="w-full gap-2">
-                    <Wrench className="h-3.5 w-3.5" /> Создать свой вариант
-                  </Button>
-                </Link>
+                <Button
+                  size="sm"
+                  className="w-full gap-2"
+                  onClick={() => {
+                    const id = createBuilderTemplateFromExample(calc);
+                    navigate(`/calc-builder/${id}`);
+                  }}
+                >
+                  <Wand2 className="h-3.5 w-3.5" /> Создать похожий в конструкторе
+                </Button>
+              </div>
+
+              {/* Builder CTA */}
+              <div className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                    <Wand2 className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-semibold text-sm">Шаблон в 1 клик</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Откроет конструктор с уже созданными полями из этого примера.
+                  Останется только написать формулы и настроить внешний вид.
+                </p>
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="w-full gap-2"
+                  onClick={() => {
+                    const id = createBuilderTemplateFromExample(calc);
+                    navigate(`/calc-builder/${id}`);
+                  }}
+                >
+                  <Wand2 className="h-3.5 w-3.5" /> Создать похожий в конструкторе
+                </Button>
               </div>
 
               {/* Why embed */}
