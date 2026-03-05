@@ -93,13 +93,16 @@ export function createBuilderTemplateFromExample(example: ExampleCalc): string {
   }
 
   // ── Result fields ────────────────────────────────────────────
-  // We can't auto-convert the JS calculate() function to CalcHub formula syntax,
-  // so we insert result fields with a placeholder formula that shows the correct key names.
+  // Transpile the JS calculate() function into CalcHub formula syntax per result key.
+  const inputKeys = example.fields.map((f) => f.key);
+  const transpiledFormulas = transpileCalculateToFormulas(example.calculate, inputKeys);
+
   for (const r of example.results) {
     const fieldId = nanoid(8);
-    // Build a simple default formula referencing the first input key
-    const firstKey = example.fields[0]?.key ?? "value";
-    const defaultFormula = `{${firstKey}}`;
+
+    // Use transpiled formula if available, fallback to first input key reference
+    const transpiledFormula = transpiledFormulas.get(r.key);
+    const formula = transpiledFormula ?? `{${example.fields[0]?.key ?? "value"}}`;
 
     fields.push({
       id: fieldId,
@@ -109,12 +112,13 @@ export function createBuilderTemplateFromExample(example: ExampleCalc): string {
       orderIndex: orderIndex++,
       rowId: fieldId,
       pageId,
-      formula: defaultFormula,
+      formula,
       config: {
         format: r.format === "currency" ? "currency"
           : r.format === "percent" ? "percent"
           : "number",
         hint: `Формула: ${example.formula}`,
+        decimals: r.format === "percent" ? 2 : 0,
       },
     });
   }
