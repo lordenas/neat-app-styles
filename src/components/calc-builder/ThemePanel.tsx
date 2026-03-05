@@ -3,6 +3,18 @@ import { ColorPicker } from "@/components/ui/color-picker";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+// ── Font options ──────────────────────────────────────────────
+
+export const FONT_OPTIONS = [
+  { value: "Inter", label: "Inter", style: "font-sans" },
+  { value: "Roboto", label: "Roboto", style: "" },
+  { value: "Montserrat", label: "Montserrat", style: "" },
+  { value: "Playfair Display", label: "Playfair Display", style: "" },
+] as const;
+
+const GOOGLE_FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@400;500;600&family=Inter:wght@400;500;600&display=swap";
+
 // ── Presets ───────────────────────────────────────────────────
 
 export interface ThemePreset {
