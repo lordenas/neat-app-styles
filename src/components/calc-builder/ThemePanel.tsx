@@ -113,8 +113,25 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
     vars["--ring"] = hsl;
   }
   if (theme.bgColor) {
-    vars["--background"] = hexToHsl(theme.bgColor);
-    vars["--card"] = hexToHsl(theme.bgColor);
+    const bgHsl = hexToHsl(theme.bgColor);
+    vars["--background"] = bgHsl;
+    vars["--card"] = bgHsl;
+    // Auto-detect dark background and adjust text/border tokens
+    const hex = theme.bgColor;
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    if (lum < 0.4) {
+      // Dark background — light text
+      vars["--foreground"] = "210 40% 98%";
+      vars["--card-foreground"] = "210 40% 98%";
+      vars["--muted"] = hexToHsl(theme.accentColor ?? "#1e293b");
+      vars["--muted-foreground"] = "215 20% 65%";
+      vars["--border"] = "217 33% 22%";
+      vars["--input"] = "217 33% 22%";
+      vars["--primary-foreground"] = "222 47% 11%";
+    }
   }
   if (theme.accentColor) {
     vars["--accent"] = hexToHsl(theme.accentColor);
