@@ -202,6 +202,7 @@ export default function CalcBuilder() {
         <Separator orientation="vertical" className="h-5" />
 
         <Input
+          data-tour="title"
           value={calculator.title}
           onChange={(e) => setCalculator({ ...calculator, title: e.target.value })}
           className="h-8 w-56 text-sm font-medium border-0 shadow-none bg-transparent focus-visible:ring-0 px-1"
@@ -209,7 +210,7 @@ export default function CalcBuilder() {
         />
 
         {/* Tab switcher */}
-        <div className="flex items-center gap-1 ml-4 bg-muted rounded-lg p-1">
+        <div data-tour="tab-switcher" className="flex items-center gap-1 ml-4 bg-muted rounded-lg p-1">
           <button
             onClick={() => setTab("builder")}
             className={cn(
@@ -284,9 +285,24 @@ export default function CalcBuilder() {
             Открыть
           </Button>
 
-          <Button size="sm" className="gap-1.5" onClick={handleSave}>
+          <Button
+            data-tour="save-btn"
+            size="sm"
+            className="gap-1.5"
+            onClick={handleSave}
+          >
             <Save className="h-3.5 w-3.5" />
             {saved ? "Сохранено ✓" : "Сохранить"}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground"
+            onClick={startTour}
+            title="Показать обучение"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
       </header>
