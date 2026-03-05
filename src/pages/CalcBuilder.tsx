@@ -429,15 +429,17 @@ export default function CalcBuilder() {
                 placeholder="Описание (необязательно)"
                 className="text-sm max-w-xl"
               />
-              <BuilderCanvas
-                calculator={fieldsForPageCalc}
-                onChange={handleCanvasChange}
-                selectedFieldId={selectedFieldId}
-                onSelectField={(fid) => {
-                  setSelectedFieldId(fid);
-                  if (fid) setLeftTab("field");
-                }}
-              />
+              <div data-tour="canvas">
+                <BuilderCanvas
+                  calculator={fieldsForPageCalc}
+                  onChange={handleCanvasChange}
+                  selectedFieldId={selectedFieldId}
+                  onSelectField={(fid) => {
+                    setSelectedFieldId(fid);
+                    if (fid) setLeftTab("field");
+                  }}
+                />
+              </div>
             </div>
           ) : (
             <div className="p-6 max-w-2xl space-y-3">
@@ -506,6 +508,8 @@ export default function CalcBuilder() {
         reason={upgradeReason}
         currentPlan={plan}
       />
+
+      <OnboardingTour forceShow={forceShow} onComplete={onComplete} />
     </div>
   );
 }
