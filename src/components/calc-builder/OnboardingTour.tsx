@@ -275,24 +275,37 @@ export function OnboardingTour({ forceShow, onComplete }: OnboardingTourProps) {
       {/* Tooltip card */}
       <div
         className={cn(
-          "fixed z-[10000] w-80 rounded-xl border bg-card shadow-xl",
+          "fixed z-[10000] w-80 rounded-xl border bg-card shadow-xl overflow-hidden",
           "pointer-events-auto",
           "animate-in fade-in-0 zoom-in-95 duration-200"
         )}
         style={{ top: pos.top, left: pos.left, right: pos.right, bottom: pos.bottom }}
       >
+        {/* Progress bar */}
+        <div className="h-1 w-full bg-muted">
+          <div
+            className="h-full bg-primary transition-all duration-300 ease-out"
+            style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+          />
+        </div>
+
         {/* Header */}
-        <div className="flex items-start justify-between gap-2 px-4 pt-4 pb-0">
+        <div className="flex items-start justify-between gap-2 px-4 pt-3 pb-0">
           <div className="flex items-center gap-2">
             {currentStep.icon}
             <span className="text-sm font-semibold text-foreground leading-tight">{currentStep.title}</span>
           </div>
-          <button
-            onClick={finish}
-            className="shrink-0 rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {step + 1}/{STEPS.length}
+            </span>
+            <button
+              onClick={finish}
+              className="rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Body */}
@@ -312,7 +325,9 @@ export function OnboardingTour({ forceShow, onComplete }: OnboardingTourProps) {
                   "rounded-full transition-all",
                   i === step
                     ? "w-4 h-1.5 bg-primary"
-                    : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    : i < step
+                      ? "w-1.5 h-1.5 bg-primary/40 hover:bg-primary/60"
+                      : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                 )}
               />
             ))}
