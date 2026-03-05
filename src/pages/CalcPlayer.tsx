@@ -254,7 +254,15 @@ export default function CalcPlayer() {
           <PageProgress pages={pages} current={currentPage} />
 
           {/* Card wrapper */}
-          <div className="rounded-xl bg-card border border-border shadow-sm p-6">
+          <div
+            className="rounded-xl bg-card border border-border shadow-sm p-6"
+            style={{
+              backgroundColor: calculator.theme?.cardColor ?? undefined,
+              fontFamily: calculator.theme?.fontFamily
+                ? `'${calculator.theme.fontFamily}', sans-serif`
+                : undefined,
+            }}
+          >
           {/* Slide container */}
           <div className="overflow-hidden">
             <div

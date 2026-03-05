@@ -1,7 +1,20 @@
+import React, { useEffect } from "react";
 import { CalcTheme } from "@/types/custom-calc";
 import { ColorPicker } from "@/components/ui/color-picker";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+
+// ── Font options ──────────────────────────────────────────────
+
+export const FONT_OPTIONS = [
+  { value: "Inter", label: "Inter", style: "font-sans" },
+  { value: "Roboto", label: "Roboto", style: "" },
+  { value: "Montserrat", label: "Montserrat", style: "" },
+  { value: "Playfair Display", label: "Playfair Display", style: "" },
+] as const;
+
+const GOOGLE_FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@400;500;600&family=Inter:wght@400;500;600&display=swap";
 
 // ── Presets ───────────────────────────────────────────────────
 
@@ -156,11 +169,25 @@ export function buildThemeVars(theme: CalcTheme): React.CSSProperties {
     };
     vars["--radius"] = radMap[theme.borderRadius] ?? "0.375rem";
   }
+  if (theme.fontFamily) {
+    vars["--calc-font"] = `'${theme.fontFamily}', sans-serif`;
+  }
   return vars as React.CSSProperties;
 }
 
 export function ThemePanel({ theme, onChange }: ThemePanelProps) {
   const upd = (patch: Partial<CalcTheme>) => onChange({ ...theme, ...patch });
+
+  // Inject Google Fonts once
+  useEffect(() => {
+    if (!document.getElementById("calc-google-fonts")) {
+      const link = document.createElement("link");
+      link.id = "calc-google-fonts";
+      link.rel = "stylesheet";
+      link.href = GOOGLE_FONTS_URL;
+      document.head.appendChild(link);
+    }
+  }, []);
 
   const activePresetId = THEME_PRESETS.find(
     (p) => p.primary === theme.primaryColor && p.bg === theme.bgColor && p.card === (theme.cardColor ?? theme.bgColor)
@@ -260,6 +287,32 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
               onChange={(c) => upd({ accentColor: c })}
             />
           </div>
+        </div>
+      </div>
+
+      {/* Separator */}
+      <div className="border-t" />
+
+      {/* Font family */}
+      <div className="space-y-2">
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Шрифт</p>
+        <div className="grid grid-cols-2 gap-1.5">
+          {FONT_OPTIONS.map((font) => (
+            <button
+              key={font.value}
+              type="button"
+              onClick={() => upd({ fontFamily: font.value })}
+              className={cn(
+                "h-9 px-2 text-sm rounded-md border transition-colors truncate",
+                (theme.fontFamily ?? "Inter") === font.value
+                  ? "border-primary bg-primary/10 text-primary font-medium"
+                  : "border-input bg-background text-muted-foreground hover:bg-muted"
+              )}
+              style={{ fontFamily: `'${font.value}', sans-serif` }}
+            >
+              {font.label}
+            </button>
+          ))}
         </div>
       </div>
 

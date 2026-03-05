@@ -105,6 +105,9 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
   const rows = groupByRow(pageFields);
   const themeVars = calculator.theme ? buildThemeVars(calculator.theme) : {};
   const cardBg = calculator.theme?.cardColor ?? calculator.theme?.bgColor;
+  const fontFamily = calculator.theme?.fontFamily
+    ? `'${calculator.theme.fontFamily}', sans-serif`
+    : undefined;
 
   return (
     <div style={themeVars}>
@@ -113,6 +116,7 @@ export function BuilderPreview({ calculator, currentPage = 0, onNavigatePage }: 
         style={{
           backgroundColor: cardBg ?? undefined,
           color: "hsl(var(--card-foreground, var(--foreground)))",
+          fontFamily,
         }}
       >
         {sorted.length === 0 ? (
