@@ -15,6 +15,8 @@ import {
   ChevronDown,
   ChevronUp,
   Code2,
+  Zap,
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +29,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CopyButton } from "@/components/ui/copy-button";
 import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
+import { usePlan, PLAN_META } from "@/hooks/usePlan";
 
 interface SavedCalculation {
   id: string;
