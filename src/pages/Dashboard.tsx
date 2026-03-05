@@ -202,41 +202,65 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Plan card + Embed Widgets */}
-        <section className="py-8 border-b border-border">
-          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-            {/* Current plan */}
-            {!planLoading && (
-              <div className="flex items-center justify-between gap-3 rounded-xl border px-5 py-4 bg-muted/30">
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+        {/* Plan Banner */}
+        {!planLoading && (
+          <section className="py-5 border-b border-border bg-muted/20">
+            <div className="container max-w-4xl">
+              <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-r from-primary/8 via-primary/4 to-transparent px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                {/* decorative */}
+                <div className="absolute right-0 top-0 h-full w-40 bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div className="h-11 w-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
                     <Zap className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold flex items-center gap-2">
-                      Тариф
-                      <Badge variant="outline" className="text-xs">{PLAN_META[plan].label}</Badge>
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {limits.maxCalcs === -1
-                        ? `${calcCount} калькуляторов — без лимита`
-                        : `${calcCount} / ${limits.maxCalcs} калькуляторов`}
-                    </p>
-                    {subscription?.current_period_end && (
-                      <p className="text-xs text-muted-foreground">
-                        Следующее списание: {new Date(subscription.current_period_end).toLocaleDateString("ru")}
-                      </p>
-                    )}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold">Текущий тариф</span>
+                      <Badge className="text-xs font-semibold">{PLAN_META[plan].label}</Badge>
+                      {plan !== "pro" && (
+                        <span className="text-xs text-muted-foreground">— доступно больше возможностей на старшем тарифе</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4 mt-1 flex-wrap">
+                      <span className="text-xs text-muted-foreground">
+                        {limits.maxCalcs === -1
+                          ? `Калькуляторы: ${calcCount} — без лимита`
+                          : `Калькуляторы: ${calcCount} / ${limits.maxCalcs}`}
+                      </span>
+                      {limits.maxCalcs !== -1 && limits.maxCalcs > 0 && (
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 w-24 rounded-full bg-primary/15 overflow-hidden">
+                            <div
+                              className="h-full bg-primary rounded-full transition-all"
+                              style={{ width: `${Math.min(100, (calcCount / limits.maxCalcs) * 100)}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-muted-foreground tabular-nums">
+                            {Math.round((calcCount / limits.maxCalcs) * 100)}%
+                          </span>
+                        </div>
+                      )}
+                      {subscription?.current_period_end && (
+                        <span className="text-xs text-muted-foreground">
+                          Следующее списание: {new Date(subscription.current_period_end).toLocaleDateString("ru")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <Link to="/pricing" className="shrink-0">
-                  <Button variant="outline" size="sm" className="gap-1.5">
-                    {plan === "pro" ? "Управлять" : <><ArrowRight className="h-3.5 w-3.5" />Апгрейд</>}
+                  <Button size="sm" variant={plan === "pro" ? "outline" : "default"} className="gap-1.5">
+                    {plan === "pro" ? "Управлять подпиской" : <><Zap className="h-3.5 w-3.5" />Улучшить тариф</>}
                   </Button>
                 </Link>
               </div>
-            )}
+            </div>
+          </section>
+        )}
+
+        {/* Quick links */}
+        <section className="py-6 border-b border-border">
+          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             {/* Embed Widgets */}
             <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
