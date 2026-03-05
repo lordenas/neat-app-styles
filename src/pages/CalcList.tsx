@@ -3,7 +3,7 @@ import { loadCalculators, deleteCalculator, CustomCalculator } from "@/types/cus
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
-import { Plus, Calculator, Trash2, ExternalLink, Pencil, Lock } from "lucide-react";
+import { Plus, Calculator, Trash2, ExternalLink, Pencil, Lock, Code2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { usePlan } from "@/hooks/usePlan";
@@ -11,6 +11,7 @@ import { UpgradeModal } from "@/components/UpgradeModal";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
 import { PLAN_META } from "@/hooks/usePlan";
+import { EmbedCodeModal } from "@/components/calc-list/EmbedCodeModal";
 
 export default function CalcList() {
   const navigate = useNavigate();
