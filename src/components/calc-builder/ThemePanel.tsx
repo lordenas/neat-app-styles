@@ -267,47 +267,43 @@ export function ThemePanel({ theme, onChange }: ThemePanelProps) {
       {/* Live preview */}
       <div className="space-y-2">
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Предпросмотр</p>
-        <div
-          className="rounded-lg p-4 border space-y-3 transition-all"
-          style={{
-            backgroundColor: theme.bgColor ?? "#ffffff",
-            borderColor: `${theme.primaryColor ?? "#3b82f6"}33`,
-            borderRadius:
-              theme.borderRadius === "none" ? 0
-              : theme.borderRadius === "sm" ? 4
-              : theme.borderRadius === "lg" ? 16
-              : 8,
-          }}
-        >
-          <div className="text-xs font-semibold" style={{ color: isDark ? "#f1f5f9" : "#0f172a" }}>Пример поля</div>
-          <div
-            className="h-8 rounded border px-2 flex items-center text-xs"
-            style={{
-              borderColor: `${theme.primaryColor ?? "#3b82f6"}60`,
-              backgroundColor: theme.accentColor ?? "#eff6ff",
-              borderRadius:
-                theme.borderRadius === "none" ? 0
-                : theme.borderRadius === "sm" ? 4
-                : theme.borderRadius === "lg" ? 16
-                : 8,
-            }}
-          >
-            <span style={{ color: isDark ? "#94a3b8" : "#94a3b8" }}>1 000 000</span>
-          </div>
-          <div
-            className="h-8 flex items-center justify-center text-xs font-medium text-white rounded cursor-pointer"
-            style={{
-              backgroundColor: theme.primaryColor ?? "#3b82f6",
-              borderRadius:
-                theme.borderRadius === "none" ? 0
-                : theme.borderRadius === "sm" ? 4
-                : theme.borderRadius === "lg" ? 16
-                : 8,
-            }}
-          >
-            Рассчитать
-          </div>
-        </div>
+        {(() => {
+          const bg = theme.bgColor ?? "#ffffff";
+          const rx = parseInt(bg.slice(1, 3), 16);
+          const gx = parseInt(bg.slice(3, 5), 16);
+          const bx = parseInt(bg.slice(5, 7), 16);
+          const lum = (0.299 * rx + 0.587 * gx + 0.114 * bx) / 255;
+          const isDarkBg = lum < 0.4;
+          const rad = theme.borderRadius === "none" ? 0 : theme.borderRadius === "sm" ? 4 : theme.borderRadius === "lg" ? 16 : 8;
+          return (
+            <div
+              className="rounded-lg p-4 border space-y-3 transition-all"
+              style={{
+                backgroundColor: bg,
+                borderColor: `${theme.primaryColor ?? "#3b82f6"}33`,
+                borderRadius: rad,
+              }}
+            >
+              <div className="text-xs font-semibold" style={{ color: isDarkBg ? "#f1f5f9" : "#0f172a" }}>Пример поля</div>
+              <div
+                className="h-8 rounded border px-2 flex items-center text-xs"
+                style={{
+                  borderColor: `${theme.primaryColor ?? "#3b82f6"}60`,
+                  backgroundColor: theme.accentColor ?? "#eff6ff",
+                  borderRadius: rad,
+                }}
+              >
+                <span style={{ color: isDarkBg ? "#94a3b8" : "#64748b" }}>1 000 000</span>
+              </div>
+              <div
+                className="h-8 flex items-center justify-center text-xs font-medium text-white rounded cursor-pointer"
+                style={{ backgroundColor: theme.primaryColor ?? "#3b82f6", borderRadius: rad }}
+              >
+                Рассчитать
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
