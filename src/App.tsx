@@ -41,6 +41,9 @@ const HelpFields = lazy(() => import("./pages/help/HelpFields"));
 const HelpPages = lazy(() => import("./pages/help/HelpPages"));
 const HelpLogic = lazy(() => import("./pages/help/HelpLogic"));
 const HelpExamples = lazy(() => import("./pages/help/HelpExamples"));
+const ExamplesIndex = lazy(() => import("./pages/examples/ExamplesIndex"));
+const ExamplesCategory = lazy(() => import("./pages/examples/ExamplesCategory"));
+const ExamplesCalc = lazy(() => import("./pages/examples/ExamplesCalc"));
 
 // Calculator pages
 const VatCalculator = lazy(() => import("./pages/calculators/VatCalculator"));
@@ -147,6 +150,9 @@ const App = () => (
                   <Route path="/help/pages" element={<HelpPages />} />
                   <Route path="/help/logic" element={<HelpLogic />} />
                   <Route path="/help/examples" element={<HelpExamples />} />
+                  <Route path="/examples" element={<ExamplesIndex />} />
+                  <Route path="/examples/:categorySlug" element={<ExamplesCategory />} />
+                  <Route path="/examples/:categorySlug/:calcSlug" element={<ExamplesCalc />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
