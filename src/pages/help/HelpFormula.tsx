@@ -76,7 +76,7 @@ export default function HelpFormula() {
           <div className="space-y-0 border border-border rounded-lg overflow-hidden divide-y divide-border">
             {functions.map(({ name, desc, example }) => (
               <div key={name} className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-4 py-3">
-                <code className="font-mono text-xs text-violet-500 shrink-0 w-44">{name}</code>
+                <code className="font-mono text-xs text-primary shrink-0 w-44">{name}</code>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-foreground">{desc}</p>
                   <code className="text-[11px] text-muted-foreground">{example}</code>
