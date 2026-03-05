@@ -1,0 +1,651 @@
+openapi: 3.1.0
+info:
+  title: CalcHub — Custom Calculator API
+  version: "1.0"
+  description: |
+    REST API для конструктора пользовательских калькуляторов.
+    Auth: Bearer JWT (NestJS).
+
+servers:
+  - url: https://api.yourdomain.com/v1
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ── Error ──────────────────────────────────────────────────
+    ErrorResponse:
+      type: object
+      required: [statusCode, code, message]
+      properties:
+        statusCode: { type: integer, example: 403 }
+        code:       { type: string,  example: PLAN_LIMIT_EXCEEDED }
+        message:    { type: string,  example: "Лимит калькуляторов превышен" }
+        details:
+          type: object
+          additionalProperties:
+            type: array
+            items: { type: string }
+
+    # ── Theme ──────────────────────────────────────────────────
+    CalcTheme:
+      type: object
+      properties:
+        primaryColor:  { type: string, example: "#6366f1" }
+        bgColor:       { type: string, example: "#ffffff" }
+        cardColor:     { type: string, example: "#f8f8f8" }
+        accentColor:   { type: string, example: "#e0e7ff" }
+        borderRadius:
+          type: string
+          enum: [none, sm, md, lg]
+        fontFamily:    { type: string, example: "Inter" }
+
+    # ── Visibility ─────────────────────────────────────────────
+    VisibilityOperator:
+      type: string
+      enum: [gt, lt, gte, lte, eq, neq, checked, not_checked, in]
+
+    VisibilityRule:
+      type: object
+      required: [fieldId, operator, value]
+      properties:
+        fieldId:  { type: string, format: uuid }
+        operator: { $ref: "#/components/schemas/VisibilityOperator" }
+        value:
+          oneOf:
+            - type: string
+            - type: number
+
+    VisibilityConfig:
+      type: object
+      required: [rules, logic]
+      properties:
+        rules:
+          type: array
+          items: { $ref: "#/components/schemas/VisibilityRule" }
+        logic:
+          type: string
+          enum: [AND, OR]
+
+    # ── SelectOption ───────────────────────────────────────────
+    SelectOption:
+      type: object
+      required: [label, value]
+      properties:
+        label:        { type: string }
+        value:        { type: string }
+        numericValue: { type: number }
+
+    # ── CalcFieldConfig ────────────────────────────────────────
+    CalcFieldConfig:
+      type: object
+      properties:
+        min:           { type: number }
+        max:           { type: number }
+        step:          { type: number }
+        options:
+          type: array
+          items: { $ref: "#/components/schemas/SelectOption" }
+        placeholder:   { type: string }
+        unit:          { type: string, example: "₽" }
+        defaultValue:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+        format:
+          type: string
+          enum: [currency, percent, number]
+        decimals:      { type: integer }
+        hint:          { type: string }
+        required:      { type: boolean }
+        requiredMessage: { type: string }
+        validationMin: { type: number }
+        validationMinMessage: { type: string }
+        validationMax: { type: number }
+        validationMaxMessage: { type: string }
+        validationPattern: { type: string }
+        validationPatternMessage: { type: string }
+        buttonVariant:
+          type: string
+          enum: [default, outline, destructive, ghost]
+        labelVariant:
+          type: string
+          enum: [h1, h2, h3, body, caption, divider]
+        labelContent:  { type: string }
+        htmlContent:   { type: string }
+        imageData:     { type: string, description: "base64 или URL" }
+        imageAlt:      { type: string }
+        imageAlign:
+          type: string
+          enum: [left, center, right]
+        imageMaxWidth: { type: integer }
+        rows:          { type: integer }
+        manualCalculation: { type: boolean }
+        paddingTop:    { type: integer }
+        paddingBottom: { type: integer }
+
+    # ── CalcField ──────────────────────────────────────────────
+    CalcField:
+      type: object
+      required: [id, type, label, key, orderIndex, rowId, config]
+      properties:
+        id:         { type: string, format: uuid }
+        pageId:     { type: string, format: uuid, nullable: true }
+        type:
+          type: string
+          enum: [number, text, textarea, select, radio, checkbox, slider, result, button, label, image, html]
+        label:      { type: string }
+        key:        { type: string, example: "amount" }
+        orderIndex: { type: integer }
+        rowId:      { type: string }
+        config:     { $ref: "#/components/schemas/CalcFieldConfig" }
+        formula:    { type: string, nullable: true, example: "round({amount} * {rate} / 100, 2)" }
+        visibility:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/VisibilityConfig" }
+
+    # ── PageRoute ──────────────────────────────────────────────
+    PageRoute:
+      type: object
+      required: [id, condition, targetPageIndex]
+      properties:
+        id:              { type: string, format: uuid }
+        condition:       { $ref: "#/components/schemas/VisibilityConfig" }
+        targetPageIndex: { type: integer }
+
+    # ── CalcPage ───────────────────────────────────────────────
+    CalcPage:
+      type: object
+      required: [id, orderIndex]
+      properties:
+        id:         { type: string, format: uuid }
+        title:      { type: string, nullable: true }
+        orderIndex: { type: integer }
+        autoAdvance:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/VisibilityConfig" }
+        routes:
+          type: array
+          items: { $ref: "#/components/schemas/PageRoute" }
+
+    # ── CustomCalculator ───────────────────────────────────────
+    CustomCalculator:
+      type: object
+      required: [id, slug, title, isPublic, fields, pages, createdAt, updatedAt]
+      properties:
+        id:          { type: string, format: uuid }
+        slug:        { type: string, example: "ipoteka-2024" }
+        title:       { type: string }
+        description: { type: string, nullable: true }
+        isPublic:    { type: boolean }
+        theme:       { $ref: "#/components/schemas/CalcTheme" }
+        pages:
+          type: array
+          items: { $ref: "#/components/schemas/CalcPage" }
+        fields:
+          type: array
+          items: { $ref: "#/components/schemas/CalcField" }
+        createdAt:   { type: string, format: date-time }
+        updatedAt:   { type: string, format: date-time }
+
+    # ── CalcListItem ───────────────────────────────────────────
+    CalcListItem:
+      type: object
+      properties:
+        id:          { type: string, format: uuid }
+        slug:        { type: string }
+        title:       { type: string }
+        description: { type: string, nullable: true }
+        isPublic:    { type: boolean }
+        fieldsCount: { type: integer }
+        pagesCount:  { type: integer }
+        createdAt:   { type: string, format: date-time }
+        updatedAt:   { type: string, format: date-time }
+
+    # ── Upsert DTOs ────────────────────────────────────────────
+    UpsertFieldDto:
+      type: object
+      required: [type, label, key, orderIndex, rowId, config]
+      properties:
+        id:         { type: string, format: uuid, description: "Если есть — update" }
+        pageId:     { type: string, format: uuid, nullable: true }
+        type:
+          type: string
+          enum: [number, text, textarea, select, radio, checkbox, slider, result, button, label, image, html]
+        label:      { type: string }
+        key:        { type: string }
+        orderIndex: { type: integer }
+        rowId:      { type: string }
+        config:     { $ref: "#/components/schemas/CalcFieldConfig" }
+        formula:    { type: string, nullable: true }
+        visibility:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/VisibilityConfig" }
+
+    UpsertPageDto:
+      type: object
+      required: [orderIndex]
+      properties:
+        id:         { type: string, format: uuid, description: "Если есть — update" }
+        title:      { type: string, nullable: true }
+        orderIndex: { type: integer }
+        autoAdvance:
+          nullable: true
+          allOf:
+            - { $ref: "#/components/schemas/VisibilityConfig" }
+        routes:
+          type: array
+          items:
+            type: object
+            required: [condition, targetPageIndex]
+            properties:
+              id:              { type: string, format: uuid }
+              condition:       { $ref: "#/components/schemas/VisibilityConfig" }
+              targetPageIndex: { type: integer }
+
+    # ── EmbedToken ─────────────────────────────────────────────
+    EmbedToken:
+      type: object
+      properties:
+        token:        { type: string }
+        monthlyViews: { type: integer }
+        viewsResetAt: { type: string, format: date-time }
+        createdAt:    { type: string, format: date-time }
+
+paths:
+  # ── Calculators list & create ──────────────────────────────
+  /calculators:
+    get:
+      summary: Список калькуляторов пользователя
+      tags: [Calculators]
+      parameters:
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 50 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: "#/components/schemas/CalcListItem" }
+                  total: { type: integer }
+                  page:  { type: integer }
+                  limit: { type: integer }
+        "401": { description: Unauthorized }
+
+    post:
+      summary: Создать калькулятор
+      tags: [Calculators]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, fields]
+              properties:
+                title:       { type: string, maxLength: 200 }
+                description: { type: string, maxLength: 1000 }
+                isPublic:    { type: boolean, default: false }
+                theme:       { $ref: "#/components/schemas/CalcTheme" }
+                pages:
+                  type: array
+                  items: { $ref: "#/components/schemas/UpsertPageDto" }
+                fields:
+                  type: array
+                  items: { $ref: "#/components/schemas/UpsertFieldDto" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:   { type: string, format: uuid }
+                      slug: { type: string }
+        "403":
+          description: Plan limit exceeded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  # ── Single calculator ──────────────────────────────────────
+  /calculators/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+
+    get:
+      summary: Получить калькулятор (редактор)
+      tags: [Calculators]
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/CustomCalculator" }
+          description: OK
+        "403": { description: Forbidden }
+        "404": { description: Not found }
+
+    patch:
+      summary: Обновить калькулятор (upsert pages + fields)
+      tags: [Calculators]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:       { type: string }
+                description: { type: string }
+                isPublic:    { type: boolean }
+                theme:       { $ref: "#/components/schemas/CalcTheme" }
+                pages:
+                  type: array
+                  items: { $ref: "#/components/schemas/UpsertPageDto" }
+                fields:
+                  type: array
+                  items: { $ref: "#/components/schemas/UpsertFieldDto" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:        { type: string, format: uuid }
+                      updatedAt: { type: string, format: date-time }
+
+    delete:
+      summary: Удалить калькулятор
+      tags: [Calculators]
+      responses:
+        "204": { description: No content }
+        "403": { description: Forbidden }
+
+  # ── Public player ──────────────────────────────────────────
+  /calculators/public/{slug}:
+    get:
+      summary: Публичный плеер по slug
+      tags: [Calculators]
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: "#/components/schemas/CustomCalculator" }
+        "404": { description: Не найден или не публичный }
+
+  # ── Pages ──────────────────────────────────────────────────
+  /calculators/{calcId}/pages:
+    post:
+      summary: Добавить страницу
+      tags: [Pages]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpsertPageDto" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+        "403":
+          description: Page limit exceeded
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ErrorResponse" }
+
+  /calculators/{calcId}/pages/{pageId}:
+    patch:
+      summary: Обновить страницу
+      tags: [Pages]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: pageId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpsertPageDto" }
+      responses:
+        "200": { description: OK }
+    delete:
+      summary: Удалить страницу
+      tags: [Pages]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: pageId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "204": { description: No content }
+
+  # ── Fields ─────────────────────────────────────────────────
+  /calculators/{calcId}/fields:
+    post:
+      summary: Добавить поле
+      tags: [Fields]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpsertFieldDto" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id: { type: string, format: uuid }
+
+  /calculators/{calcId}/fields/{fieldId}:
+    patch:
+      summary: Обновить поле
+      tags: [Fields]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: fieldId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/UpsertFieldDto" }
+      responses:
+        "200": { description: OK }
+    delete:
+      summary: Удалить поле
+      tags: [Fields]
+      parameters:
+        - name: calcId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: fieldId
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "204": { description: No content }
+
+  # ── Embed ───────────────────────────────────────────────────
+  /calculators/{id}/embed-token:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+
+    get:
+      summary: Получить embed-токен
+      tags: [Embed]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    nullable: true
+                    allOf:
+                      - { $ref: "#/components/schemas/EmbedToken" }
+
+    post:
+      summary: Создать embed-токен
+      tags: [Embed]
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:     { type: string }
+                      scriptUrl: { type: string }
+                      iframeUrl: { type: string }
+
+    delete:
+      summary: Инвалидировать embed-токен
+      tags: [Embed]
+      responses:
+        "204": { description: No content }
+
+  /embed/view:
+    post:
+      summary: Трекинг просмотра виджета
+      tags: [Embed]
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:    { type: string }
+                referrer: { type: string }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:     { type: boolean }
+                  reason: { type: string, example: limit_exceeded }
+
+  # ── Formula Evaluation ─────────────────────────────────────
+  /calculators/evaluate:
+    post:
+      summary: Вычислить формулу на сервере
+      tags: [Utils]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [formula, values]
+              properties:
+                formula:
+                  type: string
+                  example: "round({amount} * {rate} / 100, 2)"
+                values:
+                  type: object
+                  additionalProperties: { type: number }
+                  example: { amount: 500000, rate: 15.5 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      result: { type: number }
+                  - type: object
+                    properties:
+                      error: { type: string }
