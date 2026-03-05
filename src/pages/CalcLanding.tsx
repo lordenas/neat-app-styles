@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { DemoCalcSection } from "@/components/calc-landing/DemoCalcSection";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
