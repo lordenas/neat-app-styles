@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail, User, LogIn, Wrench } from "lucide-react";
+import { Globe, ChevronDown, Calculator, BookOpen, Info, Mail, User, LogIn, Wrench, HelpCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
