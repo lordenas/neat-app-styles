@@ -102,8 +102,8 @@ export default function HelpFormula() {
               <code>{"if({тип} == 1, {a} * 2, if({тип} == 2, {a} * 3, {a}))"}</code>
             </div>
           </div>
-          <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 px-4 py-3 text-xs text-amber-700 dark:text-amber-400">
-            <strong>Поддерживаемые операторы сравнения:</strong> == &nbsp; != &nbsp; &gt; &nbsp; &lt; &nbsp; &gt;= &nbsp; &lt;=
+          <div className="rounded-lg bg-muted border border-border px-4 py-3 text-xs text-muted-foreground">
+            <strong className="text-foreground">Поддерживаемые операторы сравнения:</strong> == &nbsp; != &nbsp; &gt; &nbsp; &lt; &nbsp; &gt;= &nbsp; &lt;=
           </div>
         </section>
 
