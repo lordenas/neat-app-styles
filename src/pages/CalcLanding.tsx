@@ -434,6 +434,9 @@ export default function CalcLanding() {
           </div>
         </section>
 
+        {/* ── Live demo ──────────────────────────────────────── */}
+        <DemoCalcSection />
+
         {/* ── Embed section ──────────────────────────────────── */}
         <section className="py-20 px-4 bg-muted/20 border-y border-border">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
