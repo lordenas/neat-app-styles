@@ -261,6 +261,25 @@ export default function Dashboard() {
               </Link>
             </div>
 
+            {/* My Calculators */}
+            <div className="flex-1 flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <Calculator className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Мои калькуляторы</p>
+                  <p className="text-xs text-muted-foreground">Управляйте созданными калькуляторами</p>
+                </div>
+              </div>
+              <Link to="/calc-list" className="shrink-0">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <ArrowRight className="h-3.5 w-3.5" />
+                  Открыть
+                </Button>
+              </Link>
+            </div>
+
           </div>
         </section>
 
