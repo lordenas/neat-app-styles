@@ -291,7 +291,7 @@ export default function AdminUserDetail() {
             <div className="rounded-lg border bg-card overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                  <TableRow className="bg-muted/60 hover:bg-muted/60">
                     <TableHead className="text-xs font-medium">Название</TableHead>
                     <TableHead className="text-xs font-medium hidden sm:table-cell">Полей</TableHead>
                     <TableHead className="text-xs font-medium hidden md:table-cell">Просмотров</TableHead>
