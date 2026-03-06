@@ -323,7 +323,7 @@ export default function AdminUserDetail() {
                   ))}
                 </TableBody>
               </Table>
-              <div className="px-4 py-2.5 border-t bg-muted/20 text-xs text-muted-foreground">
+              <div className="px-4 py-2.5 border-t bg-muted/50 text-xs text-muted-foreground">
                 {calcs.length} калькуляторов · {calcs.reduce((s, c) => s + c.views, 0).toLocaleString("ru")} просмотров
               </div>
             </div>
