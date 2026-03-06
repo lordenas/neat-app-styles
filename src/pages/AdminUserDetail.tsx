@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   ArrowLeft,
   Calculator,
   CreditCard,
@@ -21,9 +38,14 @@ import {
   XCircle,
   Clock,
   TrendingUp,
+  Ban,
+  ChevronDown,
+  ShieldCheck,
+  UserCheck,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -201,11 +223,35 @@ function StatusDot({ status }: { status: "active" | "inactive" }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
+// ─── Dialog types ─────────────────────────────────────────────────────────────
+
+type DialogType = "block" | "unblock" | "plan" | null;
+
+const PLAN_OPTIONS: { value: Plan; label: string }[] = [
+  { value: "free", label: "Free — бесплатный" },
+  { value: "pro", label: "Pro — $10/мес" },
+  { value: "business", label: "Business — $20/мес" },
+];
+
 export default function AdminUserDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const user = MOCK_USERS.find((u) => u.id === id);
+  // local mutable state for actions demo
+  const [userStatus, setUserStatus] = useState<"active" | "inactive" | null>(null);
+  const [userPlan, setUserPlan] = useState<Plan | null>(null);
+  const [dialog, setDialog] = useState<DialogType>(null);
+  const [pendingPlan, setPendingPlan] = useState<Plan | null>(null);
+
+  const baseUser = MOCK_USERS.find((u) => u.id === id);
+  const user = baseUser
+    ? {
+        ...baseUser,
+        status: (userStatus ?? baseUser.status) as "active" | "inactive",
+        plan: (userPlan ?? baseUser.plan) as Plan,
+      }
+    : null;
 
   const calcs = useMemo(() => (id ? genCalcs(id) : []), [id]);
   const apiReqs = useMemo(() => (id ? genApiRequests(id) : []), [id]);
@@ -214,6 +260,28 @@ export default function AdminUserDetail() {
 
   const totalApiRequests = apiReqs.length;
   const successReqs = apiReqs.filter((r) => r.status < 400).length;
+
+  const handleBlock = () => {
+    setUserStatus("inactive");
+    setDialog(null);
+    toast({ title: "Пользователь заблокирован", description: user?.display_name });
+  };
+
+  const handleUnblock = () => {
+    setUserStatus("active");
+    setDialog(null);
+    toast({ title: "Доступ восстановлен", description: user?.display_name });
+  };
+
+  const handlePlanChange = () => {
+    if (!pendingPlan) return;
+    setUserPlan(pendingPlan);
+    setDialog(null);
+    toast({
+      title: "Тариф изменён",
+      description: `${user?.display_name} → ${PLAN_LABELS[pendingPlan]}`,
+    });
+  };
 
   if (!user) {
     return (
@@ -228,14 +296,118 @@ export default function AdminUserDetail() {
     );
   }
 
+  const isBlocked = user.status === "inactive";
+
   return (
+    <>
+      {/* Block / Unblock dialog */}
+      <AlertDialog open={dialog === "block" || dialog === "unblock"} onOpenChange={(o) => !o && setDialog(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {dialog === "block" ? "Заблокировать пользователя?" : "Разблокировать пользователя?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {dialog === "block"
+                ? `Пользователь «${user.display_name}» потеряет доступ ко всем функциям. Действие можно отменить.`
+                : `Пользователю «${user.display_name}» будет восстановлен полный доступ.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction
+              className={dialog === "block" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+              onClick={dialog === "block" ? handleBlock : handleUnblock}
+            >
+              {dialog === "block" ? "Заблокировать" : "Разблокировать"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Change plan dialog */}
+      <AlertDialog open={dialog === "plan"} onOpenChange={(o) => !o && setDialog(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Сменить тариф</AlertDialogTitle>
+            <AlertDialogDescription>
+              Выберите новый тариф для «{user.display_name}». Изменение вступит в силу немедленно.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid gap-2 py-2">
+            {PLAN_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setPendingPlan(opt.value)}
+                className={`flex items-center gap-3 w-full rounded-md border px-3 py-2.5 text-sm transition-colors text-left ${
+                  pendingPlan === opt.value
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border hover:bg-muted/60"
+                }`}
+              >
+                <span className={`h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                  pendingPlan === opt.value ? "border-primary" : "border-muted-foreground/40"
+                }`}>
+                  {pendingPlan === opt.value && <span className="h-2 w-2 rounded-full bg-primary" />}
+                </span>
+                {opt.label}
+                {opt.value === user.plan && (
+                  <span className="ml-auto text-xs text-muted-foreground">текущий</span>
+                )}
+              </button>
+            ))}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogAction onClick={handlePlanChange} disabled={!pendingPlan || pendingPlan === user.plan}>
+              Применить
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     <AdminLayout
       title={user.display_name}
       description={user.email}
       actions={
-        <Button variant="outline" size="sm" onClick={() => navigate("/admin/users")}>
-          <ArrowLeft className="h-4 w-4 mr-1.5" /> К списку
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => navigate("/admin/users")}>
+            <ArrowLeft className="h-4 w-4 mr-1.5" /> К списку
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline" className="gap-1.5">
+                Действия <ChevronDown className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuItem
+                icon={<ShieldCheck />}
+                onClick={() => { setPendingPlan(user.plan); setDialog("plan"); }}
+              >
+                Сменить тариф
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {isBlocked ? (
+                <DropdownMenuItem
+                  icon={<UserCheck />}
+                  onClick={() => setDialog("unblock")}
+                >
+                  Разблокировать
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  icon={<Ban />}
+                  destructive
+                  onClick={() => setDialog("block")}
+                >
+                  Заблокировать
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       }
     >
       <div className="p-6 space-y-6">
@@ -448,5 +620,6 @@ export default function AdminUserDetail() {
         </Tabs>
       </div>
     </AdminLayout>
+    </>
   );
 }
