@@ -2,8 +2,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Megaphone, BarChart3, Settings, Users, Banknote,
   Home, Tag, Globe, FileText, ChevronDown, ChevronRight,
-  Shield, Palette, Bell, Key, Plug, PanelLeftClose, PanelLeftOpen,
+  Shield, Palette, Bell, Key, Plug, PanelLeftClose, PanelLeftOpen, LogOut,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -176,6 +177,12 @@ function NavParent({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
 
 export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/admin/login");
+  };
 
   return (
     <aside
@@ -230,6 +237,14 @@ export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
         >
           <Home className="h-4 w-4 shrink-0" />
           {!collapsed && <span>На сайт</span>}
+        </button>
+        <button
+          onClick={handleSignOut}
+          title="Выйти"
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Выйти</span>}
         </button>
         <button
           onClick={onToggle}
