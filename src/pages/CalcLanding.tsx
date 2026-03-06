@@ -263,7 +263,7 @@ export default function CalcLanding() {
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
             <Link to="/" className="font-bold text-lg tracking-tight">
-              Calc<span className="text-primary">Hub</span>
+              Num<span className="text-primary">lix</span>
             </Link>
             <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
               <a href="#benefits" className="hover:text-foreground transition-colors">Возможности</a>
