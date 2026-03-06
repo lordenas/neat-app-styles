@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { CpaBlock } from "@/components/cpa/CpaBlock";
+import { MORTGAGE_OFFERS } from "@/components/cpa/offers";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
