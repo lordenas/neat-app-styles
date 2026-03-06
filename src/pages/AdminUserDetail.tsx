@@ -620,5 +620,6 @@ export default function AdminUserDetail() {
         </Tabs>
       </div>
     </AdminLayout>
+    </>
   );
 }
