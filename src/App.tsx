@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AdminGuard } from "@/components/admin/AdminGuard";
 import "@/i18n";
 
 const Index = lazy(() => import("./pages/Index"));
