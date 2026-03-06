@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
   experimental: {
     externalDir: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
