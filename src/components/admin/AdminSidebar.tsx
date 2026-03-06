@@ -177,6 +177,12 @@ function NavParent({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
 
 export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/admin/login");
+  };
 
   return (
     <aside
