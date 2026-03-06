@@ -944,7 +944,7 @@
     "loginToSave": "You need to sign in to save calculations."
   },
   "site": {
-    "name": "CalcHub",
+    "name": "Numlix",
     "tagline": "Financial calculators for every country",
     "description": "Accurate calculations using banking formulas for 20+ countries"
   },
@@ -964,7 +964,7 @@
     "uptime": { "value": "99.9%", "label": "Service uptime" }
   },
   "features": {
-    "title": "Why CalcHub?",
+    "title": "Why Numlix?",
     "accurate": { "title": "Accurate Formulas", "description": "We use banking formulas approved by regulators" },
     "local": { "title": "Country-Specific", "description": "Taxes, rates and laws adapted to your region" },
     "free": { "title": "Completely Free", "description": "No registration, no limits, no ads" },
@@ -972,12 +972,12 @@
   },
   "faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Answers to the most common questions about CalcHub",
-    "faq1": { "q": "How accurate are CalcHub calculations?", "a": "We use banking formulas approved by financial regulators." },
+    "subtitle": "Answers to the most common questions about Numlix",
+    "faq1": { "q": "How accurate are Numlix calculations?", "a": "We use banking formulas approved by financial regulators." },
     "faq2": { "q": "Do I need to register?", "a": "No, all calculators are completely free and available without registration." },
-    "faq3": { "q": "How does CalcHub account for my country?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each country." },
+    "faq3": { "q": "How does Numlix account for my country?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each country." },
     "faq4": { "q": "Is it safe to enter financial data?", "a": "All calculations are performed locally in your browser." },
-    "faq5": { "q": "Can I use CalcHub on mobile?", "a": "Yes, CalcHub is fully responsive." }
+    "faq5": { "q": "Can I use Numlix on mobile?", "a": "Yes, Numlix is fully responsive." }
   },
   "cta": {
     "title": "Ready to calculate?",
