@@ -1,46 +1,12 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Megaphone,
-  BarChart3,
-  Settings,
-  Users,
-  Banknote,
-  Home,
-  Tag,
-  Globe,
-  FileText,
-  ChevronDown,
-  ChevronRight,
-  Shield,
-  Palette,
-  Bell,
-  Key,
-  Plug,
+  LayoutDashboard, Megaphone, BarChart3, Settings, Users, Banknote,
+  Home, Tag, Globe, FileText, ChevronDown, ChevronRight,
+  Shield, Palette, Bell, Key, Plug, PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarSeparator,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-
-// ─── Nav structure ─────────────────────────────────────────────────────────────
+import { cn } from "@/lib/utils";
 
 type NavItem = {
   title: string;
@@ -52,21 +18,13 @@ type NavItem = {
 };
 
 const NAV: { group: string; items: NavItem[] }[] = [
-  {
-    group: "Главная",
-    items: [
-      { title: "Дашборд", url: "/admin", icon: LayoutDashboard },
-    ],
-  },
+  { group: "Главная", items: [{ title: "Дашборд", url: "/admin", icon: LayoutDashboard }] },
   {
     group: "Монетизация",
     items: [
       {
-        title: "CPA-офферы",
-        url: "/admin/cpa",
-        icon: Megaphone,
-        badge: "Live",
-        badgeVariant: "default",
+        title: "CPA-офферы", url: "/admin/cpa", icon: Megaphone,
+        badge: "Live", badgeVariant: "default",
         children: [
           { title: "Кредиты", url: "/admin/cpa#credit" },
           { title: "Ипотека", url: "/admin/cpa#mortgage" },
@@ -91,9 +49,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { title: "Страницы", url: "/admin/pages", icon: FileText },
       { title: "SEO", url: "/admin/seo", icon: Globe },
       {
-        title: "Калькуляторы",
-        url: "/admin/calculators",
-        icon: LayoutDashboard,
+        title: "Калькуляторы", url: "/admin/calculators", icon: LayoutDashboard,
         children: [
           { title: "Список", url: "/admin/calculators/list" },
           { title: "Категории", url: "/admin/calculators/categories" },
@@ -121,146 +77,172 @@ const NAV: { group: string; items: NavItem[] }[] = [
   },
 ];
 
-// ─── Single item (leaf) ────────────────────────────────────────────────────────
-
-function NavLeaf({ item, depth = 0 }: { item: NavItem; depth?: number }) {
+function NavLeaf({ item, depth = 0, collapsed }: { item: NavItem; depth?: number; collapsed: boolean }) {
   const { pathname } = useLocation();
-  const active = pathname === item.url || (item.url !== "/admin" && pathname.startsWith(item.url));
+  const navigate = useNavigate();
+  const active = pathname === item.url || (item.url !== "/admin" && pathname.startsWith(item.url.split("#")[0]));
   const Icon = item.icon;
 
   if (depth === 0) {
     return (
-      <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-          <Link to={item.url} className="flex items-center gap-2 w-full">
-            {Icon && <Icon className="h-4 w-4 shrink-0" />}
+      <button
+        onClick={() => navigate(item.url)}
+        title={collapsed ? item.title : undefined}
+        className={cn(
+          "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors text-left",
+          "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          active && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+        )}
+      >
+        {Icon && <Icon className="h-4 w-4 shrink-0" />}
+        {!collapsed && (
+          <>
             <span className="flex-1 truncate">{item.title}</span>
             {item.badge && (
               <Badge variant={item.badgeVariant ?? "default"} className="text-[10px] px-1.5 py-0 h-4 shrink-0">
                 {item.badge}
               </Badge>
             )}
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+          </>
+        )}
+      </button>
     );
   }
 
   return (
-    <SidebarMenuSubItem>
-      <SidebarMenuSubButton asChild isActive={active}>
-        <Link to={item.url} className="flex items-center gap-2 w-full">
-          <span className="flex-1 truncate">{item.title}</span>
-          {item.badge && (
-            <Badge variant={item.badgeVariant ?? "default"} className="text-[10px] px-1.5 py-0 h-4 shrink-0">
-              {item.badge}
-            </Badge>
-          )}
-        </Link>
-      </SidebarMenuSubButton>
-    </SidebarMenuSubItem>
+    <button
+      onClick={() => navigate(item.url)}
+      className={cn(
+        "flex w-full items-center gap-2 rounded-md pl-6 pr-2 py-1 text-xs transition-colors text-left",
+        "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        active && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+      )}
+    >
+      <span className="flex-1 truncate">{item.title}</span>
+      {item.badge && (
+        <Badge variant={item.badgeVariant ?? "default"} className="text-[10px] px-1.5 py-0 h-4 shrink-0">
+          {item.badge}
+        </Badge>
+      )}
+    </button>
   );
 }
 
-// ─── Collapsible parent item ───────────────────────────────────────────────────
-
-function NavParent({ item }: { item: NavItem }) {
+function NavParent({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
   const { pathname } = useLocation();
-  const isChildActive = item.children?.some(
-    (c) => pathname === c.url || pathname.startsWith(c.url.split("#")[0])
-  );
+  const navigate = useNavigate();
+  const isChildActive = item.children?.some((c) => pathname === c.url || pathname.startsWith(c.url.split("#")[0]));
   const [open, setOpen] = useState(isChildActive ?? false);
   const Icon = item.icon;
-  const active = pathname === item.url;
+  const active = pathname === item.url || !!isChildActive;
 
   return (
-    <SidebarMenuItem>
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton isActive={active || (isChildActive ?? false)} tooltip={item.title}>
-            {Icon && <Icon className="h-4 w-4 shrink-0" />}
+    <div>
+      <button
+        onClick={() => { setOpen((v) => !v); navigate(item.url); }}
+        title={collapsed ? item.title : undefined}
+        className={cn(
+          "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors text-left",
+          "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          active && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+        )}
+      >
+        {Icon && <Icon className="h-4 w-4 shrink-0" />}
+        {!collapsed && (
+          <>
             <span className="flex-1 truncate">{item.title}</span>
             {item.badge && (
               <Badge variant={item.badgeVariant ?? "default"} className="text-[10px] px-1.5 py-0 h-4 shrink-0">
                 {item.badge}
               </Badge>
             )}
-            {open ? (
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            ) : (
-              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            )}
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {item.children!.map((child) => (
-              <NavLeaf key={child.url} item={child} depth={1} />
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </Collapsible>
-    </SidebarMenuItem>
+            {open
+              ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            }
+          </>
+        )}
+      </button>
+      {open && !collapsed && (
+        <div className="mt-0.5 space-y-0.5 border-l border-sidebar-border ml-5">
+          {item.children!.map((child) => (
+            <NavLeaf key={child.url} item={child} depth={1} collapsed={false} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
-// ─── Main sidebar ──────────────────────────────────────────────────────────────
-
-export function AdminSidebar() {
-  const { state } = useSidebar();
-  const collapsed = state === "collapsed";
+export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+  const navigate = useNavigate();
 
   return (
-    <Sidebar collapsible="icon">
-      {/* Logo / Brand */}
-      <SidebarHeader className="px-3 py-3 border-b">
-        <Link to="/admin" className="flex items-center gap-2.5 min-w-0">
-          <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shrink-0">
-            <Shield className="h-4 w-4 text-primary-foreground" />
+    <aside
+      className={cn(
+        "flex flex-col h-screen bg-sidebar text-sidebar-foreground border-r shrink-0 transition-[width] duration-200",
+        collapsed ? "w-12" : "w-56"
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-center gap-2.5 px-3 py-3 border-b">
+        <button
+          onClick={() => navigate("/admin")}
+          className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shrink-0"
+          title="Дашборд"
+        >
+          <Shield className="h-4 w-4 text-primary-foreground" />
+        </button>
+        {!collapsed && (
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold leading-tight truncate">Numlix Admin</p>
+            <p className="text-[10px] text-muted-foreground">Панель управления</p>
           </div>
-          {!collapsed && (
-            <div className="min-w-0">
-              <p className="text-sm font-semibold leading-tight truncate">Numlix Admin</p>
-              <p className="text-[10px] text-muted-foreground">Панель управления</p>
-            </div>
-          )}
-        </Link>
-      </SidebarHeader>
+        )}
+      </div>
 
-      {/* Navigation */}
-      <SidebarContent>
-        {NAV.map((section, si) => (
-          <SidebarGroup key={section.group}>
-            <SidebarGroupLabel>{section.group}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) =>
-                  item.children ? (
-                    <NavParent key={item.url} item={item} />
-                  ) : (
-                    <NavLeaf key={item.url} item={item} depth={0} />
-                  )
-                )}
-              </SidebarMenu>
-            </SidebarGroupContent>
-            {si < NAV.length - 1 && <SidebarSeparator className="mt-2" />}
-          </SidebarGroup>
+      {/* Nav */}
+      <div className="flex-1 overflow-y-auto py-2 space-y-4">
+        {NAV.map((section) => (
+          <div key={section.group} className="px-2">
+            {!collapsed && (
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider px-2 mb-1">
+                {section.group}
+              </p>
+            )}
+            <div className="space-y-0.5">
+              {section.items.map((item) =>
+                item.children
+                  ? <NavParent key={item.url} item={item} collapsed={collapsed} />
+                  : <NavLeaf key={item.url} item={item} depth={0} collapsed={collapsed} />
+              )}
+            </div>
+          </div>
         ))}
-      </SidebarContent>
+      </div>
 
       {/* Footer */}
-      <SidebarFooter className="border-t px-3 py-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="На сайт">
-              <Link to="/" className="flex items-center gap-2 text-muted-foreground">
-                <Home className="h-4 w-4 shrink-0" />
-                {!collapsed && <span className="text-xs">На сайт</span>}
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+      <div className="border-t px-2 py-2 space-y-1">
+        <button
+          onClick={() => navigate("/")}
+          title="На сайт"
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+        >
+          <Home className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>На сайт</span>}
+        </button>
+        <button
+          onClick={onToggle}
+          title={collapsed ? "Развернуть" : "Свернуть"}
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+        >
+          {collapsed
+            ? <PanelLeftOpen className="h-4 w-4 shrink-0" />
+            : <PanelLeftClose className="h-4 w-4 shrink-0" />
+          }
+          {!collapsed && <span>Свернуть</span>}
+        </button>
+      </div>
+    </aside>
   );
 }
