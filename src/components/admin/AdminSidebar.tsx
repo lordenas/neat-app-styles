@@ -2,8 +2,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard, Megaphone, BarChart3, Settings, Users, Banknote,
   Home, Tag, Globe, FileText, ChevronDown, ChevronRight,
-  Shield, Palette, Bell, Key, Plug, PanelLeftClose, PanelLeftOpen,
+  Shield, Palette, Bell, Key, Plug, PanelLeftClose, PanelLeftOpen, LogOut,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
