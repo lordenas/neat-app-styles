@@ -134,7 +134,6 @@ function NavLeaf({ item, depth = 0 }: { item: NavItem; depth?: number }) {
       <SidebarMenuItem>
         <SidebarMenuButton
           isActive={active}
-          tooltip={item.title}
           onClick={() => navigate(item.url)}
         >
           {Icon && <Icon className="h-4 w-4 shrink-0" />}
