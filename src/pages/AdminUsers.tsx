@@ -51,11 +51,19 @@ const MOCK_USERS: MockUser[] = [
 ];
 
 const PLAN_LABELS: Record<Plan, string> = { free: "Free", pro: "Pro", business: "Business" };
-const PLAN_VARIANTS: Record<Plan, "secondary" | "default" | "outline"> = {
-  free: "secondary",
-  pro: "default",
-  business: "outline",
-};
+
+function PlanBadge({ plan }: { plan: Plan }) {
+  const cls: Record<Plan, string> = {
+    free: "bg-muted text-muted-foreground border border-border",
+    pro: "bg-primary text-primary-foreground",
+    business: "bg-accent text-accent-foreground border border-border-strong",
+  };
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${cls[plan]}`}>
+      {PLAN_LABELS[plan]}
+    </span>
+  );
+}
 
 function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (col !== sortKey) return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />;
