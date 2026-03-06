@@ -1,5 +1,5 @@
 {
-  "site": { "name": "CalcHub", "tagline": "Finanzrechner für jedes Land", "description": "Genaue Berechnungen mit Bankformeln für 20+ Länder" },
+  "site": { "name": "Numlix", "tagline": "Finanzrechner für jedes Land", "description": "Genaue Berechnungen mit Bankformeln für 20+ Länder" },
   "nav": { "home": "Startseite", "calculators": "Rechner", "skipToContent": "Zum Inhalt springen" },
   "hero": {
     "title": "Finanzrechner", "subtitle": "für jedes Land", "description": "Kredite, Hypotheken, Einlagen, Steuern — präzise Berechnungen mit lokalen Vorschriften.",
