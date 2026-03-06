@@ -155,6 +155,7 @@ const App = () => (
                   <Route path="/examples" element={<ExamplesIndex />} />
                   <Route path="/examples/:categorySlug" element={<ExamplesCategory />} />
                   <Route path="/examples/:categorySlug/:calcSlug" element={<ExamplesCalc />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/cpa" element={<AdminCpa />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
