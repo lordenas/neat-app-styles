@@ -379,7 +379,7 @@ export default function AdminUserDetail() {
               <div className="rounded-lg border bg-card overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableRow className="bg-muted/60 hover:bg-muted/60">
                       <TableHead className="text-xs font-medium">Период</TableHead>
                       <TableHead className="text-xs font-medium">Тариф</TableHead>
                       <TableHead className="text-xs font-medium">Сумма</TableHead>
