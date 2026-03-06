@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, GripVertical, ToggleLeft, ToggleRight, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, GripVertical, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import type { CpaOffer } from "@/components/cpa/CpaBlock";
 import { CREDIT_OFFERS, MORTGAGE_OFFERS, REFINANCE_OFFERS } from "@/components/cpa/offers";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
