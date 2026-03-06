@@ -1,5 +1,5 @@
 {
-  "site": { "name": "CalcHub", "tagline": "Calculatrices financières pour chaque pays", "description": "Calculs précis avec des formules bancaires pour 20+ pays" },
+  "site": { "name": "Numlix", "tagline": "Calculatrices financières pour chaque pays", "description": "Calculs précis avec des formules bancaires pour 20+ pays" },
   "nav": { "home": "Accueil", "calculators": "Calculatrices", "skipToContent": "Aller au contenu" },
   "hero": {
     "title": "Calculatrices financières", "subtitle": "pour chaque pays", "description": "Crédits, hypothèques, dépôts, impôts — calculs précis adaptés à la réglementation locale.",
