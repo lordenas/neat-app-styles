@@ -224,7 +224,11 @@ export default function AdminUsers() {
                 </TableRow>
               ) : (
                 filtered.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-muted/30">
+                  <TableRow
+                    key={user.id}
+                    className="hover:bg-muted/30 cursor-pointer"
+                    onClick={() => navigate(`/admin/users/${user.id}`)}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-primary-light flex items-center justify-center shrink-0">
