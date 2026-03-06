@@ -175,11 +175,16 @@ function NavParent({ item }: { item: NavItem }) {
 
   return (
     <SidebarMenuItem>
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton isActive={active || (isChildActive ?? false)} tooltip={item.title}>
+      <Collapsible open={open} onOpenChange={setOpen} className="w-full">
+        <CollapsibleTrigger className="w-full">
+          <SidebarMenuButton
+            isActive={active || (isChildActive ?? false)}
+            tooltip={item.title}
+            className="w-full"
+            onClick={() => setOpen((v) => !v)}
+          >
             {Icon && <Icon className="h-4 w-4 shrink-0" />}
-            <span className="flex-1 truncate">{item.title}</span>
+            <span className="flex-1 truncate text-left">{item.title}</span>
             {item.badge && (
               <Badge variant={item.badgeVariant ?? "default"} className="text-[10px] px-1.5 py-0 h-4 shrink-0">
                 {item.badge}
