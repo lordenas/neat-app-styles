@@ -132,7 +132,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between px-4 py-3 border-b">
               <p className="font-semibold text-sm">Топ офферов по кликам</p>
               <Button variant="ghost" size="sm" asChild className="text-xs h-7 gap-1 text-muted-foreground">
-                <Link to="/admin/cpa">Все офферы <ArrowRight className="h-3 w-3" /></Link>
+                <Link to="/admin/cpa"><span className="flex items-center gap-1">Все офферы <ArrowRight className="h-3 w-3" /></span></Link>
               </Button>
             </div>
             <div className="divide-y">
