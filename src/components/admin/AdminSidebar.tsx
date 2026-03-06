@@ -239,6 +239,14 @@ export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
           {!collapsed && <span>На сайт</span>}
         </button>
         <button
+          onClick={handleSignOut}
+          title="Выйти"
+          className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          {!collapsed && <span>Выйти</span>}
+        </button>
+        <button
           onClick={onToggle}
           title={collapsed ? "Развернуть" : "Свернуть"}
           className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
