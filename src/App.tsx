@@ -75,7 +75,6 @@ const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculat
 const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
-import { AdminGuard } from "@/components/admin/AdminGuard";
 
 function PageSkeleton() {
   return (
