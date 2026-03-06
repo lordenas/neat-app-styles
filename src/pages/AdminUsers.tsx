@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -72,6 +73,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 }
 
 export default function AdminUsers() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [planFilter, setPlanFilter] = useState<Plan | "all">("all");
   const [statusFilter, setStatusFilter] = useState<"active" | "inactive" | "all">("all");
@@ -222,7 +224,11 @@ export default function AdminUsers() {
                 </TableRow>
               ) : (
                 filtered.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-muted/30">
+                  <TableRow
+                    key={user.id}
+                    className="hover:bg-muted/30 cursor-pointer"
+                    onClick={() => navigate(`/admin/users/${user.id}`)}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-primary-light flex items-center justify-center shrink-0">
