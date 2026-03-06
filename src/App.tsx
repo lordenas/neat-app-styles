@@ -71,6 +71,7 @@ const InsuranceTenureCalculator = lazy(() => import("./pages/calculators/Insuran
 const SubsistenceMinimumCalculator = lazy(() => import("./pages/calculators/SubsistenceMinimumCalculator"));
 const AlimonyIndexationCalculator = lazy(() => import("./pages/calculators/AlimonyIndexationCalculator"));
 const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculator"));
+const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 
 function PageSkeleton() {
   return (
@@ -153,6 +154,7 @@ const App = () => (
                   <Route path="/examples" element={<ExamplesIndex />} />
                   <Route path="/examples/:categorySlug" element={<ExamplesCategory />} />
                   <Route path="/examples/:categorySlug/:calcSlug" element={<ExamplesCalc />} />
+                  <Route path="/admin/cpa" element={<AdminCpa />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
