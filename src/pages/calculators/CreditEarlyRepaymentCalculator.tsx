@@ -1061,6 +1061,15 @@ export default function CreditEarlyRepaymentCalculatorPage() {
         </div>
       </div>
 
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Выгодные кредиты от банков-партнёров"
+          subtitle="Рассчитали? Теперь выберите лучшее предложение"
+          offers={CREDIT_OFFERS}
+        />
+      </div>
+
       {/* Save dialog */}
       <Dialog open={saveDialogOpen} onOpenChange={setSaveDialogOpen}>
         <DialogContent>
