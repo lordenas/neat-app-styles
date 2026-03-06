@@ -72,6 +72,7 @@ const SubsistenceMinimumCalculator = lazy(() => import("./pages/calculators/Subs
 const AlimonyIndexationCalculator = lazy(() => import("./pages/calculators/AlimonyIndexationCalculator"));
 const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculator"));
 const AdminCpa = lazy(() => import("./pages/AdminCpa"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 
 function PageSkeleton() {
   return (
