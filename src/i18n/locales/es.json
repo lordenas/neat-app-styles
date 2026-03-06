@@ -29,19 +29,19 @@
     "roiCalc": { "title": "Calculadora ROI", "description": "Retorno de inversión y período de recuperación" }
   },
   "features": {
-    "title": "¿Por qué CalcHub?",
+    "title": "¿Por qué Numlix?",
     "accurate": { "title": "Fórmulas precisas", "description": "Fórmulas bancarias aprobadas por reguladores" },
     "local": { "title": "Específico del país", "description": "Impuestos y leyes adaptados a su región" },
     "free": { "title": "Totalmente gratis", "description": "Sin registro, sin límites, sin anuncios" },
     "private": { "title": "Privado", "description": "Todos los cálculos se realizan en su navegador" }
   },
   "faq": {
-    "title": "Preguntas frecuentes", "subtitle": "Respuestas a las preguntas más comunes sobre CalcHub",
+    "title": "Preguntas frecuentes", "subtitle": "Respuestas a las preguntas más comunes sobre Numlix",
     "faq1": { "q": "¿Qué tan precisos son los cálculos?", "a": "Utilizamos fórmulas bancarias aprobadas por reguladores financieros." },
     "faq2": { "q": "¿Necesito registrarme?", "a": "No, todas las calculadoras son gratuitas y sin registro." },
     "faq3": { "q": "¿Cómo tiene en cuenta mi país?", "a": "Adaptamos las fórmulas a la legislación fiscal de cada país." },
     "faq4": { "q": "¿Son seguros mis datos?", "a": "Todos los cálculos se realizan localmente en su navegador." },
-    "faq5": { "q": "¿Puedo usar CalcHub en el móvil?", "a": "Sí, CalcHub es totalmente responsive." }
+    "faq5": { "q": "¿Puedo usar Numlix en el móvil?", "a": "Sí, Numlix es totalmente responsive." }
   },
   "cta": { "title": "¿Listo para calcular?", "description": "Elija una calculadora y obtenga un resultado preciso en segundos.", "button": "Ir a la calculadora" },
   "footer": { "rights": "Todos los derechos reservados", "disclaimer": "Los resultados son solo informativos y no constituyen asesoramiento financiero." },

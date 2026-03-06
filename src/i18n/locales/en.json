@@ -59,12 +59,12 @@
   },
   "faq": {
     "title": "Frequently Asked Questions",
-    "subtitle": "Answers to the most common questions about CalcHub",
-    "faq1": { "q": "How accurate are CalcHub calculations?", "a": "We use banking formulas approved by financial regulators. Results match leading banks' calculations down to the cent." },
+    "subtitle": "Answers to the most common questions about Numlix",
+    "faq1": { "q": "How accurate are Numlix calculations?", "a": "We use banking formulas approved by financial regulators. Results match leading banks' calculations down to the cent." },
     "faq2": { "q": "Do I need to register to use the calculators?", "a": "No, all calculators are completely free and available without registration. Just open the calculator you need and start calculating." },
-    "faq3": { "q": "How does CalcHub account for my country's specifics?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each of the 20+ supported countries." },
+    "faq3": { "q": "How does Numlix account for my country's specifics?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each of the 20+ supported countries." },
     "faq4": { "q": "Is it safe to enter financial data?", "a": "Absolutely. All calculations are performed locally in your browser. We do not send or store your data on any server." },
-    "faq5": { "q": "Can I use CalcHub on my mobile phone?", "a": "Yes, CalcHub is fully responsive. All calculators work equally well on any screen size." }
+    "faq5": { "q": "Can I use Numlix on my mobile phone?", "a": "Yes, Numlix is fully responsive. All calculators work equally well on any screen size." }
   },
   "cta": {
     "title": "Ready to calculate?",
