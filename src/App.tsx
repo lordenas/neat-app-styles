@@ -75,6 +75,7 @@ const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculat
 const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 function PageSkeleton() {
   return (
@@ -160,6 +161,7 @@ const App = () => (
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
                   <Route path="/admin/cpa" element={<AdminGuard><AdminCpa /></AdminGuard>} />
+                  <Route path="/admin/users" element={<AdminGuard><AdminUsers /></AdminGuard>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
