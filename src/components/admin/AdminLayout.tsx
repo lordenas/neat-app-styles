@@ -14,7 +14,7 @@ export function AdminLayout({ children, title, description, actions }: Props) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
+    <div className="h-screen flex w-full bg-background overflow-hidden">
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
 
       <div className="flex-1 flex flex-col min-w-0">
