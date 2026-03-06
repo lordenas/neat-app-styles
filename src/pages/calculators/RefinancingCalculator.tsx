@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { CpaBlock } from "@/components/cpa/CpaBlock";
+import { REFINANCE_OFFERS } from "@/components/cpa/offers";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -342,6 +344,15 @@ export default function RefinancingCalculatorPage() {
           </Card>
         )}
 
+      </div>
+
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Выгодные предложения по рефинансированию"
+          subtitle="Снизьте ставку — банки готовы предложить лучшие условия"
+          offers={REFINANCE_OFFERS}
+        />
       </div>
     </CalculatorLayout>
   );

@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import { CpaBlock } from "@/components/cpa/CpaBlock";
+import { CREDIT_OFFERS } from "@/components/cpa/offers";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
@@ -1059,6 +1061,15 @@ export default function CreditEarlyRepaymentCalculatorPage() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Выгодные кредиты от банков-партнёров"
+          subtitle="Рассчитали? Теперь выберите лучшее предложение"
+          offers={CREDIT_OFFERS}
+        />
       </div>
 
       {/* Save dialog */}

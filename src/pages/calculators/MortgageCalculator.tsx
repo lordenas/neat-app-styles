@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { CpaBlock } from "@/components/cpa/CpaBlock";
+import { MORTGAGE_OFFERS } from "@/components/cpa/offers";
 import { useTranslation } from "react-i18next";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -346,6 +348,15 @@ export default function MortgageCalculatorPage() {
             </CardContent>
           </Card>
         )}
+      </div>
+
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Лучшие ипотечные предложения"
+          subtitle="Рассчитали платёж? Оформите ипотеку по выгодной ставке"
+          offers={MORTGAGE_OFFERS}
+        />
       </div>
     </CalculatorLayout>
   );
