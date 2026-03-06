@@ -162,8 +162,8 @@ function genActivity(userId: string): MockActivity[] {
 
 const PLAN_LABELS: Record<Plan, string> = { free: "Free", pro: "Pro", business: "Business" };
 const PLAN_CLS: Record<Plan, string> = {
-  free: "bg-muted text-muted-foreground border border-border",
-  pro: "bg-primary text-primary-foreground",
+  free: "bg-muted text-muted-foreground border border-border-strong",
+  pro: "bg-primary/15 text-primary border border-primary/30",
   business: "bg-accent text-accent-foreground border border-border-strong",
 };
 
@@ -291,7 +291,7 @@ export default function AdminUserDetail() {
             <div className="rounded-lg border bg-card overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                  <TableRow className="bg-muted/60 hover:bg-muted/60">
                     <TableHead className="text-xs font-medium">Название</TableHead>
                     <TableHead className="text-xs font-medium hidden sm:table-cell">Полей</TableHead>
                     <TableHead className="text-xs font-medium hidden md:table-cell">Просмотров</TableHead>
@@ -323,7 +323,7 @@ export default function AdminUserDetail() {
                   ))}
                 </TableBody>
               </Table>
-              <div className="px-4 py-2.5 border-t bg-muted/20 text-xs text-muted-foreground">
+              <div className="px-4 py-2.5 border-t bg-muted/50 text-xs text-muted-foreground">
                 {calcs.length} калькуляторов · {calcs.reduce((s, c) => s + c.views, 0).toLocaleString("ru")} просмотров
               </div>
             </div>
@@ -334,7 +334,7 @@ export default function AdminUserDetail() {
             <div className="rounded-lg border bg-card overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/40 hover:bg-muted/40">
+                  <TableRow className="bg-muted/60 hover:bg-muted/60">
                     <TableHead className="text-xs font-medium">Эндпоинт</TableHead>
                     <TableHead className="text-xs font-medium">Статус</TableHead>
                     <TableHead className="text-xs font-medium hidden sm:table-cell">Время</TableHead>
@@ -363,7 +363,7 @@ export default function AdminUserDetail() {
                   ))}
                 </TableBody>
               </Table>
-              <div className="px-4 py-2.5 border-t bg-muted/20 text-xs text-muted-foreground">
+              <div className="px-4 py-2.5 border-t bg-muted/50 text-xs text-muted-foreground">
                 {totalApiRequests} запросов · {successReqs} успешных ({Math.round((successReqs / totalApiRequests) * 100)}%)
               </div>
             </div>
@@ -379,7 +379,7 @@ export default function AdminUserDetail() {
               <div className="rounded-lg border bg-card overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-muted/40 hover:bg-muted/40">
+                    <TableRow className="bg-muted/60 hover:bg-muted/60">
                       <TableHead className="text-xs font-medium">Период</TableHead>
                       <TableHead className="text-xs font-medium">Тариф</TableHead>
                       <TableHead className="text-xs font-medium">Сумма</TableHead>
@@ -419,7 +419,7 @@ export default function AdminUserDetail() {
                     ))}
                   </TableBody>
                 </Table>
-                <div className="px-4 py-2.5 border-t bg-muted/20 text-xs text-muted-foreground">
+                <div className="px-4 py-2.5 border-t bg-muted/50 text-xs text-muted-foreground">
                   Итого: ${payments.filter(p => p.status === "paid").reduce((s, p) => s + p.amount, 0)}
                 </div>
               </div>
