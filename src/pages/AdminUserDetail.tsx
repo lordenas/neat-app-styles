@@ -419,7 +419,7 @@ export default function AdminUserDetail() {
                     ))}
                   </TableBody>
                 </Table>
-                <div className="px-4 py-2.5 border-t bg-muted/20 text-xs text-muted-foreground">
+                <div className="px-4 py-2.5 border-t bg-muted/50 text-xs text-muted-foreground">
                   Итого: ${payments.filter(p => p.status === "paid").reduce((s, p) => s + p.amount, 0)}
                 </div>
               </div>
