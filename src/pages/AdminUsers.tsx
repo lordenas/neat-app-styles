@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -51,11 +50,19 @@ const MOCK_USERS: MockUser[] = [
 ];
 
 const PLAN_LABELS: Record<Plan, string> = { free: "Free", pro: "Pro", business: "Business" };
-const PLAN_VARIANTS: Record<Plan, "secondary" | "default" | "outline"> = {
-  free: "secondary",
-  pro: "default",
-  business: "outline",
-};
+
+function PlanBadge({ plan }: { plan: Plan }) {
+  const cls: Record<Plan, string> = {
+    free: "bg-muted text-muted-foreground border border-border",
+    pro: "bg-primary text-primary-foreground",
+    business: "bg-accent text-accent-foreground border border-border-strong",
+  };
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${cls[plan]}`}>
+      {PLAN_LABELS[plan]}
+    </span>
+  );
+}
 
 function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
   if (col !== sortKey) return <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground/50" />;
@@ -218,7 +225,7 @@ export default function AdminUsers() {
                   <TableRow key={user.id} className="hover:bg-muted/30">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-full bg-primary-light flex items-center justify-center shrink-0">
                           <span className="text-xs font-semibold text-primary">
                             {user.display_name.charAt(0).toUpperCase()}
                           </span>
@@ -231,13 +238,11 @@ export default function AdminUsers() {
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={PLAN_VARIANTS[user.plan]} className="text-xs">
-                        {PLAN_LABELS[user.plan]}
-                      </Badge>
+                      <PlanBadge plan={user.plan} />
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <span className={`inline-flex items-center gap-1.5 text-xs ${user.status === "active" ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${user.status === "active" ? "bg-green-500" : "bg-muted-foreground"}`} />
+                      <span className={`inline-flex items-center gap-1.5 text-xs ${user.status === "active" ? "text-success" : "text-muted-foreground"}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${user.status === "active" ? "bg-success" : "bg-muted-foreground"}`} />
                         {user.status === "active" ? "Активен" : "Неактивен"}
                       </span>
                     </TableCell>
