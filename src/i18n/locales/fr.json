@@ -1,5 +1,5 @@
 {
-  "site": { "name": "CalcHub", "tagline": "Calculatrices financières pour chaque pays", "description": "Calculs précis avec des formules bancaires pour 20+ pays" },
+  "site": { "name": "Numlix", "tagline": "Calculatrices financières pour chaque pays", "description": "Calculs précis avec des formules bancaires pour 20+ pays" },
   "nav": { "home": "Accueil", "calculators": "Calculatrices", "skipToContent": "Aller au contenu" },
   "hero": {
     "title": "Calculatrices financières", "subtitle": "pour chaque pays", "description": "Crédits, hypothèques, dépôts, impôts — calculs précis adaptés à la réglementation locale.",
@@ -29,19 +29,19 @@
     "roiCalc": { "title": "Calculatrice ROI", "description": "Retour sur investissement et délai de récupération" }
   },
   "features": {
-    "title": "Pourquoi CalcHub ?",
+    "title": "Pourquoi Numlix ?",
     "accurate": { "title": "Formules précises", "description": "Formules bancaires approuvées par les régulateurs" },
     "local": { "title": "Spécifique au pays", "description": "Impôts et lois adaptés à votre région" },
     "free": { "title": "Entièrement gratuit", "description": "Sans inscription, sans limites, sans publicité" },
     "private": { "title": "Confidentiel", "description": "Tous les calculs se font dans votre navigateur" }
   },
   "faq": {
-    "title": "Questions fréquentes", "subtitle": "Réponses aux questions les plus courantes sur CalcHub",
+    "title": "Questions fréquentes", "subtitle": "Réponses aux questions les plus courantes sur Numlix",
     "faq1": { "q": "Quelle est la précision des calculs ?", "a": "Nous utilisons des formules bancaires approuvées par les régulateurs financiers." },
     "faq2": { "q": "Faut-il s'inscrire ?", "a": "Non, toutes les calculatrices sont gratuites et accessibles sans inscription." },
-    "faq3": { "q": "Comment CalcHub prend-il en compte mon pays ?", "a": "Nous adaptons les formules à la législation fiscale de chaque pays." },
+    "faq3": { "q": "Comment Numlix prend-il en compte mon pays ?", "a": "Nous adaptons les formules à la législation fiscale de chaque pays." },
     "faq4": { "q": "Mes données sont-elles en sécurité ?", "a": "Tous les calculs sont effectués localement dans votre navigateur." },
-    "faq5": { "q": "Puis-je utiliser CalcHub sur mobile ?", "a": "Oui, CalcHub est entièrement responsive." }
+    "faq5": { "q": "Puis-je utiliser Numlix sur mobile ?", "a": "Oui, Numlix est entièrement responsive." }
   },
   "cta": { "title": "Prêt à calculer ?", "description": "Choisissez une calculatrice et obtenez un résultat précis en secondes.", "button": "Aller à la calculatrice" },
   "footer": { "rights": "Tous droits réservés", "disclaimer": "Les résultats sont à titre informatif uniquement." },

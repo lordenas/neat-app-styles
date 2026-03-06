@@ -1,6 +1,6 @@
 {
-  "name": "CalcHub — Финансовые калькуляторы",
-  "short_name": "CalcHub",
+  "name": "Numlix — Финансовые калькуляторы",
+  "short_name": "Numlix",
   "description": "Бесплатные финансовые калькуляторы: кредит, ипотека, вклады",
   "start_url": "/",
   "display": "standalone",

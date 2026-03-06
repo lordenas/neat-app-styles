@@ -174,7 +174,7 @@ export async function exportCalculationPdf(data: PdfExportData) {
   // --- Footer ---
   doc.setFontSize(7);
   doc.setTextColor(160, 160, 160);
-  doc.text(`CalcHub — ${new Date().toLocaleDateString("ru")}`, margin, doc.internal.pageSize.getHeight() - 8);
+  doc.text(`Numlix — ${new Date().toLocaleDateString("ru")}`, margin, doc.internal.pageSize.getHeight() - 8);
 
-  doc.save(`CalcHub_${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save(`Numlix_${new Date().toISOString().slice(0, 10)}.pdf`);
 }

@@ -1,5 +1,5 @@
 {
-  "site": { "name": "CalcHub", "tagline": "Finanzrechner für jedes Land", "description": "Genaue Berechnungen mit Bankformeln für 20+ Länder" },
+  "site": { "name": "Numlix", "tagline": "Finanzrechner für jedes Land", "description": "Genaue Berechnungen mit Bankformeln für 20+ Länder" },
   "nav": { "home": "Startseite", "calculators": "Rechner", "skipToContent": "Zum Inhalt springen" },
   "hero": {
     "title": "Finanzrechner", "subtitle": "für jedes Land", "description": "Kredite, Hypotheken, Einlagen, Steuern — präzise Berechnungen mit lokalen Vorschriften.",
@@ -29,19 +29,19 @@
     "roiCalc": { "title": "ROI-Rechner", "description": "Kapitalrendite und Amortisationszeit berechnen" }
   },
   "features": {
-    "title": "Warum CalcHub?",
+    "title": "Warum Numlix?",
     "accurate": { "title": "Genaue Formeln", "description": "Bankformeln, die von Regulierern genehmigt sind" },
     "local": { "title": "Landesspezifisch", "description": "Steuern und Gesetze an Ihre Region angepasst" },
     "free": { "title": "Völlig kostenlos", "description": "Ohne Anmeldung, ohne Grenzen, ohne Werbung" },
     "private": { "title": "Privat", "description": "Alle Berechnungen erfolgen in Ihrem Browser" }
   },
   "faq": {
-    "title": "Häufige Fragen", "subtitle": "Antworten auf die häufigsten Fragen zu CalcHub",
-    "faq1": { "q": "Wie genau sind die CalcHub-Berechnungen?", "a": "Wir verwenden von Finanzaufsichtsbehörden genehmigte Bankformeln." },
+    "title": "Häufige Fragen", "subtitle": "Antworten auf die häufigsten Fragen zu Numlix",
+    "faq1": { "q": "Wie genau sind die Numlix-Berechnungen?", "a": "Wir verwenden von Finanzaufsichtsbehörden genehmigte Bankformeln." },
     "faq2": { "q": "Muss ich mich registrieren?", "a": "Nein, alle Rechner sind kostenlos und ohne Registrierung verfügbar." },
-    "faq3": { "q": "Wie berücksichtigt CalcHub mein Land?", "a": "Wir passen Formeln an Steuerrecht, Zinssätze und Standards jedes Landes an." },
+    "faq3": { "q": "Wie berücksichtigt Numlix mein Land?", "a": "Wir passen Formeln an Steuerrecht, Zinssätze und Standards jedes Landes an." },
     "faq4": { "q": "Ist die Eingabe von Finanzdaten sicher?", "a": "Alle Berechnungen erfolgen lokal in Ihrem Browser." },
-    "faq5": { "q": "Kann ich CalcHub auf dem Handy nutzen?", "a": "Ja, CalcHub ist vollständig responsiv." }
+    "faq5": { "q": "Kann ich Numlix auf dem Handy nutzen?", "a": "Ja, Numlix ist vollständig responsiv." }
   },
   "cta": { "title": "Bereit zu rechnen?", "description": "Wählen Sie einen Rechner und erhalten Sie in Sekunden ein genaues Ergebnis.", "button": "Zum Rechner" },
   "footer": { "rights": "Alle Rechte vorbehalten", "disclaimer": "Berechnungsergebnisse dienen nur zu Informationszwecken." },
