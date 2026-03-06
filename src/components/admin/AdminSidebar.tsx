@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Megaphone,
@@ -32,11 +32,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -123,6 +123,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
 
 function NavLeaf({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const active =
     pathname === item.url ||
     (item.url !== "/admin" && pathname.startsWith(item.url.split("#")[0]));
@@ -131,28 +132,12 @@ function NavLeaf({ item, depth = 0 }: { item: NavItem; depth?: number }) {
   if (depth === 0) {
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
-          <Link to={item.url}>
-            {Icon && <Icon className="h-4 w-4 shrink-0" />}
-            <span className="flex-1 truncate">{item.title}</span>
-            {item.badge && (
-              <Badge
-                variant={item.badgeVariant ?? "default"}
-                className="text-[10px] px-1.5 py-0 h-4 shrink-0"
-              >
-                {item.badge}
-              </Badge>
-            )}
-          </Link>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    );
-  }
-
-  return (
-    <SidebarMenuSubItem>
-      <SidebarMenuSubButton asChild isActive={active}>
-        <Link to={item.url}>
+        <SidebarMenuButton
+          isActive={active}
+          tooltip={item.title}
+          onClick={() => navigate(item.url)}
+        >
+          {Icon && <Icon className="h-4 w-4 shrink-0" />}
           <span className="flex-1 truncate">{item.title}</span>
           {item.badge && (
             <Badge
@@ -162,16 +147,42 @@ function NavLeaf({ item, depth = 0 }: { item: NavItem; depth?: number }) {
               {item.badge}
             </Badge>
           )}
-        </Link>
-      </SidebarMenuSubButton>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+
+  // Sub-item: plain link styled inline
+  return (
+    <SidebarMenuSubItem>
+      <Link
+        to={item.url}
+        className={cn(
+          "flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sm",
+          "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          "transition-colors w-full",
+          active && "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+        )}
+      >
+        <span className="flex-1 truncate">{item.title}</span>
+        {item.badge && (
+          <Badge
+            variant={item.badgeVariant ?? "default"}
+            className="text-[10px] px-1.5 py-0 h-4 shrink-0"
+          >
+            {item.badge}
+          </Badge>
+        )}
+      </Link>
     </SidebarMenuSubItem>
   );
 }
 
-// ─── Parent item with inline toggle (avoids nested <button>) ─────────────────
+// ─── Parent item with inline toggle ──────────────────────────────────────────
 
 function NavParent({ item }: { item: NavItem }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const isChildActive = item.children?.some(
     (c) => pathname === c.url || pathname.startsWith(c.url.split("#")[0])
   );
@@ -184,7 +195,10 @@ function NavParent({ item }: { item: NavItem }) {
       <SidebarMenuButton
         isActive={active}
         tooltip={item.title}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          setOpen((v) => !v);
+          navigate(item.url);
+        }}
       >
         {Icon && <Icon className="h-4 w-4 shrink-0" />}
         <span className="flex-1 truncate">{item.title}</span>
@@ -219,11 +233,15 @@ function NavParent({ item }: { item: NavItem }) {
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const navigate = useNavigate();
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="px-3 py-3 border-b">
-        <Link to="/admin" className="flex items-center gap-2.5 min-w-0">
+        <button
+          onClick={() => navigate("/admin")}
+          className="flex items-center gap-2.5 min-w-0 w-full text-left"
+        >
           <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shrink-0">
             <Shield className="h-4 w-4 text-primary-foreground" />
           </div>
@@ -233,7 +251,7 @@ export function AdminSidebar() {
               <p className="text-[10px] text-muted-foreground">Панель управления</p>
             </div>
           )}
-        </Link>
+        </button>
       </SidebarHeader>
 
       <SidebarContent>
@@ -259,11 +277,12 @@ export function AdminSidebar() {
       <SidebarFooter className="border-t px-3 py-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="На сайт">
-              <Link to="/">
-                <Home className="h-4 w-4 shrink-0" />
-                <span className="text-xs">На сайт</span>
-              </Link>
+            <SidebarMenuButton
+              tooltip="На сайт"
+              onClick={() => navigate("/")}
+            >
+              <Home className="h-4 w-4 shrink-0" />
+              <span className="text-xs">На сайт</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
