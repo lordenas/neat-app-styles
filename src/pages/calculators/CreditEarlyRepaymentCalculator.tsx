@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from "react";
+import { CpaBlock } from "@/components/cpa/CpaBlock";
+import { CREDIT_OFFERS } from "@/components/cpa/offers";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
