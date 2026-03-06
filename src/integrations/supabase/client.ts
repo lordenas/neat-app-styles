@@ -2,8 +2,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+const viteEnv = (import.meta as ImportMeta | undefined)?.env;
+const SUPABASE_URL = viteEnv?.VITE_SUPABASE_URL;
+const SUPABASE_PUBLISHABLE_KEY = viteEnv?.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
@@ -11,8 +12,22 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 const resolvedSupabaseUrl = SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const resolvedSupabaseKey =
   SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "";
+const hasSupabaseConfig = Boolean(resolvedSupabaseUrl && resolvedSupabaseKey);
 
-export const supabase = createClient<Database>(resolvedSupabaseUrl, resolvedSupabaseKey, {
+const supabaseUrl = hasSupabaseConfig
+  ? resolvedSupabaseUrl
+  : "https://placeholder.supabase.co";
+const supabaseKey = hasSupabaseConfig
+  ? resolvedSupabaseKey
+  : "placeholder-anon-key";
+
+if (!hasSupabaseConfig && typeof window !== "undefined") {
+  console.warn(
+    "[supabase] Missing SUPABASE env vars. Using placeholder client. Set VITE_SUPABASE_URL/VITE_SUPABASE_PUBLISHABLE_KEY or NEXT_PUBLIC_* equivalents.",
+  );
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
   auth: {
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     persistSession: true,

@@ -55,9 +55,15 @@
 
     --shadow-color: 214 20% 50%;
     --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.08), 0 2px 4px -2px hsl(var(--shadow-color) / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.08), 0 4px 6px -4px hsl(var(--shadow-color) / 0.04);
-    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.1), 0 8px 10px -6px hsl(var(--shadow-color) / 0.05);
+    --shadow-md:
+      0 4px 6px -1px hsl(var(--shadow-color) / 0.08),
+      0 2px 4px -2px hsl(var(--shadow-color) / 0.05);
+    --shadow-lg:
+      0 10px 15px -3px hsl(var(--shadow-color) / 0.08),
+      0 4px 6px -4px hsl(var(--shadow-color) / 0.04);
+    --shadow-xl:
+      0 20px 25px -5px hsl(var(--shadow-color) / 0.1),
+      0 8px 10px -6px hsl(var(--shadow-color) / 0.05);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -124,9 +130,15 @@
 
     --shadow-color: 220 40% 3%;
     --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.2);
-    --shadow-md: 0 4px 6px -1px hsl(var(--shadow-color) / 0.3), 0 2px 4px -2px hsl(var(--shadow-color) / 0.2);
-    --shadow-lg: 0 10px 15px -3px hsl(var(--shadow-color) / 0.35), 0 4px 6px -4px hsl(var(--shadow-color) / 0.2);
-    --shadow-xl: 0 20px 25px -5px hsl(var(--shadow-color) / 0.4), 0 8px 10px -6px hsl(var(--shadow-color) / 0.25);
+    --shadow-md:
+      0 4px 6px -1px hsl(var(--shadow-color) / 0.3),
+      0 2px 4px -2px hsl(var(--shadow-color) / 0.2);
+    --shadow-lg:
+      0 10px 15px -3px hsl(var(--shadow-color) / 0.35),
+      0 4px 6px -4px hsl(var(--shadow-color) / 0.2);
+    --shadow-xl:
+      0 20px 25px -5px hsl(var(--shadow-color) / 0.4),
+      0 8px 10px -6px hsl(var(--shadow-color) / 0.25);
   }
 }
 
@@ -142,12 +154,20 @@
   header,
   footer,
   main {
-    transition: background-color 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out, box-shadow 200ms ease-out;
+    transition:
+      background-color 200ms ease-out,
+      border-color 200ms ease-out,
+      color 200ms ease-out,
+      box-shadow 200ms ease-out;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 
   h1 {
@@ -196,21 +216,34 @@
   }
 }
 
-
 /* Hero floating card animations */
 @keyframes heroFloatA {
-  0%, 100% { transform: translateY(0px) rotate(-1deg); }
-  50% { transform: translateY(-12px) rotate(1deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
 }
 @keyframes heroFloatB {
-  0%, 100% { transform: translateY(0px) rotate(1deg); }
-  50% { transform: translateY(-16px) rotate(-1deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-1deg);
+  }
 }
 
 /* Progress indeterminate animation */
 @keyframes progress-indeterminate {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
 }
 
 /* Reduced Motion (WCAG AAA) */
@@ -261,12 +294,19 @@
 }
 
 @keyframes toast-progress {
-  from { width: 100%; }
-  to { width: 0%; }
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }
 
 @media print {
-  header, footer, .site-header, .site-footer {
+  header,
+  footer,
+  .site-header,
+  .site-footer {
     display: none !important;
   }
 }
