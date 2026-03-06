@@ -238,13 +238,11 @@ export default function AdminUsers() {
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-sm text-muted-foreground">{user.email}</TableCell>
                     <TableCell>
-                      <Badge variant={PLAN_VARIANTS[user.plan]} className="text-xs">
-                        {PLAN_LABELS[user.plan]}
-                      </Badge>
+                      <PlanBadge plan={user.plan} />
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <span className={`inline-flex items-center gap-1.5 text-xs ${user.status === "active" ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${user.status === "active" ? "bg-green-500" : "bg-muted-foreground"}`} />
+                      <span className={`inline-flex items-center gap-1.5 text-xs ${user.status === "active" ? "text-success" : "text-muted-foreground"}`}>
+                        <span className={`h-1.5 w-1.5 rounded-full ${user.status === "active" ? "bg-success" : "bg-muted-foreground"}`} />
                         {user.status === "active" ? "Активен" : "Неактивен"}
                       </span>
                     </TableCell>
