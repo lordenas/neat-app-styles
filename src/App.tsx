@@ -76,6 +76,7 @@ const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
+const AdminUserDetail = lazy(() => import("./pages/AdminUserDetail"));
 
 function PageSkeleton() {
   return (
