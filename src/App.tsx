@@ -75,6 +75,7 @@ const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculat
 const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 
 function PageSkeleton() {
   return (
