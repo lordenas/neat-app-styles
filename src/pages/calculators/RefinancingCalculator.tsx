@@ -343,6 +343,15 @@ export default function RefinancingCalculatorPage() {
         )}
 
       </div>
+
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Выгодные предложения по рефинансированию"
+          subtitle="Снизьте ставку — банки готовы предложить лучшие условия"
+          offers={REFINANCE_OFFERS}
+        />
+      </div>
     </CalculatorLayout>
   );
 }

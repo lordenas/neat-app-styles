@@ -347,6 +347,15 @@ export default function MortgageCalculatorPage() {
           </Card>
         )}
       </div>
+
+      {/* CPA Block */}
+      <div className="mt-8">
+        <CpaBlock
+          title="Лучшие ипотечные предложения"
+          subtitle="Рассчитали платёж? Оформите ипотеку по выгодной ставке"
+          offers={MORTGAGE_OFFERS}
+        />
+      </div>
     </CalculatorLayout>
   );
 }
