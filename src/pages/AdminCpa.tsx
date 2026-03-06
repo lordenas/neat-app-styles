@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, GripVertical, ToggleLeft, ToggleRight, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, GripVertical, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import type { CpaOffer } from "@/components/cpa/CpaBlock";
 import { CREDIT_OFFERS, MORTGAGE_OFFERS, REFINANCE_OFFERS } from "@/components/cpa/offers";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -475,39 +475,34 @@ export default function AdminCpa() {
 
   const hiddenCount = groups.reduce((s, g) => s + g.offers.filter((o) => o.hidden).length, 0);
 
+  const headerActions = (
+    <div className="flex items-center gap-2">
+      {hiddenCount > 0 && (
+        <Badge variant="secondary" className="text-xs">
+          {hiddenCount} скрыт{hiddenCount === 1 ? "" : "о"}
+        </Badge>
+      )}
+      <Button size="sm" onClick={handleSaveAll} variant={saved ? "secondary" : "default"}>
+        {saved ? "✓ Сохранено" : "Сохранить изменения"}
+      </Button>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Top bar */}
-      <header className="sticky top-0 z-10 border-b bg-card/80 backdrop-blur-sm px-4 py-3 flex items-center gap-4">
-        <div className="flex-1 min-w-0">
-          <h1 className="font-semibold text-base leading-tight">CPA — управление офферами</h1>
-          <p className="text-xs text-muted-foreground">Добавляйте, редактируйте и скрывайте банковские предложения</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {hiddenCount > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              {hiddenCount} скрыт{hiddenCount === 1 ? "" : hiddenCount < 5 ? "о" : "о"}
-            </Badge>
-          )}
-          <Button size="sm" onClick={handleSaveAll} variant={saved ? "secondary" : "default"}>
-            {saved ? "✓ Сохранено" : "Сохранить изменения"}
-          </Button>
-        </div>
-      </header>
-
+    <AdminLayout
+      title="CPA — офферы банков"
+      description="Добавляйте, редактируйте и скрывайте банковские предложения"
+      actions={headerActions}
+    >
       <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
         <StatsBar groups={groups} />
 
         {/* Search */}
-        <div className="relative">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Поиск по названию банка или ставке…"
-            className="pl-4"
-          />
-        </div>
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Поиск по названию банка или ставке…"
+        />
 
         {/* Groups */}
         <div className="space-y-3">
@@ -527,6 +522,6 @@ export default function AdminCpa() {
           </ul>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
