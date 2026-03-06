@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+// PlanBadge replaces Badge for plan — see below
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
