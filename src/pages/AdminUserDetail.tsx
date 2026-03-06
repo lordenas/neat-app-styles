@@ -162,8 +162,8 @@ function genActivity(userId: string): MockActivity[] {
 
 const PLAN_LABELS: Record<Plan, string> = { free: "Free", pro: "Pro", business: "Business" };
 const PLAN_CLS: Record<Plan, string> = {
-  free: "bg-muted text-muted-foreground border border-border",
-  pro: "bg-primary text-primary-foreground",
+  free: "bg-muted text-muted-foreground border border-border-strong",
+  pro: "bg-primary/15 text-primary border border-primary/30",
   business: "bg-accent text-accent-foreground border border-border-strong",
 };
 
