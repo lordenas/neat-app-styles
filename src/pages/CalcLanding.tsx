@@ -250,7 +250,7 @@ export default function CalcLanding() {
   return (
     <>
       <Helmet>
-        <title>Конструктор калькуляторов для сайта — CalcHub</title>
+        <title>Конструктор калькуляторов для сайта — Numlix</title>
         <meta
           name="description"
           content="Создайте калькулятор для своего сайта без кода за 10 минут. Встройте через script или iframe. Слайдеры, формулы, условная логика, уведомления."
