@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AdminGuard } from "@/components/admin/AdminGuard";
 import "@/i18n";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -73,6 +74,7 @@ const AlimonyIndexationCalculator = lazy(() => import("./pages/calculators/Alimo
 const DepositCalculator = lazy(() => import("./pages/calculators/DepositCalculator"));
 const AdminCpa = lazy(() => import("./pages/AdminCpa"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 
 function PageSkeleton() {
   return (
@@ -155,8 +157,9 @@ const App = () => (
                   <Route path="/examples" element={<ExamplesIndex />} />
                   <Route path="/examples/:categorySlug" element={<ExamplesCategory />} />
                   <Route path="/examples/:categorySlug/:calcSlug" element={<ExamplesCalc />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/cpa" element={<AdminCpa />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin" element={<AdminGuard><AdminDashboard /></AdminGuard>} />
+                  <Route path="/admin/cpa" element={<AdminGuard><AdminCpa /></AdminGuard>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
