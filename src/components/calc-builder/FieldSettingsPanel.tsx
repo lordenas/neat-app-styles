@@ -13,7 +13,7 @@ import { FormulaEditor } from "./FormulaEditor";
 import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info, Mail,
 } from "lucide-react";
 import { useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
@@ -31,12 +31,14 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   label:    <TextQuote className="h-4 w-4" />,
   image:    <ImageIcon className="h-4 w-4" />,
   html:     <Code2 className="h-4 w-4" />,
+  email:    <Mail className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
   button: "Кнопка", label: "Текст", image: "Картинка", html: "HTML",
+  email: "Email / Лид",
 };
 
 function slugify(s: string): string {
