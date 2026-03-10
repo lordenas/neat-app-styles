@@ -22,6 +22,7 @@ import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
 import { usePlan } from "@/hooks/usePlan";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { useAuth } from "@/hooks/useAuth";
 
 function nanoid(len = 8): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
