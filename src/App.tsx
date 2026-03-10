@@ -144,6 +144,7 @@ const App = () => (
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="/embed-widgets" element={<EmbedWidgets />} />
                   <Route path="/api-keys" element={<ApiKeys />} />
+                  <Route path="/leads" element={<Leads />} />
                   <Route path="/calc-list" element={<CalcList />} />
                   <Route path="/calc-builder" element={<CalcBuilder />} />
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />
