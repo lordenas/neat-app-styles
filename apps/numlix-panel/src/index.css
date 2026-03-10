@@ -1,0 +1,312 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 214 65% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 214 60% 94%;
+    --primary-dark: 214 70% 35%;
+
+    --secondary: 210 15% 93%;
+    --secondary-foreground: 220 20% 20%;
+
+    --muted: 210 15% 95%;
+    --muted-foreground: 215 12% 50%;
+
+    --accent: 210 15% 93%;
+    --accent-foreground: 220 20% 15%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 145 55% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 90% 55%;
+    --warning-foreground: 38 90% 15%;
+
+    --info: 205 75% 50%;
+    --info-foreground: 0 0% 100%;
+
+    --surface: 0 0% 100%;
+    --surface-foreground: 220 20% 10%;
+    --elevated: 210 20% 99%;
+    --elevated-foreground: 220 20% 10%;
+    --overlay: 220 20% 10% / 0.4;
+
+    --border: 214 20% 88%;
+    --border-strong: 214 18% 74%;
+    --border-subtle: 214 15% 93%;
+    --input: 214 20% 88%;
+    --ring: 214 65% 45%;
+
+    --radius: 0.375rem;
+
+    --shadow-color: 214 20% 50%;
+    --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.05);
+    --shadow-md:
+      0 4px 6px -1px hsl(var(--shadow-color) / 0.08),
+      0 2px 4px -2px hsl(var(--shadow-color) / 0.05);
+    --shadow-lg:
+      0 10px 15px -3px hsl(var(--shadow-color) / 0.08),
+      0 4px 6px -4px hsl(var(--shadow-color) / 0.04);
+    --shadow-xl:
+      0 20px 25px -5px hsl(var(--shadow-color) / 0.1),
+      0 8px 10px -6px hsl(var(--shadow-color) / 0.05);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --section-bg: 210 20% 96%;
+    --stripe-bg: 210 15% 97%;
+    --notebook-page: 210 20% 97%;
+    --notebook-stack: 210 15% 90%;
+  }
+
+  .dark {
+    --background: 220 20% 8%;
+    --foreground: 210 15% 90%;
+    --card: 220 18% 12%;
+    --card-foreground: 210 15% 90%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 210 15% 90%;
+    --primary: 214 65% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 214 50% 20%;
+    --primary-dark: 214 70% 65%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 210 15% 85%;
+    --muted: 220 12% 16%;
+    --muted-foreground: 215 12% 55%;
+    --accent: 220 15% 18%;
+    --accent-foreground: 210 15% 90%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 55% 48%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 90% 55%;
+    --warning-foreground: 38 90% 15%;
+    --info: 205 75% 55%;
+    --info-foreground: 0 0% 100%;
+    --surface: 220 18% 12%;
+    --surface-foreground: 210 15% 90%;
+    --elevated: 220 16% 16%;
+    --elevated-foreground: 210 15% 90%;
+    --overlay: 220 20% 5% / 0.6;
+    --border: 220 15% 20%;
+    --border-strong: 220 15% 32%;
+    --border-subtle: 220 12% 15%;
+    --input: 220 15% 20%;
+    --ring: 214 65% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --section-bg: 220 18% 10%;
+    --stripe-bg: 220 15% 14%;
+    --notebook-page: 220 15% 32%;
+    --notebook-stack: 220 12% 26%;
+
+    --shadow-color: 220 40% 3%;
+    --shadow-sm: 0 1px 2px 0 hsl(var(--shadow-color) / 0.2);
+    --shadow-md:
+      0 4px 6px -1px hsl(var(--shadow-color) / 0.3),
+      0 2px 4px -2px hsl(var(--shadow-color) / 0.2);
+    --shadow-lg:
+      0 10px 15px -3px hsl(var(--shadow-color) / 0.35),
+      0 4px 6px -4px hsl(var(--shadow-color) / 0.2);
+    --shadow-xl:
+      0 20px 25px -5px hsl(var(--shadow-color) / 0.4),
+      0 8px 10px -6px hsl(var(--shadow-color) / 0.25);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* Плавная смена темы — применяем только к основным контейнерам */
+  body,
+  .section-card,
+  .form-section,
+  header,
+  footer,
+  main {
+    transition:
+      background-color 200ms ease-out,
+      border-color 200ms ease-out,
+      color 200ms ease-out,
+      box-shadow 200ms ease-out;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  h1 {
+    @apply text-3xl font-bold tracking-tight text-foreground;
+  }
+  h2 {
+    @apply text-2xl font-semibold tracking-tight text-foreground;
+  }
+  h3 {
+    @apply text-xl font-semibold text-foreground;
+  }
+  h4 {
+    @apply text-lg font-medium text-foreground;
+  }
+  h5 {
+    @apply text-base font-medium text-foreground;
+  }
+  h6 {
+    @apply text-sm font-medium text-foreground;
+  }
+}
+
+@layer components {
+  .section-card {
+    @apply bg-card rounded-md border border-border p-6;
+  }
+
+  .form-section {
+    @apply bg-[hsl(var(--section-bg))] rounded-md p-5;
+  }
+
+  .table-stripe {
+    @apply bg-[hsl(var(--stripe-bg))];
+  }
+
+  .label-text {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  .helper-text {
+    @apply text-xs text-muted-foreground mt-1;
+  }
+
+  .error-text {
+    @apply text-xs text-destructive mt-1;
+  }
+}
+
+/* Hero floating card animations */
+@keyframes heroFloatA {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+@keyframes heroFloatB {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(-1deg);
+  }
+}
+
+/* Progress indeterminate animation */
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+/* Reduced Motion (WCAG AAA) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility profiles */
+.a11y-reduce-motion *,
+.a11y-reduce-motion *::before,
+.a11y-reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.a11y-high-contrast {
+  --foreground: 0 0% 0%;
+  --background: 0 0% 100%;
+  --primary: 214 100% 35%;
+  --muted-foreground: 0 0% 20%;
+  --border: 0 0% 0%;
+}
+.dark.a11y-high-contrast {
+  --foreground: 0 0% 100%;
+  --background: 0 0% 0%;
+  --primary: 214 100% 65%;
+  --muted-foreground: 0 0% 80%;
+  --border: 0 0% 100%;
+}
+
+.a11y-bw {
+  filter: grayscale(1);
+}
+
+.a11y-font-large {
+  font-size: 112.5%;
+}
+.a11y-font-xlarge {
+  font-size: 125%;
+}
+
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .site-header,
+  .site-footer {
+    display: none !important;
+  }
+}
