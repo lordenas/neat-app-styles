@@ -70,6 +70,7 @@ export default function CalcBuilder() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const {
     state: calculator,
