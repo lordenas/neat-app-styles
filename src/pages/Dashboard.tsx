@@ -261,7 +261,7 @@ export default function Dashboard() {
 
         {/* Quick links */}
         <section className="py-6 border-b border-border">
-          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="container max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             {/* Embed Widgets */}
             <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
@@ -298,6 +298,25 @@ export default function Dashboard() {
                 </div>
               </div>
               <Link to="/calc-list" className="shrink-0">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <ArrowRight className="h-3.5 w-3.5" />
+                  Открыть
+                </Button>
+              </Link>
+            </div>
+
+            {/* Leads */}
+            <div className="flex items-center justify-between gap-4 rounded-xl border bg-muted/30 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Лиды</p>
+                  <p className="text-xs text-muted-foreground">Контакты из калькуляторов</p>
+                </div>
+              </div>
+              <Link to="/leads" className="shrink-0">
                 <Button variant="outline" size="sm" className="gap-1.5">
                   <ArrowRight className="h-3.5 w-3.5" />
                   Открыть
