@@ -433,6 +433,8 @@ export interface CustomCalculator {
    * В бэке: UNIQUE constraint в БД.
    */
   slug: string;
+  /** ID владельца калькулятора (для сохранения лидов) */
+  userId?: string;
   /** Заголовок калькулятора */
   title: string;
   /** Описание */
