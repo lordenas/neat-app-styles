@@ -341,6 +341,21 @@ export function PlayerField({
     );
   }
 
+  // ── Email / Lead Capture ─────────────────────────────────────
+  if (field.type === "email") {
+    return (
+      <LeadCaptureField
+        field={field}
+        values={values}
+        calculatorId={calculatorId}
+        calculatorTitle={calculatorTitle}
+        ownerUserId={ownerUserId}
+        resultValues={resultValues}
+        paddingStyle={paddingStyle}
+      />
+    );
+  }
+
   const rawVal = values[field.key];
   const strVal = rawVal !== undefined ? String(rawVal) : "";
   const numVal = parseFloat(strVal) || 0;
