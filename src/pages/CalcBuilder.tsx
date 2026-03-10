@@ -22,6 +22,7 @@ import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
 import { usePlan } from "@/hooks/usePlan";
 import { UpgradeModal } from "@/components/UpgradeModal";
+import { useAuth } from "@/hooks/useAuth";
 
 function nanoid(len = 8): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -69,6 +70,7 @@ export default function CalcBuilder() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const {
     state: calculator,
@@ -108,7 +110,7 @@ export default function CalcBuilder() {
   const activepageObj = pages[activePage];
 
   const handleSave = () => {
-    const updated = { ...calculator, updatedAt: new Date().toISOString() };
+    const updated = { ...calculator, userId: user?.id, updatedAt: new Date().toISOString() };
     setStateDirectly(updated);
     saveCalculator(updated);
     setSaved(true);

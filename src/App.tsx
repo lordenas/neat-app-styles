@@ -35,6 +35,7 @@ const CalcList = lazy(() => import("./pages/CalcList"));
 const CalcPlayer = lazy(() => import("./pages/CalcPlayer"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const CalcLanding = lazy(() => import("./pages/CalcLanding"));
+const Leads = lazy(() => import("./pages/Leads"));
 const HelpIndex = lazy(() => import("./pages/help/HelpIndex"));
 const HelpGettingStarted = lazy(() => import("./pages/help/HelpGettingStarted"));
 const HelpFormula = lazy(() => import("./pages/help/HelpFormula"));
@@ -143,6 +144,7 @@ const App = () => (
                   <Route path="/embed-builder" element={<EmbedBuilder />} />
                   <Route path="/embed-widgets" element={<EmbedWidgets />} />
                   <Route path="/api-keys" element={<ApiKeys />} />
+                  <Route path="/leads" element={<Leads />} />
                   <Route path="/calc-list" element={<CalcList />} />
                   <Route path="/calc-builder" element={<CalcBuilder />} />
                   <Route path="/calc-builder/:id" element={<CalcBuilder />} />

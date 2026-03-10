@@ -13,7 +13,7 @@ import { FormulaEditor } from "./FormulaEditor";
 import { SimpleTooltip } from "@/components/ui/simple-tooltip";
 import {
   Hash, Type, SlidersHorizontal, List, CircleDot, ToggleLeft, Calculator,
-  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info,
+  Plus, X, Trash2, ChevronDown, MousePointerClick, AlignLeft, TextQuote, ImageIcon, Code2, Info, Mail,
 } from "lucide-react";
 import { useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
@@ -31,12 +31,14 @@ const TYPE_ICONS: Record<CalcFieldType, React.ReactNode> = {
   label:    <TextQuote className="h-4 w-4" />,
   image:    <ImageIcon className="h-4 w-4" />,
   html:     <Code2 className="h-4 w-4" />,
+  email:    <Mail className="h-4 w-4" />,
 };
 
 const TYPE_LABELS: Record<CalcFieldType, string> = {
   number: "Число", text: "Текст", textarea: "Многострочный", slider: "Слайдер",
   select: "Список", radio: "Радио", checkbox: "Чекбокс", result: "Результат",
   button: "Кнопка", label: "Текст", image: "Картинка", html: "HTML",
+  email: "Email / Лид",
 };
 
 function slugify(s: string): string {
@@ -343,6 +345,62 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
           <div className="space-y-3">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Настройки кнопки</p>
             <ButtonSettings field={field} allFields={allFields} pages={pages} updConfig={updConfig} />
+          </div>
+        )}
+
+        {field.type === "email" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Поля захвата лида</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              Данные будут сохранены в базе лидов вашего калькулятора при отправке.
+            </p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadShowName ?? true}
+                  onChange={(e) => updConfig({ leadShowName: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Запрашивать имя</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadShowPhone ?? false}
+                  onChange={(e) => updConfig({ leadShowPhone: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Запрашивать телефон</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadRequired ?? true}
+                  onChange={(e) => updConfig({ leadRequired: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Обязательно для продолжения</span>
+              </label>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Текст кнопки отправки</Label>
+                <Input
+                  inputSize="sm"
+                  value={field.config.leadButtonLabel ?? ""}
+                  onChange={(e) => updConfig({ leadButtonLabel: e.target.value })}
+                  placeholder="Получить результат"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Подсказка под формой</Label>
+                <Input
+                  inputSize="sm"
+                  value={field.config.hint ?? ""}
+                  onChange={(e) => updConfig({ hint: e.target.value })}
+                  placeholder="Мы не передаём данные третьим лицам"
+                />
+              </div>
+            </div>
           </div>
         )}
 

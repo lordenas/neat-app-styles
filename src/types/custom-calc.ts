@@ -101,7 +101,8 @@ export type CalcFieldType =
   | "button"    // Кнопка с действием
   | "label"     // Статический текст / заголовок
   | "image"     // Картинка (загружается пользователем, хранится в base64)
-  | "html";     // Произвольный HTML-блок (поддерживает {key} интерполяцию)
+  | "html"      // Произвольный HTML-блок (поддерживает {key} интерполяцию)
+  | "email";    // Поле захвата лида (email + имя + телефон → сохраняется в БД)
 
 /** Тип действия кнопки */
 export type ButtonActionType =
@@ -241,6 +242,16 @@ export interface CalcFieldConfig {
   paddingTop?: number;
   /** Внутренний отступ снизу (0–64px) */
   paddingBottom?: number;
+
+  // ── Lead Capture (email field) ────────────────────────────────
+  /** Показывать поле «Имя» в форме захвата лида */
+  leadShowName?: boolean;
+  /** Показывать поле «Телефон» в форме захвата лида */
+  leadShowPhone?: boolean;
+  /** Форма обязательна для продолжения */
+  leadRequired?: boolean;
+  /** Текст кнопки отправки лид-формы */
+  leadButtonLabel?: string;
 
   // ── Validation ────────────────────────────────────────────────
   /** Поле обязательно для заполнения */
@@ -422,6 +433,8 @@ export interface CustomCalculator {
    * В бэке: UNIQUE constraint в БД.
    */
   slug: string;
+  /** ID владельца калькулятора (для сохранения лидов) */
+  userId?: string;
   /** Заголовок калькулятора */
   title: string;
   /** Описание */

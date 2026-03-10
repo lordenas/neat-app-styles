@@ -11,7 +11,7 @@ import {
 import {
   Hash, Type, ChevronDown, ToggleLeft, SlidersHorizontal,
   List, CircleDot, Calculator, PlusCircle, AlignLeft,
-  MousePointerClick, TextQuote, ImageIcon, Code2,
+  MousePointerClick, TextQuote, ImageIcon, Code2, Mail,
 } from "lucide-react";
 
 const FIELD_TYPES_GROUPS: {
@@ -31,9 +31,15 @@ const FIELD_TYPES_GROUPS: {
     ],
   },
   {
+    group: "Лидогенерация",
+    items: [
+      { type: "email", label: "Email / Лид", icon: <Mail className="h-4 w-4" />, description: "Захват контакта (email, имя, телефон) → сохраняется в базе лидов" },
+    ],
+  },
+  {
     group: "Вывод и действия",
     items: [
-    { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
+      { type: "result",   label: "Результат",    icon: <Calculator className="h-4 w-4" />,        description: "Вычисляемое поле (формула)" },
       { type: "button",   label: "Кнопка",       icon: <MousePointerClick className="h-4 w-4" />, description: "Кнопка с действием" },
       { type: "label",    label: "Текст / заголовок", icon: <TextQuote className="h-4 w-4" />,    description: "Статический текст, разделитель" },
       { type: "image",    label: "Картинка",     icon: <ImageIcon className="h-4 w-4" />,         description: "Изображение, загруженное разработчиком" },

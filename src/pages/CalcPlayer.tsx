@@ -287,19 +287,23 @@ export default function CalcPlayer() {
                     className="grid gap-5"
                     style={{ gridTemplateColumns: `repeat(${rowFields.length}, 1fr)` }}
                   >
-                    {rowFields.map((field) => (
-                      <PlayerField
-                        key={field.id}
-                        field={field}
-                        allFields={allSorted}
-                        values={values}
-                        onChange={onChange}
-                        onTriggerCalculate={handleTriggerCalculate}
-                        onReset={handleReset}
-                        onNavigatePage={handleNavigatePage}
-                        manualResults={manualResults}
-                      />
-                    ))}
+                     {rowFields.map((field) => (
+                        <PlayerField
+                          key={field.id}
+                          field={field}
+                          allFields={allSorted}
+                          values={values}
+                          onChange={onChange}
+                          onTriggerCalculate={handleTriggerCalculate}
+                          onReset={handleReset}
+                          onNavigatePage={handleNavigatePage}
+                          manualResults={manualResults}
+                          calculatorId={calculator.id}
+                          calculatorTitle={calculator.title}
+                          ownerUserId={calculator.userId}
+                          resultValues={evaluateAllFormulas(allSorted, values)}
+                        />
+                      ))}
                   </div>
                 ))}
               </div>

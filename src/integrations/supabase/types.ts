@@ -56,6 +56,45 @@ export type Database = {
         }
         Relationships: []
       }
+      calc_leads: {
+        Row: {
+          calculator_id: string
+          calculator_title: string | null
+          created_at: string
+          email: string
+          form_values: Json | null
+          id: string
+          name: string | null
+          owner_user_id: string
+          phone: string | null
+          result_values: Json | null
+        }
+        Insert: {
+          calculator_id: string
+          calculator_title?: string | null
+          created_at?: string
+          email: string
+          form_values?: Json | null
+          id?: string
+          name?: string | null
+          owner_user_id: string
+          phone?: string | null
+          result_values?: Json | null
+        }
+        Update: {
+          calculator_id?: string
+          calculator_title?: string | null
+          created_at?: string
+          email?: string
+          form_values?: Json | null
+          id?: string
+          name?: string | null
+          owner_user_id?: string
+          phone?: string | null
+          result_values?: Json | null
+        }
+        Relationships: []
+      }
       embed_widgets: {
         Row: {
           config: Json
