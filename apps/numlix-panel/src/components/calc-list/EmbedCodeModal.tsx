@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CopyButton } from "@/components/ui/copy-button";
 import { Badge } from "@/components/ui/badge";
@@ -96,14 +101,16 @@ export function EmbedCodeModal({ calc, open, onOpenChange }: Props) {
             <TabsContent value="script" className="mt-3">
               <CodeBlock code={generateScriptCode(calc)} />
               <p className="text-xs text-muted-foreground mt-2">
-                Виджет загружается асинхронно и адаптируется под размер контейнера.
+                Виджет загружается асинхронно и адаптируется под размер
+                контейнера.
               </p>
             </TabsContent>
 
             <TabsContent value="iframe" className="mt-3">
               <CodeBlock code={generateIframeCode(calc)} />
               <p className="text-xs text-muted-foreground mt-2">
-                Простой способ встройки через iframe. Высоту можно изменить вручную.
+                Простой способ встройки через iframe. Высоту можно изменить
+                вручную.
               </p>
             </TabsContent>
           </Tabs>

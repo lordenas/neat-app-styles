@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useListCalculatorsQuery, useDeleteCalculatorMutation } from "@/services/api/calculatorsApi";
+import {
+  useListCalculatorsQuery,
+  useDeleteCalculatorMutation,
+} from "@/services/api/calculatorsApi";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlan } from "@/hooks/usePlan";
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +15,9 @@ export default function CalcListScreen() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { data: calcList = [] } = useListCalculatorsQuery(undefined, { skip: !user });
+  const { data: calcList = [] } = useListCalculatorsQuery(undefined, {
+    skip: !user,
+  });
   const [deleteCalculator] = useDeleteCalculatorMutation();
   const { plan, limits, isCalcLimitReached, loading: planLoading } = usePlan();
   const [upgradeOpen, setUpgradeOpen] = useState(false);

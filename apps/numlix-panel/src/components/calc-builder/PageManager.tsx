@@ -11,11 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-
-function nanoid(len = 12): string {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
+import { uuid } from "@/lib/uuid";
 
 interface PageManagerProps {
   pages: CalcPage[];
@@ -42,7 +38,7 @@ export function PageManager({
 
   const addPage = () => {
     const newPage: CalcPage = {
-      id: nanoid(),
+      id: uuid(),
       title: `Страница ${pages.length + 1}`,
       orderIndex: pages.length,
       autoAdvance: null,

@@ -6,11 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Trash2, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-function nanoid(len = 8): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
+import { uuid } from "@/lib/uuid";
 
 interface PageRoutesEditorProps {
   /** Текущая страница (источник переходов) */
@@ -30,7 +26,7 @@ export function PageRoutesEditor({ page, pages, fields, onChange }: PageRoutesEd
     const firstOther = otherPages[0];
     if (!firstOther) return;
     const newRoute: PageRoute = {
-      id: nanoid(),
+      id: uuid(),
       condition: { rules: [], logic: "AND" },
       targetPageIndex: pages.findIndex((p) => p.id === firstOther.id),
     };

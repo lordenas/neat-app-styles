@@ -21,6 +21,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useHistory } from "@/hooks/useHistory";
 import { cn } from "@/lib/utils";
+import { uuid } from "@/lib/uuid";
 import { usePlan } from "@/hooks/usePlan";
 import { UpgradeModal } from "@/components/UpgradeModal";
 
@@ -30,7 +31,7 @@ function nanoid(len = 8): string {
 }
 
 function makeDefaultPage(): CalcPage {
-  return { id: nanoid(12), title: "Страница 1", orderIndex: 0, autoAdvance: null };
+  return { id: uuid(), title: "Страница 1", orderIndex: 0, autoAdvance: null };
 }
 
 function makeNew(): CustomCalculator {
@@ -123,9 +124,9 @@ export default function CalcBuilder() {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
     setStateDirectly(updated);
     try {
-      if (updated.id && updated.slug) {
+      if (id) {
         await updateCalc({
-          id: updated.id,
+          id,
           title: updated.title,
           description: updated.description,
           isPublic: updated.isPublic,

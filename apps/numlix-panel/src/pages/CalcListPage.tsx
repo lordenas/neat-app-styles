@@ -2,7 +2,15 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calculator, Trash2, ExternalLink, Pencil, Lock, Code2 } from "lucide-react";
+import {
+  Plus,
+  Calculator,
+  Trash2,
+  ExternalLink,
+  Pencil,
+  Lock,
+  Code2,
+} from "lucide-react";
 import { UpgradeModal } from "@/components/UpgradeModal";
 import { EmbedCodeModal } from "@/components/calc-list/EmbedCodeModal";
 import type { CustomCalculator } from "@/types/custom-calc";
@@ -54,7 +62,10 @@ export function CalcListPage({
           </div>
           <div className="flex items-center gap-3">
             {!planLoading && (
-              <Badge variant="outline" className="gap-1.5 text-xs hidden sm:flex">
+              <Badge
+                variant="outline"
+                className="gap-1.5 text-xs hidden sm:flex"
+              >
                 <span
                   className="h-1.5 w-1.5 rounded-full"
                   style={{ background: planMeta.color }}
@@ -67,33 +78,53 @@ export function CalcListPage({
                 )}
               </Badge>
             )}
-            <Button className="gap-2" onClick={onNew} disabled={isCalcLimitReached && plan !== "free"}>
+            <Button
+              className="gap-2"
+              onClick={onNew}
+              disabled={isCalcLimitReached && plan !== "free"}
+            >
               {isCalcLimitReached ? (
-                <><Lock className="h-4 w-4" />Лимит достигнут</>
+                <>
+                  <Lock className="h-4 w-4" />
+                  Лимит достигнут
+                </>
               ) : (
-                <><Plus className="h-4 w-4" />Новый</>
+                <>
+                  <Plus className="h-4 w-4" />
+                  Новый
+                </>
               )}
             </Button>
           </div>
         </div>
 
-        {!planLoading && limits.maxCalcs !== -1 && calcList.length >= limits.maxCalcs && (
-          <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-warning/40 bg-warning/5 px-4 py-3">
-            <p className="text-sm text-warning-foreground">
-              <span className="font-semibold">Лимит достигнут.</span>{" "}
-              Вы создали {calcList.length} из {limits.maxCalcs} калькуляторов на тарифе «{planMeta.label}».
-            </p>
-            <Button size="sm" variant="outline" onClick={() => setUpgradeOpen(true)} className="shrink-0">
-              Апгрейд
-            </Button>
-          </div>
-        )}
+        {!planLoading &&
+          limits.maxCalcs !== -1 &&
+          calcList.length >= limits.maxCalcs && (
+            <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-warning/40 bg-warning/5 px-4 py-3">
+              <p className="text-sm text-warning-foreground">
+                <span className="font-semibold">Лимит достигнут.</span> Вы
+                создали {calcList.length} из {limits.maxCalcs} калькуляторов на
+                тарифе «{planMeta.label}».
+              </p>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setUpgradeOpen(true)}
+                className="shrink-0"
+              >
+                Апгрейд
+              </Button>
+            </div>
+          )}
 
         {calcList.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed rounded-2xl">
             <Calculator className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-lg font-medium mb-1">Нет калькуляторов</p>
-            <p className="text-sm text-muted-foreground mb-6">Создайте первый пользовательский калькулятор</p>
+            <p className="text-sm text-muted-foreground mb-6">
+              Создайте первый пользовательский калькулятор
+            </p>
             <Button onClick={onNew}>
               <Plus className="h-4 w-4 mr-2" />
               Создать
@@ -112,20 +143,46 @@ export function CalcListPage({
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm truncate">{c.title}</p>
                   <p className="text-xs text-muted-foreground">
-                    {c.fields.length} полей · {c.isPublic ? "Публичный" : "Приватный"}
+                    {c.fields.length} полей ·{" "}
+                    {c.isPublic ? "Публичный" : "Приватный"}
                   </p>
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-8 w-8" title="Получить код" onClick={() => onEmbedOpen(c)} aria-label="Получить код">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    title="Получить код"
+                    onClick={() => onEmbedOpen(c)}
+                    aria-label="Получить код"
+                  >
                     <Code2 className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenPlayer(c.slug)} aria-label="Открыть в новой вкладке">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => onOpenPlayer(c.slug)}
+                    aria-label="Открыть в новой вкладке"
+                  >
                     <ExternalLink className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(c.id)} aria-label="Редактировать">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => onEdit(c.id)}
+                    aria-label="Редактировать"
+                  >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-destructive" onClick={() => onDelete(c.id)} aria-label="Удалить">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 hover:text-destructive"
+                    onClick={() => onDelete(c.id)}
+                    aria-label="Удалить"
+                  >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
@@ -146,7 +203,9 @@ export function CalcListPage({
       <EmbedCodeModal
         calc={embedCalc}
         open={!!embedCalc}
-        onOpenChange={(v) => { if (!v) onEmbedOpen(null); }}
+        onOpenChange={(v) => {
+          if (!v) onEmbedOpen(null);
+        }}
       />
     </div>
   );

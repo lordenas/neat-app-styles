@@ -22,7 +22,8 @@ export const PANEL_ROUTES = {
 export const panelRouteTo = {
   calcBuilderEdit: (id: string) => `/calc-builder/${id}`,
   calcPlayer: (slug: string) => `/c/${slug}`,
-  embedBuilderEdit: (widgetId: string) => `/embed-builder?widgetId=${encodeURIComponent(widgetId)}`,
+  embedBuilderEdit: (widgetId: string) =>
+    `/embed-builder?widgetId=${encodeURIComponent(widgetId)}`,
 } as const;
 
 export const panelPages = {

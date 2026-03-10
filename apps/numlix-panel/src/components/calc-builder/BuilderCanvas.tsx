@@ -17,16 +17,12 @@ import { CalcField, CalcFieldType, CustomCalculator } from "@/types/custom-calc"
 import { FieldCard } from "./FieldCard";
 import { FieldTypeMenu } from "./FieldTypeMenu";
 import { cn } from "@/lib/utils";
+import { uuid } from "@/lib/uuid";
 
 // ─── Utilities ───────────────────────────────────────────────
 
-function nanoid(len = 12): string {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  return Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-}
-
 function createField(type: CalcFieldType, order: number): CalcField {
-  const id = nanoid();
+  const id = uuid();
   const defaults: Partial<CalcField> = {};
   if (type === "number" || type === "slider") {
     defaults.config = { min: 0, max: 1000000, step: 1 };

@@ -30,7 +30,14 @@ export const calculatorsApi = baseApi.injectEndpoints({
         params: params ?? {},
       }),
       transformResponse: (raw: unknown) => {
-        const arr = Array.isArray(raw) ? raw : (raw && typeof raw === "object" && "items" in raw) ? (raw as { items: unknown[] }).items : [];
+        const obj = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : null;
+        const arr = Array.isArray(raw)
+          ? raw
+          : obj && "data" in obj && Array.isArray(obj.data)
+            ? obj.data
+            : obj && "items" in obj && Array.isArray(obj.items)
+              ? obj.items
+              : [];
         return arr.map((item) => toCalculator(item as Record<string, unknown>));
       },
       providesTags: (result) =>
