@@ -15,6 +15,9 @@ import { PlayerResult } from "./PlayerResult";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import DOMPurify from "dompurify";
+import { Mail, User, Phone, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PlayerFieldProps {
   field: CalcField;
@@ -28,6 +31,12 @@ interface PlayerFieldProps {
   manualResults?: Record<string, number>;
   /** Validation errors keyed by field.key */
   validationErrors?: Record<string, string>;
+  /** Calculator meta for lead saving */
+  calculatorId?: string;
+  calculatorTitle?: string;
+  ownerUserId?: string;
+  /** All evaluated result values at time of lead capture */
+  resultValues?: Record<string, number>;
 }
 
 /** Returns a validation error message if the value violates configured rules, or null if valid */
