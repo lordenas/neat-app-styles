@@ -110,7 +110,7 @@ export default function CalcBuilder() {
   const activepageObj = pages[activePage];
 
   const handleSave = () => {
-    const updated = { ...calculator, updatedAt: new Date().toISOString() };
+    const updated = { ...calculator, userId: user?.id, updatedAt: new Date().toISOString() };
     setStateDirectly(updated);
     saveCalculator(updated);
     setSaved(true);
