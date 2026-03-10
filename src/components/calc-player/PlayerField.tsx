@@ -85,6 +85,7 @@ export function validateField(field: CalcField, value: number | string | boolean
 
 export function PlayerField({
   field, allFields, values, onChange, onTriggerCalculate, onReset, onNavigatePage, manualResults, validationErrors,
+  calculatorId, calculatorTitle, ownerUserId, resultValues,
 }: PlayerFieldProps) {
   const visible = resolveVisibility(field.visibility, values, allFields);
   if (!visible) return null;
