@@ -348,6 +348,62 @@ export function FieldSettingsPanel({ field, allFields, pages = [], onChange, onD
           </div>
         )}
 
+        {field.type === "email" && (
+          <div className="space-y-3">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Поля захвата лида</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              Данные будут сохранены в базе лидов вашего калькулятора при отправке.
+            </p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadShowName ?? true}
+                  onChange={(e) => updConfig({ leadShowName: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Запрашивать имя</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadShowPhone ?? false}
+                  onChange={(e) => updConfig({ leadShowPhone: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Запрашивать телефон</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={field.config.leadRequired ?? true}
+                  onChange={(e) => updConfig({ leadRequired: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="text-xs">Обязательно для продолжения</span>
+              </label>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Текст кнопки отправки</Label>
+                <Input
+                  inputSize="sm"
+                  value={field.config.leadButtonLabel ?? ""}
+                  onChange={(e) => updConfig({ leadButtonLabel: e.target.value })}
+                  placeholder="Получить результат"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Подсказка под формой</Label>
+                <Input
+                  inputSize="sm"
+                  value={field.config.hint ?? ""}
+                  onChange={(e) => updConfig({ hint: e.target.value })}
+                  placeholder="Мы не передаём данные третьим лицам"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <Separator />
 
         {/* Padding controls */}
