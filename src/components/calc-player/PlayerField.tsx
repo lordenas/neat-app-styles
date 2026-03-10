@@ -528,3 +528,120 @@ export function PlayerField({
 function resolveUrl(url: string, values: Record<string, number | string | boolean>): string {
   return url.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? ""));
 }
+
+// ── Lead Capture Field ────────────────────────────────────────
+
+interface LeadCaptureFieldProps {
+  field: CalcField;
+  values: Record<string, number | string | boolean>;
+  calculatorId?: string;
+  calculatorTitle?: string;
+  ownerUserId?: string;
+  resultValues?: Record<string, number>;
+  paddingStyle?: React.CSSProperties;
+}
+
+function LeadCaptureField({ field, values, calculatorId, calculatorTitle, ownerUserId, resultValues, paddingStyle }: LeadCaptureFieldProps) {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const showName = field.config.leadShowName ?? true;
+  const showPhone = field.config.leadShowPhone ?? false;
+  const buttonLabel = field.config.leadButtonLabel || "Получить результат";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Введите корректный email");
+      return;
+    }
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { error: dbError } = await (supabase.from("calc_leads" as any).insert({
+        calculator_id: calculatorId ?? "unknown",
+        calculator_title: calculatorTitle ?? null,
+        owner_user_id: ownerUserId ?? "00000000-0000-0000-0000-000000000000",
+        email,
+        name: name || null,
+        phone: phone || null,
+        form_values: values as Record<string, unknown>,
+        result_values: resultValues ?? {},
+      }));
+
+      if (dbError) throw dbError;
+      setSubmitted(true);
+      toast({ title: "Данные отправлены!", description: "Спасибо, мы сохранили ваш контакт.", variant: "success" });
+    } catch {
+      setError("Ошибка при отправке. Попробуйте ещё раз.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inner = submitted ? (
+    <div className="flex flex-col items-center gap-3 py-4 text-center">
+      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+        <ShieldCheck className="h-5 w-5 text-primary" />
+      </div>
+      <p className="text-sm font-medium">Контакт сохранён</p>
+      <p className="text-xs text-muted-foreground">Спасибо! Результаты ниже.</p>
+    </div>
+  ) : (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <Mail className="h-4 w-4 text-primary" />
+        <p className="text-sm font-medium">{field.label || "Получить результаты"}</p>
+      </div>
+      {showName && (
+        <div className="relative">
+          <User className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Input
+            type="text"
+            placeholder="Ваше имя"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      )}
+      <div className="relative">
+        <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+        <Input
+          type="email"
+          placeholder="Email *"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); setError(null); }}
+          required
+          className={cn("pl-8", error && "border-destructive")}
+        />
+      </div>
+      {showPhone && (
+        <div className="relative">
+          <Phone className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Input
+            type="tel"
+            placeholder="Телефон"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      )}
+      {error && <p className="text-xs text-destructive" role="alert">{error}</p>}
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Отправка..." : buttonLabel}
+      </Button>
+      {field.config.hint && (
+        <p className="text-xs text-muted-foreground text-center">{field.config.hint}</p>
+      )}
+    </form>
+  );
+
+  return paddingStyle ? <div style={paddingStyle}>{inner}</div> : inner;
+}
