@@ -243,6 +243,16 @@ export interface CalcFieldConfig {
   /** Внутренний отступ снизу (0–64px) */
   paddingBottom?: number;
 
+  // ── Lead Capture (email field) ────────────────────────────────
+  /** Показывать поле «Имя» в форме захвата лида */
+  leadShowName?: boolean;
+  /** Показывать поле «Телефон» в форме захвата лида */
+  leadShowPhone?: boolean;
+  /** Форма обязательна для продолжения */
+  leadRequired?: boolean;
+  /** Текст кнопки отправки лид-формы */
+  leadButtonLabel?: string;
+
   // ── Validation ────────────────────────────────────────────────
   /** Поле обязательно для заполнения */
   required?: boolean;
