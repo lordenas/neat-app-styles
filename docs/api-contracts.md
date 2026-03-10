@@ -525,3 +525,96 @@ interface CustomCalculator {
 | `saveCalculator(calc)` (update) | `PATCH /calculators/:id`               |
 | `deleteCalculator(id)`          | `DELETE /calculators/:id`              |
 | embed code generation           | `POST /calculators/:id/embed-token`    |
+
+---
+
+## 12. Lead Capture — таблица `calc_leads`
+
+### DB Schema
+
+```sql
+CREATE TABLE public.calc_leads (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  calculator_id   text NOT NULL,          -- id калькулятора (localStorage slug в MVP)
+  calculator_title text,                  -- снапшот заголовка калькулятора
+  owner_user_id   uuid NOT NULL,          -- user_id владельца калькулятора (для RLS)
+  email           text NOT NULL,
+  name            text,
+  phone           text,
+  form_values     jsonb DEFAULT '{}',     -- все значения полей формы на момент отправки
+  result_values   jsonb DEFAULT '{}',     -- все вычисленные результаты
+  created_at      timestamptz NOT NULL DEFAULT now()
+);
+```
+
+### RLS Policies
+
+- `SELECT` — только владелец (`auth.uid() = owner_user_id`)
+- `INSERT` — публичный (виджет отправляет без авторизации), `owner_user_id` задаётся клиентом
+- `DELETE` — только владелец
+
+### `GET /leads` (список лидов)
+
+**Auth**: required  
+**Query params**: `calculator_id?`, `search?`, `limit?`, `offset?`  
+**Response `200`**:
+
+```ts
+{
+  data: CalcLead[];
+  total: number;
+}
+
+interface CalcLead {
+  id:               string;
+  calculator_id:    string;
+  calculator_title: string | null;
+  email:            string;
+  name:             string | null;
+  phone:            string | null;
+  form_values:      Record<string, unknown>;
+  result_values:    Record<string, unknown>;
+  created_at:       string; // ISO 8601
+}
+```
+
+### `POST /leads` (сохранить лид — публичный)
+
+**Auth**: не требуется (вызывается виджетом/плеером)  
+**Body**:
+
+```ts
+{
+  calculator_id:    string;
+  calculator_title?: string;
+  owner_user_id:   string;   // передаётся с фронта (из localStorage calculator.userId)
+  email:           string;
+  name?:           string;
+  phone?:          string;
+  form_values:     Record<string, unknown>;
+  result_values:   Record<string, unknown>;
+}
+```
+
+**Response `201`**: `{ id: string }`
+
+### `DELETE /leads/:id`
+
+**Auth**: required (только владелец)  
+**Response `204`**
+
+### `GET /leads/export.csv`
+
+**Auth**: required  
+**Query**: `calculator_id?`  
+Возвращает CSV-файл с полями: Email, Имя, Телефон, Калькулятор, Дата, + ключи из `result_values`.
+
+### Email-поле в `CalcFieldConfig`
+
+| Поле               | Тип     | Описание                                  |
+|--------------------|---------|-------------------------------------------|
+| `leadShowName`     | boolean | Показывать поле «Имя» (default: true)     |
+| `leadShowPhone`    | boolean | Показывать поле «Телефон» (default: false)|
+| `leadRequired`     | boolean | Обязательно (default: true)               |
+| `leadButtonLabel`  | string  | Текст кнопки (default: "Получить результат") |
+
