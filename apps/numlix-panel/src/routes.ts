@@ -26,14 +26,14 @@ export const panelRouteTo = {
 } as const;
 
 export const panelPages = {
-  Auth: lazy(() => import("./pages/Auth")),
+  Auth: lazy(() => import("./pages/AuthScreen")),
   Dashboard: lazy(() => import("./pages/Dashboard")),
-  CalcList: lazy(() => import("./pages/CalcList")),
+  CalcList: lazy(() => import("./pages/CalcListScreen")),
   CalcBuilder: lazy(() => import("./pages/CalcBuilder")),
   CalcPlayer: lazy(() => import("./pages/CalcPlayer")),
   EmbedBuilder: lazy(() => import("./pages/EmbedBuilder")),
   EmbedWidgets: lazy(() => import("./pages/EmbedWidgets")),
-  ApiKeys: lazy(() => import("./pages/ApiKeys")),
+  ApiKeys: lazy(() => import("./pages/ApiKeysScreen")),
   HelpIndex: lazy(() => import("./pages/help/HelpIndex")),
   HelpGettingStarted: lazy(() => import("./pages/help/HelpGettingStarted")),
   HelpFormula: lazy(() => import("./pages/help/HelpFormula")),

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useGetCalculatorQuery, useUpdateCalculatorMutation, useCreateCalculatorMutation } from "@/services/api/calculatorsApi";
 import {
-  CustomCalculator, CalcField, CalcPage, CalcTheme, loadCalculators, saveCalculator,
+  CustomCalculator, CalcField, CalcPage, CalcTheme,
 } from "@/types/custom-calc";
 import { BuilderCanvas } from "@/components/calc-builder/BuilderCanvas";
 import { BuilderPreview } from "@/components/calc-builder/BuilderPreview";
@@ -47,28 +48,30 @@ function makeNew(): CustomCalculator {
   };
 }
 
-function loadInitial(id?: string): CustomCalculator {
-  if (id) {
-    const found = loadCalculators().find((c) => c.id === id);
-    if (found) {
-      if (!found.pages || found.pages.length === 0) {
-        const firstPage = makeDefaultPage();
-        return {
-          ...found,
-          pages: [firstPage],
-          fields: found.fields.map((f) => ({ ...f, pageId: firstPage.id })),
-        };
-      }
-      return found;
-    }
+function normalizeCalculatorFromApi(c: CustomCalculator): CustomCalculator {
+  if (!c.pages || c.pages.length === 0) {
+    const firstPage = makeDefaultPage();
+    return {
+      ...c,
+      pages: [firstPage],
+      fields: (c.fields ?? []).map((f) => ({ ...f, pageId: firstPage.id })),
+    };
   }
-  return makeNew();
+  return c as CustomCalculator;
 }
 
 export default function CalcBuilder() {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { data: fetched } = useGetCalculatorQuery(id!, { skip: !id });
+  const [updateCalc] = useUpdateCalculatorMutation();
+  const [createCalc] = useCreateCalculatorMutation();
+
+  const seed = useMemo(() => {
+    if (id && fetched) return normalizeCalculatorFromApi(fetched);
+    return makeNew();
+  }, [id, fetched]);
 
   const {
     state: calculator,
@@ -78,7 +81,16 @@ export default function CalcBuilder() {
     redo,
     canUndo,
     canRedo,
-  } = useHistory<CustomCalculator>(loadInitial(id));
+  } = useHistory<CustomCalculator>(seed);
+
+  const hasSyncedRef = useRef(false);
+  useEffect(() => {
+    if (id && fetched && !hasSyncedRef.current) {
+      setStateDirectly(normalizeCalculatorFromApi(fetched));
+      hasSyncedRef.current = true;
+    }
+    if (!id) hasSyncedRef.current = false;
+  }, [id, fetched, setStateDirectly]);
 
   const [saved, setSaved] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
@@ -107,13 +119,38 @@ export default function CalcBuilder() {
   const pages = calculator.pages ?? [makeDefaultPage()];
   const activepageObj = pages[activePage];
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updated = { ...calculator, updatedAt: new Date().toISOString() };
     setStateDirectly(updated);
-    saveCalculator(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-    toast({ title: "Сохранено", description: `Калькулятор «${updated.title}» сохранён локально.` });
+    try {
+      if (updated.id && updated.slug) {
+        await updateCalc({
+          id: updated.id,
+          title: updated.title,
+          description: updated.description,
+          isPublic: updated.isPublic,
+          theme: updated.theme,
+          pages: updated.pages,
+          fields: updated.fields,
+        }).unwrap();
+        toast({ title: "Сохранено", description: `Калькулятор «${updated.title}» сохранён.` });
+      } else {
+        const created = await createCalc({
+          title: updated.title,
+          description: updated.description,
+          isPublic: updated.isPublic,
+          theme: updated.theme,
+          pages: updated.pages,
+          fields: updated.fields,
+        }).unwrap();
+        toast({ title: "Сохранено", description: `Калькулятор «${created.title}» создан.` });
+        navigate(`/calc-builder/${created.id}`, { replace: true });
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      toast({ title: "Ошибка сохранения", variant: "destructive" });
+    }
   };
 
   const copyPlayerLink = () => {

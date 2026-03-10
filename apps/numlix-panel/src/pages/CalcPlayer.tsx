@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { CustomCalculator, CalcPage, getCalculatorBySlug } from "@/types/custom-calc";
+import { CustomCalculator, CalcPage } from "@/types/custom-calc";
+import { useGetPublicCalculatorQuery } from "@/services/api/calculatorsApi";
 import { PlayerField } from "@/components/calc-player/PlayerField";
 import { groupByRow } from "@/components/calc-builder/BuilderCanvas";
 import { buildThemeVars } from "@/components/calc-builder/ThemePanel";
@@ -65,8 +66,8 @@ function PageProgress({ pages, current }: { pages: CalcPage[]; current: number }
 
 export default function CalcPlayer() {
   const { slug } = useParams<{ slug: string }>();
-  const [calculator, setCalculator] = useState<CustomCalculator | null>(null);
-  const [notFound, setNotFound] = useState(false);
+  const { data: calculatorFromApi, isLoading, isError } = useGetPublicCalculatorQuery(slug ?? "", { skip: !slug });
+  const calculator = calculatorFromApi ?? null;
   const [values, setValues] = useState<Record<string, number | string | boolean>>({});
   const [manualResults, setManualResults] = useState<Record<string, number>>({});
 
@@ -77,13 +78,9 @@ export default function CalcPlayer() {
   const { currentPage, enterDir, goTo, next, prev } = usePageSlide(pages.length);
 
   useEffect(() => {
-    if (!slug) { setNotFound(true); return; }
-    const calc = getCalculatorBySlug(slug);
-    if (!calc) { setNotFound(true); return; }
-    setCalculator(calc);
-
+    if (!calculator) return;
     const defaults: Record<string, number | string | boolean> = {};
-    for (const field of calc.fields) {
+    for (const field of calculator.fields) {
       if (field.type === "result") continue;
       const def = field.config.defaultValue;
       if (def !== undefined) {
@@ -100,7 +97,9 @@ export default function CalcPlayer() {
       }
     }
     setValues(defaults);
-  }, [slug]);
+  }, [calculator]);
+
+  const notFound = !slug || isError || (!isLoading && !calculator);
 
   // Auto-advance + conditional routes: check current page on every values change
   useEffect(() => {
@@ -180,6 +179,18 @@ export default function CalcPlayer() {
     else goTo(target);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <SiteHeader />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="animate-pulse text-muted-foreground text-sm">Загрузка...</div>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
   if (notFound) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
@@ -206,16 +217,7 @@ export default function CalcPlayer() {
     );
   }
 
-  if (!calculator) {
-    return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <SiteHeader />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm">Загрузка...</div>
-        </main>
-      </div>
-    );
-  }
+  if (!calculator) return null;
 
   const allSorted = [...calculator.fields].sort((a, b) => a.orderIndex - b.orderIndex);
   const currentPageId = pages[currentPage]?.id;

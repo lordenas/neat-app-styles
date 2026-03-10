@@ -2,7 +2,6 @@ export * from "./hooks/useAuth";
 export * from "./hooks/usePlan";
 export * from "./hooks/useToast";
 export * from "./hooks/useHistory";
-export * from "./hooks/useApiKeys";
 export * from "./hooks/useEmbedWidgets";
 export * from "./lib/utils";
 export * from "./types/custom-calc";

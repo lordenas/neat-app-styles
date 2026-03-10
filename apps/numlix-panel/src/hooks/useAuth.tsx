@@ -1,10 +1,18 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { createContext, useContext, useMemo, ReactNode } from "react";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { clearTokens } from "@/store/slices/authSlice";
+import { decodeJwtPayload } from "@/lib/jwt";
+
+/** Minimal user shape for compatibility with existing consumers (Dashboard, etc.) */
+export interface AuthUser {
+  id: string;
+  email?: string;
+  user_metadata?: { display_name?: string };
+}
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: AuthUser | null;
+  session: { access_token?: string } | null;
   loading: boolean;
   signUp: (email: string, password: string, displayName?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -14,52 +22,39 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const tokens = useAppSelector((s) => s.auth.tokens);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const signUp = async (email: string, password: string, displayName?: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { display_name: displayName },
+  const value = useMemo(() => {
+    const loading = false;
+    let user: AuthUser | null = null;
+    let session: { access_token?: string } | null = null;
+    if (tokens?.accessToken) {
+      session = { access_token: tokens.accessToken };
+      const payload = decodeJwtPayload(tokens.accessToken);
+      if (payload) {
+        user = {
+          id: payload.sub ?? "user",
+          email: payload.email,
+          user_metadata: {},
+        };
+      } else {
+        user = { id: "user", user_metadata: {} };
+      }
+    }
+    return {
+      user,
+      session,
+      loading,
+      signUp: async () => ({ error: null }),
+      signIn: async () => ({ error: null }),
+      signOut: async () => {
+        dispatch(clearTokens());
       },
-    });
-    return { error: error as Error | null };
-  };
+    };
+  }, [tokens, dispatch]);
 
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error as Error | null };
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

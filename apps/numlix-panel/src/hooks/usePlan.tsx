@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { loadCalculators } from "@/types/custom-calc";
+import { useGetCurrentSubscriptionQuery } from "@/services/api/subscriptionsApi";
+import { useListCalculatorsQuery } from "@/services/api/calculatorsApi";
+import type { PlanSlug } from "@/services/api/subscriptionsApi";
 
 export type PlanType = "free" | "basic" | "standard" | "pro";
 
@@ -54,6 +54,17 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   },
 };
 
+/** Map backend plan slug to frontend PlanType */
+function mapPlanSlugToType(slug: string): PlanType {
+  const m: Record<string, PlanType> = {
+    free: "free",
+    pro_500: "basic",
+    pro_1000: "standard",
+    pro_5000: "pro",
+  };
+  return m[slug] ?? "free";
+}
+
 export const PLAN_META = {
   free:     { label: "Бесплатный", price: 0,  color: "hsl(var(--muted-foreground))" },
   basic:    { label: "Базовый",    price: 5,  color: "hsl(var(--info))" },
@@ -70,31 +81,24 @@ export interface Subscription {
 
 export function usePlan() {
   const { user } = useAuth();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
+  const isAuthenticated = Boolean(user);
+  const { data: subData, isLoading: subLoading } = useGetCurrentSubscriptionQuery(undefined, { skip: !isAuthenticated });
+  const { data: calculators = [] } = useListCalculatorsQuery(undefined, { skip: !isAuthenticated });
 
-  const fetchSubscription = useCallback(async () => {
-    if (!user) { setLoading(false); return; }
-    const { data } = await (supabase as any)
-      .from("subscriptions")
-      .select("id, plan, status, current_period_end")
-      .eq("user_id", user.id)
-      .single();
-    setSubscription((data as Subscription) ?? null);
-    setLoading(false);
-  }, [user]);
-
-  useEffect(() => {
-    fetchSubscription();
-  }, [fetchSubscription]);
-
-  const plan: PlanType = (subscription?.plan as PlanType) ?? "free";
+  const plan: PlanType = subData ? mapPlanSlugToType(subData.plan) : "free";
   const limits = PLAN_LIMITS[plan];
+  const subscription: Subscription | null = subData
+    ? {
+        id: subData.id ?? "",
+        plan,
+        status: subData.status ?? "active",
+        current_period_end: subData.currentPeriodEnd ?? subData.current_period_end ?? null,
+      }
+    : null;
 
-  const calcCount = loadCalculators().length;
-
+  const calcCount = calculators.length;
+  const loading = isAuthenticated && subLoading;
   const isCalcLimitReached = limits.maxCalcs !== -1 && calcCount >= limits.maxCalcs;
-
   const isPageLimitReached = (currentPageCount: number) =>
     limits.maxPages !== -1 && currentPageCount >= limits.maxPages;
 
@@ -106,6 +110,6 @@ export function usePlan() {
     calcCount,
     isCalcLimitReached,
     isPageLimitReached,
-    refetch: fetchSubscription,
+    refetch: () => {},
   };
 }

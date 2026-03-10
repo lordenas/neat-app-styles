@@ -23,7 +23,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useListCalculationsQuery, useDeleteCalculationMutation, useShareCalculationMutation, type SavedCalculationView } from "@/services/api/calculationsApi";
 import { toast } from "@/hooks/use-toast";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -31,15 +31,7 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { useEmbedWidgets } from "@/hooks/useEmbedWidgets";
 import { usePlan, PLAN_META } from "@/hooks/usePlan";
 
-interface SavedCalculation {
-  id: string;
-  title: string;
-  calculator_type: string;
-  parameters: Record<string, unknown>;
-  result: Record<string, unknown>;
-  created_at: string;
-  share_token?: string | null;
-}
+type SavedCalculation = SavedCalculationView;
 
 const TYPE_META: Record<string, { label: string; icon: string; color: string }> = {
   credit:    { label: "Кредит",       icon: "💳", color: "bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-800" },
@@ -59,11 +51,12 @@ function getTypeMeta(type: string) {
 export default function Dashboard() {
   const { user, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
-  const [calculations, setCalculations] = useState<SavedCalculation[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
+  const { data: calculations = [], isLoading: loading } = useListCalculationsQuery(undefined, { skip: !user });
+  const [deleteCalculationMutation] = useDeleteCalculationMutation();
+  const [shareCalculationMutation] = useShareCalculationMutation();
   const { widgets } = useEmbedWidgets();
   const { plan, limits, calcCount, subscription, loading: planLoading } = usePlan();
 
@@ -71,47 +64,25 @@ export default function Dashboard() {
     if (!authLoading && !user) navigate("/auth");
   }, [user, authLoading, navigate]);
 
-  useEffect(() => {
-    if (user) fetchCalculations();
-  }, [user]);
-
-  const fetchCalculations = async () => {
-    const { data, error } = await supabase
-      .from("saved_calculations")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!error && data) setCalculations(data as SavedCalculation[]);
-    setLoading(false);
-  };
-
   const deleteCalculation = async (id: string) => {
-    const { error } = await supabase.from("saved_calculations").delete().eq("id", id);
-    if (error) {
-      toast({ title: "Ошибка", description: "Не удалось удалить расчёт.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
-    } else {
-      setCalculations((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await deleteCalculationMutation(id).unwrap();
       setSelected((prev) => { const n = new Set(prev); n.delete(id); return n; });
       toast({ title: "Удалено", description: "Расчёт удалён из истории.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
+    } catch {
+      toast({ title: "Ошибка", description: "Не удалось удалить расчёт.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
     }
   };
 
   const shareCalculation = async (calc: SavedCalculation) => {
-    const token = calc.share_token || crypto.randomUUID();
-    if (!calc.share_token) {
-      const { error } = await supabase
-        .from("saved_calculations")
-        .update({ share_token: token } as any)
-        .eq("id", calc.id);
-      if (error) {
-        toast({ title: "Ошибка", description: "Не удалось создать ссылку.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
-        return;
-      }
-      setCalculations((prev) => prev.map((c) => c.id === calc.id ? { ...c, share_token: token } : c));
+    try {
+      const res = await shareCalculationMutation(calc.id).unwrap();
+      const url = `${window.location.origin}/shared/${res.token}`;
+      await navigator.clipboard.writeText(url);
+      toast({ title: "Ссылка скопирована", description: "Поделитесь ею с кем угодно.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
+    } catch {
+      toast({ title: "Ошибка", description: "Не удалось создать ссылку.", variant: "destructive", icon: <XCircle className="h-5 w-5 text-destructive" /> });
     }
-    const url = `${window.location.origin}/shared/${token}`;
-    await navigator.clipboard.writeText(url);
-    toast({ title: "Ссылка скопирована", description: "Поделитесь ею с кем угодно.", variant: "success", icon: <CheckCircle2 className="h-5 w-5 text-[hsl(var(--success))]" /> });
   };
 
   const selectedCalcs = calculations.filter((c) => selected.has(c.id));
