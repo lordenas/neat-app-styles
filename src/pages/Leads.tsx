@@ -56,7 +56,7 @@ export default function Leads() {
       .select("*")
       .eq("owner_user_id", user!.id)
       .order("created_at", { ascending: false }));
-    if (!error && data) setLeads(data as CalcLead[]);
+    if (!error && data) setLeads(data as unknown as CalcLead[]);
     setLoading(false);
   };
 
