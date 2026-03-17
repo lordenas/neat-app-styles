@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { format, differenceInCalendarDays } from "date-fns";
 import { ru } from "date-fns/locale";
 import { CalendarIcon, Briefcase, Plus, Trash2 } from "lucide-react";
@@ -12,7 +12,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CopyButton } from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
-import { calcUnusedVacation, ExcludedPeriod } from "@/lib/calculators/unused-vacation";
+import { ExcludedPeriod } from "@/lib/calculators/unused-vacation";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcUnusedVacation } from "@/lib/calculators/unused-vacation"; */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { ChevronDown } from "lucide-react";
 
@@ -96,14 +98,24 @@ export default function UnusedVacationCalculator() {
   const [excludedPeriods, setExcludedPeriods] = useState<ExcludedPeriod[]>([]);
   const [excludedOpen, setExcludedOpen] = useState(false);
 
-  const result = calcUnusedVacation({
-    avgDailyPay,
-    startDate,
-    endDate,
-    annualVacationDays,
-    usedVacationDays,
-    excludedPeriods,
-  });
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
+      avgDailyPay,
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
+      annualVacationDays,
+      usedVacationDays,
+      excludedPeriods: excludedPeriods.map((p) => ({
+        from: format(p.from, "yyyy-MM-dd"),
+        to: format(p.to, "yyyy-MM-dd"),
+        label: p.label ?? "",
+      })),
+    },
+  }), [avgDailyPay, startDate, endDate, annualVacationDays, usedVacationDays, excludedPeriods]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ workedMonths: number; excludedDays: number; earnedDays: number; unusedDays: number; compensation: number; ndfl: number; netPay: number }>("unused-vacation", req);
+  const result = backendData?.result ?? { workedMonths: 0, excludedDays: 0, earnedDays: 0, unusedDays: 0, compensation: 0, ndfl: 0, netPay: 0 };
+  /* Legacy: const result = calcUnusedVacation({...}); */
 
   const addPeriod = () =>
     setExcludedPeriods((p) => [...p, { from: new Date(), to: new Date(), label: "" }]);
@@ -119,6 +131,11 @@ export default function UnusedVacationCalculator() {
   return (
     <CalculatorLayout calculatorId="unused-vacation" categoryName="Зарплатные" categoryPath="/categories/salary">
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* Параметры */}
         <Card>

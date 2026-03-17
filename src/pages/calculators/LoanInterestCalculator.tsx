@@ -9,12 +9,12 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 import {
-  calcLoanInterest,
-  type LoanInterestInput,
   type Payout,
   type DebtIncrease,
   type RateChange,
 } from "@/lib/calculators/loan-interest";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcLoanInterest, type LoanInterestInput } from "@/lib/calculators/loan-interest"; */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { cn } from "@/lib/utils";
 
@@ -38,14 +38,17 @@ export default function LoanInterestCalculatorPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const advancedCount = rateChanges.length + payouts.length + debtIncreases.length;
 
-  const result = useMemo(() => {
-    const input: LoanInterestInput = {
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       principal, startDate, endDate, initialRatePercent: initialRate,
       rateChanges, payouts, debtIncreases,
       payoutAppliesToInterestFirst: true,
-    };
-    return calcLoanInterest(input);
-  }, [principal, startDate, endDate, initialRate, rateChanges, payouts, debtIncreases]);
+    },
+  }), [principal, startDate, endDate, initialRate, rateChanges, payouts, debtIncreases]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalInterest: number; totalDebtAndInterest: number; totalDays: number; rows: Array<{ type: string; dateTo?: string; cumulativeInterest?: number; principal?: number }> }>("loan-interest", req);
+  const result = backendData?.result ?? { totalInterest: 0, totalDebtAndInterest: 0, totalDays: 0, rows: [] as Array<{ type: string; dateTo?: string; cumulativeInterest?: number; principal?: number }> };
+  /* Legacy: const result = useMemo(() => calcLoanInterest(input), [...]); */
 
   // Build chart data from period rows
   const chartData = useMemo(() => {
@@ -69,6 +72,11 @@ export default function LoanInterestCalculatorPage() {
   return (
     <CalculatorLayout calculatorId="loan-interest" categoryName="Финансы" categoryPath="/categories/finance" title={title}>
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* Input panel — full width */}
         <Card>
           <CardHeader className="pb-3"><CardTitle className="text-base">Параметры займа</CardTitle></CardHeader>

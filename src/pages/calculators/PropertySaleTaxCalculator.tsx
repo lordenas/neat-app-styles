@@ -13,6 +13,7 @@ import {
 } from "@/lib/calculators/property-sale-tax";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { Home, Gift, CheckCircle2, ShieldX } from "lucide-react";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
@@ -42,13 +43,16 @@ export default function PropertySaleTaxCalculatorPage() {
   const [purchaseExpenses, setPurchaseExpenses] = useState(5_000_000);
   const [saleAfter2025, setSaleAfter2025] = useState(true);
 
-  const result = useMemo(() => {
-    const input: PropertySaleTaxInput = {
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       ownershipBefore2016, acquisitionType, isSoleHousing, yearsHeld,
       salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025,
-    };
-    return calcPropertySaleTax(input);
-  }, [ownershipBefore2016, acquisitionType, isSoleHousing, yearsHeld, salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025]);
+    } satisfies PropertySaleTaxInput,
+  }), [ownershipBefore2016, acquisitionType, isSoleHousing, yearsHeld, salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ taxableIncome: number; taxableBase: number; tax: number; minPeriodYears: number; noTax: boolean; explanation: string; useSalePriceForIncome?: boolean }>("property-sale-tax", req);
+  const result = backendData?.result ?? { taxableIncome: 0, taxableBase: 0, tax: 0, minPeriodYears: 0, noTax: false, explanation: "", useSalePriceForIncome: true };
+  /* Legacy: const result = useMemo(() => calcPropertySaleTax(input), [...]); */
 
   return (
     <CalculatorLayout
@@ -65,6 +69,11 @@ export default function PropertySaleTaxCalculatorPage() {
       }
     >
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* ── Parameters bar ── */}
         <Card>

@@ -8,8 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
-import { calculateMortgage, buildRefinancingSchedule } from "@/lib/calculators/refinancing";
+import { buildRefinancingSchedule } from "@/lib/calculators/refinancing";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy client-side calculation — not used when backend is available (migration). */
+// import { calculateMortgage } from "@/lib/calculators/refinancing";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Home, TrendingUp, Calendar, Banknote } from "lucide-react";
 
@@ -27,11 +30,36 @@ export default function MortgageCalculatorPage() {
 
   const [schedulePeriod, setSchedulePeriod] = useState<"year" | "month">("year");
 
-  const result = useMemo(() => calculateMortgage(propertyPrice, downPayment, annualRate, termYears), [propertyPrice, downPayment, annualRate, termYears]);
+  const backendRequest = useMemo(
+    () => ({
+      regionCode: "GLB",
+      input: { propertyPrice, downPayment, annualRate, termYears },
+    }),
+    [propertyPrice, downPayment, annualRate, termYears]
+  );
+  const { data: backendData, error: backendError, isLoading: backendLoading } = useBackendCalculation<{
+    principal: number;
+    monthlyPayment: number;
+    totalPayment: number;
+    totalInterest: number;
+    termMonths: number;
+  }>("mortgage", backendRequest);
+  const result = useMemo(() => {
+    const r = backendData?.result;
+    if (!r) return { principal: 0, monthlyPayment: 0, totalPayment: 0, totalInterest: 0, termMonths: 0 };
+    return {
+      principal: r.principal ?? 0,
+      monthlyPayment: r.monthlyPayment ?? 0,
+      totalPayment: r.totalPayment ?? 0,
+      totalInterest: r.totalInterest ?? 0,
+      termMonths: r.termMonths ?? 0,
+    };
+  }, [backendData?.result]);
   const schedule = useMemo(() => {
     if (result.principal <= 0) return null;
     return buildRefinancingSchedule(result.principal, annualRate, result.termMonths, schedulePeriod);
   }, [result.principal, annualRate, result.termMonths, schedulePeriod]);
+  /* Legacy: const result = useMemo(() => calculateMortgage(propertyPrice, downPayment, annualRate, termYears), [...]); */
 
   const downPercent = propertyPrice > 0 ? Math.round((downPayment / propertyPrice) * 100) : 0;
   const overpayPercent = result.totalPayment > 0
@@ -145,8 +173,19 @@ export default function MortgageCalculatorPage() {
           </CardContent>
         </Card>
 
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* Stats */}
-        {result.principal > 0 ? (
+        {backendLoading ? (
+          <Card>
+            <CardContent className="py-8">
+              <p className="text-sm text-muted-foreground text-center">Загрузка…</p>
+            </CardContent>
+          </Card>
+        ) : result.principal > 0 ? (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <Card className="p-4">

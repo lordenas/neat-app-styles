@@ -8,12 +8,9 @@ import { cn } from "@/lib/utils";
 import {
   type PeniCalculationType,
   type TaxPayerType,
-  getKeyRateOnDate,
-  daysBetween,
-  calculateDailyPeni,
-  getPeniFraction } from
-"@/lib/calculators/peni";
-import keyRateData from "@/data/key-rate-ru.json";
+} from "@/lib/calculators/peni";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: local peni formula imports removed; backend is source of truth. */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { AlertTriangle, Building2, User, Receipt, Home, Briefcase } from "lucide-react";
 
@@ -38,37 +35,13 @@ export default function PeniCalculatorPage() {
   });
   const [dateTo, setDateTo] = useState(() => new Date().toISOString().slice(0, 10));
 
-  const result = useMemo(() => {
-    if (debt <= 0 || !dateFrom || !dateTo || dateFrom >= dateTo) return null;
-    const rates = keyRateData.rates;
-    const totalDays = daysBetween(dateFrom, dateTo);
-    let totalPeni = 0;
-    const breakdown: {dateFrom: string;dateTo: string;keyRate: number;fraction: number;dailyPeni: number;days: number;}[] = [];
-
-    for (let i = 0; i < totalDays; i++) {
-      const d = new Date(dateFrom);
-      d.setDate(d.getDate() + i + 1);
-      const dateStr = d.toISOString().slice(0, 10);
-      const keyRate = getKeyRateOnDate(rates, dateStr);
-      const fraction = getPeniFraction(calcType, payerType, i + 1);
-      const daily = calculateDailyPeni(debt, keyRate, fraction);
-      totalPeni += daily;
-
-      const last = breakdown[breakdown.length - 1];
-      if (!last || last.keyRate !== keyRate || last.fraction !== fraction) {
-        breakdown.push({ dateFrom: dateStr, dateTo: dateStr, keyRate, fraction, dailyPeni: daily, days: 1 });
-      } else {
-        last.dateTo = dateStr;
-        last.days++;
-      }
-    }
-
-    return {
-      totalDays,
-      totalPeni: Math.round(totalPeni * 100) / 100,
-      breakdown
-    };
-  }, [debt, calcType, payerType, dateFrom, dateTo]);
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: { debt, calcType, payerType, dateFrom, dateTo },
+  }), [debt, calcType, payerType, dateFrom, dateTo]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalDays: number; totalPeni: number; breakdown: { dateFrom: string; dateTo: string; keyRate: number; fraction: number; dailyPeni: number; days: number }[] }>("peni", req);
+  const result = debt <= 0 || !dateFrom || !dateTo || dateFrom >= dateTo ? null : (backendData?.result ?? { totalDays: 0, totalPeni: 0, breakdown: [] });
+  /* Legacy: local loop with key rates removed in favor of backend. */
 
   const fmt = (v: number) => new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
   const fmtInt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v));
@@ -85,6 +58,11 @@ export default function PeniCalculatorPage() {
   return (
     <CalculatorLayout calculatorId="peni" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         
 
 

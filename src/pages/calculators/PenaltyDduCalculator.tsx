@@ -18,6 +18,8 @@ import keyRateData from "@/data/key-rate-ru.json";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { AlertTriangle, User, Building2, TrendingDown, CalendarX } from "lucide-react";
 
+/** legacy-local-calc: no backend endpoint yet (migration gap). See apps/numlix-main/docs/MIGRATION_CALC_STATUS.md */
+
 const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 const fmtInt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v));

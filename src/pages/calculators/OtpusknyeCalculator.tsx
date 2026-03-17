@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus, Umbrella } from "lucide-react";
 import { CopyButton } from "@/components/ui/copy-button";
-import { calcOtpusknye, type ExcludedPeriod } from "@/lib/calculators/otpusknye";
+import { type ExcludedPeriod } from "@/lib/calculators/otpusknye";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcOtpusknye } from "@/lib/calculators/otpusknye"; */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 
 const fmt = (n: number) => n.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -28,7 +30,10 @@ export default function OtpusknyeCalculator() {
     setPartialMonths(copy);
   };
 
-  const result = calcOtpusknye({ totalEarnings, fullMonths, partialMonths, vacationDays });
+  const req = useMemo(() => ({ regionCode: "GLB", input: { totalEarnings, fullMonths, partialMonths, vacationDays } }), [totalEarnings, fullMonths, partialMonths, vacationDays]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ avgDailyPay: number; calcDays: number; vacationPay: number; ndfl: number; netPay: number }>("otpusknye", req);
+  const result = backendData?.result ?? { avgDailyPay: 0, calcDays: 0, vacationPay: 0, ndfl: 0, netPay: 0 };
+  /* Legacy: const result = calcOtpusknye({ totalEarnings, fullMonths, partialMonths, vacationDays }); */
 
   const title = (
     <div>
@@ -42,6 +47,11 @@ export default function OtpusknyeCalculator() {
   return (
     <CalculatorLayout calculatorId="otpusknye" categoryName="Зарплатные" categoryPath="/categories/salary" title={title}>
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* Main params */}
         <Card>
           <CardHeader className="pb-3">

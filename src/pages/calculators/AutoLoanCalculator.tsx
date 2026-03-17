@@ -8,8 +8,10 @@ import { Slider } from "@/components/ui/slider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, Car, TrendingUp, Banknote, Calendar, Percent } from "lucide-react";
-import { calcAutoLoan, type AutoLoanInput } from "@/lib/calculators/auto-loan";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy client-side calculation — not used when backend is available (migration). */
+// import { calcAutoLoan, type AutoLoanInput } from "@/lib/calculators/auto-loan";
 
 const TERM_PRESETS = [12, 24, 36, 48, 60, 84];
 
@@ -21,8 +23,30 @@ export default function AutoLoanCalculator() {
   const [termMonths, setTermMonths] = useState(60);
   const [showSchedule, setShowSchedule] = useState(false);
 
-  const input: AutoLoanInput = { carPrice, downPayment, annualRate, termMonths };
-  const result = useMemo(() => calcAutoLoan(input), [carPrice, downPayment, annualRate, termMonths]);
+  const backendRequest = useMemo(
+    () => ({ regionCode: "GLB", input: { carPrice, downPayment, annualRate, termMonths } }),
+    [carPrice, downPayment, annualRate, termMonths]
+  );
+  const { data: backendData, error: backendError, isLoading: backendLoading } = useBackendCalculation<{
+    loanAmount: number;
+    monthlyPayment: number;
+    totalPayment: number;
+    totalInterest: number;
+    schedule: { month: number; payment: number; principal: number; interest: number; balance: number }[];
+  }>("auto-loan", backendRequest);
+  const result = useMemo(() => {
+    const r = backendData?.result;
+    if (!r) return { loanAmount: 0, monthlyPayment: 0, totalPayment: 0, totalInterest: 0, schedule: [] };
+    return {
+      loanAmount: r.loanAmount ?? 0,
+      monthlyPayment: r.monthlyPayment ?? 0,
+      totalPayment: r.totalPayment ?? 0,
+      totalInterest: r.totalInterest ?? 0,
+      schedule: Array.isArray(r.schedule) ? r.schedule : [],
+    };
+  }, [backendData?.result]);
+  /* Legacy: const input: AutoLoanInput = { carPrice, downPayment, annualRate, termMonths };
+  const result = useMemo(() => calcAutoLoan(input), [carPrice, downPayment, annualRate, termMonths]); */
 
   const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 0 });
 
@@ -171,6 +195,11 @@ export default function AutoLoanCalculator() {
           </CardContent>
         </Card>
 
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* Hero result */}
         <Card className="bg-primary text-primary-foreground border-0">
           <CardContent className="px-6 py-8">
@@ -182,7 +211,7 @@ export default function AutoLoanCalculator() {
                 <div>
                   <p className="text-sm opacity-75 mb-1">Ежемесячный платёж</p>
                   <p className="text-5xl font-bold tracking-tight">
-                    {fmt(result.monthlyPayment)} ₽
+                    {backendLoading ? "Загрузка…" : `${fmt(result.monthlyPayment)} ₽`}
                   </p>
                 </div>
               </div>
