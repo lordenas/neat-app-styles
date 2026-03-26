@@ -1,0 +1,234 @@
+{
+  "description": "Примеры input для POST /api/v1/calculate/credit-early-repayment. В запросе обернуть в { \"regionCode\": \"GLB\", \"input\": <один из examples> } и добавить заголовок x-api-key.",
+  "examples": [
+    {
+      "name": "1. Минимальный — только обязательные поля, без досрочных",
+      "input": {
+        "loanAmount": 5000000,
+        "annualRatePercent": 18,
+        "termMonths": 180,
+        "issueDate": "2026-02-22"
+      }
+    },
+    {
+      "name": "2. С одним досрочным платежом (уменьшение срока)",
+      "input": {
+        "loanAmount": 3000000,
+        "annualRatePercent": 15,
+        "termMonths": 120,
+        "issueDate": "2026-01-15",
+        "earlyPayments": [
+          {
+            "date": "15.08.2026",
+            "amount": 500000,
+            "mode": "reduce_term"
+          }
+        ]
+      }
+    },
+    {
+      "name": "3. Несколько досрочных (уменьшение платежа)",
+      "input": {
+        "loanAmount": 5000000,
+        "annualRatePercent": 18,
+        "termMonths": 180,
+        "issueDate": "2026-02-22",
+        "earlyPayments": [
+          {
+            "date": "22.06.2026",
+            "amount": 300000,
+            "mode": "reduce_payment"
+          },
+          {
+            "date": "22.12.2026",
+            "amount": 500000,
+            "mode": "reduce_payment"
+          }
+        ]
+      }
+    },
+    {
+      "name": "4. Рекуррентный досрочный платёж (ежемесячно)",
+      "input": {
+        "loanAmount": 2000000,
+        "annualRatePercent": 12,
+        "termMonths": 60,
+        "issueDate": "2026-03-01",
+        "earlyPayments": [
+          {
+            "date": "01.06.2026",
+            "amount": 50000,
+            "mode": "reduce_term",
+            "recurring": true,
+            "frequency": "monthly",
+            "endDate": "01.12.2026"
+          }
+        ]
+      }
+    },
+    {
+      "name": "5. Изменение ставки (пересчёт платежа)",
+      "input": {
+        "loanAmount": 4000000,
+        "annualRatePercent": 20,
+        "termMonths": 120,
+        "issueDate": "2026-02-01",
+        "rateChanges": [
+          {
+            "date": "01.02.2027",
+            "ratePercent": 16,
+            "recalcMode": "payment"
+          }
+        ]
+      }
+    },
+    {
+      "name": "6. Изменение ставки (пересчёт срока)",
+      "input": {
+        "loanAmount": 3000000,
+        "annualRatePercent": 18,
+        "termMonths": 84,
+        "issueDate": "2026-04-10",
+        "rateChanges": [
+          {
+            "date": "10.04.2028",
+            "ratePercent": 14,
+            "recalcMode": "term"
+          }
+        ]
+      }
+    },
+    {
+      "name": "7. Кредитные каникулы — только проценты",
+      "input": {
+        "loanAmount": 2500000,
+        "annualRatePercent": 16,
+        "termMonths": 60,
+        "issueDate": "2026-01-20",
+        "creditHolidays": [
+          {
+            "startDate": "20.03.2026",
+            "months": 3,
+            "type": "interest"
+          }
+        ]
+      }
+    },
+    {
+      "name": "8. Кредитные каникулы — полные (без платежей)",
+      "input": {
+        "loanAmount": 3500000,
+        "annualRatePercent": 14,
+        "termMonths": 72,
+        "issueDate": "2026-05-01",
+        "creditHolidays": [
+          {
+            "startDate": "01.06.2026",
+            "months": 2,
+            "type": "none"
+          }
+        ]
+      }
+    },
+    {
+      "name": "9. Дополнительные опции: первый платёж только проценты, округление",
+      "input": {
+        "loanAmount": 1000000,
+        "annualRatePercent": 19,
+        "termMonths": 36,
+        "issueDate": "2026-02-22",
+        "firstPaymentInterestOnly": true,
+        "roundPayment": true,
+        "roundTo": "hundred"
+      }
+    },
+    {
+      "name": "10. Перенос выходных на следующий рабочий день",
+      "input": {
+        "loanAmount": 1500000,
+        "annualRatePercent": 17,
+        "termMonths": 24,
+        "issueDate": "2026-02-22",
+        "transferWeekends": true,
+        "transferDirection": "next"
+      }
+    },
+    {
+      "name": "11. Комбинированный: досрочные + изменение ставки + каникулы",
+      "input": {
+        "loanAmount": 5000000,
+        "annualRatePercent": 18,
+        "termMonths": 180,
+        "issueDate": "2026-02-22",
+        "earlyPayments": [
+          {
+            "date": "22.06.2026",
+            "amount": 400000,
+            "mode": "reduce_term"
+          },
+          {
+            "date": "22.02.2027",
+            "amount": 300000,
+            "mode": "reduce_payment"
+          }
+        ],
+        "rateChanges": [
+          {
+            "date": "22.02.2028",
+            "ratePercent": 15,
+            "recalcMode": "payment"
+          }
+        ],
+        "creditHolidays": [
+          {
+            "startDate": "22.08.2026",
+            "months": 2,
+            "type": "interest"
+          }
+        ],
+        "roundPayment": true,
+        "roundTo": "rub"
+      }
+    },
+    {
+      "name": "12. Дата выдачи в формате dd.MM.yyyy",
+      "input": {
+        "loanAmount": 2000000,
+        "annualRatePercent": 12,
+        "termMonths": 48,
+        "issueDate": "22.02.2026",
+        "earlyPayments": [
+          {
+            "date": "22.08.2026",
+            "amount": 100000,
+            "mode": "reduce_term"
+          }
+        ]
+      }
+    }
+  ],
+  "fullRequestExample": {
+    "comment": "Полное тело для POST /api/v1/calculate/credit-early-repayment, заголовок: x-api-key: <ваш_ключ>",
+    "regionCode": "GLB",
+    "input": {
+      "loanAmount": 5000000,
+      "annualRatePercent": 18,
+      "termMonths": 180,
+      "issueDate": "2026-02-22",
+      "earlyPayments": [
+        {
+          "date": "22.06.2026",
+          "amount": 400000,
+          "mode": "reduce_term"
+        }
+      ],
+      "rateChanges": [],
+      "creditHolidays": [],
+      "firstPaymentInterestOnly": false,
+      "roundPayment": false,
+      "roundTo": "rub",
+      "transferWeekends": false,
+      "transferDirection": "next"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "scenario": "A_phys_petrol_3_5",
+    "customsFee": "13541.00",
+    "duty": "493502.22",
+    "recyclingFee": "5200.00",
+    "excise": "0.00",
+    "vat": "0.00",
+    "total": "512243.22",
+    "eurRate": "auto"
+  },
+  {
+    "scenario": "B_legal_petrol_new",
+    "customsFee": "13541.00",
+    "duty": "274167.90",
+    "recyclingFee": "800800.00",
+    "excise": "7680.00",
+    "vat": "464119.46",
+    "total": "1560308.36",
+    "eurRate": "auto"
+  },
+  {
+    "scenario": "C_phys_electric_new_hp70",
+    "customsFee": "18465.00",
+    "duty": "411251.85",
+    "recyclingFee": "3400.00",
+    "excise": "0.00",
+    "vat": "693644.79",
+    "total": "1126761.64",
+    "eurRate": "auto"
+  },
+  {
+    "scenario": "D_phys_electric_new_hp150",
+    "customsFee": "18465.00",
+    "duty": "411251.85",
+    "recyclingFee": "1560000.00",
+    "excise": "9600.00",
+    "vat": "695756.79",
+    "total": "2695073.64",
+    "eurRate": "auto"
+  },
+  {
+    "scenario": "E_legal_diesel_7plus",
+    "customsFee": "4924.00",
+    "duty": "760358.98",
+    "recyclingFee": "3456000.00",
+    "excise": "110340.00",
+    "vat": "432821.53",
+    "total": "4764444.51",
+    "eurRate": "auto"
+  },
+  {
+    "scenario": "F_phys_hybrid_parallel_1_3",
+    "customsFee": "13541.00",
+    "duty": "1005282.30",
+    "recyclingFee": "3400.00",
+    "excise": "0.00",
+    "vat": "0.00",
+    "total": "1022223.30",
+    "eurRate": "auto"
+  }
+]
