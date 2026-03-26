@@ -1,0 +1,62 @@
+---
+description: Единая авторизация Numlix (JWT, httpOnly cookies, Caddy, поддомены) — обязательные инварианты и ссылка на полную спецификацию.
+globs:
+  - packages/auth-shared/**
+  - apps/calc-hub-back/**
+  - apps/numlix-main/**
+  - apps/numlix-panel/**
+  - apps/numlix-admin/**
+  - packages/admin-shared/**
+  - infra/local/**
+alwaysApply: false
+---
+
+# Numlix auth — правила для ИИ (кратко + полный текст)
+
+**Полная документация (читать при любых правках auth/CORS/cookies/env):** `docs/NUMLIX_AUTH.md`
+
+Ниже — инварианты, нарушение которых ломает прод или локальный SSO. Не дублируй длинные объяснения в чате: правь код и при необходимости обновляй `docs/NUMLIX_AUTH.md`.
+
+## Архитектура в одном абзаце
+
+- Источник истины по пользователю: **`calc-hub-back`**, JWT access + refresh, **httpOnly cookies** (имена из env), опционально Bearer в памяти.
+- Фронты: **`@numlix/auth-shared`** (`AuthProvider`, `bootstrapSession`, `login`/`refresh`/`logout`/`getMe`), **`credentials: "include"`** на всех запросах к API.
+- SSO между **`panel.numlix.local`**, **`numlix.local`**, **`api.numlix.local`**: **`COOKIE_DOMAIN=.numlix.local`**, **`COOKIE_SAMESITE=none`** + **Secure** (часто **`COOKIE_SECURE=auto`** за Caddy), **`CORS_ORIGINS`** должен содержать **все https-origin фронтов**.
+- За **HTTPS** на фронте API в env только **`https://api...`** — иначе mixed content.
+
+## Запреты (не делать)
+
+1. **Не класть** скомпилированные **`*.js` / `*.d.ts`** в `packages/auth-shared/src/` — Vite резолвит **`.js` раньше `.ts`**, подхватится мёртвый код (типичный симптом: запросы на `localhost:3001`). Сборка пакета только в **`dist/`**; см. `packages/auth-shared/.gitignore`.
+2. **Не читать** `VITE_*` так: `const e = import.meta.env; e.VITE_API_URL` — Vite **не подставит** значения. Только **литералы** `import.meta.env.VITE_API_URL`.
+3. **Не включать** `experimental.trustHostHeader` в Next без **`NUMLIX_BEHIND_PROXY=1`** — ломает **`http://localhost:3000`** (редиректы на `https://localhost:3000`).
+4. **Не использовать** `getMe` с `null` через старую логику `null ?? getAccessToken()` — для cookie-only нужно **`accessToken === undefined ? getAccessToken() : accessToken`** (уже в `auth-client.ts`).
+5. **Не убирать** `credentials: "include"` у auth и RTK `baseQuery` на panel.
+
+## Обязательные проверки перед «готово»
+
+- [ ] Новый фронтовый origin добавлен в **`CORS_ORIGINS`** (calc-hub-back).
+- [ ] Для Caddy: cookie **Domain** + **SameSite/Secure** согласованы с HTTPS; после смены — **перелогин**.
+- [ ] `numlix-main` за Caddy: **`npm run dev:numlix-main:proxy`** + **`allowedDevOrigins`** в `next.config.ts`.
+- [ ] Порты: Next **3000**, Nest **3001**, совпадает с `Caddyfile`.
+
+## Куда смотреть в коде
+
+| Задача | Файл |
+|--------|------|
+| Куки, refresh, login | `apps/calc-hub-back/src/modules/auth/auth.controller.ts` |
+| CORS, trust proxy | `apps/calc-hub-back/src/main.ts` |
+| JWT из Bearer/cookie | `apps/calc-hub-back/src/modules/auth/jwt.strategy.ts` |
+| bootstrap / getMe(null) | `packages/auth-shared/src/auth-client.ts` |
+| URL API, normalize https | `packages/auth-shared/src/config.ts` |
+| Next AuthProvider + env | `apps/numlix-main/src/components/legacy-providers.tsx` |
+| Next за прокси | `apps/numlix-main/next.config.ts` |
+| RTK + refresh | `apps/numlix-panel/src/services/api/baseApi.ts` |
+| Локальный TLS маршрут | `infra/local/Caddyfile` |
+
+## Если пользователь сообщает о баге
+
+1. Открыть **`docs/NUMLIX_AUTH.md`**, раздел «Типичные симптомы».
+2. Проверить **фактические** `.env` (не только `.env.example`): `VITE_API_URL`, `NEXT_PUBLIC_API_URL`, `CORS_ORIGINS`, `COOKIE_*`.
+3. Убедиться, что в `packages/auth-shared/src/` **нет** лишних `.js`.
+
+После изменения поведения auth — **обнови** `docs/NUMLIX_AUTH.md` и при необходимости этот `.mdc`.

@@ -11,13 +11,18 @@ interface LegacyProvidersProps {
   children: ReactNode;
 }
 
+const authApiBase =
+  typeof process.env.NEXT_PUBLIC_API_URL === "string" && process.env.NEXT_PUBLIC_API_URL.length > 0
+    ? process.env.NEXT_PUBLIC_API_URL
+    : undefined;
+
 export function LegacyProviders({ children }: LegacyProvidersProps) {
   return (
     <HelmetProvider>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <TooltipProvider>
           <Toaster />
-          <AuthProvider>{children as never}</AuthProvider>
+          <AuthProvider apiBaseUrl={authApiBase}>{children as never}</AuthProvider>
         </TooltipProvider>
       </ThemeProvider>
     </HelmetProvider>

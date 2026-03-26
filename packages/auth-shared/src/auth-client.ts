@@ -86,7 +86,8 @@ export async function logout(): Promise<void> {
 }
 
 export async function getMe(accessToken?: string | null): Promise<AuthUser> {
-  const token = accessToken ?? getAccessToken();
+  // undefined → взять из памяти; null → только httpOnly-cookie (без Bearer), для SSO между поддоменами
+  const token = accessToken === undefined ? getAccessToken() : accessToken;
   const headers: Record<string, string> = {};
   if (token) {
     headers.Authorization = `Bearer ${token}`;
@@ -96,10 +97,15 @@ export async function getMe(accessToken?: string | null): Promise<AuthUser> {
 
 export async function bootstrapSession(): Promise<{ user: AuthUser | null; accessToken: string | null }> {
   try {
-    const refreshed = await refreshSession();
-    return { user: refreshed.user, accessToken: refreshed.accessToken };
+    const user = await getMe(null);
+    return { user, accessToken: null };
   } catch {
-    clearAccessToken();
-    return { user: null, accessToken: null };
+    try {
+      const refreshed = await refreshSession();
+      return { user: refreshed.user, accessToken: refreshed.accessToken };
+    } catch {
+      clearAccessToken();
+      return { user: null, accessToken: null };
+    }
   }
 }
