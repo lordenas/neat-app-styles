@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@numlix/admin-shared": "*",
+    "@numlix/auth-shared": "*",
     "@numlix/ui-kit": "*",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.462.0",

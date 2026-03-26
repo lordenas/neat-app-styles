@@ -32,6 +32,17 @@ const RATE_TYPES: { id: RateType; label: string; icon: React.ReactNode; desc: st
 const today = () => new Date().toISOString().slice(0, 10);
 const monthAgo = () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return d.toISOString().slice(0, 10); };
 
+interface PenaltyContractBreakdownRow {
+  isPayment?: boolean;
+  isAdditionalDebt?: boolean;
+  isExcluded?: boolean;
+  periodLabel: string;
+  days: number;
+  amountLabel: string;
+  formula?: string;
+  penalty: number;
+}
+
 export default function PenaltyContractCalculatorPage() {
   const [sum, setSum] = useState(500000);
   const [rateType, setRateType] = useState<RateType>("percent_per_day");
@@ -56,8 +67,8 @@ export default function PenaltyContractCalculatorPage() {
       partialPayments, additionalDebts, showPerDebt: false,
     } satisfies PenaltyContractInput,
   }), [sum, startDate, endDate, workdaysOnly, rateType, rateValue, excludedPeriods, partialPayments, additionalDebts]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ totalPenalty: number; totalPenaltyCapped: number; totalDebtAndPenalty: number; breakdown: unknown[] }>("penalty-contract", req);
-  const result = backendData?.result ?? { totalPenalty: 0, totalPenaltyCapped: 0, totalDebtAndPenalty: 0, breakdown: [] };
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalPenalty: number; totalPenaltyCapped: number; totalDebtAndPenalty: number; breakdown: PenaltyContractBreakdownRow[] }>("penalty-contract", req);
+  const result = backendData?.result ?? { totalPenalty: 0, totalPenaltyCapped: 0, totalDebtAndPenalty: 0, breakdown: [] as PenaltyContractBreakdownRow[] };
   /* Legacy: const result = useMemo(() => calcPenaltyContract(input), [...]); */
 
   const totalWithDebt = sum + (result?.totalPenaltyCapped ?? 0);

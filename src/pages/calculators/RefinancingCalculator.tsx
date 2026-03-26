@@ -63,8 +63,8 @@ export default function RefinancingCalculatorPage() {
       newRate, newTerm, newTermUnit,
     },
   }), [remainingDebt, remainingTerm, termUnit, currentRate, newRate, newTerm, newTermUnit]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ currentMonthlyPayment: number; refinancedMonthlyPayment: number; currentTotalInterest: number; refinancedTotalInterest: number; totalInterestDelta: number; monthlyPaymentDelta: number; scheduleData?: unknown[] }>("refinancing", req);
-  const result = backendData?.result ?? { currentMonthlyPayment: 0, refinancedMonthlyPayment: 0, currentTotalInterest: 0, refinancedTotalInterest: 0, totalInterestDelta: 0, monthlyPaymentDelta: 0, scheduleData: [] };
+  const { data: backendData, error: backendError } = useBackendCalculation<{ currentMonthlyPayment: number; refinancedMonthlyPayment: number; currentTotalInterest: number; refinancedTotalInterest: number; currentTotalPayment: number; refinancedTotalPayment: number; totalInterestDelta: number; monthlyPaymentDelta: number; scheduleData?: unknown[] }>("refinancing", req);
+  const result = backendData?.result ?? { currentMonthlyPayment: 0, refinancedMonthlyPayment: 0, currentTotalInterest: 0, refinancedTotalInterest: 0, currentTotalPayment: 0, refinancedTotalPayment: 0, totalInterestDelta: 0, monthlyPaymentDelta: 0, scheduleData: [] };
   /* Legacy: const result = useMemo(() => calculateRefinancing(input), [...]); */
 
   const chartData = useMemo(() => {

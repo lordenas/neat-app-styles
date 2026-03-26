@@ -24,6 +24,27 @@ const fmt = (v: number) =>
 const PRINCIPAL_PRESETS = [100_000, 300_000, 500_000, 1_000_000, 3_000_000];
 const RATE_PRESETS = [7.5, 10, 12, 15, 21];
 
+interface LoanInterestPeriodRow {
+  type: "period";
+  dateFrom: string;
+  dateTo: string;
+  days: number;
+  principal: number;
+  ratePercent: number;
+  periodInterest: number;
+  cumulativeInterest: number;
+}
+
+interface LoanInterestMetaRow {
+  type: string;
+}
+
+type LoanInterestRow = LoanInterestPeriodRow | LoanInterestMetaRow;
+
+function isPeriodRow(row: LoanInterestRow): row is LoanInterestPeriodRow {
+  return row.type === "period";
+}
+
 export default function LoanInterestCalculatorPage() {
   const [principal, setPrincipal] = useState(500_000);
   const [initialRate, setInitialRate] = useState(10);
@@ -46,13 +67,13 @@ export default function LoanInterestCalculatorPage() {
       payoutAppliesToInterestFirst: true,
     },
   }), [principal, startDate, endDate, initialRate, rateChanges, payouts, debtIncreases]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ totalInterest: number; totalDebtAndInterest: number; totalDays: number; rows: Array<{ type: string; dateTo?: string; cumulativeInterest?: number; principal?: number }> }>("loan-interest", req);
-  const result = backendData?.result ?? { totalInterest: 0, totalDebtAndInterest: 0, totalDays: 0, rows: [] as Array<{ type: string; dateTo?: string; cumulativeInterest?: number; principal?: number }> };
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalInterest: number; totalDebtAndInterest: number; totalDays: number; rows: LoanInterestRow[] }>("loan-interest", req);
+  const result = backendData?.result ?? { totalInterest: 0, totalDebtAndInterest: 0, totalDays: 0, rows: [] as LoanInterestRow[] };
   /* Legacy: const result = useMemo(() => calcLoanInterest(input), [...]); */
 
   // Build chart data from period rows
   const chartData = useMemo(() => {
-    const periods = result.rows.filter((r): r is Extract<typeof r, { type: "period" }> => r.type === "period");
+    const periods = result.rows.filter(isPeriodRow);
     return periods.map((r) => ({
       label: r.dateTo.slice(0, 7),
       interest: r.cumulativeInterest,
@@ -351,7 +372,7 @@ export default function LoanInterestCalculatorPage() {
                         </thead>
                         <tbody>
                           {result.rows
-                            .filter((r): r is Extract<typeof r, { type: "period" }> => r.type === "period")
+                            .filter(isPeriodRow)
                             .map((r, i) => (
                               <tr key={i} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
                                 <td className="py-2 pr-3 text-muted-foreground whitespace-nowrap">

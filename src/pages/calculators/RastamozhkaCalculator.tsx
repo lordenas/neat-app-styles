@@ -80,8 +80,8 @@ export default function RastamozhkaCalculator() {
     regionCode: "GLB",
     input: { priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate } satisfies RastamozhkaInput,
   }), [priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ customsFee: number; duty: number; recyclingFee: number; excise: number; vat: number; total: number; totalRub?: number }>("rastamozhka-auto", req);
-  const result = backendData?.result ?? { customsFee: 0, duty: 0, recyclingFee: 0, excise: 0, vat: 0, total: 0 };
+  const { data: backendData, error: backendError } = useBackendCalculation<{ customsFee: number; duty: number; recyclingFee: number; excise: number; vat: number; total: number; totalRub?: number; dutyNote?: string }>("rastamozhka-auto", req);
+  const result = backendData?.result ?? { customsFee: 0, duty: 0, recyclingFee: 0, excise: 0, vat: 0, total: 0, dutyNote: undefined };
   /* Legacy: const input: RastamozhkaInput = {...}; const result = calcRastamozhka(input); */
 
   const priceRub  = Math.round(priceEur * eurRate);

@@ -7,11 +7,13 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8082,
+    allowedHosts: true,
   },
   plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@numlix/auth-shared": path.resolve(__dirname, "../../packages/auth-shared/src/index.ts"),
     },
   },
 });

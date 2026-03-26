@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*", "../../src/*"],
-      "@numlix/ui-kit": ["../../packages/ui-kit/src/index.ts"]
+      "@numlix/ui-kit": ["../../packages/ui-kit/src/index.ts"],
+      "@numlix/auth-shared": ["../../packages/auth-shared/src/index.ts"]
     }
   },
   "include": [

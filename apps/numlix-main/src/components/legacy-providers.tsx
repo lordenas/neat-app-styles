@@ -1,11 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { AuthProvider } from "@numlix/auth-shared";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AuthProvider } from "@/hooks/useAuth";
 
 interface LegacyProvidersProps {
   children: ReactNode;

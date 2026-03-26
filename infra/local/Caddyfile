@@ -1,0 +1,31 @@
+# Local subdomain routing for numlix projects.
+# Add these hosts to /etc/hosts:
+# 127.0.0.1 numlix.local panel.numlix.local admin.numlix.local api.numlix.local
+#
+# HTTPS uses Caddy's local CA. One-time trust (macOS): caddy trust
+# Then: caddy run --config ./infra/local/Caddyfile
+#
+# numlix-main: use npm run dev:proxy -w numlix-main (NUMLIX_BEHIND_PROXY=1),
+# иначе редиректы i18n уведут на http://127.0.0.1:3000 вместо https://numlix.local
+#
+# Фронты и API в .env — только https://*.numlix.local (mixed content: https-страница не ходит на http-API).
+
+{
+  local_certs
+}
+
+numlix.local {
+  reverse_proxy 127.0.0.1:3000
+}
+
+panel.numlix.local {
+  reverse_proxy 127.0.0.1:8081
+}
+
+admin.numlix.local {
+  reverse_proxy 127.0.0.1:8082
+}
+
+api.numlix.local {
+  reverse_proxy 127.0.0.1:3001
+}

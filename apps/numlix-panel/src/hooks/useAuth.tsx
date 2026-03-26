@@ -1,7 +1,8 @@
-import { createContext, useContext, useMemo, ReactNode } from "react";
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { clearTokens } from "@/store/slices/authSlice";
-import { decodeJwtPayload } from "@/lib/jwt";
+import {
+  AuthProvider as SharedAuthProvider,
+  useAuth as useSharedAuth,
+} from "@numlix/auth-shared";
+import type { ReactNode } from "react";
 
 /** Minimal user shape for compatibility with existing consumers (Dashboard, etc.) */
 export interface AuthUser {
@@ -19,46 +20,24 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const tokens = useAppSelector((s) => s.auth.tokens);
-  const dispatch = useAppDispatch();
-
-  const value = useMemo(() => {
-    const loading = false;
-    let user: AuthUser | null = null;
-    let session: { access_token?: string } | null = null;
-    if (tokens?.accessToken) {
-      session = { access_token: tokens.accessToken };
-      const payload = decodeJwtPayload(tokens.accessToken);
-      if (payload) {
-        user = {
-          id: payload.sub ?? "user",
-          email: payload.email,
-          user_metadata: {},
-        };
-      } else {
-        user = { id: "user", user_metadata: {} };
-      }
-    }
-    return {
-      user,
-      session,
-      loading,
-      signUp: async () => ({ error: null }),
-      signIn: async () => ({ error: null }),
-      signOut: async () => {
-        dispatch(clearTokens());
-      },
-    };
-  }, [tokens, dispatch]);
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <SharedAuthProvider>{children}</SharedAuthProvider>;
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
+export function useAuth(): AuthContextType {
+  const auth = useSharedAuth();
+  return {
+    user: auth.user
+      ? {
+          id: auth.user.id,
+          email: auth.user.email,
+          user_metadata: auth.user.fullName ? { display_name: auth.user.fullName } : {},
+        }
+      : null,
+    session: auth.accessToken ? { access_token: auth.accessToken } : null,
+    loading: auth.loading,
+    signUp: auth.signUp,
+    signIn: auth.signIn,
+    signOut: auth.signOut,
+  };
 }

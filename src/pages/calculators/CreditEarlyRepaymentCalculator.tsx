@@ -277,8 +277,8 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       },
     },
   }), [loanAmount, rate, termMonths, issueDate, earlyPayments, rateChanges, creditHolidays, firstPayInterest, roundPay, roundTo, transferWeekend, transferDir]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ baseMonthlyPayment: number; baseTotalInterest: number; totalInterest: number; interestSaved: number; termSavedMonths: number; totalEarlyPaid: number; schedule: any[] }>("credit-early-repayment", req);
-  const result = loanAmount <= 0 || termMonths <= 0 || rate <= 0 ? null : (backendData?.result ?? { baseMonthlyPayment: 0, baseTotalInterest: 0, totalInterest: 0, interestSaved: 0, termSavedMonths: 0, totalEarlyPaid: 0, schedule: [] });
+  const { data: backendData, error: backendError } = useBackendCalculation<{ baseMonthlyPayment: number; baseTotalInterest: number; totalInterest: number; interestSaved: number; termSavedMonths: number; totalEarlyPaid: number; actualTermMonths: number; baseTermMonths: number; schedule: any[] }>("credit-early-repayment", req);
+  const result = loanAmount <= 0 || termMonths <= 0 || rate <= 0 ? null : (backendData?.result ?? { baseMonthlyPayment: 0, baseTotalInterest: 0, totalInterest: 0, interestSaved: 0, termSavedMonths: 0, totalEarlyPaid: 0, actualTermMonths: termMonths, baseTermMonths: termMonths, schedule: [] });
   /* Legacy: const result = useMemo(() => calculateEarlyRepayment(...), [...]); */
 
   /* ── early payments CRUD ── */

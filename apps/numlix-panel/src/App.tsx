@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PANEL_ROUTES, panelPages } from "./routes";
 
 function PageSkeleton() {
@@ -32,21 +33,119 @@ export default function App() {
                   <Routes>
                     <Route path="/" element={<Navigate to={PANEL_ROUTES.auth} replace />} />
                     <Route path={PANEL_ROUTES.auth} element={<panelPages.Auth />} />
-                    <Route path={PANEL_ROUTES.dashboard} element={<panelPages.Dashboard />} />
-                    <Route path={PANEL_ROUTES.calcList} element={<panelPages.CalcList />} />
-                    <Route path={PANEL_ROUTES.calcBuilder} element={<panelPages.CalcBuilder />} />
-                    <Route path={PANEL_ROUTES.calcBuilderEdit} element={<panelPages.CalcBuilder />} />
+                    <Route
+                      path={PANEL_ROUTES.dashboard}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.Dashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.calcList}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.CalcList />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.calcBuilder}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.CalcBuilder />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.calcBuilderEdit}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.CalcBuilder />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route path={PANEL_ROUTES.calcPlayer} element={<panelPages.CalcPlayer />} />
-                    <Route path={PANEL_ROUTES.embedBuilder} element={<panelPages.EmbedBuilder />} />
-                    <Route path={PANEL_ROUTES.embedWidgets} element={<panelPages.EmbedWidgets />} />
-                    <Route path={PANEL_ROUTES.apiKeys} element={<panelPages.ApiKeys />} />
-                    <Route path={PANEL_ROUTES.help} element={<panelPages.HelpIndex />} />
-                    <Route path={PANEL_ROUTES.helpGettingStarted} element={<panelPages.HelpGettingStarted />} />
-                    <Route path={PANEL_ROUTES.helpFormula} element={<panelPages.HelpFormula />} />
-                    <Route path={PANEL_ROUTES.helpFields} element={<panelPages.HelpFields />} />
-                    <Route path={PANEL_ROUTES.helpPages} element={<panelPages.HelpPages />} />
-                    <Route path={PANEL_ROUTES.helpLogic} element={<panelPages.HelpLogic />} />
-                    <Route path={PANEL_ROUTES.helpExamples} element={<panelPages.HelpExamples />} />
+                    <Route
+                      path={PANEL_ROUTES.embedBuilder}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.EmbedBuilder />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.embedWidgets}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.EmbedWidgets />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.apiKeys}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.ApiKeys />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.help}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpIndex />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpGettingStarted}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpGettingStarted />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpFormula}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpFormula />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpFields}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpFields />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpPages}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpPages />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpLogic}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpLogic />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path={PANEL_ROUTES.helpExamples}
+                      element={
+                        <ProtectedRoute>
+                          <panelPages.HelpExamples />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route path="*" element={<panelPages.NotFound />} />
                   </Routes>
                 </Suspense>

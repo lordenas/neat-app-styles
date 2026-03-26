@@ -1,34 +1,13 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "../integrations/supabase/client";
+import {
+  AuthProvider as SharedAuthProvider,
+  useAuth as useSharedAuth,
+} from "@numlix/auth-shared";
+import type { ReactNode } from "react";
 import type { AdminRole } from "../types/admin";
 
-function extractRoles(user: User | null): AdminRole[] {
-  if (!user) return [];
-  const appMeta = user.app_metadata as Record<string, unknown> | undefined;
-  const userMeta = user.user_metadata as Record<string, unknown> | undefined;
-
-  const fromArray = (value: unknown): AdminRole[] =>
-    Array.isArray(value)
-      ? value.filter((item): item is AdminRole => item === "admin" || item === "super_admin")
-      : [];
-
-  const fromSingle = (value: unknown): AdminRole[] =>
-    value === "admin" || value === "super_admin" ? [value] : [];
-
-  return Array.from(
-    new Set([
-      ...fromArray(appMeta?.roles),
-      ...fromSingle(appMeta?.role),
-      ...fromArray(userMeta?.roles),
-      ...fromSingle(userMeta?.role),
-    ]),
-  );
-}
-
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
+  user: { id: string; email: string } | null;
+  session: { access_token?: string } | null;
   loading: boolean;
   roles: AdminRole[];
   hasRole: (allowed: AdminRole[]) => boolean;
@@ -37,65 +16,28 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const roles = extractRoles(user);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const signUp = async (email: string, password: string, displayName?: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
-        data: { display_name: displayName },
-      },
-    });
-    return { error: error as Error | null };
-  };
-
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error as Error | null };
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const hasRole = (allowed: AdminRole[]) => {
-    if (allowed.length === 0) return true;
-    return roles.some((role) => allowed.includes(role));
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, session, loading, roles, hasRole, signUp, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <SharedAuthProvider>{children}</SharedAuthProvider>;
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
-  return context;
+export function useAuth(): AuthContextType {
+  const auth = useSharedAuth();
+  const userRoleUpper = auth.user?.role?.toUpperCase();
+  const roles: AdminRole[] =
+    userRoleUpper === "ADMIN" ? ["admin"] : [];
+  return {
+    user: auth.user ? { id: auth.user.id, email: auth.user.email } : null,
+    session: auth.accessToken ? { access_token: auth.accessToken } : null,
+    loading: auth.loading,
+    roles,
+    hasRole: (allowed: AdminRole[]) => {
+      if (allowed.length === 0) {
+        return true;
+      }
+      return roles.some((role) => allowed.includes(role));
+    },
+    signUp: auth.signUp,
+    signIn: auth.signIn,
+    signOut: auth.signOut,
+  };
 }

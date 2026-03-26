@@ -22,11 +22,6 @@
       "import": "./dist/components/index.js",
       "default": "./dist/components/index.js"
     },
-    "./integrations": {
-      "types": "./dist/integrations/index.d.ts",
-      "import": "./dist/integrations/index.js",
-      "default": "./dist/integrations/index.js"
-    },
     "./types": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/types/index.js",
@@ -41,8 +36,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@numlix/auth-shared": "*",
     "@numlix/ui-kit": "*",
-    "@supabase/supabase-js": "^2.97.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",

@@ -6,19 +6,16 @@ import {
   type FetchBaseQueryError,
   type FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react";
-import { setTokens, clearTokens, type AuthTokens } from "@/store/slices/authSlice";
+import { getAccessToken, normalizeApiBaseUrlForBrowser, refreshSession, setAccessToken } from "@numlix/auth-shared";
 
-type AuthStateShape = { auth: { tokens: AuthTokens | null } };
-
-const getBaseUrl = () => {
-  const viteEnv = (import.meta as ImportMeta & { env?: Record<string, string> })?.env;
-  return viteEnv?.VITE_API_URL ?? "http://localhost:3000";
-};
+const getBaseUrl = () =>
+  normalizeApiBaseUrlForBrowser(import.meta.env.VITE_API_URL ?? "https://api.numlix.local");
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getBaseUrl(),
-  prepareHeaders(headers, { getState }) {
-    const token = (getState() as AuthStateShape).auth.tokens?.accessToken;
+  credentials: "include",
+  prepareHeaders(headers) {
+    const token = getAccessToken();
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
@@ -38,26 +35,13 @@ export const baseApi = createApi({
   reducerPath: "api",
   baseQuery: (async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
-    const state = api.getState() as AuthStateShape;
-    const refreshToken = state.auth.tokens?.refreshToken;
-
-    if (result.error?.status === 401 && refreshToken && !isAuthEndpoint(args)) {
-      const refreshResult = await baseQuery(
-        {
-          url: "/api/auth/refresh",
-          method: "POST",
-          body: { refreshToken },
-        },
-        api,
-        extraOptions
-      );
-
-      if (refreshResult.data && typeof refreshResult.data === "object" && "accessToken" in refreshResult.data) {
-        const data = refreshResult.data as AuthTokens;
-        api.dispatch(setTokens(data));
+    if (result.error?.status === 401 && !isAuthEndpoint(args)) {
+      try {
+        const refreshed = await refreshSession();
+        setAccessToken(refreshed.accessToken);
         result = await baseQuery(args, api, extraOptions);
-      } else {
-        api.dispatch(clearTokens());
+      } catch {
+        setAccessToken(null);
       }
     }
     return result;

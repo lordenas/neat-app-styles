@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "dev:proxy": "NUMLIX_BEHIND_PROXY=1 next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "generate:og": "node scripts/generate-og.mjs"
   },
   "dependencies": {
+    "@numlix/auth-shared": "*",
     "@numlix/ui-kit": "*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

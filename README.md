@@ -71,3 +71,7 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Local multi-subdomain setup
+
+For local domain-based routing between all Numlix apps, use the guide in `infra/local/README.md`.

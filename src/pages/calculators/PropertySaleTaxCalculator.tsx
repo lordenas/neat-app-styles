@@ -50,8 +50,8 @@ export default function PropertySaleTaxCalculatorPage() {
       salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025,
     } satisfies PropertySaleTaxInput,
   }), [ownershipBefore2016, acquisitionType, isSoleHousing, yearsHeld, salePrice, cadastralValue, coefficient, useFixedDeduction, purchaseExpenses, saleAfter2025]);
-  const { data: backendData, error: backendError } = useBackendCalculation<{ taxableIncome: number; taxableBase: number; tax: number; minPeriodYears: number; noTax: boolean; explanation: string; useSalePriceForIncome?: boolean }>("property-sale-tax", req);
-  const result = backendData?.result ?? { taxableIncome: 0, taxableBase: 0, tax: 0, minPeriodYears: 0, noTax: false, explanation: "", useSalePriceForIncome: true };
+  const { data: backendData, error: backendError } = useBackendCalculation<{ taxableIncome: number; taxableBase: number; tax: number; minPeriodYears: number; noTax: boolean; explanation: string; cadastralIncome: number; useSalePriceForIncome?: boolean; rateBreakdown?: { taxAt13: number; taxAt15: number } }>("property-sale-tax", req);
+  const result = backendData?.result ?? { taxableIncome: 0, taxableBase: 0, tax: 0, minPeriodYears: 0, noTax: false, explanation: "", cadastralIncome: 0, useSalePriceForIncome: true, rateBreakdown: undefined };
   /* Legacy: const result = useMemo(() => calcPropertySaleTax(input), [...]); */
 
   return (

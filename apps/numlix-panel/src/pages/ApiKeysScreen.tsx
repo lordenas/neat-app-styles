@@ -4,12 +4,11 @@ import { useListApiKeysQuery, useCreateApiKeyMutation, useDeleteApiKeyMutation }
 import { useAppSelector } from "@/store/hooks";
 import { toast } from "@/hooks/use-toast";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { normalizeApiBaseUrlForBrowser } from "@numlix/auth-shared";
 import { ApiKeysPage } from "./ApiKeysPage";
 
-const getBaseUrl = () => {
-  const viteEnv = (import.meta as ImportMeta & { env?: Record<string, string> })?.env;
-  return viteEnv?.VITE_API_URL ?? "http://localhost:3000";
-};
+const getBaseUrl = () =>
+  normalizeApiBaseUrlForBrowser(import.meta.env.VITE_API_URL ?? "https://api.numlix.local");
 
 export default function ApiKeysScreen() {
   const navigate = useNavigate();

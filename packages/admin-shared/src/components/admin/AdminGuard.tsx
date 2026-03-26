@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import { getDomainRoutes } from "@numlix/auth-shared";
 import { Button, Skeleton } from "@numlix/ui-kit";
 import { useAuth } from "../../hooks/useAuth";
 import type { AdminRole } from "../../types/admin";
@@ -17,6 +18,7 @@ export function AdminGuard({
   fallback,
 }: AdminGuardProps) {
   const { user, loading, hasRole } = useAuth();
+  const domainRoutes = getDomainRoutes();
 
   if (loading) {
     return (
@@ -41,7 +43,7 @@ export function AdminGuard({
           <p className="text-sm text-muted-foreground">
             У вашей учетной записи нет прав для доступа к этому разделу.
           </p>
-          <Button variant="outline" onClick={() => window.location.assign("/")}>
+          <Button variant="outline" onClick={() => window.location.assign(domainRoutes.mainHome)}>
             На главную
           </Button>
         </div>
