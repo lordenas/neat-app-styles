@@ -16,7 +16,7 @@ import {
 import { PiggyBank, Plus, Trash2 } from "lucide-react";
 import { CopyButton } from "@/components/ui/copy-button";
 import {
-  calculateDeposit,
+  /* calculateDeposit, */
   type TermUnit,
   type CompoundFrequency,
   type PayoutFrequency,
@@ -26,6 +26,7 @@ import {
   type RegularWithdrawal,
 } from "@/lib/calculators/deposit";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 
 const fmt = (n: number) => n.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDate = (s: string) => {
@@ -95,9 +96,9 @@ export default function DepositCalculator() {
   const [showSchedule, setShowSchedule] = useState(false);
   const [taxInfoOpen, setTaxInfoOpen] = useState(false);
 
-  const result = useMemo(() => {
-    if (principal <= 0 || !startDate || term <= 0) return null;
-    return calculateDeposit({
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       principal, startDate, term, termUnit,
       annualRatePercent: annualRate,
       capitalization, compoundFrequency: compoundFreq, payoutFrequency: payoutFreq,
@@ -106,9 +107,11 @@ export default function DepositCalculator() {
       oneTimeWithdrawals: oneTimeWithdrawals.filter(w => w.date && w.amount > 0),
       regularWithdrawals: regularWithdrawals.filter(r => r.startDate && r.amount > 0),
       minimumBalance, keyRatePercent: keyRate, taxRatePercent: taxRate,
-    });
-  }, [principal, startDate, term, termUnit, annualRate, capitalization, compoundFreq, payoutFreq,
-      oneTimeTopUps, regularTopUps, oneTimeWithdrawals, regularWithdrawals, minimumBalance, keyRate, taxRate]);
+    },
+  }), [principal, startDate, term, termUnit, annualRate, capitalization, compoundFreq, payoutFreq, oneTimeTopUps, regularTopUps, oneTimeWithdrawals, regularWithdrawals, minimumBalance, keyRate, taxRate]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalInterest: number; finalBalance: number; totalReturn: number; totalTopUps: number; totalWithdrawals: number; netIncome: number; effectiveRatePercent: number; totalTax: number; schedule: any[]; taxRows: any[]; blockedWithdrawals: any[] }>("deposit", req);
+  const result = backendData?.result ?? null;
+  /* Legacy: const result = useMemo(() => calculateDeposit({...}), [...]); */
 
   // Top-up handlers
   const addOTTopUp = useCallback(() => setOneTimeTopUps(p => [...p, { date: startDate, amount: 0 }]), [startDate]);
@@ -145,6 +148,11 @@ export default function DepositCalculator() {
   return (
     <CalculatorLayout calculatorId="deposit" categoryName="Финансовые" categoryPath="/categories/finance" title={title}>
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* Base params */}
         <Card>

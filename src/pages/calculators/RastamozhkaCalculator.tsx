@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,9 @@ import { Car, Building2, Info, TrendingUp, Zap, Fuel } from "lucide-react";
 import {
   Collapsible, CollapsibleTrigger, CollapsibleContent,
 } from "@/components/ui/collapsible";
-import { calcRastamozhka, type RastamozhkaInput, type EngineType } from "@/lib/calculators/rastamozhka";
+import { type RastamozhkaInput, type EngineType } from "@/lib/calculators/rastamozhka";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcRastamozhka } from "@/lib/calculators/rastamozhka"; */
 
 const AGE_GROUPS = [
   { value: "new",  label: "Новый" },
@@ -74,8 +76,13 @@ export default function RastamozhkaCalculator() {
 
   const isElectric = engineType === "electric" || engineType === "hybrid_series";
 
-  const input: RastamozhkaInput = { priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate };
-  const result = calcRastamozhka(input);
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: { priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate } satisfies RastamozhkaInput,
+  }), [priceEur, engineVolume, horsePower, engineType, ageGroup, importerType, eurRate]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ customsFee: number; duty: number; recyclingFee: number; excise: number; vat: number; total: number; totalRub?: number; dutyNote?: string }>("rastamozhka-auto", req);
+  const result = backendData?.result ?? { customsFee: 0, duty: 0, recyclingFee: 0, excise: 0, vat: 0, total: 0, dutyNote: undefined };
+  /* Legacy: const input: RastamozhkaInput = {...}; const result = calcRastamozhka(input); */
 
   const priceRub  = Math.round(priceEur * eurRate);
   const totalCost = priceRub + result.total;
@@ -96,6 +103,11 @@ export default function RastamozhkaCalculator() {
   return (
     <CalculatorLayout calculatorId="rastamozhka-auto" categoryName="Автомобильные" categoryPath="/categories/automotive">
       <div className="space-y-5">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* Тип ввозящего */}
         <Card>

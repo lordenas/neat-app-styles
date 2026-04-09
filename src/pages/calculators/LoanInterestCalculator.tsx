@@ -9,12 +9,12 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 import {
-  calcLoanInterest,
-  type LoanInterestInput,
   type Payout,
   type DebtIncrease,
   type RateChange,
 } from "@/lib/calculators/loan-interest";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcLoanInterest, type LoanInterestInput } from "@/lib/calculators/loan-interest"; */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +23,27 @@ const fmt = (v: number) =>
 
 const PRINCIPAL_PRESETS = [100_000, 300_000, 500_000, 1_000_000, 3_000_000];
 const RATE_PRESETS = [7.5, 10, 12, 15, 21];
+
+interface LoanInterestPeriodRow {
+  type: "period";
+  dateFrom: string;
+  dateTo: string;
+  days: number;
+  principal: number;
+  ratePercent: number;
+  periodInterest: number;
+  cumulativeInterest: number;
+}
+
+interface LoanInterestMetaRow {
+  type: string;
+}
+
+type LoanInterestRow = LoanInterestPeriodRow | LoanInterestMetaRow;
+
+function isPeriodRow(row: LoanInterestRow): row is LoanInterestPeriodRow {
+  return row.type === "period";
+}
 
 export default function LoanInterestCalculatorPage() {
   const [principal, setPrincipal] = useState(500_000);
@@ -38,18 +59,21 @@ export default function LoanInterestCalculatorPage() {
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const advancedCount = rateChanges.length + payouts.length + debtIncreases.length;
 
-  const result = useMemo(() => {
-    const input: LoanInterestInput = {
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       principal, startDate, endDate, initialRatePercent: initialRate,
       rateChanges, payouts, debtIncreases,
       payoutAppliesToInterestFirst: true,
-    };
-    return calcLoanInterest(input);
-  }, [principal, startDate, endDate, initialRate, rateChanges, payouts, debtIncreases]);
+    },
+  }), [principal, startDate, endDate, initialRate, rateChanges, payouts, debtIncreases]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalInterest: number; totalDebtAndInterest: number; totalDays: number; rows: LoanInterestRow[] }>("loan-interest", req);
+  const result = backendData?.result ?? { totalInterest: 0, totalDebtAndInterest: 0, totalDays: 0, rows: [] as LoanInterestRow[] };
+  /* Legacy: const result = useMemo(() => calcLoanInterest(input), [...]); */
 
   // Build chart data from period rows
   const chartData = useMemo(() => {
-    const periods = result.rows.filter((r): r is Extract<typeof r, { type: "period" }> => r.type === "period");
+    const periods = result.rows.filter(isPeriodRow);
     return periods.map((r) => ({
       label: r.dateTo.slice(0, 7),
       interest: r.cumulativeInterest,
@@ -69,6 +93,11 @@ export default function LoanInterestCalculatorPage() {
   return (
     <CalculatorLayout calculatorId="loan-interest" categoryName="Финансы" categoryPath="/categories/finance" title={title}>
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* Input panel — full width */}
         <Card>
           <CardHeader className="pb-3"><CardTitle className="text-base">Параметры займа</CardTitle></CardHeader>
@@ -343,7 +372,7 @@ export default function LoanInterestCalculatorPage() {
                         </thead>
                         <tbody>
                           {result.rows
-                            .filter((r): r is Extract<typeof r, { type: "period" }> => r.type === "period")
+                            .filter(isPeriodRow)
                             .map((r, i) => (
                               <tr key={i} className="border-b border-border/40 hover:bg-muted/30 transition-colors">
                                 <td className="py-2 pr-3 text-muted-foreground whitespace-nowrap">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,13 +8,12 @@ import { Slider } from "@/components/ui/slider";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  calcTransportTax,
-  type TransportTaxInput,
-  type VehicleCategory,
-} from "@/lib/calculators/transport-tax";
+import { type VehicleCategory } from "@/lib/calculators/transport-tax";
 import { POPULAR_REGIONS, REGION_NAMES } from "@/lib/calculators/osago";
 import { cn } from "@/lib/utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy client-side calculation — not used when backend is available (migration). */
+// import { calcTransportTax, type TransportTaxInput } from "@/lib/calculators/transport-tax";
 
 // Full vehicle category list per НК РФ ст. 361
 const VEHICLE_CATEGORIES: {
@@ -72,17 +71,50 @@ export default function TransportTaxCalculator() {
     if (horsePower > next.maxPower) setHorsePower(next.maxPower);
   };
 
-  const input: TransportTaxInput = {
-    horsePower: safePower,
-    vehicleCategory: category,
-    regionCode,
-    ownershipMonths,
-    carPrice: cat.showPrice ? carPrice : 0,
-    carYear,
-    taxYear,
-  };
-  const result = calcTransportTax(input);
+  const backendRequest = useMemo(
+    () => ({
+      regionCode,
+      input: {
+        horsePower: safePower,
+        vehicleCategory: category,
+        regionCode,
+        ownershipMonths,
+        ...(cat.showPrice ? { carPrice, carYear } : {}),
+        taxYear,
+      },
+    }),
+    [regionCode, safePower, category, ownershipMonths, taxYear, cat.showPrice, carPrice, carYear]
+  );
+  const { data: backendData, error: backendError, isLoading: backendLoading } = useBackendCalculation<{
+    baseRate: number;
+    regionalRate: number;
+    luxuryMultiplier: number;
+    ownershipCoeff: number;
+    taxAmount: number;
+  }>("transport-tax", backendRequest);
+
+  const result = useMemo(() => {
+    const r = backendData?.result;
+    if (!r)
+      return {
+        baseRate: 0,
+        regionalRate: 0,
+        luxuryMultiplier: 1,
+        ownershipCoeff: 0,
+        taxAmount: 0,
+      };
+    return {
+      baseRate: r.baseRate ?? 0,
+      regionalRate: r.regionalRate ?? 0,
+      luxuryMultiplier: r.luxuryMultiplier ?? 1,
+      ownershipCoeff: r.ownershipCoeff ?? 0,
+      taxAmount: r.taxAmount ?? 0,
+    };
+  }, [backendData?.result]);
+
   const ownershipPct = (ownershipMonths / 12) * 100;
+
+  /* Legacy: const input: TransportTaxInput = {...}; const result = calcTransportTax(input); */
 
   return (
     <CalculatorLayout calculatorId="transport-tax" categoryName="Автомобильные" categoryPath="/categories/automotive">
@@ -277,13 +309,20 @@ export default function TransportTaxCalculator() {
           </CardContent>
         </Card>
 
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         {/* RESULT */}
         <Card variant="elevated" className="border-primary/20">
           <CardContent className="pt-6 pb-5">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Транспортный налог за {taxYear} год</p>
-                <p className="text-4xl font-bold text-primary">{formatRub(result.taxAmount)}</p>
+                <p className="text-4xl font-bold text-primary">
+                  {backendLoading ? "Загрузка…" : formatRub(result.taxAmount)}
+                </p>
                 {result.luxuryMultiplier > 1 && (
                   <Badge variant="destructive" className="mt-2">Коэффициент роскоши ×{result.luxuryMultiplier}</Badge>
                 )}

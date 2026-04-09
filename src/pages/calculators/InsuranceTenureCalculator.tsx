@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Trash2, Plus, ShieldCheck } from "lucide-react";
 import { CopyButton } from "@/components/ui/copy-button";
-import { calcInsuranceTenure, type TenurePeriod } from "@/lib/calculators/insurance-tenure";
+import { type TenurePeriod } from "@/lib/calculators/insurance-tenure";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcInsuranceTenure } from "@/lib/calculators/insurance-tenure"; */
 
 export default function InsuranceTenureCalculator() {
   const [periods, setPeriods] = useState<TenurePeriod[]>([
@@ -22,7 +24,10 @@ export default function InsuranceTenureCalculator() {
   };
 
   const validPeriods = periods.filter((p) => p.startDate && p.endDate);
-  const result = calcInsuranceTenure(validPeriods);
+  const req = useMemo(() => ({ regionCode: "GLB", input: { periods: validPeriods } }), [validPeriods]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalYears: number; totalMonths: number; totalDays: number; rawDays: number; sickPayPercent: number; sickPayDescription: string }>("insurance-tenure", req);
+  const result = backendData?.result ?? { totalYears: 0, totalMonths: 0, totalDays: 0, rawDays: 0, sickPayPercent: 60, sickPayDescription: "" };
+  /* Legacy: const result = calcInsuranceTenure(validPeriods); */
 
   const sickBgClass =
     result.sickPayPercent === 100
@@ -50,6 +55,11 @@ export default function InsuranceTenureCalculator() {
   return (
     <CalculatorLayout calculatorId="insurance-tenure" categoryName="Зарплатные" categoryPath="/categories/salary" title={title}>
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* Periods */}
         <Card>

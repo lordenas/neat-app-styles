@@ -22,6 +22,8 @@ import {
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { ArrowDown, ArrowUp, Percent, Receipt, Package } from "lucide-react";
 
+/** legacy-local-calc: no backend endpoint yet (migration gap). See apps/numlix-main/docs/MIGRATION_CALC_STATUS.md */
+
 export default function VatCalculatorPage() {
   const { t } = useTranslation();
 

@@ -1,0 +1,4 @@
+# Сборка только в dist/. Файлы *.js рядом с *.ts ломают Vite: resolveExtensions отдаёт приоритет .js.
+src/**/*.js
+src/**/*.d.ts
+src/**/*.d.ts.map

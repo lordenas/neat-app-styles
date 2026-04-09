@@ -18,8 +18,6 @@ import {
   PROGRESSIVE_BRACKETS_2025,
   SVO_BRACKETS,
   PROPERTY_SALE_BRACKETS,
-  calculateProgressiveNdfl,
-  calculateFlatNdfl,
   getDefaultRateForIncomeType,
   type IncomeType,
 } from "@/lib/calculators/ndfl";
@@ -31,6 +29,7 @@ import {
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 
 const INCOME_ICONS: Record<string, string> = {
   salary: "💼",
@@ -53,70 +52,13 @@ export default function NdflCalculatorPage() {
 
   const typeOption = INCOME_TYPE_OPTIONS.find((o) => o.id === incomeType);
 
-  const result = useMemo(() => {
-    if (income <= 0) return null;
-
-    let tax: number;
-    let effectiveRate: number;
-
-    if (isNonResident) {
-      effectiveRate = manualRate ?? getDefaultRateForIncomeType(incomeType, true);
-      if (direction === "fromGross") {
-        tax = calculateFlatNdfl(income, effectiveRate);
-      } else {
-        const gross = income / (1 - effectiveRate / 100);
-        tax = calculateFlatNdfl(gross, effectiveRate);
-        return { gross: Math.round(gross * 100) / 100, tax, net: income, effectiveRate };
-      }
-      return { gross: income, tax, net: Math.round((income - tax) * 100) / 100, effectiveRate };
-    }
-
-    if (incomeType === "manual") {
-      effectiveRate = manualRate ?? 13;
-      if (direction === "fromGross") {
-        tax = calculateFlatNdfl(income, effectiveRate);
-      } else {
-        const gross = income / (1 - effectiveRate / 100);
-        tax = calculateFlatNdfl(gross, effectiveRate);
-        return { gross: Math.round(gross * 100) / 100, tax, net: income, effectiveRate };
-      }
-      return { gross: income, tax, net: Math.round((income - tax) * 100) / 100, effectiveRate };
-    }
-
-    let brackets = PROGRESSIVE_BRACKETS_2025;
-    if (typeOption?.useSvoScale) brackets = SVO_BRACKETS;
-    if (typeOption?.usePropertySaleScale) brackets = PROPERTY_SALE_BRACKETS;
-
-    if (typeOption?.useProgressive || typeOption?.useSvoScale || typeOption?.usePropertySaleScale) {
-      if (direction === "fromGross") {
-        tax = calculateProgressiveNdfl(income, brackets);
-        effectiveRate = income > 0 ? Math.round((tax / income) * 10000) / 100 : 0;
-        return { gross: income, tax, net: Math.round((income - tax) * 100) / 100, effectiveRate };
-      } else {
-        let lo = income, hi = income * 2;
-        for (let i = 0; i < 100; i++) {
-          const mid = (lo + hi) / 2;
-          const t = calculateProgressiveNdfl(mid, brackets);
-          if (mid - t < income) lo = mid;
-          else hi = mid;
-        }
-        const gross = Math.round(((lo + hi) / 2) * 100) / 100;
-        tax = calculateProgressiveNdfl(gross, brackets);
-        effectiveRate = gross > 0 ? Math.round((tax / gross) * 10000) / 100 : 0;
-        return { gross, tax, net: income, effectiveRate };
-      }
-    }
-
-    effectiveRate = typeOption?.defaultRatePercent ?? 13;
-    if (direction === "fromGross") {
-      tax = calculateFlatNdfl(income, effectiveRate);
-      return { gross: income, tax, net: Math.round((income - tax) * 100) / 100, effectiveRate };
-    } else {
-      const gross = income / (1 - effectiveRate / 100);
-      tax = calculateFlatNdfl(gross, effectiveRate);
-      return { gross: Math.round(gross * 100) / 100, tax, net: income, effectiveRate };
-    }
-  }, [income, incomeType, isNonResident, direction, manualRate, typeOption]);
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: { income, incomeType, isNonResident, direction, manualRate: manualRate ?? undefined },
+  }), [income, incomeType, isNonResident, direction, manualRate]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ gross: number; tax: number; net: number; effectiveRate: number }>("ndfl", req);
+  const result = backendData?.result ?? (income > 0 ? { gross: income, tax: 0, net: income, effectiveRate: 0 } : null);
+  
 
   const fmt = (v: number) =>
     new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
@@ -136,6 +78,11 @@ export default function NdflCalculatorPage() {
   return (
     <CalculatorLayout calculatorId="ndfl" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Калькулятор НДФЛ</h1>
           <p className="text-muted-foreground mt-1">

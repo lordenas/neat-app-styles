@@ -16,6 +16,7 @@ import {
   calcPenaltyContract,
 } from "@/lib/calculators/penalty-contract";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 import { AlertTriangle, Calendar, Percent, Coins, ChevronDown, Plus, Trash2 } from "lucide-react";
 
 const fmt = (v: number) =>
@@ -30,6 +31,17 @@ const RATE_TYPES: { id: RateType; label: string; icon: React.ReactNode; desc: st
 
 const today = () => new Date().toISOString().slice(0, 10);
 const monthAgo = () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return d.toISOString().slice(0, 10); };
+
+interface PenaltyContractBreakdownRow {
+  isPayment?: boolean;
+  isAdditionalDebt?: boolean;
+  isExcluded?: boolean;
+  periodLabel: string;
+  days: number;
+  amountLabel: string;
+  formula?: string;
+  penalty: number;
+}
 
 export default function PenaltyContractCalculatorPage() {
   const [sum, setSum] = useState(500000);
@@ -47,14 +59,17 @@ export default function PenaltyContractCalculatorPage() {
 
   const advancedCount = excludedPeriods.length + partialPayments.length + additionalDebts.length;
 
-  const result = useMemo(() => {
-    const input: PenaltyContractInput = {
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       sum, startDate, endDate, workdaysOnly,
       excludedPeriods, rateType, rateValue,
       partialPayments, additionalDebts, showPerDebt: false,
-    };
-    return calcPenaltyContract(input);
-  }, [sum, startDate, endDate, workdaysOnly, rateType, rateValue, excludedPeriods, partialPayments, additionalDebts]);
+    } satisfies PenaltyContractInput,
+  }), [sum, startDate, endDate, workdaysOnly, rateType, rateValue, excludedPeriods, partialPayments, additionalDebts]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ totalPenalty: number; totalPenaltyCapped: number; totalDebtAndPenalty: number; breakdown: PenaltyContractBreakdownRow[] }>("penalty-contract", req);
+  const result = backendData?.result ?? { totalPenalty: 0, totalPenaltyCapped: 0, totalDebtAndPenalty: 0, breakdown: [] as PenaltyContractBreakdownRow[] };
+  /* Legacy: const result = useMemo(() => calcPenaltyContract(input), [...]); */
 
   const totalWithDebt = sum + (result?.totalPenaltyCapped ?? 0);
   const penaltyShare = totalWithDebt > 0
@@ -84,6 +99,11 @@ export default function PenaltyContractCalculatorPage() {
   return (
     <CalculatorLayout calculatorId="penalty-contract" categoryName="Налоги" categoryPath="/categories/taxes">
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Неустойка по договору</h1>
           <p className="text-muted-foreground mt-1">

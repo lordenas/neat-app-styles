@@ -42,6 +42,8 @@ import {
   type RateChangeEntry,
   type CreditHolidayEntry,
 } from "@/lib/calculators/early-repayment";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: calculateEarlyRepayment kept as reference only. */
 
 /* ───────────── helpers ───────────── */
 
@@ -252,20 +254,32 @@ export default function CreditEarlyRepaymentCalculatorPage() {
   const rate = useMemo(() => Math.max(0, parseFloat(annualRate) || 0), [annualRate]);
 
   // --- Calculation ---
-  const result = useMemo(() => {
-    if (loanAmount <= 0 || termMonths <= 0 || rate <= 0) return null;
-    return calculateEarlyRepayment(
-      loanAmount, rate, termMonths, issueDate,
-      earlyPayments, rateChanges, creditHolidays,
-      firstPayInterest, roundPay, roundTo,
-      transferWeekend, transferDir,
-    );
-  }, [
-    loanAmount, rate, termMonths, issueDate,
-    earlyPayments, rateChanges, creditHolidays,
-    firstPayInterest, roundPay, roundTo,
-    transferWeekend, transferDir,
-  ]);
+  const toIso = (s: string) => {
+    const d = parseMaskedDateExt(s);
+    return d ? format(d, "yyyy-MM-dd") : s;
+  };
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
+      loanAmount,
+      annualRatePercent: rate,
+      termMonths,
+      issueDate: format(issueDate, "yyyy-MM-dd"),
+      earlyPayments: earlyPayments.map((p) => ({ ...p, date: toIso(p.date) })),
+      rateChanges: rateChanges.map((r) => ({ ...r, date: toIso(r.date) })),
+      creditHolidays: creditHolidays.map((h) => ({ ...h, startDate: toIso(h.startDate) })),
+      options: {
+        firstPaymentInterestOnly: firstPayInterest,
+        roundPayment: roundPay,
+        roundTo,
+        transferWeekends: transferWeekend,
+        transferDirection: transferDir,
+      },
+    },
+  }), [loanAmount, rate, termMonths, issueDate, earlyPayments, rateChanges, creditHolidays, firstPayInterest, roundPay, roundTo, transferWeekend, transferDir]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ baseMonthlyPayment: number; baseTotalInterest: number; totalInterest: number; interestSaved: number; termSavedMonths: number; totalEarlyPaid: number; actualTermMonths: number; baseTermMonths: number; schedule: any[] }>("credit-early-repayment", req);
+  const result = loanAmount <= 0 || termMonths <= 0 || rate <= 0 ? null : (backendData?.result ?? { baseMonthlyPayment: 0, baseTotalInterest: 0, totalInterest: 0, interestSaved: 0, termSavedMonths: 0, totalEarlyPaid: 0, actualTermMonths: termMonths, baseTermMonths: termMonths, schedule: [] });
+  /* Legacy: const result = useMemo(() => calculateEarlyRepayment(...), [...]); */
 
   /* ── early payments CRUD ── */
   const addEarlyPayment = () => {
@@ -403,6 +417,11 @@ export default function CreditEarlyRepaymentCalculatorPage() {
       }
     >
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* ── Left column ── */}
           <div className="flex-1 min-w-0 space-y-5">

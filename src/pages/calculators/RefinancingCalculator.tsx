@@ -15,6 +15,7 @@ import {
   type TermUnit,
 } from "@/lib/calculators/refinancing";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
@@ -55,14 +56,16 @@ export default function RefinancingCalculatorPage() {
   const [newTerm, setNewTerm] = useState(15);
   const [newTermUnit, setNewTermUnit] = useState<TermUnit>("years");
 
-  const result = useMemo(() => {
-    const input: RefinancingInput = {
-      remainingDebt, remainingTerm, termUnit, currentRate,
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
+      remainingDebt, remainingTerm, remainingTermUnit: termUnit, currentRate,
       newRate, newTerm, newTermUnit,
-      amountChanged: false, termChanged: true, rateChanged: true,
-    };
-    return calculateRefinancing(input);
-  }, [remainingDebt, remainingTerm, termUnit, currentRate, newRate, newTerm, newTermUnit]);
+    },
+  }), [remainingDebt, remainingTerm, termUnit, currentRate, newRate, newTerm, newTermUnit]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ currentMonthlyPayment: number; refinancedMonthlyPayment: number; currentTotalInterest: number; refinancedTotalInterest: number; currentTotalPayment: number; refinancedTotalPayment: number; totalInterestDelta: number; monthlyPaymentDelta: number; scheduleData?: unknown[] }>("refinancing", req);
+  const result = backendData?.result ?? { currentMonthlyPayment: 0, refinancedMonthlyPayment: 0, currentTotalInterest: 0, refinancedTotalInterest: 0, currentTotalPayment: 0, refinancedTotalPayment: 0, totalInterestDelta: 0, monthlyPaymentDelta: 0, scheduleData: [] };
+  /* Legacy: const result = useMemo(() => calculateRefinancing(input), [...]); */
 
   const chartData = useMemo(() => {
     const termMonths = termUnit === "years" ? remainingTerm * 12 : remainingTerm;
@@ -106,6 +109,11 @@ export default function RefinancingCalculatorPage() {
       }
     >
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* ── Parameters ── */}
         <Card>

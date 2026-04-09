@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CalculatorLayout } from "@/components/CalculatorLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,14 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Car, MapPin, Shield, Clock, Zap, Plus, Trash2, User, Users, Info } from "lucide-react";
 import {
-  calcOsago, POPULAR_REGIONS, REGION_NAMES, BASE_TARIFF_CORRIDORS,
-  type OsagoInput, type VehicleCategory,
+  POPULAR_REGIONS, REGION_NAMES, BASE_TARIFF_CORRIDORS,
+  type VehicleCategory,
 } from "@/lib/calculators/osago";
 import { cn } from "@/lib/utils";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+
+/* Legacy client-side calculation — not used when backend is available (commented per migration plan). */
+// import { calcOsago, type OsagoInput } from "@/lib/calculators/osago";
 
 const fmt = (v: number) => new Intl.NumberFormat("ru-RU").format(Math.round(v));
 
@@ -102,18 +106,67 @@ export default function OsagoCalculator() {
     : drivers.length === 0 ? 1.0
     : Math.max(...drivers.map((d) => getKvs(d.age, d.experience)));
 
-  const input: OsagoInput = {
-    category, horsePower, regionCode,
-    driverAge: drivers[0]?.age ?? 35,
-    driverExperience: drivers[0]?.experience ?? 10,
-    kbmClass, usagePeriod, unlimitedDrivers,
-  };
-  const baseResult = calcOsago({ ...input, customBaseTariff: activeTariff });
-  const { kt, kbm, km, ks, ko } = baseResult;
-  const kvs = worstKvs;
-  const total = Math.round(activeTariff * kt * kvs * kbm * km * ks * ko);
-  const totalMin = Math.round(corridorMin * kt * kvs * kbm * km * ks * ko);
-  const totalMax = Math.round(corridorMax * kt * kvs * kbm * km * ks * ko);
+  const backendRequest = useMemo(
+    () => ({
+      regionCode,
+      input: {
+        category,
+        horsePower,
+        regionCode,
+        driverAge: drivers[0]?.age ?? 35,
+        driverExperience: drivers[0]?.experience ?? 10,
+        kbmClass,
+        usagePeriod,
+        unlimitedDrivers,
+        baseTariff: activeTariff,
+      },
+    }),
+    [
+      regionCode,
+      category,
+      horsePower,
+      drivers,
+      kbmClass,
+      usagePeriod,
+      unlimitedDrivers,
+      activeTariff,
+    ]
+  );
+  const { data: backendData, error: backendError, isLoading: backendLoading } = useBackendCalculation<{
+    baseTariff: number;
+    kt: number;
+    kvs: number;
+    kbm: number;
+    km: number;
+    ks: number;
+    ko: number;
+    total: number;
+  }>("osago", backendRequest);
+
+  const r = backendData?.result;
+  const kt = r?.kt ?? 1;
+  const kvs = r?.kvs ?? worstKvs;
+  const kbm = r?.kbm ?? 1;
+  const km = r?.km ?? 1;
+  const ks = r?.ks ?? 1;
+  const ko = r?.ko ?? 1;
+  const total = r != null ? Math.round(r.total) : 0;
+  const totalMin = r != null ? Math.round(corridorMin * r.kt * r.kvs * r.kbm * r.km * r.ks * r.ko) : 0;
+  const totalMax = r != null ? Math.round(corridorMax * r.kt * r.kvs * r.kbm * r.km * r.ks * r.ko) : 0;
+
+  /* Legacy client-side calculation — kept for reference, not used (migration to backend). */
+  // const input: OsagoInput = {
+  //   category, horsePower, regionCode,
+  //   driverAge: drivers[0]?.age ?? 35,
+  //   driverExperience: drivers[0]?.experience ?? 10,
+  //   kbmClass, usagePeriod, unlimitedDrivers,
+  // };
+  // const baseResult = calcOsago({ ...input, customBaseTariff: activeTariff });
+  // const { kt, kbm, km, ks, ko } = baseResult;
+  // const kvs = worstKvs;
+  // const total = Math.round(activeTariff * kt * kvs * kbm * km * ks * ko);
+  // const totalMin = Math.round(corridorMin * kt * kvs * kbm * km * ks * ko);
+  // const totalMax = Math.round(corridorMax * kt * kvs * kbm * km * ks * ko);
 
   const addDriver = () => setDrivers([...drivers, { age: 25, experience: 3 }]);
   const removeDriver = (i: number) => setDrivers(drivers.filter((_, j) => j !== i));
@@ -411,13 +464,22 @@ export default function OsagoCalculator() {
         </Card>
 
         {/* Hero */}
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
         <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Shield className="h-5 w-5 text-primary" />
               <span className="text-sm font-medium text-primary">Стоимость полиса ОСАГО</span>
             </div>
-            <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
+            {backendLoading ? (
+              <p className="text-4xl font-bold tracking-tight text-muted-foreground">Загрузка…</p>
+            ) : (
+              <p className="text-4xl font-bold tracking-tight">{fmt(total)} ₽</p>
+            )}
             <p className="text-sm text-muted-foreground mt-1">
               Базовый тариф: {fmt(activeTariff)} ₽ · {REGION_NAMES[regionCode] ?? regionCode}
             </p>

@@ -1,0 +1,270 @@
+{
+  "site": {
+    "name": "Numlix",
+    "tagline": "Financial calculators for every country",
+    "description": "Accurate calculations using banking formulas for 20+ countries"
+  },
+  "nav": {
+    "home": "Home",
+    "calculators": "Calculators",
+    "skipToContent": "Skip to content"
+  },
+  "hero": {
+    "title": "Financial Calculators",
+    "subtitle": "for every country",
+    "description": "Loans, mortgages, deposits, taxes — accurate calculations using banking formulas adapted to local regulations.",
+    "cta": "Start calculating",
+    "badge": "Free · No sign-up required",
+    "searchPlaceholder": "Find a calculator...",
+    "stats": {
+      "calculators": "20+ calculators",
+      "countries": "20+ countries",
+      "languages": "12 languages",
+      "free": "Free"
+    }
+  },
+  "trust": {
+    "users": { "value": "150K+", "label": "Monthly users" },
+    "calculations": { "value": "2M+", "label": "Calculations made" },
+    "countries": { "value": "20+", "label": "Countries supported" },
+    "uptime": { "value": "99.9%", "label": "Service uptime" }
+  },
+  "categories": {
+    "title": "Calculator Categories",
+    "subtitle": "Choose a section to quickly find the right calculator",
+    "credit": { "title": "Loans & Credits", "description": "Loan calculator with early repayment, annuity and differentiated payments", "count": "5 calculators" },
+    "mortgage": { "title": "Mortgage", "description": "Mortgage calculation with down payment, refinancing options", "count": "4 calculators" },
+    "deposit": { "title": "Deposits & Savings", "description": "Deposit yield, compound interest, savings accounts", "count": "3 calculators" },
+    "tax": { "title": "Taxes & Salary", "description": "Income tax, net salary, tax deductions by country", "count": "4 calculators" },
+    "business": { "title": "Business", "description": "Profitability, break-even point, ROI, margins", "count": "3 calculators" },
+    "currency": { "title": "Currency & Investments", "description": "Currency converter, investment returns, inflation", "count": "3 calculators" }
+  },
+  "popular": {
+    "title": "Popular Calculators",
+    "subtitle": "Most requested financial planning tools",
+    "noResults": "No calculators found. Try a different search.",
+    "creditCalc": { "title": "Loan Calculator", "description": "Calculate monthly payment, overpayment and repayment schedule with early payments" },
+    "mortgageCalc": { "title": "Mortgage Calculator", "description": "Full mortgage calculation with down payment, insurance and refinancing" },
+    "depositCalc": { "title": "Deposit Calculator", "description": "Find out deposit yield with capitalization and partial withdrawal" },
+    "salaryCalc": { "title": "Salary Calculator", "description": "Calculate net salary after all taxes and contributions" },
+    "refinanceCalc": { "title": "Refinancing", "description": "Evaluate the benefit of refinancing your current loan at a new rate" },
+    "roiCalc": { "title": "ROI Calculator", "description": "Calculate return on investment and project payback period" }
+  },
+  "features": {
+    "title": "Why Numlix?",
+    "accurate": { "title": "Accurate Formulas", "description": "We use banking formulas approved by regulators" },
+    "local": { "title": "Country-Specific", "description": "Taxes, rates and laws adapted to your region" },
+    "free": { "title": "Completely Free", "description": "No registration, no limits, no ads" },
+    "private": { "title": "Private", "description": "All calculations happen in your browser" }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to the most common questions about Numlix",
+    "faq1": { "q": "How accurate are Numlix calculations?", "a": "We use banking formulas approved by financial regulators. Results match leading banks' calculations down to the cent." },
+    "faq2": { "q": "Do I need to register to use the calculators?", "a": "No, all calculators are completely free and available without registration. Just open the calculator you need and start calculating." },
+    "faq3": { "q": "How does Numlix account for my country's specifics?", "a": "We adapt formulas to the tax legislation, interest rates and financial standards of each of the 20+ supported countries." },
+    "faq4": { "q": "Is it safe to enter financial data?", "a": "Absolutely. All calculations are performed locally in your browser. We do not send or store your data on any server." },
+    "faq5": { "q": "Can I use Numlix on my mobile phone?", "a": "Yes, Numlix is fully responsive. All calculators work equally well on any screen size." }
+  },
+  "cta": {
+    "title": "Ready to calculate?",
+    "description": "Choose a calculator and get an accurate result in seconds. Free, no sign-up required.",
+    "button": "Go to calculator"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "disclaimer": "Calculation results are for informational purposes only and do not constitute financial advice."
+  },
+  "language": {
+    "label": "Language",
+    "en": "English", "ru": "Русский", "fr": "Français", "de": "Deutsch",
+    "ar": "العربية", "pes": "فارسی", "pl": "Polski", "uk": "Українська",
+    "es": "Español", "pt": "Português", "nl": "Nederlands", "sv": "Svenska"
+  },
+  "country": {
+    "label": "Country",
+    "global": "Global", "ru": "Russia", "us": "USA", "uk": "United Kingdom",
+    "de": "Germany", "fr": "France", "iran": "Iran", "pl": "Poland",
+    "ua": "Ukraine", "es": "Spain", "kz": "Kazakhstan", "br": "Brazil",
+    "in": "India", "by": "Belarus", "uz": "Uzbekistan", "eg": "Egypt",
+    "ae": "UAE", "sa": "Saudi Arabia", "qa": "Qatar", "nl": "Netherlands", "se": "Sweden"
+  },
+  "accessibility": {
+    "toggleLabel": "Accessibility mode",
+    "toggleDescription": "Apply accessibility profile for your region",
+    "openMenu": "Open accessibility settings",
+    "profileLabel": "Accessibility profile",
+    "contrastHigh": "High contrast", "contrastDefault": "Default contrast",
+    "contrastBlackWhite": "Black & white", "motionReduce": "Reduce motion",
+    "motionDefault": "Default animation", "fontScaleLarge": "Large text",
+    "fontScaleDefault": "Default text size", "fontScaleXLarge": "Extra large text",
+    "reset": "Reset", "contrast": "Contrast", "motion": "Motion", "fontSize": "Font size"
+  },
+  "common": {
+    "params": "Parameters",
+    "result": "Result",
+    "details": "Details",
+    "total": "Total",
+    "amount": "Amount",
+    "rate": "Rate",
+    "term": "Term",
+    "months": "mo.",
+    "years": "years",
+    "currency": "$",
+    "calculate": "Calculate",
+    "schedule": "Payment Schedule",
+    "show": "Show",
+    "hide": "Hide",
+    "aboutCalc": "About This Calculator",
+    "formula": "Formulas",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "endOfTerm": "End of term",
+    "loanAmount": "Loan Amount",
+    "monthlyPayment": "Monthly Payment",
+    "totalPayment": "Total Payment",
+    "overpayment": "Overpayment",
+    "interestTotal": "Total Interest",
+    "principalDebt": "Principal",
+    "interest": "Interest",
+    "balance": "Balance",
+    "payment": "Payment",
+    "month": "Month",
+    "year": "Year",
+    "no": "#",
+    "back": "Back",
+    "home": "Home"
+  },
+  "calc": {
+    "vat": {
+      "title": "VAT Calculator",
+      "description": "Add or exclude VAT at the rate of any country",
+      "operation": "Operation",
+      "addVat": "Add VAT",
+      "excludeVat": "Exclude VAT",
+      "country": "Country",
+      "vatRate": "Rate (%)",
+      "amountExcl": "Amount excl. VAT",
+      "vatAmount": "VAT",
+      "amountIncl": "Amount incl. VAT",
+      "enterAmount": "Enter an amount to calculate",
+      "aboutTitle": "About VAT Calculator",
+      "aboutText": "VAT (Value Added Tax) is an indirect tax included in the price of goods and services.",
+      "formulaAdd": "Add: Amount incl. VAT = Amount × (1 + Rate / 100)",
+      "formulaExclude": "Exclude: Amount excl. VAT = Amount ÷ (1 + Rate / 100)",
+      "ratesTitle": "VAT Rates by Country",
+      "standard": "Standard (%)",
+      "reduced": "Reduced (%)"
+    },
+    "mortgage": {
+      "title": "Mortgage Calculator",
+      "description": "Calculate annuity mortgage payments with amortization schedule",
+      "propertyPrice": "Property Price",
+      "downPayment": "Down Payment",
+      "annualRate": "Annual Rate (%)",
+      "termYears": "Term (years)",
+      "scheduleByYear": "Schedule by Year",
+      "moreYears": "... {{count}} more years",
+      "downPaymentExceeds": "Down payment cannot exceed property price",
+      "aboutText": "Calculated using the annuity formula: M = P × r × (1+r)ⁿ / ((1+r)ⁿ − 1)"
+    },
+    "deposit": {
+      "title": "Deposit Calculator",
+      "description": "Calculate deposit yield with capitalization, top-ups, withdrawals, and income tax",
+      "initialAmount": "Deposit Amount",
+      "annualRate": "Annual Rate (%)",
+      "termMonths": "Term (months)",
+      "capitalization": "Capitalization",
+      "capMonthly": "Monthly",
+      "capQuarterly": "Quarterly",
+      "capEndOfTerm": "End of term",
+      "capNone": "No capitalization (simple interest)",
+      "topUpWithdraw": "Top-ups, withdrawals & tax",
+      "monthlyTopUp": "Monthly Top-up",
+      "monthlyWithdrawal": "Monthly Withdrawal",
+      "maxKeyRate": "Max Key Rate (%)",
+      "totalToReceive": "Total to Receive",
+      "inclInterest": "including accrued interest",
+      "income": "Income",
+      "accruedInterest": "Accrued Interest",
+      "effectiveRate": "Effective Rate",
+      "topUps": "Top-ups",
+      "withdrawals": "Withdrawals",
+      "tax": "Tax",
+      "taxFreeThreshold": "Tax-Free Threshold",
+      "taxableIncome": "Taxable Income",
+      "ndfl13": "Income Tax 13%",
+      "netIncome": "Net Income",
+      "openBalance": "Opening Balance",
+      "closeBalance": "Closing Balance"
+    },
+    "refinancing": {
+      "title": "Refinancing Calculator",
+      "description": "Compare your current loan with new refinancing terms and estimate savings",
+      "currentLoan": "Current Loan",
+      "newLoan": "New Terms",
+      "remainingDebt": "Remaining Debt",
+      "remainingTerm": "Remaining Term (mo.)",
+      "currentRate": "Current Rate (%)",
+      "newRate": "New Rate (%)",
+      "newTerm": "New Term (mo.)",
+      "savings": "Savings"
+    },
+    "microloan": {
+      "title": "Payday Loan Calculator",
+      "description": "Calculate payday loan interest, overdue penalties, and total amount to repay",
+      "loanAmount": "Loan Amount",
+      "dailyRate": "Daily Rate (%)",
+      "loanDays": "Term (days)",
+      "overdueDays": "Overdue Days",
+      "overdueRate": "Overdue Penalty (% per day)",
+      "interestAccrued": "Interest Accrued",
+      "penalty": "Overdue Penalty",
+      "totalRepayment": "Total Repayment"
+    },
+    "inflation": {
+      "title": "Inflation Calculator",
+      "description": "Calculate inflation over a period, price changes, and savings depreciation",
+      "startYear": "Start Year",
+      "endYear": "End Year",
+      "purchasePower": "Purchasing Power",
+      "cumulativeInflation": "Cumulative Inflation",
+      "priceChange": "Price Change"
+    },
+    "creditEarlyRepayment": {
+      "title": "Loan Calculator with Early Repayment",
+      "description": "Calculate loan payments with early repayments, rate changes, and payment holidays",
+      "loanAmount": "Loan Amount",
+      "annualRate": "Annual Rate (%)",
+      "termMonths": "Term (months)",
+      "paymentType": "Payment Type",
+      "annuity": "Annuity",
+      "differentiated": "Differentiated"
+    },
+    "autoLoan": {
+      "title": "Auto Loan Calculator",
+      "description": "Calculate monthly payment, total interest, and repayment schedule for a car loan",
+      "carPrice": "Vehicle Price",
+      "downPayment": "Down Payment",
+      "annualRate": "Annual Rate (%)",
+      "termMonths": "Term (months)"
+    },
+    "fuelConsumption": {
+      "title": "Fuel Consumption Calculator",
+      "description": "Calculate fuel consumption per trip and average consumption per 100 km",
+      "calcConsumption": "Calculate Consumption",
+      "planTrip": "Plan a Trip",
+      "tripData": "Trip Data",
+      "planning": "Planning",
+      "distance": "Distance (km)",
+      "fuelUsed": "Fuel Used (L)",
+      "fuelPrice": "Price per Liter",
+      "consumption": "Consumption",
+      "per100km": "L/100km",
+      "tripCost": "Trip Cost",
+      "costPerKm": "Cost per km",
+      "consumptionRate": "Consumption (L/100km)",
+      "fuelNeeded": "Fuel Needed"
+    }
+  }
+}

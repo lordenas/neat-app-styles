@@ -14,6 +14,7 @@ import {
 } from "@/lib/calculators/property-deduction";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import { Home, ChevronDown, CheckCircle2, Clock } from "lucide-react";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
 
 const fmt = (v: number) =>
   new Intl.NumberFormat("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
@@ -44,18 +45,23 @@ export default function PropertyDeductionCalculatorPage() {
   const [returnedAmount, setReturnedAmount] = useState(0);
   const [advancedOpen, setAdvancedOpen] = useState(false);
 
-  const result = useMemo(() => {
-    const relevantIncome: Record<number, number> = {};
-    for (const y of getIncomeYears(purchaseYear)) {
-      relevantIncome[y] = incomeByYear[y] ?? 0;
-    }
-    return calcPropertyDeduction({
+  const relevantIncome = useMemo(() => {
+    const out: Record<number, number> = {};
+    for (const y of getIncomeYears(purchaseYear)) out[y] = incomeByYear[y] ?? 0;
+    return out;
+  }, [purchaseYear, incomeByYear]);
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: {
       propertyPrice, purchaseYear, usedPreviously,
       previousUsePeriod: usedPreviously ? previousUsePeriod : null,
       returnedAmount: usedPreviously && previousUsePeriod === "after_2014" ? returnedAmount : 0,
       incomeByYear: relevantIncome,
-    });
-  }, [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, incomeByYear]);
+    },
+  }), [propertyPrice, purchaseYear, usedPreviously, previousUsePeriod, returnedAmount, relevantIncome]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ unusedDeduction: number; taxToReturn: number; totalNdflEntered: number; availableFromEnteredYears: number; remainingForFutureYears: number; yearsWithIncome: number[]; isFullyBlocked: boolean }>("property-deduction", req);
+  const result = backendData?.result ?? { unusedDeduction: 0, taxToReturn: 0, totalNdflEntered: 0, availableFromEnteredYears: 0, remainingForFutureYears: 0, yearsWithIncome: [], isFullyBlocked: false };
+  /* Legacy: const result = useMemo(() => calcPropertyDeduction(...), [...]); */
 
   const deductionUsed = Math.min(propertyPrice, MAX_PROPERTY_DEDUCTION);
   const deductionShare = MAX_PROPERTY_DEDUCTION > 0
@@ -82,6 +88,11 @@ export default function PropertyDeductionCalculatorPage() {
       }
     >
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* ── Parameters bar ── */}
         <Card>

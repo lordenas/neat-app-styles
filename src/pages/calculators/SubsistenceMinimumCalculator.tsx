@@ -12,6 +12,8 @@ import {
   calcSubsistenceMinimum, PM_REGIONS, PM_BY_REGION, type PmCategory,
 } from "@/lib/calculators/subsistence-minimum";
 
+/** legacy-local-calc: no backend endpoint yet (migration gap). See apps/numlix-main/docs/MIGRATION_CALC_STATUS.md */
+
 const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
 const CATEGORIES: { value: PmCategory; label: string }[] = [

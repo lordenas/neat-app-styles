@@ -11,6 +11,8 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { calcAlimonyIndexation, PM_CHILD_HISTORY } from "@/lib/calculators/alimony-indexation";
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 
+/** legacy-local-calc: no backend endpoint yet (migration gap). See apps/numlix-main/docs/MIGRATION_CALC_STATUS.md */
+
 const fmt = (n: number) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
 
 export default function AlimonyIndexationCalculator() {

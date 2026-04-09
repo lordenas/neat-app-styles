@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Fuel, Route, Banknote, Gauge, TrendingDown } from "lucide-react";
-import { calcFuelConsumption, calcFuelNeeded } from "@/lib/calculators/fuel-consumption";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calcFuelConsumption, calcFuelNeeded } from "@/lib/calculators/fuel-consumption"; */
 
 function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent?: boolean }) {
   return (
@@ -60,12 +61,21 @@ export default function FuelConsumptionCalculator() {
   const [consumption100, setConsumption100] = useState(8);
   const [fuelPrice2, setFuelPrice2] = useState(56);
 
-  const result1 = useMemo(() => calcFuelConsumption({ distance, fuelUsed, fuelPrice }), [distance, fuelUsed, fuelPrice]);
-  const result2 = useMemo(() => calcFuelNeeded(distance2, consumption100, fuelPrice2), [distance2, consumption100, fuelPrice2]);
+  const req1 = useMemo(() => ({ regionCode: "GLB", input: { mode: "consumption", distance, fuelUsed, fuelPrice } }), [distance, fuelUsed, fuelPrice]);
+  const req2 = useMemo(() => ({ regionCode: "GLB", input: { mode: "trip", distance: distance2, consumptionPer100: consumption100, fuelPrice: fuelPrice2 } }), [distance2, consumption100, fuelPrice2]);
+  const { data: data1, error: error1 } = useBackendCalculation<{ mode: "consumption"; per100km: number; tripCost: number; costPerKm: number }>("fuel-consumption", req1);
+  const { data: data2, error: error2 } = useBackendCalculation<{ mode: "trip"; liters: number; cost: number }>("fuel-consumption", req2);
+  const result1 = data1?.result ?? { mode: "consumption" as const, per100km: 0, tripCost: 0, costPerKm: 0 };
+  const result2 = data2?.result ?? { mode: "trip" as const, liters: 0, cost: 0 };
 
   return (
     <CalculatorLayout calculatorId="fuel-consumption" categoryName="Automotive" categoryPath="/categories/automotive">
       <div className="space-y-8">
+        {(error1 || error2) && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {error1 || error2}
+          </div>
+        )}
         <Tabs defaultValue="calc" className="space-y-8">
           <TabsList className="h-11">
             <TabsTrigger value="calc" className="px-6 text-sm">

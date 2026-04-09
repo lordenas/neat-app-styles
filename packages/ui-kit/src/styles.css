@@ -1,0 +1,44 @@
+/* Shared UI kit variables and utility classes */
+:root {
+  --shadow-sm: 0 1px 2px 0 hsl(214 20% 50% / 0.05);
+  --shadow-md: 0 4px 6px -1px hsl(214 20% 50% / 0.08), 0 2px 4px -2px hsl(214 20% 50% / 0.05);
+  --shadow-lg: 0 10px 15px -3px hsl(214 20% 50% / 0.08), 0 4px 6px -4px hsl(214 20% 50% / 0.04);
+  --shadow-xl: 0 20px 25px -5px hsl(214 20% 50% / 0.1), 0 8px 10px -6px hsl(214 20% 50% / 0.05);
+  --section-bg: 210 20% 96%;
+  --stripe-bg: 210 15% 97%;
+}
+
+.section-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.form-section {
+  background: hsl(var(--section-bg));
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.table-stripe {
+  background: hsl(var(--stripe-bg));
+}
+
+.label-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.helper-text {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.error-text {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: hsl(var(--destructive));
+}

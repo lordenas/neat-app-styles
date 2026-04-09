@@ -8,11 +8,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, TrendingUp, ReceiptText, CircleDollarSign } from "lucide-react";
 import {
-  calculateMicroloan,
-  type MicroloanInput,
   type RateUnit,
   type OverduePeriodUnit,
 } from "@/lib/calculators/microloan";
+import { useBackendCalculation } from "../../hooks/useBackendCalculation";
+/* Legacy: import { calculateMicroloan, type MicroloanInput } from "@/lib/calculators/microloan"; */
 import { formatNumberInput, parseNumberInput } from "@/lib/calculators/format-utils";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
@@ -60,13 +60,13 @@ export default function MicroloanCalculatorPage() {
   const [overdueRateUnit, setOverdueRateUnit] = useState<RateUnit>("day");
   const [penaltyAmount, setPenaltyAmount] = useState(0);
 
-  const result = useMemo(() => {
-    const input: MicroloanInput = {
-      amount, termDays, rate, rateUnit,
-      hasOverdue, overduePeriod, overdueUnit, overdueRate, overdueRateUnit, penaltyAmount,
-    };
-    return calculateMicroloan(input);
-  }, [amount, termDays, rate, rateUnit, hasOverdue, overduePeriod, overdueUnit, overdueRate, overdueRateUnit, penaltyAmount]);
+  const req = useMemo(() => ({
+    regionCode: "GLB",
+    input: { amount, termDays, rate, rateUnit, hasOverdue, overduePeriod, overdueUnit, overdueRate, overdueRateUnit, penaltyAmount },
+  }), [amount, termDays, rate, rateUnit, hasOverdue, overduePeriod, overdueUnit, overdueRate, overdueRateUnit, penaltyAmount]);
+  const { data: backendData, error: backendError } = useBackendCalculation<{ interestAccrued: number; totalToRepay: number; overdueInterest: number; overdueTotal: number; grandTotal: number; dailyAccrual: Array<{ day: number; interest: number; total: number }> }>("microloan", req);
+  const result = backendData?.result ?? { interestAccrued: 0, totalToRepay: 0, overdueInterest: 0, overdueTotal: 0, grandTotal: 0, dailyAccrual: [] as Array<{ day: number; interest: number; total: number }> };
+  /* Legacy: const result = useMemo(() => calculateMicroloan(input), [...]); */
 
   const rateOpts = [
     { id: "day" as RateUnit, label: t("calculator.microloan.ratePerDay") },
@@ -100,6 +100,11 @@ export default function MicroloanCalculatorPage() {
       }
     >
       <div className="space-y-6">
+        {backendError && (
+          <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+            {backendError}
+          </div>
+        )}
 
         {/* ── Parameters ── */}
         <Card>
